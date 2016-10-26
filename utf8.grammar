@@ -1,0 +1,1203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.6">
+    <grammar name="UTF-8" start="id:597" author="Scott Marcy" email="synalyze@mscott.org" fileextension="txt" uti="public.plain-text" complete="yes">
+        <description>Performs UTF-8 multi-byte sequence highlighting and validation</description>
+        <structure name="Defaults" id="598" encoding="UTF-8" endian="big" signed="no" strokecolor="969696"/>
+        <structure name="Byte sequence" id="600" extends="id:598">
+            <number name="Start byte" mustmatch="yes" id="601" type="integer" length="1" display="hex"/>
+            <structure name="Continuation" id="602" length="0" consists-of="id:603"/>
+        </structure>
+        <structure name="NUL_sequence" id="606" extends="id:600" strokecolor="FF3528" fillcolor="FEFFFE">
+            <number name="Start byte" id="607" strokecolor="FB40FC" fillcolor="FF9AF7" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="00" value="0x0"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="1-byte_sequence" id="611" length="1" extends="id:600">
+            <number name="Start byte" id="612" type="integer" minval="0x1" maxval="0x7F">
+                <fixedvalues/>
+            </number>
+        </structure>
+        <structure name="2-byte_sequence" id="616" length="2" extends="id:600" strokecolor="FFEE22" fillcolor="FFF6AC">
+            <number name="Start byte" id="617" strokecolor="FFEE22" fillcolor="FFEE22" type="integer" length="1" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="C2" value="0xC2"/>
+                    <fixedvalue name="C3" value="0xC3"/>
+                    <fixedvalue name="C4" value="0xC4"/>
+                    <fixedvalue name="C5" value="0xC5"/>
+                    <fixedvalue name="C6" value="0xC6"/>
+                    <fixedvalue name="C7" value="0xC7"/>
+                    <fixedvalue name="C8" value="0xC8"/>
+                    <fixedvalue name="C9" value="0xC9"/>
+                    <fixedvalue name="CA" value="0xCA"/>
+                    <fixedvalue name="CB" value="0xCB"/>
+                    <fixedvalue name="CC" value="0xCC"/>
+                    <fixedvalue name="CD" value="0xCD"/>
+                    <fixedvalue name="CE" value="0xCE"/>
+                    <fixedvalue name="CF" value="0xCF"/>
+                    <fixedvalue name="D0" value="0xD0"/>
+                    <fixedvalue name="D1" value="0xD1"/>
+                    <fixedvalue name="D2" value="0xD2"/>
+                    <fixedvalue name="D3" value="0xD3"/>
+                    <fixedvalue name="D4" value="0xD4"/>
+                    <fixedvalue name="D5" value="0xD5"/>
+                    <fixedvalue name="D6" value="0xD6"/>
+                    <fixedvalue name="D7" value="0xD7"/>
+                    <fixedvalue name="D8" value="0xD8"/>
+                    <fixedvalue name="D9" value="0xD9"/>
+                    <fixedvalue name="DA" value="0xDA"/>
+                    <fixedvalue name="DB" value="0xDB"/>
+                    <fixedvalue name="DC" value="0xDC"/>
+                    <fixedvalue name="DD" value="0xDD"/>
+                    <fixedvalue name="DE" value="0xDE"/>
+                    <fixedvalue name="DF" value="0xDF"/>
+                </fixedvalues>
+            </number>
+            <structure name="Continuation" id="618" length="1" consists-of="id:603" strokecolor="FFEE22" fillcolor="FEF77C">
+                <number name="80-BF" mustmatch="yes" id="619" strokecolor="FFEE22" fillcolor="FEF77C" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="80" value="0x80"/>
+                        <fixedvalue name="81" value="0x81"/>
+                        <fixedvalue name="82" value="0x82"/>
+                        <fixedvalue name="83" value="0x83"/>
+                        <fixedvalue name="84" value="0x84"/>
+                        <fixedvalue name="85" value="0x85"/>
+                        <fixedvalue name="86" value="0x86"/>
+                        <fixedvalue name="87" value="0x87"/>
+                        <fixedvalue name="88" value="0x88"/>
+                        <fixedvalue name="89" value="0x89"/>
+                        <fixedvalue name="8a" value="0x8A"/>
+                        <fixedvalue name="8b" value="0x8B"/>
+                        <fixedvalue name="8c" value="0x8C"/>
+                        <fixedvalue name="8d" value="0x8D"/>
+                        <fixedvalue name="8e" value="0x8E"/>
+                        <fixedvalue name="8f" value="0x8F"/>
+                        <fixedvalue name="90" value="0x90"/>
+                        <fixedvalue name="91" value="0x91"/>
+                        <fixedvalue name="92" value="0x92"/>
+                        <fixedvalue name="93" value="0x93"/>
+                        <fixedvalue name="94" value="0x94"/>
+                        <fixedvalue name="95" value="0x95"/>
+                        <fixedvalue name="96" value="0x96"/>
+                        <fixedvalue name="97" value="0x97"/>
+                        <fixedvalue name="98" value="0x98"/>
+                        <fixedvalue name="99" value="0x99"/>
+                        <fixedvalue name="9a" value="0x9A"/>
+                        <fixedvalue name="9b" value="0x9B"/>
+                        <fixedvalue name="9c" value="0x9C"/>
+                        <fixedvalue name="9d" value="0x9D"/>
+                        <fixedvalue name="9e" value="0x9E"/>
+                        <fixedvalue name="9f" value="0x9F"/>
+                        <fixedvalue name="a0" value="0xA0"/>
+                        <fixedvalue name="a1" value="0xA1"/>
+                        <fixedvalue name="a2" value="0xA2"/>
+                        <fixedvalue name="a3" value="0xA3"/>
+                        <fixedvalue name="a4" value="0xA4"/>
+                        <fixedvalue name="a5" value="0xA5"/>
+                        <fixedvalue name="a6" value="0xA6"/>
+                        <fixedvalue name="a7" value="0xA7"/>
+                        <fixedvalue name="a8" value="0xA8"/>
+                        <fixedvalue name="a9" value="0xA9"/>
+                        <fixedvalue name="aa" value="0xAA"/>
+                        <fixedvalue name="ab" value="0xAB"/>
+                        <fixedvalue name="ac" value="0xAC"/>
+                        <fixedvalue name="ad" value="0xAD"/>
+                        <fixedvalue name="ae" value="0xAE"/>
+                        <fixedvalue name="af" value="0xAF"/>
+                        <fixedvalue name="b0" value="0xB0"/>
+                        <fixedvalue name="b1" value="0xB1"/>
+                        <fixedvalue name="b2" value="0xB2"/>
+                        <fixedvalue name="b3" value="0xB3"/>
+                        <fixedvalue name="b4" value="0xB4"/>
+                        <fixedvalue name="b5" value="0xB5"/>
+                        <fixedvalue name="b6" value="0xB6"/>
+                        <fixedvalue name="b7" value="0xB7"/>
+                        <fixedvalue name="b8" value="0xB8"/>
+                        <fixedvalue name="b9" value="0xB9"/>
+                        <fixedvalue name="ba" value="0xBA"/>
+                        <fixedvalue name="bb" value="0xBB"/>
+                        <fixedvalue name="bc" value="0xBC"/>
+                        <fixedvalue name="bd" value="0xBD"/>
+                        <fixedvalue name="be" value="0xBE"/>
+                        <fixedvalue name="bf" value="0xBF"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+        <structure name="3-byte_sequence-A" id="622" length="3" extends="id:600" strokecolor="00E24C" fillcolor="00E24C">
+            <number name="Start byte" id="623" strokecolor="00E24C" fillcolor="00E24C" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="e1" value="0xE1"/>
+                    <fixedvalue name="e2" value="0xE2"/>
+                    <fixedvalue name="e3" value="0xE3"/>
+                    <fixedvalue name="e4" value="0xE4"/>
+                    <fixedvalue name="e5" value="0xE5"/>
+                    <fixedvalue name="e6" value="0xE6"/>
+                    <fixedvalue name="e7" value="0xE7"/>
+                    <fixedvalue name="e8" value="0xE8"/>
+                    <fixedvalue name="e9" value="0xE9"/>
+                    <fixedvalue name="ea" value="0xEA"/>
+                    <fixedvalue name="eb" value="0xEB"/>
+                    <fixedvalue name="ec" value="0xEC"/>
+                    <fixedvalue name="ee" value="0xEE"/>
+                    <fixedvalue name="ef" value="0xEF"/>
+                </fixedvalues>
+            </number>
+            <structure name="Continuation" id="624" length="2" consists-of="id:603" strokecolor="A6E5AA" fillcolor="A6E5AA">
+                <number name="80-BF-1" mustmatch="yes" id="625" strokecolor="A6E5AA" fillcolor="A6E5AA" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="80" value="0x80"/>
+                        <fixedvalue name="81" value="0x81"/>
+                        <fixedvalue name="82" value="0x82"/>
+                        <fixedvalue name="83" value="0x83"/>
+                        <fixedvalue name="84" value="0x84"/>
+                        <fixedvalue name="85" value="0x85"/>
+                        <fixedvalue name="86" value="0x86"/>
+                        <fixedvalue name="87" value="0x87"/>
+                        <fixedvalue name="88" value="0x88"/>
+                        <fixedvalue name="89" value="0x89"/>
+                        <fixedvalue name="8a" value="0x8A"/>
+                        <fixedvalue name="8b" value="0x8B"/>
+                        <fixedvalue name="8c" value="0x8C"/>
+                        <fixedvalue name="8d" value="0x8D"/>
+                        <fixedvalue name="8e" value="0x8E"/>
+                        <fixedvalue name="8f" value="0x8F"/>
+                        <fixedvalue name="90" value="0x90"/>
+                        <fixedvalue name="91" value="0x91"/>
+                        <fixedvalue name="92" value="0x92"/>
+                        <fixedvalue name="93" value="0x93"/>
+                        <fixedvalue name="94" value="0x94"/>
+                        <fixedvalue name="95" value="0x95"/>
+                        <fixedvalue name="96" value="0x96"/>
+                        <fixedvalue name="97" value="0x97"/>
+                        <fixedvalue name="98" value="0x98"/>
+                        <fixedvalue name="99" value="0x99"/>
+                        <fixedvalue name="9a" value="0x9A"/>
+                        <fixedvalue name="9b" value="0x9B"/>
+                        <fixedvalue name="9c" value="0x9C"/>
+                        <fixedvalue name="9d" value="0x9D"/>
+                        <fixedvalue name="9e" value="0x9E"/>
+                        <fixedvalue name="9f" value="0x9F"/>
+                        <fixedvalue name="a0" value="0xA0"/>
+                        <fixedvalue name="a1" value="0xA1"/>
+                        <fixedvalue name="a2" value="0xA2"/>
+                        <fixedvalue name="a3" value="0xA3"/>
+                        <fixedvalue name="a4" value="0xA4"/>
+                        <fixedvalue name="a5" value="0xA5"/>
+                        <fixedvalue name="a6" value="0xA6"/>
+                        <fixedvalue name="a7" value="0xA7"/>
+                        <fixedvalue name="a8" value="0xA8"/>
+                        <fixedvalue name="a9" value="0xA9"/>
+                        <fixedvalue name="aa" value="0xAA"/>
+                        <fixedvalue name="ab" value="0xAB"/>
+                        <fixedvalue name="ac" value="0xAC"/>
+                        <fixedvalue name="ad" value="0xAD"/>
+                        <fixedvalue name="ae" value="0xAE"/>
+                        <fixedvalue name="af" value="0xAF"/>
+                        <fixedvalue name="b0" value="0xB0"/>
+                        <fixedvalue name="b1" value="0xB1"/>
+                        <fixedvalue name="b2" value="0xB2"/>
+                        <fixedvalue name="b3" value="0xB3"/>
+                        <fixedvalue name="b4" value="0xB4"/>
+                        <fixedvalue name="b5" value="0xB5"/>
+                        <fixedvalue name="b6" value="0xB6"/>
+                        <fixedvalue name="b7" value="0xB7"/>
+                        <fixedvalue name="b8" value="0xB8"/>
+                        <fixedvalue name="b9" value="0xB9"/>
+                        <fixedvalue name="ba" value="0xBA"/>
+                        <fixedvalue name="bb" value="0xBB"/>
+                        <fixedvalue name="bc" value="0xBC"/>
+                        <fixedvalue name="bd" value="0xBD"/>
+                        <fixedvalue name="be" value="0xBE"/>
+                        <fixedvalue name="bf" value="0xBF"/>
+                    </fixedvalues>
+                </number>
+                <number name="80-BF-2" mustmatch="yes" id="626" strokecolor="A6E5AA" fillcolor="A6E5AA" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="80" value="0x80"/>
+                        <fixedvalue name="81" value="0x81"/>
+                        <fixedvalue name="82" value="0x82"/>
+                        <fixedvalue name="83" value="0x83"/>
+                        <fixedvalue name="84" value="0x84"/>
+                        <fixedvalue name="85" value="0x85"/>
+                        <fixedvalue name="86" value="0x86"/>
+                        <fixedvalue name="87" value="0x87"/>
+                        <fixedvalue name="88" value="0x88"/>
+                        <fixedvalue name="89" value="0x89"/>
+                        <fixedvalue name="8a" value="0x8A"/>
+                        <fixedvalue name="8b" value="0x8B"/>
+                        <fixedvalue name="8c" value="0x8C"/>
+                        <fixedvalue name="8d" value="0x8D"/>
+                        <fixedvalue name="8e" value="0x8E"/>
+                        <fixedvalue name="8f" value="0x8F"/>
+                        <fixedvalue name="90" value="0x90"/>
+                        <fixedvalue name="91" value="0x91"/>
+                        <fixedvalue name="92" value="0x92"/>
+                        <fixedvalue name="93" value="0x93"/>
+                        <fixedvalue name="94" value="0x94"/>
+                        <fixedvalue name="95" value="0x95"/>
+                        <fixedvalue name="96" value="0x96"/>
+                        <fixedvalue name="97" value="0x97"/>
+                        <fixedvalue name="98" value="0x98"/>
+                        <fixedvalue name="99" value="0x99"/>
+                        <fixedvalue name="9a" value="0x9A"/>
+                        <fixedvalue name="9b" value="0x9B"/>
+                        <fixedvalue name="9c" value="0x9C"/>
+                        <fixedvalue name="9d" value="0x9D"/>
+                        <fixedvalue name="9e" value="0x9E"/>
+                        <fixedvalue name="9f" value="0x9F"/>
+                        <fixedvalue name="a0" value="0xA0"/>
+                        <fixedvalue name="a1" value="0xA1"/>
+                        <fixedvalue name="a2" value="0xA2"/>
+                        <fixedvalue name="a3" value="0xA3"/>
+                        <fixedvalue name="a4" value="0xA4"/>
+                        <fixedvalue name="a5" value="0xA5"/>
+                        <fixedvalue name="a6" value="0xA6"/>
+                        <fixedvalue name="a7" value="0xA7"/>
+                        <fixedvalue name="a8" value="0xA8"/>
+                        <fixedvalue name="a9" value="0xA9"/>
+                        <fixedvalue name="aa" value="0xAA"/>
+                        <fixedvalue name="ab" value="0xAB"/>
+                        <fixedvalue name="ac" value="0xAC"/>
+                        <fixedvalue name="ad" value="0xAD"/>
+                        <fixedvalue name="ae" value="0xAE"/>
+                        <fixedvalue name="af" value="0xAF"/>
+                        <fixedvalue name="b0" value="0xB0"/>
+                        <fixedvalue name="b1" value="0xB1"/>
+                        <fixedvalue name="b2" value="0xB2"/>
+                        <fixedvalue name="b3" value="0xB3"/>
+                        <fixedvalue name="b4" value="0xB4"/>
+                        <fixedvalue name="b5" value="0xB5"/>
+                        <fixedvalue name="b6" value="0xB6"/>
+                        <fixedvalue name="b7" value="0xB7"/>
+                        <fixedvalue name="b8" value="0xB8"/>
+                        <fixedvalue name="b9" value="0xB9"/>
+                        <fixedvalue name="ba" value="0xBA"/>
+                        <fixedvalue name="bb" value="0xBB"/>
+                        <fixedvalue name="bc" value="0xBC"/>
+                        <fixedvalue name="bd" value="0xBD"/>
+                        <fixedvalue name="be" value="0xBE"/>
+                        <fixedvalue name="bf" value="0xBF"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+        <structure name="3-byte_sequence-B" id="629" length="3" extends="id:600" consists-of="id:603" strokecolor="00E24C" fillcolor="00E24C">
+            <number name="Start byte" id="630" strokecolor="00E24C" fillcolor="00E24C" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="e0" value="0xE0"/>
+                </fixedvalues>
+            </number>
+            <structure name="Continuation" id="631" length="2" consists-of="id:603" strokecolor="A6E5AA" fillcolor="A6E5AA">
+                <number name="A0-BF" mustmatch="yes" id="632" strokecolor="A6E5AA" fillcolor="A6E5AA" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="a0" value="0xA0"/>
+                        <fixedvalue name="a1" value="0xA1"/>
+                        <fixedvalue name="a2" value="0xA2"/>
+                        <fixedvalue name="a3" value="0xA3"/>
+                        <fixedvalue name="a4" value="0xA4"/>
+                        <fixedvalue name="a5" value="0xA5"/>
+                        <fixedvalue name="a6" value="0xA6"/>
+                        <fixedvalue name="a7" value="0xA7"/>
+                        <fixedvalue name="a8" value="0xA8"/>
+                        <fixedvalue name="a9" value="0xA9"/>
+                        <fixedvalue name="aa" value="0xAA"/>
+                        <fixedvalue name="ab" value="0xAB"/>
+                        <fixedvalue name="ac" value="0xAC"/>
+                        <fixedvalue name="ad" value="0xAD"/>
+                        <fixedvalue name="ae" value="0xAE"/>
+                        <fixedvalue name="af" value="0xAF"/>
+                        <fixedvalue name="b0" value="0xB0"/>
+                        <fixedvalue name="b1" value="0xB1"/>
+                        <fixedvalue name="b2" value="0xB2"/>
+                        <fixedvalue name="b3" value="0xB3"/>
+                        <fixedvalue name="b4" value="0xB4"/>
+                        <fixedvalue name="b5" value="0xB5"/>
+                        <fixedvalue name="b6" value="0xB6"/>
+                        <fixedvalue name="b7" value="0xB7"/>
+                        <fixedvalue name="b8" value="0xB8"/>
+                        <fixedvalue name="b9" value="0xB9"/>
+                        <fixedvalue name="ba" value="0xBA"/>
+                        <fixedvalue name="bb" value="0xBB"/>
+                        <fixedvalue name="bc" value="0xBC"/>
+                        <fixedvalue name="bd" value="0xBD"/>
+                        <fixedvalue name="be" value="0xBE"/>
+                        <fixedvalue name="bf" value="0xBF"/>
+                    </fixedvalues>
+                </number>
+                <number name="80-BF" mustmatch="yes" id="633" strokecolor="A6E5AA" fillcolor="A6E5AA" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="80" value="0x80"/>
+                        <fixedvalue name="81" value="0x81"/>
+                        <fixedvalue name="82" value="0x82"/>
+                        <fixedvalue name="83" value="0x83"/>
+                        <fixedvalue name="84" value="0x84"/>
+                        <fixedvalue name="85" value="0x85"/>
+                        <fixedvalue name="86" value="0x86"/>
+                        <fixedvalue name="87" value="0x87"/>
+                        <fixedvalue name="88" value="0x88"/>
+                        <fixedvalue name="89" value="0x89"/>
+                        <fixedvalue name="8a" value="0x8A"/>
+                        <fixedvalue name="8b" value="0x8B"/>
+                        <fixedvalue name="8c" value="0x8C"/>
+                        <fixedvalue name="8d" value="0x8D"/>
+                        <fixedvalue name="8e" value="0x8E"/>
+                        <fixedvalue name="8f" value="0x8F"/>
+                        <fixedvalue name="90" value="0x90"/>
+                        <fixedvalue name="91" value="0x91"/>
+                        <fixedvalue name="92" value="0x92"/>
+                        <fixedvalue name="93" value="0x93"/>
+                        <fixedvalue name="94" value="0x94"/>
+                        <fixedvalue name="95" value="0x95"/>
+                        <fixedvalue name="96" value="0x96"/>
+                        <fixedvalue name="97" value="0x97"/>
+                        <fixedvalue name="98" value="0x98"/>
+                        <fixedvalue name="99" value="0x99"/>
+                        <fixedvalue name="9a" value="0x9A"/>
+                        <fixedvalue name="9b" value="0x9B"/>
+                        <fixedvalue name="9c" value="0x9C"/>
+                        <fixedvalue name="9d" value="0x9D"/>
+                        <fixedvalue name="9e" value="0x9E"/>
+                        <fixedvalue name="9f" value="0x9F"/>
+                        <fixedvalue name="a0" value="0xA0"/>
+                        <fixedvalue name="a1" value="0xA1"/>
+                        <fixedvalue name="a2" value="0xA2"/>
+                        <fixedvalue name="a3" value="0xA3"/>
+                        <fixedvalue name="a4" value="0xA4"/>
+                        <fixedvalue name="a5" value="0xA5"/>
+                        <fixedvalue name="a6" value="0xA6"/>
+                        <fixedvalue name="a7" value="0xA7"/>
+                        <fixedvalue name="a8" value="0xA8"/>
+                        <fixedvalue name="a9" value="0xA9"/>
+                        <fixedvalue name="aa" value="0xAA"/>
+                        <fixedvalue name="ab" value="0xAB"/>
+                        <fixedvalue name="ac" value="0xAC"/>
+                        <fixedvalue name="ad" value="0xAD"/>
+                        <fixedvalue name="ae" value="0xAE"/>
+                        <fixedvalue name="af" value="0xAF"/>
+                        <fixedvalue name="b0" value="0xB0"/>
+                        <fixedvalue name="b1" value="0xB1"/>
+                        <fixedvalue name="b2" value="0xB2"/>
+                        <fixedvalue name="b3" value="0xB3"/>
+                        <fixedvalue name="b4" value="0xB4"/>
+                        <fixedvalue name="b5" value="0xB5"/>
+                        <fixedvalue name="b6" value="0xB6"/>
+                        <fixedvalue name="b7" value="0xB7"/>
+                        <fixedvalue name="b8" value="0xB8"/>
+                        <fixedvalue name="b9" value="0xB9"/>
+                        <fixedvalue name="ba" value="0xBA"/>
+                        <fixedvalue name="bb" value="0xBB"/>
+                        <fixedvalue name="bc" value="0xBC"/>
+                        <fixedvalue name="bd" value="0xBD"/>
+                        <fixedvalue name="be" value="0xBE"/>
+                        <fixedvalue name="bf" value="0xBF"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+        <structure name="3-byte_sequence-C" id="636" length="3" extends="id:600" consists-of="id:603" strokecolor="00E24C" fillcolor="00E24C">
+            <number name="Start byte" id="637" strokecolor="00E24C" fillcolor="00E24C" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="ed" value="0xED"/>
+                </fixedvalues>
+            </number>
+            <structure name="Continuation" id="638" length="2" consists-of="id:603" strokecolor="A6E5AA" fillcolor="A6E5AA">
+                <number name="80-9F" mustmatch="yes" id="639" strokecolor="A6E5AA" fillcolor="A6E5AA" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="80" value="0x80"/>
+                        <fixedvalue name="81" value="0x81"/>
+                        <fixedvalue name="82" value="0x82"/>
+                        <fixedvalue name="83" value="0x83"/>
+                        <fixedvalue name="84" value="0x84"/>
+                        <fixedvalue name="85" value="0x85"/>
+                        <fixedvalue name="86" value="0x86"/>
+                        <fixedvalue name="87" value="0x87"/>
+                        <fixedvalue name="88" value="0x88"/>
+                        <fixedvalue name="89" value="0x89"/>
+                        <fixedvalue name="8a" value="0x8A"/>
+                        <fixedvalue name="8b" value="0x8B"/>
+                        <fixedvalue name="8c" value="0x8C"/>
+                        <fixedvalue name="8d" value="0x8D"/>
+                        <fixedvalue name="8e" value="0x8E"/>
+                        <fixedvalue name="8f" value="0x8F"/>
+                        <fixedvalue name="90" value="0x90"/>
+                        <fixedvalue name="91" value="0x91"/>
+                        <fixedvalue name="92" value="0x92"/>
+                        <fixedvalue name="93" value="0x93"/>
+                        <fixedvalue name="94" value="0x94"/>
+                        <fixedvalue name="95" value="0x95"/>
+                        <fixedvalue name="96" value="0x96"/>
+                        <fixedvalue name="97" value="0x97"/>
+                        <fixedvalue name="98" value="0x98"/>
+                        <fixedvalue name="99" value="0x99"/>
+                        <fixedvalue name="9a" value="0x9A"/>
+                        <fixedvalue name="9b" value="0x9B"/>
+                        <fixedvalue name="9c" value="0x9C"/>
+                        <fixedvalue name="9d" value="0x9D"/>
+                        <fixedvalue name="9e" value="0x9E"/>
+                        <fixedvalue name="9f" value="0x9F"/>
+                    </fixedvalues>
+                </number>
+                <number name="80-BF" mustmatch="yes" id="640" strokecolor="A6E5AA" fillcolor="A6E5AA" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="80" value="0x80"/>
+                        <fixedvalue name="81" value="0x81"/>
+                        <fixedvalue name="82" value="0x82"/>
+                        <fixedvalue name="83" value="0x83"/>
+                        <fixedvalue name="84" value="0x84"/>
+                        <fixedvalue name="85" value="0x85"/>
+                        <fixedvalue name="86" value="0x86"/>
+                        <fixedvalue name="87" value="0x87"/>
+                        <fixedvalue name="88" value="0x88"/>
+                        <fixedvalue name="89" value="0x89"/>
+                        <fixedvalue name="8a" value="0x8A"/>
+                        <fixedvalue name="8b" value="0x8B"/>
+                        <fixedvalue name="8c" value="0x8C"/>
+                        <fixedvalue name="8d" value="0x8D"/>
+                        <fixedvalue name="8e" value="0x8E"/>
+                        <fixedvalue name="8f" value="0x8F"/>
+                        <fixedvalue name="90" value="0x90"/>
+                        <fixedvalue name="91" value="0x91"/>
+                        <fixedvalue name="92" value="0x92"/>
+                        <fixedvalue name="93" value="0x93"/>
+                        <fixedvalue name="94" value="0x94"/>
+                        <fixedvalue name="95" value="0x95"/>
+                        <fixedvalue name="96" value="0x96"/>
+                        <fixedvalue name="97" value="0x97"/>
+                        <fixedvalue name="98" value="0x98"/>
+                        <fixedvalue name="99" value="0x99"/>
+                        <fixedvalue name="9a" value="0x9A"/>
+                        <fixedvalue name="9b" value="0x9B"/>
+                        <fixedvalue name="9c" value="0x9C"/>
+                        <fixedvalue name="9d" value="0x9D"/>
+                        <fixedvalue name="9e" value="0x9E"/>
+                        <fixedvalue name="9f" value="0x9F"/>
+                        <fixedvalue name="a0" value="0xA0"/>
+                        <fixedvalue name="a1" value="0xA1"/>
+                        <fixedvalue name="a2" value="0xA2"/>
+                        <fixedvalue name="a3" value="0xA3"/>
+                        <fixedvalue name="a4" value="0xA4"/>
+                        <fixedvalue name="a5" value="0xA5"/>
+                        <fixedvalue name="a6" value="0xA6"/>
+                        <fixedvalue name="a7" value="0xA7"/>
+                        <fixedvalue name="a8" value="0xA8"/>
+                        <fixedvalue name="a9" value="0xA9"/>
+                        <fixedvalue name="aa" value="0xAA"/>
+                        <fixedvalue name="ab" value="0xAB"/>
+                        <fixedvalue name="ac" value="0xAC"/>
+                        <fixedvalue name="ad" value="0xAD"/>
+                        <fixedvalue name="ae" value="0xAE"/>
+                        <fixedvalue name="af" value="0xAF"/>
+                        <fixedvalue name="b0" value="0xB0"/>
+                        <fixedvalue name="b1" value="0xB1"/>
+                        <fixedvalue name="b2" value="0xB2"/>
+                        <fixedvalue name="b3" value="0xB3"/>
+                        <fixedvalue name="b4" value="0xB4"/>
+                        <fixedvalue name="b5" value="0xB5"/>
+                        <fixedvalue name="b6" value="0xB6"/>
+                        <fixedvalue name="b7" value="0xB7"/>
+                        <fixedvalue name="b8" value="0xB8"/>
+                        <fixedvalue name="b9" value="0xB9"/>
+                        <fixedvalue name="ba" value="0xBA"/>
+                        <fixedvalue name="bb" value="0xBB"/>
+                        <fixedvalue name="bc" value="0xBC"/>
+                        <fixedvalue name="bd" value="0xBD"/>
+                        <fixedvalue name="be" value="0xBE"/>
+                        <fixedvalue name="bf" value="0xBF"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+        <structure name="4-byte_sequence-A" id="643" length="4" extends="id:600" consists-of="id:603" strokecolor="00FCFF" fillcolor="00FCFF">
+            <number name="Start byte" id="644" strokecolor="00FCFF" fillcolor="00FCFF" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="f0" value="0xF0"/>
+                </fixedvalues>
+            </number>
+            <structure name="Continuation" id="645" length="3" consists-of="id:603" strokecolor="9DF5FF" fillcolor="9DF5FF">
+                <number name="90-BF" mustmatch="yes" id="646" strokecolor="9DF5FF" fillcolor="9DF5FF" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="90" value="0x90"/>
+                        <fixedvalue name="91" value="0x91"/>
+                        <fixedvalue name="92" value="0x92"/>
+                        <fixedvalue name="93" value="0x93"/>
+                        <fixedvalue name="94" value="0x94"/>
+                        <fixedvalue name="95" value="0x95"/>
+                        <fixedvalue name="96" value="0x96"/>
+                        <fixedvalue name="97" value="0x97"/>
+                        <fixedvalue name="98" value="0x98"/>
+                        <fixedvalue name="99" value="0x99"/>
+                        <fixedvalue name="9a" value="0x9A"/>
+                        <fixedvalue name="9b" value="0x9B"/>
+                        <fixedvalue name="9c" value="0x9C"/>
+                        <fixedvalue name="9d" value="0x9D"/>
+                        <fixedvalue name="9e" value="0x9E"/>
+                        <fixedvalue name="9f" value="0x9F"/>
+                        <fixedvalue name="a0" value="0xA0"/>
+                        <fixedvalue name="a1" value="0xA1"/>
+                        <fixedvalue name="a2" value="0xA2"/>
+                        <fixedvalue name="a3" value="0xA3"/>
+                        <fixedvalue name="a4" value="0xA4"/>
+                        <fixedvalue name="a5" value="0xA5"/>
+                        <fixedvalue name="a6" value="0xA6"/>
+                        <fixedvalue name="a7" value="0xA7"/>
+                        <fixedvalue name="a8" value="0xA8"/>
+                        <fixedvalue name="a9" value="0xA9"/>
+                        <fixedvalue name="aa" value="0xAA"/>
+                        <fixedvalue name="ab" value="0xAB"/>
+                        <fixedvalue name="ac" value="0xAC"/>
+                        <fixedvalue name="ad" value="0xAD"/>
+                        <fixedvalue name="ae" value="0xAE"/>
+                        <fixedvalue name="af" value="0xAF"/>
+                        <fixedvalue name="b0" value="0xB0"/>
+                        <fixedvalue name="b1" value="0xB1"/>
+                        <fixedvalue name="b2" value="0xB2"/>
+                        <fixedvalue name="b3" value="0xB3"/>
+                        <fixedvalue name="b4" value="0xB4"/>
+                        <fixedvalue name="b5" value="0xB5"/>
+                        <fixedvalue name="b6" value="0xB6"/>
+                        <fixedvalue name="b7" value="0xB7"/>
+                        <fixedvalue name="b8" value="0xB8"/>
+                        <fixedvalue name="b9" value="0xB9"/>
+                        <fixedvalue name="ba" value="0xBA"/>
+                        <fixedvalue name="bb" value="0xBB"/>
+                        <fixedvalue name="bc" value="0xBC"/>
+                        <fixedvalue name="bd" value="0xBD"/>
+                        <fixedvalue name="be" value="0xBE"/>
+                        <fixedvalue name="bf" value="0xBF"/>
+                    </fixedvalues>
+                </number>
+                <number name="80-BF-1" mustmatch="yes" id="647" strokecolor="9DF5FF" fillcolor="9DF5FF" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="80" value="0x80"/>
+                        <fixedvalue name="81" value="0x81"/>
+                        <fixedvalue name="82" value="0x82"/>
+                        <fixedvalue name="83" value="0x83"/>
+                        <fixedvalue name="84" value="0x84"/>
+                        <fixedvalue name="85" value="0x85"/>
+                        <fixedvalue name="86" value="0x86"/>
+                        <fixedvalue name="87" value="0x87"/>
+                        <fixedvalue name="88" value="0x88"/>
+                        <fixedvalue name="89" value="0x89"/>
+                        <fixedvalue name="8a" value="0x8A"/>
+                        <fixedvalue name="8b" value="0x8B"/>
+                        <fixedvalue name="8c" value="0x8C"/>
+                        <fixedvalue name="8d" value="0x8D"/>
+                        <fixedvalue name="8e" value="0x8E"/>
+                        <fixedvalue name="8f" value="0x8F"/>
+                        <fixedvalue name="90" value="0x90"/>
+                        <fixedvalue name="91" value="0x91"/>
+                        <fixedvalue name="92" value="0x92"/>
+                        <fixedvalue name="93" value="0x93"/>
+                        <fixedvalue name="94" value="0x94"/>
+                        <fixedvalue name="95" value="0x95"/>
+                        <fixedvalue name="96" value="0x96"/>
+                        <fixedvalue name="97" value="0x97"/>
+                        <fixedvalue name="98" value="0x98"/>
+                        <fixedvalue name="99" value="0x99"/>
+                        <fixedvalue name="9a" value="0x9A"/>
+                        <fixedvalue name="9b" value="0x9B"/>
+                        <fixedvalue name="9c" value="0x9C"/>
+                        <fixedvalue name="9d" value="0x9D"/>
+                        <fixedvalue name="9e" value="0x9E"/>
+                        <fixedvalue name="9f" value="0x9F"/>
+                        <fixedvalue name="a0" value="0xA0"/>
+                        <fixedvalue name="a1" value="0xA1"/>
+                        <fixedvalue name="a2" value="0xA2"/>
+                        <fixedvalue name="a3" value="0xA3"/>
+                        <fixedvalue name="a4" value="0xA4"/>
+                        <fixedvalue name="a5" value="0xA5"/>
+                        <fixedvalue name="a6" value="0xA6"/>
+                        <fixedvalue name="a7" value="0xA7"/>
+                        <fixedvalue name="a8" value="0xA8"/>
+                        <fixedvalue name="a9" value="0xA9"/>
+                        <fixedvalue name="aa" value="0xAA"/>
+                        <fixedvalue name="ab" value="0xAB"/>
+                        <fixedvalue name="ac" value="0xAC"/>
+                        <fixedvalue name="ad" value="0xAD"/>
+                        <fixedvalue name="ae" value="0xAE"/>
+                        <fixedvalue name="af" value="0xAF"/>
+                        <fixedvalue name="b0" value="0xB0"/>
+                        <fixedvalue name="b1" value="0xB1"/>
+                        <fixedvalue name="b2" value="0xB2"/>
+                        <fixedvalue name="b3" value="0xB3"/>
+                        <fixedvalue name="b4" value="0xB4"/>
+                        <fixedvalue name="b5" value="0xB5"/>
+                        <fixedvalue name="b6" value="0xB6"/>
+                        <fixedvalue name="b7" value="0xB7"/>
+                        <fixedvalue name="b8" value="0xB8"/>
+                        <fixedvalue name="b9" value="0xB9"/>
+                        <fixedvalue name="ba" value="0xBA"/>
+                        <fixedvalue name="bb" value="0xBB"/>
+                        <fixedvalue name="bc" value="0xBC"/>
+                        <fixedvalue name="bd" value="0xBD"/>
+                        <fixedvalue name="be" value="0xBE"/>
+                        <fixedvalue name="bf" value="0xBF"/>
+                    </fixedvalues>
+                </number>
+                <number name="80-BF-2" mustmatch="yes" id="648" strokecolor="9DF5FF" fillcolor="9DF5FF" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="80" value="0x80"/>
+                        <fixedvalue name="81" value="0x81"/>
+                        <fixedvalue name="82" value="0x82"/>
+                        <fixedvalue name="83" value="0x83"/>
+                        <fixedvalue name="84" value="0x84"/>
+                        <fixedvalue name="85" value="0x85"/>
+                        <fixedvalue name="86" value="0x86"/>
+                        <fixedvalue name="87" value="0x87"/>
+                        <fixedvalue name="88" value="0x88"/>
+                        <fixedvalue name="89" value="0x89"/>
+                        <fixedvalue name="8a" value="0x8A"/>
+                        <fixedvalue name="8b" value="0x8B"/>
+                        <fixedvalue name="8c" value="0x8C"/>
+                        <fixedvalue name="8d" value="0x8D"/>
+                        <fixedvalue name="8e" value="0x8E"/>
+                        <fixedvalue name="8f" value="0x8F"/>
+                        <fixedvalue name="90" value="0x90"/>
+                        <fixedvalue name="91" value="0x91"/>
+                        <fixedvalue name="92" value="0x92"/>
+                        <fixedvalue name="93" value="0x93"/>
+                        <fixedvalue name="94" value="0x94"/>
+                        <fixedvalue name="95" value="0x95"/>
+                        <fixedvalue name="96" value="0x96"/>
+                        <fixedvalue name="97" value="0x97"/>
+                        <fixedvalue name="98" value="0x98"/>
+                        <fixedvalue name="99" value="0x99"/>
+                        <fixedvalue name="9a" value="0x9A"/>
+                        <fixedvalue name="9b" value="0x9B"/>
+                        <fixedvalue name="9c" value="0x9C"/>
+                        <fixedvalue name="9d" value="0x9D"/>
+                        <fixedvalue name="9e" value="0x9E"/>
+                        <fixedvalue name="9f" value="0x9F"/>
+                        <fixedvalue name="a0" value="0xA0"/>
+                        <fixedvalue name="a1" value="0xA1"/>
+                        <fixedvalue name="a2" value="0xA2"/>
+                        <fixedvalue name="a3" value="0xA3"/>
+                        <fixedvalue name="a4" value="0xA4"/>
+                        <fixedvalue name="a5" value="0xA5"/>
+                        <fixedvalue name="a6" value="0xA6"/>
+                        <fixedvalue name="a7" value="0xA7"/>
+                        <fixedvalue name="a8" value="0xA8"/>
+                        <fixedvalue name="a9" value="0xA9"/>
+                        <fixedvalue name="aa" value="0xAA"/>
+                        <fixedvalue name="ab" value="0xAB"/>
+                        <fixedvalue name="ac" value="0xAC"/>
+                        <fixedvalue name="ad" value="0xAD"/>
+                        <fixedvalue name="ae" value="0xAE"/>
+                        <fixedvalue name="af" value="0xAF"/>
+                        <fixedvalue name="b0" value="0xB0"/>
+                        <fixedvalue name="b1" value="0xB1"/>
+                        <fixedvalue name="b2" value="0xB2"/>
+                        <fixedvalue name="b3" value="0xB3"/>
+                        <fixedvalue name="b4" value="0xB4"/>
+                        <fixedvalue name="b5" value="0xB5"/>
+                        <fixedvalue name="b6" value="0xB6"/>
+                        <fixedvalue name="b7" value="0xB7"/>
+                        <fixedvalue name="b8" value="0xB8"/>
+                        <fixedvalue name="b9" value="0xB9"/>
+                        <fixedvalue name="ba" value="0xBA"/>
+                        <fixedvalue name="bb" value="0xBB"/>
+                        <fixedvalue name="bc" value="0xBC"/>
+                        <fixedvalue name="bd" value="0xBD"/>
+                        <fixedvalue name="be" value="0xBE"/>
+                        <fixedvalue name="bf" value="0xBF"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+        <structure name="4-byte_sequence-B" id="651" length="4" extends="id:600" consists-of="id:603" strokecolor="9DF5FF" fillcolor="9DF5FF">
+            <number name="Start byte" id="652" strokecolor="00FCFF" fillcolor="00FCFF" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="f1" value="0xF1"/>
+                    <fixedvalue name="f2" value="0xF2"/>
+                    <fixedvalue name="f3" value="0xF3"/>
+                </fixedvalues>
+            </number>
+            <structure name="Continuation" id="653" length="3" consists-of="id:603" strokecolor="9DF5FF" fillcolor="9DF5FF">
+                <number name="80-BF-1" mustmatch="yes" id="654" strokecolor="9DF5FF" fillcolor="9DF5FF" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="80" value="0x80"/>
+                        <fixedvalue name="81" value="0x81"/>
+                        <fixedvalue name="82" value="0x82"/>
+                        <fixedvalue name="83" value="0x83"/>
+                        <fixedvalue name="84" value="0x84"/>
+                        <fixedvalue name="85" value="0x85"/>
+                        <fixedvalue name="86" value="0x86"/>
+                        <fixedvalue name="87" value="0x87"/>
+                        <fixedvalue name="88" value="0x88"/>
+                        <fixedvalue name="89" value="0x89"/>
+                        <fixedvalue name="8a" value="0x8A"/>
+                        <fixedvalue name="8b" value="0x8B"/>
+                        <fixedvalue name="8c" value="0x8C"/>
+                        <fixedvalue name="8d" value="0x8D"/>
+                        <fixedvalue name="8e" value="0x8E"/>
+                        <fixedvalue name="8f" value="0x8F"/>
+                        <fixedvalue name="90" value="0x90"/>
+                        <fixedvalue name="91" value="0x91"/>
+                        <fixedvalue name="92" value="0x92"/>
+                        <fixedvalue name="93" value="0x93"/>
+                        <fixedvalue name="94" value="0x94"/>
+                        <fixedvalue name="95" value="0x95"/>
+                        <fixedvalue name="96" value="0x96"/>
+                        <fixedvalue name="97" value="0x97"/>
+                        <fixedvalue name="98" value="0x98"/>
+                        <fixedvalue name="99" value="0x99"/>
+                        <fixedvalue name="9a" value="0x9A"/>
+                        <fixedvalue name="9b" value="0x9B"/>
+                        <fixedvalue name="9c" value="0x9C"/>
+                        <fixedvalue name="9d" value="0x9D"/>
+                        <fixedvalue name="9e" value="0x9E"/>
+                        <fixedvalue name="9f" value="0x9F"/>
+                        <fixedvalue name="a0" value="0xA0"/>
+                        <fixedvalue name="a1" value="0xA1"/>
+                        <fixedvalue name="a2" value="0xA2"/>
+                        <fixedvalue name="a3" value="0xA3"/>
+                        <fixedvalue name="a4" value="0xA4"/>
+                        <fixedvalue name="a5" value="0xA5"/>
+                        <fixedvalue name="a6" value="0xA6"/>
+                        <fixedvalue name="a7" value="0xA7"/>
+                        <fixedvalue name="a8" value="0xA8"/>
+                        <fixedvalue name="a9" value="0xA9"/>
+                        <fixedvalue name="aa" value="0xAA"/>
+                        <fixedvalue name="ab" value="0xAB"/>
+                        <fixedvalue name="ac" value="0xAC"/>
+                        <fixedvalue name="ad" value="0xAD"/>
+                        <fixedvalue name="ae" value="0xAE"/>
+                        <fixedvalue name="af" value="0xAF"/>
+                        <fixedvalue name="b0" value="0xB0"/>
+                        <fixedvalue name="b1" value="0xB1"/>
+                        <fixedvalue name="b2" value="0xB2"/>
+                        <fixedvalue name="b3" value="0xB3"/>
+                        <fixedvalue name="b4" value="0xB4"/>
+                        <fixedvalue name="b5" value="0xB5"/>
+                        <fixedvalue name="b6" value="0xB6"/>
+                        <fixedvalue name="b7" value="0xB7"/>
+                        <fixedvalue name="b8" value="0xB8"/>
+                        <fixedvalue name="b9" value="0xB9"/>
+                        <fixedvalue name="ba" value="0xBA"/>
+                        <fixedvalue name="bb" value="0xBB"/>
+                        <fixedvalue name="bc" value="0xBC"/>
+                        <fixedvalue name="bd" value="0xBD"/>
+                        <fixedvalue name="be" value="0xBE"/>
+                        <fixedvalue name="bf" value="0xBF"/>
+                    </fixedvalues>
+                </number>
+                <number name="80-BF-2" mustmatch="yes" id="655" strokecolor="9DF5FF" fillcolor="9DF5FF" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="80" value="0x80"/>
+                        <fixedvalue name="81" value="0x81"/>
+                        <fixedvalue name="82" value="0x82"/>
+                        <fixedvalue name="83" value="0x83"/>
+                        <fixedvalue name="84" value="0x84"/>
+                        <fixedvalue name="85" value="0x85"/>
+                        <fixedvalue name="86" value="0x86"/>
+                        <fixedvalue name="87" value="0x87"/>
+                        <fixedvalue name="88" value="0x88"/>
+                        <fixedvalue name="89" value="0x89"/>
+                        <fixedvalue name="8a" value="0x8A"/>
+                        <fixedvalue name="8b" value="0x8B"/>
+                        <fixedvalue name="8c" value="0x8C"/>
+                        <fixedvalue name="8d" value="0x8D"/>
+                        <fixedvalue name="8e" value="0x8E"/>
+                        <fixedvalue name="8f" value="0x8F"/>
+                        <fixedvalue name="90" value="0x90"/>
+                        <fixedvalue name="91" value="0x91"/>
+                        <fixedvalue name="92" value="0x92"/>
+                        <fixedvalue name="93" value="0x93"/>
+                        <fixedvalue name="94" value="0x94"/>
+                        <fixedvalue name="95" value="0x95"/>
+                        <fixedvalue name="96" value="0x96"/>
+                        <fixedvalue name="97" value="0x97"/>
+                        <fixedvalue name="98" value="0x98"/>
+                        <fixedvalue name="99" value="0x99"/>
+                        <fixedvalue name="9a" value="0x9A"/>
+                        <fixedvalue name="9b" value="0x9B"/>
+                        <fixedvalue name="9c" value="0x9C"/>
+                        <fixedvalue name="9d" value="0x9D"/>
+                        <fixedvalue name="9e" value="0x9E"/>
+                        <fixedvalue name="9f" value="0x9F"/>
+                        <fixedvalue name="a0" value="0xA0"/>
+                        <fixedvalue name="a1" value="0xA1"/>
+                        <fixedvalue name="a2" value="0xA2"/>
+                        <fixedvalue name="a3" value="0xA3"/>
+                        <fixedvalue name="a4" value="0xA4"/>
+                        <fixedvalue name="a5" value="0xA5"/>
+                        <fixedvalue name="a6" value="0xA6"/>
+                        <fixedvalue name="a7" value="0xA7"/>
+                        <fixedvalue name="a8" value="0xA8"/>
+                        <fixedvalue name="a9" value="0xA9"/>
+                        <fixedvalue name="aa" value="0xAA"/>
+                        <fixedvalue name="ab" value="0xAB"/>
+                        <fixedvalue name="ac" value="0xAC"/>
+                        <fixedvalue name="ad" value="0xAD"/>
+                        <fixedvalue name="ae" value="0xAE"/>
+                        <fixedvalue name="af" value="0xAF"/>
+                        <fixedvalue name="b0" value="0xB0"/>
+                        <fixedvalue name="b1" value="0xB1"/>
+                        <fixedvalue name="b2" value="0xB2"/>
+                        <fixedvalue name="b3" value="0xB3"/>
+                        <fixedvalue name="b4" value="0xB4"/>
+                        <fixedvalue name="b5" value="0xB5"/>
+                        <fixedvalue name="b6" value="0xB6"/>
+                        <fixedvalue name="b7" value="0xB7"/>
+                        <fixedvalue name="b8" value="0xB8"/>
+                        <fixedvalue name="b9" value="0xB9"/>
+                        <fixedvalue name="ba" value="0xBA"/>
+                        <fixedvalue name="bb" value="0xBB"/>
+                        <fixedvalue name="bc" value="0xBC"/>
+                        <fixedvalue name="bd" value="0xBD"/>
+                        <fixedvalue name="be" value="0xBE"/>
+                        <fixedvalue name="bf" value="0xBF"/>
+                    </fixedvalues>
+                </number>
+                <number name="80-BF-3" mustmatch="yes" id="656" strokecolor="9DF5FF" fillcolor="9DF5FF" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="80" value="0x80"/>
+                        <fixedvalue name="81" value="0x81"/>
+                        <fixedvalue name="82" value="0x82"/>
+                        <fixedvalue name="83" value="0x83"/>
+                        <fixedvalue name="84" value="0x84"/>
+                        <fixedvalue name="85" value="0x85"/>
+                        <fixedvalue name="86" value="0x86"/>
+                        <fixedvalue name="87" value="0x87"/>
+                        <fixedvalue name="88" value="0x88"/>
+                        <fixedvalue name="89" value="0x89"/>
+                        <fixedvalue name="8a" value="0x8A"/>
+                        <fixedvalue name="8b" value="0x8B"/>
+                        <fixedvalue name="8c" value="0x8C"/>
+                        <fixedvalue name="8d" value="0x8D"/>
+                        <fixedvalue name="8e" value="0x8E"/>
+                        <fixedvalue name="8f" value="0x8F"/>
+                        <fixedvalue name="90" value="0x90"/>
+                        <fixedvalue name="91" value="0x91"/>
+                        <fixedvalue name="92" value="0x92"/>
+                        <fixedvalue name="93" value="0x93"/>
+                        <fixedvalue name="94" value="0x94"/>
+                        <fixedvalue name="95" value="0x95"/>
+                        <fixedvalue name="96" value="0x96"/>
+                        <fixedvalue name="97" value="0x97"/>
+                        <fixedvalue name="98" value="0x98"/>
+                        <fixedvalue name="99" value="0x99"/>
+                        <fixedvalue name="9a" value="0x9A"/>
+                        <fixedvalue name="9b" value="0x9B"/>
+                        <fixedvalue name="9c" value="0x9C"/>
+                        <fixedvalue name="9d" value="0x9D"/>
+                        <fixedvalue name="9e" value="0x9E"/>
+                        <fixedvalue name="9f" value="0x9F"/>
+                        <fixedvalue name="a0" value="0xA0"/>
+                        <fixedvalue name="a1" value="0xA1"/>
+                        <fixedvalue name="a2" value="0xA2"/>
+                        <fixedvalue name="a3" value="0xA3"/>
+                        <fixedvalue name="a4" value="0xA4"/>
+                        <fixedvalue name="a5" value="0xA5"/>
+                        <fixedvalue name="a6" value="0xA6"/>
+                        <fixedvalue name="a7" value="0xA7"/>
+                        <fixedvalue name="a8" value="0xA8"/>
+                        <fixedvalue name="a9" value="0xA9"/>
+                        <fixedvalue name="aa" value="0xAA"/>
+                        <fixedvalue name="ab" value="0xAB"/>
+                        <fixedvalue name="ac" value="0xAC"/>
+                        <fixedvalue name="ad" value="0xAD"/>
+                        <fixedvalue name="ae" value="0xAE"/>
+                        <fixedvalue name="af" value="0xAF"/>
+                        <fixedvalue name="b0" value="0xB0"/>
+                        <fixedvalue name="b1" value="0xB1"/>
+                        <fixedvalue name="b2" value="0xB2"/>
+                        <fixedvalue name="b3" value="0xB3"/>
+                        <fixedvalue name="b4" value="0xB4"/>
+                        <fixedvalue name="b5" value="0xB5"/>
+                        <fixedvalue name="b6" value="0xB6"/>
+                        <fixedvalue name="b7" value="0xB7"/>
+                        <fixedvalue name="b8" value="0xB8"/>
+                        <fixedvalue name="b9" value="0xB9"/>
+                        <fixedvalue name="ba" value="0xBA"/>
+                        <fixedvalue name="bb" value="0xBB"/>
+                        <fixedvalue name="bc" value="0xBC"/>
+                        <fixedvalue name="bd" value="0xBD"/>
+                        <fixedvalue name="be" value="0xBE"/>
+                        <fixedvalue name="bf" value="0xBF"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+        <structure name="4-byte_sequence-C" id="659" extends="id:600" consists-of="id:603" strokecolor="9DF5FF" fillcolor="9DF5FF">
+            <number name="Start byte" id="660" strokecolor="00FCFF" fillcolor="00FCFF" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="f4" value="0xF4"/>
+                </fixedvalues>
+            </number>
+            <structure name="Continuation" id="661" length="0" consists-of="id:603" strokecolor="9DF5FF" fillcolor="9DF5FF">
+                <number name="80-8F" mustmatch="yes" id="662" strokecolor="9DF5FF" fillcolor="9DF5FF" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="80" value="0x80"/>
+                        <fixedvalue name="81" value="0x81"/>
+                        <fixedvalue name="82" value="0x82"/>
+                        <fixedvalue name="83" value="0x83"/>
+                        <fixedvalue name="84" value="0x84"/>
+                        <fixedvalue name="85" value="0x85"/>
+                        <fixedvalue name="86" value="0x86"/>
+                        <fixedvalue name="87" value="0x87"/>
+                        <fixedvalue name="88" value="0x88"/>
+                        <fixedvalue name="89" value="0x89"/>
+                        <fixedvalue name="8a" value="0x8A"/>
+                        <fixedvalue name="8b" value="0x8B"/>
+                        <fixedvalue name="8c" value="0x8C"/>
+                        <fixedvalue name="8d" value="0x8D"/>
+                        <fixedvalue name="8e" value="0x8E"/>
+                        <fixedvalue name="8f" value="0x8F"/>
+                    </fixedvalues>
+                </number>
+                <number name="80-BF-1" mustmatch="yes" id="663" strokecolor="9DF5FF" fillcolor="9DF5FF" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="80" value="0x80"/>
+                        <fixedvalue name="81" value="0x81"/>
+                        <fixedvalue name="82" value="0x82"/>
+                        <fixedvalue name="83" value="0x83"/>
+                        <fixedvalue name="84" value="0x84"/>
+                        <fixedvalue name="85" value="0x85"/>
+                        <fixedvalue name="86" value="0x86"/>
+                        <fixedvalue name="87" value="0x87"/>
+                        <fixedvalue name="88" value="0x88"/>
+                        <fixedvalue name="89" value="0x89"/>
+                        <fixedvalue name="8a" value="0x8A"/>
+                        <fixedvalue name="8b" value="0x8B"/>
+                        <fixedvalue name="8c" value="0x8C"/>
+                        <fixedvalue name="8d" value="0x8D"/>
+                        <fixedvalue name="8e" value="0x8E"/>
+                        <fixedvalue name="8f" value="0x8F"/>
+                        <fixedvalue name="90" value="0x90"/>
+                        <fixedvalue name="91" value="0x91"/>
+                        <fixedvalue name="92" value="0x92"/>
+                        <fixedvalue name="93" value="0x93"/>
+                        <fixedvalue name="94" value="0x94"/>
+                        <fixedvalue name="95" value="0x95"/>
+                        <fixedvalue name="96" value="0x96"/>
+                        <fixedvalue name="97" value="0x97"/>
+                        <fixedvalue name="98" value="0x98"/>
+                        <fixedvalue name="99" value="0x99"/>
+                        <fixedvalue name="9a" value="0x9A"/>
+                        <fixedvalue name="9b" value="0x9B"/>
+                        <fixedvalue name="9c" value="0x9C"/>
+                        <fixedvalue name="9d" value="0x9D"/>
+                        <fixedvalue name="9e" value="0x9E"/>
+                        <fixedvalue name="9f" value="0x9F"/>
+                        <fixedvalue name="a0" value="0xA0"/>
+                        <fixedvalue name="a1" value="0xA1"/>
+                        <fixedvalue name="a2" value="0xA2"/>
+                        <fixedvalue name="a3" value="0xA3"/>
+                        <fixedvalue name="a4" value="0xA4"/>
+                        <fixedvalue name="a5" value="0xA5"/>
+                        <fixedvalue name="a6" value="0xA6"/>
+                        <fixedvalue name="a7" value="0xA7"/>
+                        <fixedvalue name="a8" value="0xA8"/>
+                        <fixedvalue name="a9" value="0xA9"/>
+                        <fixedvalue name="aa" value="0xAA"/>
+                        <fixedvalue name="ab" value="0xAB"/>
+                        <fixedvalue name="ac" value="0xAC"/>
+                        <fixedvalue name="ad" value="0xAD"/>
+                        <fixedvalue name="ae" value="0xAE"/>
+                        <fixedvalue name="af" value="0xAF"/>
+                        <fixedvalue name="b0" value="0xB0"/>
+                        <fixedvalue name="b1" value="0xB1"/>
+                        <fixedvalue name="b2" value="0xB2"/>
+                        <fixedvalue name="b3" value="0xB3"/>
+                        <fixedvalue name="b4" value="0xB4"/>
+                        <fixedvalue name="b5" value="0xB5"/>
+                        <fixedvalue name="b6" value="0xB6"/>
+                        <fixedvalue name="b7" value="0xB7"/>
+                        <fixedvalue name="b8" value="0xB8"/>
+                        <fixedvalue name="b9" value="0xB9"/>
+                        <fixedvalue name="ba" value="0xBA"/>
+                        <fixedvalue name="bb" value="0xBB"/>
+                        <fixedvalue name="bc" value="0xBC"/>
+                        <fixedvalue name="bd" value="0xBD"/>
+                        <fixedvalue name="be" value="0xBE"/>
+                        <fixedvalue name="bf" value="0xBF"/>
+                    </fixedvalues>
+                </number>
+                <number name="80-BF-2" mustmatch="yes" id="664" strokecolor="9DF5FF" fillcolor="9DF5FF" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="80" value="0x80"/>
+                        <fixedvalue name="81" value="0x81"/>
+                        <fixedvalue name="82" value="0x82"/>
+                        <fixedvalue name="83" value="0x83"/>
+                        <fixedvalue name="84" value="0x84"/>
+                        <fixedvalue name="85" value="0x85"/>
+                        <fixedvalue name="86" value="0x86"/>
+                        <fixedvalue name="87" value="0x87"/>
+                        <fixedvalue name="88" value="0x88"/>
+                        <fixedvalue name="89" value="0x89"/>
+                        <fixedvalue name="8a" value="0x8A"/>
+                        <fixedvalue name="8b" value="0x8B"/>
+                        <fixedvalue name="8c" value="0x8C"/>
+                        <fixedvalue name="8d" value="0x8D"/>
+                        <fixedvalue name="8e" value="0x8E"/>
+                        <fixedvalue name="8f" value="0x8F"/>
+                        <fixedvalue name="90" value="0x90"/>
+                        <fixedvalue name="91" value="0x91"/>
+                        <fixedvalue name="92" value="0x92"/>
+                        <fixedvalue name="93" value="0x93"/>
+                        <fixedvalue name="94" value="0x94"/>
+                        <fixedvalue name="95" value="0x95"/>
+                        <fixedvalue name="96" value="0x96"/>
+                        <fixedvalue name="97" value="0x97"/>
+                        <fixedvalue name="98" value="0x98"/>
+                        <fixedvalue name="99" value="0x99"/>
+                        <fixedvalue name="9a" value="0x9A"/>
+                        <fixedvalue name="9b" value="0x9B"/>
+                        <fixedvalue name="9c" value="0x9C"/>
+                        <fixedvalue name="9d" value="0x9D"/>
+                        <fixedvalue name="9e" value="0x9E"/>
+                        <fixedvalue name="9f" value="0x9F"/>
+                        <fixedvalue name="a0" value="0xA0"/>
+                        <fixedvalue name="a1" value="0xA1"/>
+                        <fixedvalue name="a2" value="0xA2"/>
+                        <fixedvalue name="a3" value="0xA3"/>
+                        <fixedvalue name="a4" value="0xA4"/>
+                        <fixedvalue name="a5" value="0xA5"/>
+                        <fixedvalue name="a6" value="0xA6"/>
+                        <fixedvalue name="a7" value="0xA7"/>
+                        <fixedvalue name="a8" value="0xA8"/>
+                        <fixedvalue name="a9" value="0xA9"/>
+                        <fixedvalue name="aa" value="0xAA"/>
+                        <fixedvalue name="ab" value="0xAB"/>
+                        <fixedvalue name="ac" value="0xAC"/>
+                        <fixedvalue name="ad" value="0xAD"/>
+                        <fixedvalue name="ae" value="0xAE"/>
+                        <fixedvalue name="af" value="0xAF"/>
+                        <fixedvalue name="b0" value="0xB0"/>
+                        <fixedvalue name="b1" value="0xB1"/>
+                        <fixedvalue name="b2" value="0xB2"/>
+                        <fixedvalue name="b3" value="0xB3"/>
+                        <fixedvalue name="b4" value="0xB4"/>
+                        <fixedvalue name="b5" value="0xB5"/>
+                        <fixedvalue name="b6" value="0xB6"/>
+                        <fixedvalue name="b7" value="0xB7"/>
+                        <fixedvalue name="b8" value="0xB8"/>
+                        <fixedvalue name="b9" value="0xB9"/>
+                        <fixedvalue name="ba" value="0xBA"/>
+                        <fixedvalue name="bb" value="0xBB"/>
+                        <fixedvalue name="bc" value="0xBC"/>
+                        <fixedvalue name="bd" value="0xBD"/>
+                        <fixedvalue name="be" value="0xBE"/>
+                        <fixedvalue name="bf" value="0xBF"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+        <structure name="Invalid_start" id="667" extends="id:600" strokecolor="FF6D5E" fillcolor="FF6D5E">
+            <number name="Start byte" id="668" strokecolor="FF6D5E" fillcolor="FF6D5E" type="integer" length="1" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="80" value="0x80"/>
+                    <fixedvalue name="81" value="0x81"/>
+                    <fixedvalue name="82" value="0x82"/>
+                    <fixedvalue name="83" value="0x83"/>
+                    <fixedvalue name="84" value="0x84"/>
+                    <fixedvalue name="85" value="0x85"/>
+                    <fixedvalue name="86" value="0x86"/>
+                    <fixedvalue name="87" value="0x87"/>
+                    <fixedvalue name="88" value="0x88"/>
+                    <fixedvalue name="89" value="0x89"/>
+                    <fixedvalue name="8a" value="0x8A"/>
+                    <fixedvalue name="8b" value="0x8B"/>
+                    <fixedvalue name="8c" value="0x8C"/>
+                    <fixedvalue name="8d" value="0x8D"/>
+                    <fixedvalue name="8e" value="0x8E"/>
+                    <fixedvalue name="8f" value="0x8F"/>
+                    <fixedvalue name="90" value="0x90"/>
+                    <fixedvalue name="91" value="0x91"/>
+                    <fixedvalue name="92" value="0x92"/>
+                    <fixedvalue name="93" value="0x93"/>
+                    <fixedvalue name="94" value="0x94"/>
+                    <fixedvalue name="95" value="0x95"/>
+                    <fixedvalue name="96" value="0x96"/>
+                    <fixedvalue name="97" value="0x97"/>
+                    <fixedvalue name="98" value="0x98"/>
+                    <fixedvalue name="99" value="0x99"/>
+                    <fixedvalue name="9a" value="0x9A"/>
+                    <fixedvalue name="9b" value="0x9B"/>
+                    <fixedvalue name="9c" value="0x9C"/>
+                    <fixedvalue name="9d" value="0x9D"/>
+                    <fixedvalue name="9e" value="0x9E"/>
+                    <fixedvalue name="9f" value="0x9F"/>
+                    <fixedvalue name="a0" value="0xA0"/>
+                    <fixedvalue name="a1" value="0xA1"/>
+                    <fixedvalue name="a2" value="0xA2"/>
+                    <fixedvalue name="a3" value="0xA3"/>
+                    <fixedvalue name="a4" value="0xA4"/>
+                    <fixedvalue name="a5" value="0xA5"/>
+                    <fixedvalue name="a6" value="0xA6"/>
+                    <fixedvalue name="a7" value="0xA7"/>
+                    <fixedvalue name="a8" value="0xA8"/>
+                    <fixedvalue name="a9" value="0xA9"/>
+                    <fixedvalue name="aa" value="0xAA"/>
+                    <fixedvalue name="ab" value="0xAB"/>
+                    <fixedvalue name="ac" value="0xAC"/>
+                    <fixedvalue name="ad" value="0xAD"/>
+                    <fixedvalue name="ae" value="0xAE"/>
+                    <fixedvalue name="af" value="0xAF"/>
+                    <fixedvalue name="b0" value="0xB0"/>
+                    <fixedvalue name="b1" value="0xB1"/>
+                    <fixedvalue name="b2" value="0xB2"/>
+                    <fixedvalue name="b3" value="0xB3"/>
+                    <fixedvalue name="b4" value="0xB4"/>
+                    <fixedvalue name="b5" value="0xB5"/>
+                    <fixedvalue name="b6" value="0xB6"/>
+                    <fixedvalue name="b7" value="0xB7"/>
+                    <fixedvalue name="b8" value="0xB8"/>
+                    <fixedvalue name="b9" value="0xB9"/>
+                    <fixedvalue name="ba" value="0xBA"/>
+                    <fixedvalue name="bb" value="0xBB"/>
+                    <fixedvalue name="bc" value="0xBC"/>
+                    <fixedvalue name="bd" value="0xBD"/>
+                    <fixedvalue name="be" value="0xBE"/>
+                    <fixedvalue name="bf" value="0xBF"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="Illegal_byte" id="672" extends="id:600" strokecolor="FF6D5E" fillcolor="FF6D5E">
+            <number name="Start byte" id="673" strokecolor="FF6D5E" fillcolor="FF6D5E" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="c0" value="0xC0"/>
+                    <fixedvalue name="c1" value="0xC1"/>
+                    <fixedvalue name="f5" value="0xF5"/>
+                    <fixedvalue name="f6" value="0xF6"/>
+                    <fixedvalue name="f7" value="0xF7"/>
+                    <fixedvalue name="f8" value="0xF8"/>
+                    <fixedvalue name="f9" value="0xF9"/>
+                    <fixedvalue name="fa" value="0xFA"/>
+                    <fixedvalue name="fb" value="0xFB"/>
+                    <fixedvalue name="fc" value="0xFC"/>
+                    <fixedvalue name="fd" value="0xFD"/>
+                    <fixedvalue name="fe" value="0xFE"/>
+                    <fixedvalue name="ff" value="0xFF"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="Illegal" id="677" extends="id:600">
+            <number name="Start byte" mustmatch="no" id="678" strokecolor="FF6D5E" fillcolor="FF6D5E" type="integer">
+                <fixedvalues/>
+            </number>
+        </structure>
+        <structure name="UTF-8 File" id="597" length="0" repeatmin="0" repeatmax="-1" extends="id:598" consists-of="id:598" order="variable">
+            <structure name="Byte_sequences" id="682" repeatmin="0" repeatmax="-1" order="variable">
+                <structref name="Illegal_byte" id="683" repeatmin="0" repeatmax="-1" structure="id:672"/>
+                <structref name="Invalid_start" id="684" repeatmin="0" structure="id:667"/>
+                <structref name="NUL_sequence" id="685" strokecolor="FF3528" repeatmin="0" repeatmax="-1" structure="id:606"/>
+                <structref name="1-byte_sequence" id="686" repeatmin="0" repeatmax="-1" structure="id:611"/>
+                <structref name="2-byte_sequence" id="687" fillcolor="FFF6AC" repeatmin="0" repeatmax="-1" structure="id:616"/>
+                <structref name="3-byte_sequence-A" id="688" fillcolor="A6E5AA" repeatmin="0" repeatmax="-1" structure="id:622"/>
+                <structref name="3-byte_sequence-B" id="689" repeatmin="0" repeatmax="-1" structure="id:629"/>
+                <structref name="3-byte_sequence-C" id="690" repeatmin="0" repeatmax="-1" structure="id:636"/>
+                <structref name="4-byte_sequence-A" id="691" repeatmin="0" repeatmax="-1" structure="id:643"/>
+                <structref name="4-byte_sequence-B" id="692" repeatmin="0" repeatmax="-1" structure="id:651"/>
+                <structref name="4-byte_sequence-C" id="693" repeatmin="0" repeatmax="-1" structure="id:659"/>
+            </structure>
+            <structure name="Invalid_Continuation" id="695" length="0">
+                <structref name="Illegal" id="696" structure="id:677"/>
+            </structure>
+        </structure>
+        <structure name="ID: 21" id="603" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+    </grammar>
+</ufwb>

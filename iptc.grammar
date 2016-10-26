@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.7.1">
+    <grammar name="IPTC grammar" start="id:1020" author="Andreas Pehnack">
+        <description>Grammar for IPTC data. See http://www.iptc.org/std/IIM/4.1/specification/IIMV4.1.pdf</description>
+        <structure name="IPTC file" id="1020" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="DataSet" id="1027" structure="id:1024"/>
+        </structure>
+        <structure name="DataSet" id="1024" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="TagMarker" id="1026" type="integer" length="1"/>
+            <number name="RecordNumber" id="1029" type="integer" length="1"/>
+            <number name="DataSetNumber" id="1030" type="integer" length="1"/>
+            <number name="DataLength" id="1031" type="integer" length="2"/>
+            <structure name="DataField" id="1032"/>
+        </structure>
+    </grammar>
+</ufwb>

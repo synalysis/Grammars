@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.5.1">
+    <grammar name="TRD" start="id:42" author="Andreas Pehnack" email="andreas@synalysis.net" fileextension="trd">
+        <description>Grammar for TRD (RIFF) files</description>
+        <structure name="Defaults" id="43" alignment="2" repeatmin="0" encoding="ISO_8859-1:1987" endian="little" signed="no"/>
+        <structure name="Chunk" id="45" repeatmin="0" extends="id:43">
+            <string name="chunkID" id="46" fillcolor="FFD385" type="fixed-length" length="4"/>
+            <number name="chunkSize" id="47" fillcolor="58FEFE" type="integer" length="4"/>
+            <structure name="Contents" id="48" length="chunkSize" alignment="1"/>
+        </structure>
+        <structure name="TRD file" id="42" repeatmin="0" extends="id:43">
+            <structure name="RIFFHEADER" id="51" length="12" fillcolor="FFFEFF">
+                <string name="groupID" id="52" fillcolor="54FA8A" type="fixed-length" length="4" encoding="ISO_8859-1:1987"/>
+                <number name="size" id="53" fillcolor="58FEFE" type="integer" length="4"/>
+                <string name="riffType" id="54" fillcolor="7B82F6" type="fixed-length" length="4" encoding="ISO_8859-1:1987"/>
+            </structure>
+            <structure name="Chunks" id="56" alignment="2" repeatmin="0" repeatmax="-1" consists-of="id:45" order="variable">
+                <structref name="DEFN Chunk" id="58" repeatmin="0" structure="id:57"/>
+                <structref name="DEFS Chunk" id="60" repeatmin="0" structure="id:59"/>
+                <structref name="Unknown Chunk" id="61" repeatmin="0" structure="id:45"/>
+            </structure>
+        </structure>
+        <structure name="DEFN Chunk" id="57" repeatmin="0" extends="id:45">
+            <string name="chunkID" mustmatch="yes" id="64" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Definition" value="DEFN"/>
+                </fixedvalues>
+            </string>
+            <number name="chunkSize" id="65" type="integer"/>
+            <structure name="Contents" id="66">
+                <number name="Count" id="67" type="integer" length="4"/>
+            </structure>
+        </structure>
+        <structure name="DEFS Chunk" id="59" repeatmin="0" extends="id:45">
+            <string name="chunkID" mustmatch="yes" id="70" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Definitions" value="DEFS"/>
+                </fixedvalues>
+            </string>
+            <number name="chunkSize" id="71" type="integer"/>
+            <structure name="Contents" id="72" repeatmax="-1">
+                <structref name="DEF Chunk" id="74" repeatmax="-1" structure="id:73"/>
+            </structure>
+        </structure>
+        <structure name="DEF Chunk" id="73" repeatmin="0" extends="id:45">
+            <string name="chunkID" mustmatch="yes" id="77" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Definition" value="DEF "/>
+                </fixedvalues>
+            </string>
+            <number name="chunkSize" id="78" type="integer"/>
+            <structure name="Contents" id="79">
+                <structure name="Chunks" id="80" repeatmax="-1" order="variable">
+                    <structref name="DATA Chunk" id="82" repeatmin="0" structure="id:81"/>
+                    <structref name="INFO Chunk" id="84" repeatmin="0" structure="id:83"/>
+                    <structref name="DEF Chunk" id="85" repeatmin="0" structure="id:73"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="DATA Chunk" id="81" repeatmin="0" extends="id:45">
+            <string name="chunkID" mustmatch="yes" id="89" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Data" value="DATA"/>
+                </fixedvalues>
+            </string>
+            <number name="chunkSize" id="90" type="integer"/>
+            <structure name="Contents" id="91">
+                <structure name="Chunks" id="92" repeatmax="-1" order="variable">
+                    <structref name="PATT Chunk" id="94" repeatmin="0" structure="id:93"/>
+                    <structref name="STRN Chunk" id="96" repeatmin="0" structure="id:95"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="PATT Chunk" id="93" alignment="1" repeatmin="0" extends="id:45">
+            <string name="chunkID" mustmatch="yes" id="100" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Pattern" value="PATT"/>
+                </fixedvalues>
+            </string>
+            <number name="chunkSize" id="101" type="integer"/>
+            <structure name="Contents" id="102">
+                <number name="Count" id="103" type="integer" length="2"/>
+                <structure name="Pattern" id="104" repeat="id:103" repeatmax="-1">
+                    <number name="Pos" id="105" type="integer" length="2"/>
+                    <number name="Length" id="106" type="integer" length="2"/>
+                    <binary name="Pattern" id="107" fillcolor="D783FF" length="Length"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="STRN Chunk" id="95" alignment="1" repeatmin="0" extends="id:45">
+            <string name="chunkID" mustmatch="yes" id="111" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="STRN" value="STRN"/>
+                </fixedvalues>
+            </string>
+            <number name="chunkSize" id="112" type="integer"/>
+            <structure name="Contents" id="113">
+                <number name="StringCount" id="187" type="integer" length="2"/>
+                <structure name="Strings" id="188" repeat="id:187" repeatmax="StringCount">
+                    <number name="Length" id="190" type="integer" length="4"/>
+                    <string name="String" id="191" type="fixed-length" length="Length"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="INFO Chunk" id="83" repeatmin="0" extends="id:45">
+            <string name="chunkID" mustmatch="yes" id="116" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Info" value="INFO"/>
+                </fixedvalues>
+            </string>
+            <number name="chunkSize" id="117" type="integer"/>
+            <structure name="Contents" id="118">
+                <structure name="Elements" id="119" repeatmax="-1" order="variable">
+                    <structref name="TYPE Element" id="121" repeatmin="0" structure="id:120"/>
+                    <structref name="EXT Element" id="123" repeatmin="0" structure="id:122"/>
+                    <structref name="FNUM Element" id="125" repeatmin="0" structure="id:124"/>
+                    <structref name="HOME Element" id="127" repeatmin="0" structure="id:126"/>
+                    <structref name="MAIL Element" id="129" repeatmin="0" structure="id:128"/>
+                    <structref name="NAME Element" id="131" repeatmin="0" structure="id:130"/>
+                    <structref name="USER Element" id="133" repeatmin="0" structure="id:132"/>
+                    <structref name="REM Element" id="135" repeatmin="0" structure="id:134"/>
+                    <structref name="RURL Element" id="137" repeatmin="0" structure="id:136"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="StringElement" id="141" alignment="1" repeatmin="0" extends="id:43">
+            <string name="elementID" mustmatch="yes" id="142" type="fixed-length" length="4"/>
+            <number name="stringLength" id="143" type="integer" length="2"/>
+            <string name="String" id="144" type="fixed-length" length="stringLength"/>
+        </structure>
+        <structure name="NumberElement" id="146" alignment="1" repeatmin="0" extends="id:43">
+            <string name="elementID" mustmatch="yes" id="147" type="fixed-length" length="4"/>
+            <number name="numberLength" id="148" type="integer" length="2"/>
+            <number name="Number" id="149" type="integer" length="numberLength"/>
+        </structure>
+        <structure name="TYPE Element" id="120" repeatmin="0" extends="id:141">
+            <string name="elementID" id="151" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Type" value="TYPE"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="EXT Element" id="122" repeatmin="0" extends="id:141">
+            <string name="elementID" id="155" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Ext" value="EXT "/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="NAME Element" id="130" repeatmin="0" extends="id:141">
+            <string name="elementID" id="159" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Name" value="NAME"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="USER Element" id="132" repeatmin="0" extends="id:141">
+            <string name="elementID" id="163" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="User" value="USER"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="REM Element" id="134" repeatmin="0" extends="id:141">
+            <string name="elementID" id="167" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Remark" value="REM "/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="RURL Element" id="136" repeatmin="0" extends="id:141">
+            <string name="elementID" id="171" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="RefURL" value="RURL"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="FNUM Element" id="124" repeatmin="0" extends="id:146">
+            <string name="elementID" id="175" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="FileNum" value="FNUM"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="MAIL Element" id="128" repeatmin="0" extends="id:141">
+            <string name="elementID" id="179" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="E-Mail" value="MAIL"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="HOME Element" id="126" repeatmin="0" extends="id:141">
+            <string name="elementID" id="183" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Home" value="HOME"/>
+                </fixedvalues>
+            </string>
+        </structure>
+    </grammar>
+</ufwb>

@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9.1">
+    <grammar name="TIFF" start="id:1995" author="Andreas Pehnack" email="andreas@synalysis.net" fileextension="tif,tiff" uti="public.tiff">
+        <structure name="TIFF File" id="1995" extends="id:1996">
+            <structref name="Header" id="2213" structure="id:1998"/>
+        </structure>
+        <structure name="Defaults" id="1996" encoding="ISO_8859-1:1987" endian="dynamic" signed="no"/>
+        <structure name="Header" id="1998" extends="id:1996">
+            <number name="Eye catcher" mustmatch="yes" id="1999" type="integer" length="2" endian="big" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="LittleEndian" value="0x4949">
+                        <description>
+                        Little Endian marker
+                    </description>
+                    </fixedvalue>
+                    <fixedvalue name="BigEndian" value="0x4D4D">
+                        <description>
+                        Big Endian marker
+                    </description>
+                    </fixedvalue>
+                </fixedvalues>
+            </number>
+            <scriptelement name="SetDynamicEndianness" id="2000">
+                <script name="unnamed" type="Generic">
+                    <source language="Lua">results = currentMapper:getCurrentResults()
+lastResult = results:getLastResult()
+value = lastResult:getValue()
+num = value:getUnsignedNumber()
+
+if (num == 0x4949) then
+    currentMapper:setDynamicEndianness(synalysis.ENDIAN_LITTLE)
+else
+    currentMapper:setDynamicEndianness(synalysis.ENDIAN_BIG)
+end
+
+</source>
+                </script>
+            </scriptelement>
+            <number name="Identifier" mustmatch="yes" id="2001" type="integer" length="2" endian="dynamic">
+                <fixedvalues>
+                    <fixedvalue name="MeaningOfLife" value="42"/>
+                </fixedvalues>
+            </number>
+            <offset name="IFDOffset" id="2003" length="4" references="id:2002" follownullreference="no"/>
+        </structure>
+        <structure name="Value" id="2005" extends="id:1996">
+            <number name="FieldType" mustmatch="yes" id="2006" fillcolor="FFD385" type="integer" length="2"/>
+            <structure name="Values" id="2007" order="variable">
+                <structure name="Direct" id="2008" repeatmin="0">
+                    <number name="ValueCount" mustmatch="yes" id="2009" type="integer" length="4"/>
+                </structure>
+                <structure name="Indirect" id="2011" repeatmin="0">
+                    <number name="ValueCount" id="2012" type="integer" length="4"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="BYTE" id="2016" extends="id:2005">
+            <number name="FieldType" id="2017" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="BYTE" value="1"/>
+                </fixedvalues>
+            </number>
+            <structure name="Values" id="2018" order="variable">
+                <structure name="Direct" id="2019" repeatmin="0">
+                    <binary name="Value" id="2021" length="ValueCount"/>
+                </structure>
+                <structure name="Indirect" id="2023" repeatmin="0">
+                    <offset name="ByteArray" id="2026" length="4" references="id:2024" follownullreference="yes"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="ASCII" id="2030" extends="id:2005">
+            <number name="FieldType" id="2031" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="ASCII" value="2"/>
+                </fixedvalues>
+            </number>
+            <structure name="Values" id="2032" order="variable">
+                <structure name="Direct" id="2033" repeatmin="0">
+                    <number name="ValueCount" id="2034" type="integer">
+                        <fixedvalues>
+                            <fixedvalue name="One" value="1"/>
+                            <fixedvalue name="Two" value="2"/>
+                            <fixedvalue name="Three" value="3"/>
+                            <fixedvalue name="Four" value="4"/>
+                        </fixedvalues>
+                    </number>
+                    <string name="Value" id="2035" fillcolor="FEFB8C" type="fixed-length" length="ValueCount"/>
+                </structure>
+                <structure name="Indirect" id="2037" repeatmin="0">
+                    <offset name="StringValue" id="2040" length="4" references="id:2038" follownullreference="no"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="SHORT" id="2044" extends="id:2005">
+            <number name="FieldType" id="2045" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="SHORT" value="3"/>
+                </fixedvalues>
+            </number>
+            <structure name="Values" id="2046" order="variable">
+                <structure name="Direct" id="2047" repeatmin="0">
+                    <number name="ValueCount" id="2048" type="integer">
+                        <fixedvalues>
+                            <fixedvalue name="One" value="1"/>
+                            <fixedvalue name="Two" value="2"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="Value" id="2049" repeatmax="ValueCount" type="integer" length="2"/>
+                </structure>
+                <structure name="Indirect" id="2051" repeatmin="0">
+                    <offset name="ShortValueArray" id="2054" length="4" references="id:2052" follownullreference="yes"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="LONG" id="2058" extends="id:2005">
+            <number name="FieldType" id="2059" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="LONG" value="4"/>
+                </fixedvalues>
+            </number>
+            <structure name="Values" id="2060" order="variable">
+                <structure name="Direct" id="2061" repeatmin="0">
+                    <number name="ValueCount" id="2062" type="integer">
+                        <fixedvalues>
+                            <fixedvalue name="One" value="1"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="Value" id="2063" fillcolor="54FA8A" repeatmin="ValueCount" repeatmax="ValueCount" type="integer" length="4"/>
+                </structure>
+                <structure name="Indirect" id="2065" repeatmin="0">
+                    <offset name="LongValueArray" id="2068" length="4" references="id:2066" follownullreference="no"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="RATIONAL_VALUE" id="2072" repeatmax="ValueCount" extends="id:1996" encoding="ISO_8859-1:1987" signed="no">
+            <number name="Fraction" id="2073" fillcolor="7B82F6" type="integer" length="4"/>
+            <number name="Denominator" id="2074" fillcolor="FF84F7" type="integer" length="4"/>
+        </structure>
+        <structure name="RATIONAL" id="2076" extends="id:2005">
+            <number name="FieldType" id="2077" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="RATIONAL" value="5"/>
+                </fixedvalues>
+            </number>
+            <structure name="Values" id="2078" order="variable">
+                <structure name="Direct" id="2079" repeatmin="0">
+                    <number name="ValueCount" id="2080" type="integer">
+                        <fixedvalues>
+                            <fixedvalue name="Zero" value="0"/>
+                        </fixedvalues>
+                    </number>
+                    <structref name="RATIONAL_VALUE" id="2081" structure="id:2072"/>
+                </structure>
+                <structure name="Indirect" id="2083" repeatmin="0">
+                    <offset name="RATIONAL_VALUE" id="2085" fillcolor="FF9130" length="4" references="id:2072" follownullreference="no"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="SBYTE" id="2089" extends="id:2005">
+            <number name="FieldType" id="2090" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="SBYTE" value="6"/>
+                </fixedvalues>
+            </number>
+            <structure name="Values" id="2091" order="variable">
+                <structure name="Direct" id="2092" repeatmin="0">
+                    <number name="ValueCount" id="2093" type="integer">
+                        <fixedvalues>
+                            <fixedvalue name="One" value="1"/>
+                            <fixedvalue name="Two" value="2"/>
+                            <fixedvalue name="Three" value="3"/>
+                            <fixedvalue name="Four" value="4"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="Value" id="2094" repeatmax="ValueCount" type="integer" length="1" signed="yes"/>
+                </structure>
+                <structure name="Indirect" id="2096" repeatmin="0">
+                    <offset name="SignedByteArray" id="2099" length="4" references="id:2097" follownullreference="yes"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="UNDEFINED" id="2103" extends="id:2005">
+            <number name="FieldType" id="2104" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="UNDEFINED" value="7"/>
+                </fixedvalues>
+            </number>
+            <structure name="Values" id="2105" order="variable">
+                <structure name="Direct" id="2106" repeatmin="0">
+                    <number name="ValueCount" id="2107" type="integer">
+                        <fixedvalues>
+                            <fixedvalue name="One" value="1"/>
+                            <fixedvalue name="Two" value="2"/>
+                            <fixedvalue name="Three" value="3"/>
+                            <fixedvalue name="Four" value="4"/>
+                        </fixedvalues>
+                    </number>
+                    <binary name="Value" id="2108" length="ValueCount"/>
+                </structure>
+                <structure name="Indirect" id="2110" repeatmin="0">
+                    <offset name="UndefinedBlock" id="2113" length="4" references="id:2111" follownullreference="yes"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="SSHORT" id="2117" extends="id:2005">
+            <number name="FieldType" id="2118" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="SSHORT" value="8"/>
+                </fixedvalues>
+            </number>
+            <structure name="Values" id="2119" order="variable">
+                <structure name="Direct" id="2120" repeatmin="0">
+                    <number name="Value" id="2122" fillcolor="00F950" type="integer" length="2" signed="yes"/>
+                </structure>
+                <structure name="Indirect" id="2124" repeatmin="0">
+                    <offset name="SignedShortArray" id="2127" length="4" references="id:2125" follownullreference="yes"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="SLONG" id="2131" extends="id:2005">
+            <number name="FieldType" id="2132" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="SLONG" value="9"/>
+                </fixedvalues>
+            </number>
+            <structure name="Values" id="2133" order="variable">
+                <structure name="Direct" id="2134" repeatmin="0">
+                    <number name="ValueCount" id="2135" type="integer">
+                        <fixedvalues>
+                            <fixedvalue name="One" value="1"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="Value" id="2136" fillcolor="FF1713" type="integer" length="4" signed="yes"/>
+                </structure>
+                <structure name="Indirect" id="2138" repeatmin="0">
+                    <offset name="SignedLongArray" id="2141" length="1" references="id:2139" follownullreference="yes"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="SRATIONAL_VALUE" id="2145" repeatmax="ValueCount" extends="id:1996" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Fraction" id="2146" fillcolor="7B82F6" type="integer" length="4"/>
+            <number name="Denominator" id="2147" fillcolor="FF84F7" type="integer" length="4"/>
+        </structure>
+        <structure name="SRATIONAL" id="2149" extends="id:2005">
+            <number name="FieldType" id="2150" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="SRATIONAL" value="10"/>
+                </fixedvalues>
+            </number>
+            <structure name="Values" id="2151" order="variable">
+                <structure name="Direct" id="2152" repeatmin="0">
+                    <number name="ValueCount" id="2153" type="integer">
+                        <fixedvalues>
+                            <fixedvalue name="Zero" value="0"/>
+                        </fixedvalues>
+                    </number>
+                    <structref name="SRATIONAL_VALUE" id="2154" structure="id:2145"/>
+                </structure>
+                <structure name="Indirect" id="2156" repeatmin="0">
+                    <offset name="SRATIONAL_VALUE" id="2158" length="4" references="id:2145" follownullreference="yes"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="FLOAT" id="2162" extends="id:2005">
+            <number name="FieldType" id="2163" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="FLOAT" value="11"/>
+                </fixedvalues>
+            </number>
+            <structure name="Values" id="2164" order="variable">
+                <structure name="Direct" id="2165" repeatmin="0">
+                    <number name="Value" id="2167" type="float" length="4"/>
+                </structure>
+                <structure name="Indirect" id="2169" repeatmin="0">
+                    <offset name="FloatArray" id="2172" length="4" references="id:2170" follownullreference="yes"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="DOUBLE" id="2176" extends="id:2005">
+            <number name="FieldType" id="2177" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="DOUBLE" value="12"/>
+                </fixedvalues>
+            </number>
+            <structure name="Values" id="2178" order="variable">
+                <structure name="Direct" id="2179" repeatmin="0">
+                    <number name="ValueCount" id="2180" type="integer">
+                        <fixedvalues>
+                            <fixedvalue name="Zero" value="0"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="Value" id="2181" type="float" length="8"/>
+                </structure>
+                <structure name="Indirect" id="2183" repeatmin="0">
+                    <offset name="DoubleArray" id="2186" length="4" references="id:2184" follownullreference="yes"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="UNKNOWN" id="2235" extends="id:2005">
+            <number name="FieldType" id="2237" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Type" value="13"/>
+                </fixedvalues>
+            </number>
+            <structure name="Values" id="2238" order="variable">
+                <structure name="Direct" id="2239" repeatmin="0">
+                    <number name="Value" id="2247" type="integer" length="4"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="IFD Entry" id="2190" length="12" extends="id:1996">
+            <number name="Tag" id="2191" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="NewSubfileType" value="254"/>
+                    <fixedvalue name="SubfileType" value="255"/>
+                    <fixedvalue name="ImageWidth" value="256"/>
+                    <fixedvalue name="ImageLength" value="257"/>
+                    <fixedvalue name="BitsPerSample" value="258"/>
+                    <fixedvalue name="Compression" value="259"/>
+                    <fixedvalue name="PhotometricInterpretation" value="262"/>
+                    <fixedvalue name="Threshholding" value="263"/>
+                    <fixedvalue name="CellWidth" value="264"/>
+                    <fixedvalue name="CellLength" value="265"/>
+                    <fixedvalue name="FillOrder" value="266"/>
+                    <fixedvalue name="DocumentName" value="269"/>
+                    <fixedvalue name="ImageDescription" value="270"/>
+                    <fixedvalue name="Make" value="271"/>
+                    <fixedvalue name="Model" value="272"/>
+                    <fixedvalue name="StripOffsets" value="273"/>
+                    <fixedvalue name="Orientation" value="274"/>
+                    <fixedvalue name="SamplesPerPixel" value="277"/>
+                    <fixedvalue name="RowsPerStrip" value="278"/>
+                    <fixedvalue name="StripByteCounts" value="279"/>
+                    <fixedvalue name="MinSampleValue" value="280"/>
+                    <fixedvalue name="MaxSampleValue" value="281"/>
+                    <fixedvalue name="XResolution" value="282"/>
+                    <fixedvalue name="YResolution" value="283"/>
+                    <fixedvalue name="PlanarConfiguration" value="284"/>
+                    <fixedvalue name="PageName" value="285"/>
+                    <fixedvalue name="XPosition" value="286"/>
+                    <fixedvalue name="YPosition" value="287"/>
+                    <fixedvalue name="FreeOffsets" value="288"/>
+                    <fixedvalue name="FreeByteCounts" value="289"/>
+                    <fixedvalue name="GrayResponseUnit" value="290"/>
+                    <fixedvalue name="GrayResponseCurve" value="291"/>
+                    <fixedvalue name="T4Options" value="292"/>
+                    <fixedvalue name="T6Options" value="293"/>
+                    <fixedvalue name="ResolutionUnit" value="296"/>
+                    <fixedvalue name="PageNumber" value="297"/>
+                    <fixedvalue name="TransferFunction" value="301"/>
+                    <fixedvalue name="Software" value="305"/>
+                    <fixedvalue name="DateTime" value="306"/>
+                    <fixedvalue name="Artist" value="315"/>
+                    <fixedvalue name="HostComputer" value="316"/>
+                    <fixedvalue name="Predictor" value="317"/>
+                    <fixedvalue name="WhitePoint" value="318"/>
+                    <fixedvalue name="PrimaryChromaticities" value="319"/>
+                    <fixedvalue name="ColorMap" value="320"/>
+                    <fixedvalue name="HalftoneHints" value="321"/>
+                    <fixedvalue name="TileWidth" value="322"/>
+                    <fixedvalue name="TileLength" value="323"/>
+                    <fixedvalue name="TileOffsets" value="324"/>
+                    <fixedvalue name="TileByteCounts" value="325"/>
+                    <fixedvalue name="InkSet" value="332"/>
+                    <fixedvalue name="InkNames" value="333"/>
+                    <fixedvalue name="NumberOfInks" value="334"/>
+                    <fixedvalue name="DotRange" value="336"/>
+                    <fixedvalue name="TargetPrinter" value="337"/>
+                    <fixedvalue name="ExtraSamples" value="338"/>
+                    <fixedvalue name="SampleFormat" value="339"/>
+                    <fixedvalue name="SMinSampleValue" value="340"/>
+                    <fixedvalue name="SMaxSampleValue" value="341"/>
+                    <fixedvalue name="TransferRange" value="342"/>
+                    <fixedvalue name="JPEGProc" value="512"/>
+                    <fixedvalue name="JPEGInterchangeFormat" value="513"/>
+                    <fixedvalue name="JPEGInterchangeFormatLength" value="514"/>
+                    <fixedvalue name="JPEGRestartInterval" value="515"/>
+                    <fixedvalue name="JPEGLosslessPredictors" value="517"/>
+                    <fixedvalue name="JPEGPointTransforms" value="518"/>
+                    <fixedvalue name="JPEGQTables" value="519"/>
+                    <fixedvalue name="JPEGDCTables" value="520"/>
+                    <fixedvalue name="JPEGACTables" value="521"/>
+                    <fixedvalue name="YCbCrCoefficients" value="529"/>
+                    <fixedvalue name="YCbCrSubSampling" value="530"/>
+                    <fixedvalue name="YCbCrPositioning" value="531"/>
+                    <fixedvalue name="ReferenceBlackWhite" value="532"/>
+                    <fixedvalue name="Copyright" value="33432"/>
+                    <fixedvalue name="ICC Profile" value="34675"/>
+                    <fixedvalue name="Exif" value="34665"/>
+                    <fixedvalue name="GPS" value="34853"/>
+                    <fixedvalue name="Interoperability" value="40965"/>
+                    <fixedvalue name="XMP Meta Data" value="700"/>
+                </fixedvalues>
+            </number>
+            <structure name="Values" id="2192" order="variable">
+                <structref name="BYTE" id="2193" repeatmin="0" structure="id:2016"/>
+                <structref name="ASCII" id="2194" repeatmin="0" structure="id:2030"/>
+                <structref name="SHORT" id="2195" repeatmin="0" structure="id:2044"/>
+                <structref name="LONG" id="2196" repeatmin="0" structure="id:2058"/>
+                <structref name="RATIONAL" id="2197" repeatmin="0" structure="id:2076"/>
+                <structref name="SBYTE" id="2198" repeatmin="0" structure="id:2089"/>
+                <structref name="UNDEFINED" id="2199" repeatmin="0" structure="id:2103"/>
+                <structref name="SSHORT" id="2200" repeatmin="0" structure="id:2117"/>
+                <structref name="SLONG" id="2201" repeatmin="0" structure="id:2131"/>
+                <structref name="SRATIONAL" id="2202" repeatmin="0" structure="id:2149"/>
+                <structref name="FLOAT" id="2203" repeatmin="0" structure="id:2162"/>
+                <structref name="DOUBLE" id="2204" repeatmin="0" structure="id:2176"/>
+                <structref name="UNKNOWN" id="2246" repeatmin="0" structure="id:2235"/>
+            </structure>
+        </structure>
+        <structure name="IFD" id="2002" extends="id:1996">
+            <number name="EntryCount" id="2207" type="integer" length="2"/>
+            <structure name="Entries" id="2208" repeat="id:2207" repeatmax="-1">
+                <structref name="IFD Entry" id="2209" structure="id:2190"/>
+            </structure>
+            <offset name="IFDOffset" id="2211" length="4" references="id:2002" follownullreference="no"/>
+        </structure>
+        <structure name="ShortValueArray" id="2052" extends="id:1996">
+            <number name="Value" id="2215" fillcolor="54FA8A" repeatmax="ValueCount" type="integer" length="2" endian="little"/>
+        </structure>
+        <structure name="LongValueArray" id="2066" extends="id:1996">
+            <number name="Value" id="2217" fillcolor="58FEFE" repeatmax="ValueCount" type="integer" length="4"/>
+        </structure>
+        <structure name="UndefinedBlock" id="2111" length="ValueCount" extends="id:1996" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Bytes" id="2219" length="remaining"/>
+        </structure>
+        <structure name="ByteArray" id="2024" length="ValueCount" extends="id:1996" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Value" id="2221" length="remaining"/>
+        </structure>
+        <structure name="StringValue" id="2038" length="ValueCount" extends="id:1996" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="Value" id="2223" fillcolor="FEFB8C" type="zero-terminated"/>
+        </structure>
+        <structure name="SignedByteArray" id="2097" length="ValueCount" extends="id:1996" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Value" id="2225" repeatmax="ValueCount" type="integer" length="1" signed="yes"/>
+        </structure>
+        <structure name="SignedShortArray" id="2125" extends="id:1996" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Value" id="2227" fillcolor="00F950" repeatmax="ValueCount" type="integer" length="2" signed="yes"/>
+        </structure>
+        <structure name="SignedLongArray" id="2139" extends="id:1996" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Value" id="2229" fillcolor="FF1713" repeatmax="ValueCount" type="integer" length="4" signed="yes"/>
+        </structure>
+        <structure name="FloatArray" id="2170" extends="id:1996" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Value" id="2231" repeatmax="ValueCount" type="float" length="4"/>
+        </structure>
+        <structure name="DoubleArray" id="2184" extends="id:1996" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Value" id="2233" repeatmax="ValueCount" type="float" length="8"/>
+        </structure>
+    </grammar>
+</ufwb>

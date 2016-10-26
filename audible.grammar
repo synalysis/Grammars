@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.0.3.1">
+    <grammar name="Audible" start="AA file" author="Unknown User" fileextension="aa" uti="com.apple.itunes.audible">
+        <description>Grammar for AA files</description>
+        <structure name="Defaults" id="8322" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+        <structure name="UnknownChunk" id="8324" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Data" id="8325"/>
+        </structure>
+        <structure name="Textual Metadata" id="8327" length="this.Size" extends="Defaults" fillcolor="FFFEFF">
+            <number name="NumFields" id="8328" fillcolor="FDEE9A" type="integer" length="4"/>
+            <structure name="Field" id="8329" length="this.Size" repeat="id:8328" repeatmax="40">
+                <binary name="&lt;Binary Fill Bytes&gt;" id="8330" unused="yes" length="1"/>
+                <number name="FieldNameLength" id="8331" fillcolor="F97DFC" type="integer" length="4"/>
+                <number name="FieldValueLength" id="8332" fillcolor="F75589" type="integer" length="4"/>
+                <structure name="FieldNameWrapper" id="8333" length="prev.FieldNameLength" fillcolor="86E222">
+                    <string name="FieldName" id="8334" fillcolor="86E222" type="zero-terminated"/>
+                </structure>
+                <structure name="FieldValueWrapper" id="8336" length="prev.FieldValueLength" fillcolor="7C20FF">
+                    <string name="FieldValue" id="8337" fillcolor="7C20FF" type="zero-terminated"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="ChunkReference" id="8341" length="12" extends="Defaults">
+            <number name="Chunk Type" mustmatch="yes" id="8342" fillcolor="FDEAED" type="integer" length="4"/>
+            <offset name="Chunk Offset" id="8343" length="4" endian="big" references="UnknownChunk" referenced-size="id:8344"/>
+            <number name="Chunk Size" id="8344" fillcolor="EFE7FF" type="integer" length="4"/>
+        </structure>
+        <structure name="EntireFileChunkReference" id="8346" extends="Defaults">
+            <number name="Chunk Type" mustmatch="yes" id="8347" type="integer" length="4">
+                <fixedvalue name="EntireFile" value="0"/>
+            </number>
+            <number name="Chunk Starting Offset" id="8348" type="integer" length="4"/>
+            <number name="Chunk Size" id="8349" type="integer" length="4"/>
+        </structure>
+        <structure name="ChunkReference1" id="8351" extends="ChunkReference">
+            <number name="Chunk Type" id="8352" type="integer">
+                <fixedvalue name="Type1" value="1"/>
+            </number>
+            <offset name="Chunk Offset" id="8353" references="UnknownChunk" referenced-size="id:8354"/>
+            <number name="Chunk Size" id="8354" type="integer"/>
+        </structure>
+        <structure name="ChunkReferenceTextualMetadata" id="8356" extends="ChunkReference">
+            <number name="Chunk Type" id="8357" type="integer">
+                <fixedvalue name="Textual Metadata" value="2"/>
+            </number>
+            <offset name="Chunk Offset" id="8358" references="Textual Metadata" referenced-size="id:8359"/>
+            <number name="Chunk Size" id="8359" type="integer"/>
+        </structure>
+        <structure name="ChunkReference3" id="8361" extends="ChunkReference">
+            <number name="Chunk Type" id="8362" type="integer">
+                <fixedvalue name="Type3" value="3"/>
+            </number>
+            <offset name="Chunk Offset" id="8363" references="UnknownChunk" referenced-size="id:8364"/>
+            <number name="Chunk Size" id="8364" type="integer"/>
+        </structure>
+        <structure name="ChunkReference4" id="8366" extends="ChunkReference">
+            <number name="Chunk Type" id="8367" type="integer">
+                <fixedvalue name="Type4" value="4"/>
+            </number>
+            <offset name="Chunk Offset" id="8368" references="UnknownChunk" referenced-size="id:8369"/>
+            <number name="Chunk Size" id="8369" type="integer"/>
+        </structure>
+        <structure name="ChunkReference5" id="8371" extends="ChunkReference">
+            <number name="Chunk Type" id="8372" type="integer">
+                <fixedvalue name="Type5" value="5"/>
+            </number>
+            <offset name="Chunk Offset" id="8373" references="UnknownChunk" referenced-size="id:8374"/>
+            <number name="Chunk Size" id="8374" type="integer"/>
+        </structure>
+        <structure name="OffsetsTableReference" id="8376" extends="ChunkReference">
+            <number name="Chunk Type" id="8377" type="integer">
+                <fixedvalue name="OffsetsTable" value="6"/>
+            </number>
+            <offset name="Chunk Offset" id="8378" references="UnknownChunk" referenced-size="id:8379"/>
+            <number name="Chunk Size" id="8379" type="integer"/>
+        </structure>
+        <structure name="ChunkReference7" id="8381" extends="ChunkReference">
+            <number name="Chunk Type" id="8382" type="integer">
+                <fixedvalue name="Type7" value="7"/>
+            </number>
+            <offset name="Chunk Offset" id="8383" references="UnknownChunk" referenced-size="id:8384"/>
+            <number name="Chunk Size" id="8384" type="integer"/>
+        </structure>
+        <structure name="ChunkReference8" id="8386" extends="ChunkReference">
+            <number name="Chunk Type" id="8387" type="integer">
+                <fixedvalue name="Type8" value="8"/>
+            </number>
+            <offset name="Chunk Offset" id="8388" references="UnknownChunk" referenced-size="id:8389"/>
+            <number name="Chunk Size" id="8389" type="integer"/>
+        </structure>
+        <structure name="ChunkReference9" id="8391" extends="ChunkReference">
+            <number name="Chunk Type" id="8392" type="integer">
+                <fixedvalue name="Type9" value="9"/>
+            </number>
+            <offset name="Chunk Offset" id="8393" references="UnknownChunk" referenced-size="id:8394"/>
+            <number name="Chunk Size" id="8394" type="integer"/>
+        </structure>
+        <structure name="EncryptedAudioReference" id="8396" extends="ChunkReference">
+            <number name="Chunk Type" id="8397" type="integer">
+                <fixedvalue name="EncryptedAudio" value="10"/>
+            </number>
+            <offset name="Chunk Offset" id="8398" references="UnknownChunk" referenced-size="id:8399"/>
+            <number name="Chunk Size" id="8399" type="integer"/>
+        </structure>
+        <structure name="CoverImageReference" id="8401" extends="ChunkReference">
+            <number name="Chunk Type" id="8402" type="integer">
+                <fixedvalue name="CoverImage" value="11"/>
+            </number>
+            <offset name="Chunk Offset" id="8403" references="UnknownChunk" referenced-size="id:8404"/>
+            <number name="Chunk Size" id="8404" type="integer"/>
+        </structure>
+        <structure name="ChunkReferenceAny" id="8406" extends="ChunkReference">
+            <number name="Chunk Type" id="8407" type="integer"/>
+            <offset name="Chunk Offset" id="8408" references="UnknownChunk" referenced-size="id:8409"/>
+            <number name="Chunk Size" id="8409" type="integer"/>
+        </structure>
+        <structure name="AA file" id="8321" consists-of="ChunkReference" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="File Size" id="8411" fillcolor="E1FEB3" type="integer" length="4"/>
+            <binary name="Unknown1" id="8412" unused="yes" length="4"/>
+            <number name="Number Of Chunks" id="8413" fillcolor="FEFADC" type="integer" length="4"/>
+            <binary name="Unknown2" id="8414" unused="yes" length="4"/>
+            <structure name="ChunkReferences" id="8415" repeat="id:8413" repeatmax="99" order="variable">
+                <structref name="EntireFileChunkReference" id="8416" repeatmin="0"/>
+                <structref name="ChunkReference1" id="8417" repeatmin="0"/>
+                <structref name="ChunkReferenceTextualMetadata" id="8418" repeatmin="0"/>
+                <structref name="ChunkReference3" id="8419" repeatmin="0"/>
+                <structref name="ChunkReference4" id="8420" repeatmin="0"/>
+                <structref name="ChunkReference5" id="8421" repeatmin="0"/>
+                <structref name="OffsetsTableReference" id="8422" repeatmin="0"/>
+                <structref name="ChunkReference7" id="8423" repeatmin="0"/>
+                <structref name="ChunkReference8" id="8424" repeatmin="0"/>
+                <structref name="ChunkReference9" id="8425" repeatmin="0"/>
+                <structref name="EncryptedAudioReference" id="8426" repeatmin="0"/>
+                <structref name="CoverImageReference" id="8427" repeatmin="0"/>
+                <structref name="ChunkReferenceAny" id="8428" repeatmin="0"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

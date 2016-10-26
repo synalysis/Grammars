@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.7">
+    <grammar name="STereoLithography" start="id:5" author="Jonathan Wight" email="jwight@mac.com" uti="com.pleasantsoftware.uti.stl">
+        <description>Grammar for STL files</description>
+        <structure name="STL" id="5" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <description>STL (STereoLithography) files are used predominately as a file format for 3D printing.
+
+There are really two formats called STL - a binary format (that this grammar works with) and text based.
+
+http://en.wikipedia.org/wiki/STL_(file_format)</description>
+            <string name="Header" id="6" type="fixed-length" length="80"/>
+            <number name="TriangleCount" id="7" type="integer" length="4" minval="0"/>
+            <structure name="triangles" id="8">
+                <structref name="triangles" id="10" repeatmax="TriangleCount" structure="id:9"/>
+            </structure>
+            <structure name="vertex" id="12">
+                <number name="x" id="13" type="float" length="32" lengthunit="bit"/>
+                <number name="y" id="14" type="float" length="4"/>
+                <number name="z" id="15" type="float" length="4"/>
+            </structure>
+            <structure name="triangle" id="9">
+                <structref name="normal" id="17" fillcolor="D783FF" structure="id:12"/>
+                <structref name="vertex0" id="18" structure="id:12"/>
+                <structref name="vertex1" id="19" structure="id:12"/>
+                <structref name="vertex2" id="20" structure="id:12"/>
+                <number name="attribute_byte_count" mustmatch="yes" id="21" type="integer" length="2">
+                    <fixedvalues>
+                        <fixedvalue name="default" value="0"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

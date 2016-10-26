@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9.1">
+    <grammar name="Gradients grammar" start="id:544" author="Andreas Pehnack" email="andreas.pehnack@me.com" fileextension="grd">
+        <description>Grammar for Photoshop Gradients files</description>
+        <structure name="Gradients file" id="544" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MagicNumber" id="545" type="fixed-length" length="4" encoding="ISO_8859-1:1987"/>
+            <number name="Version" id="546" type="integer" length="2"/>
+            <number name="Unknown" id="547" type="integer" length="4"/>
+            <number name="ClassNameLength" id="548" type="integer" length="4"/>
+            <string name="ClassName" id="549" type="fixed-length" length="2 * ClassNameLength" encoding="ISO_8859-1:1987"/>
+            <structref name="List" id="551" structure="id:550"/>
+        </structure>
+        <structure name="RootNode" id="553" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="List" id="554" structure="id:550"/>
+        </structure>
+        <structure name="Object" id="556" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="NameLength" id="557" type="integer" length="4"/>
+            <string name="Name" id="558" type="fixed-length" length="if(NameLength,NameLength,4)" encoding="ISO_8859-1:1987"/>
+            <string name="Type" mustmatch="yes" id="559" type="fixed-length" length="4"/>
+        </structure>
+        <structure name="Class" id="561" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="ClassIdentifier" mustmatch="yes" id="562" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Objc" value="4F626A63"/>
+                </fixedvalues>
+            </binary>
+            <number name="ClassNameLength" id="563" type="integer" length="4"/>
+            <string name="ClassName" id="564" type="fixed-length" length="ClassNameLength * 2" encoding="UTF-16BE"/>
+            <structref name="List" id="565" structure="id:550"/>
+        </structure>
+        <structure name="List" id="550" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="ClassIdentifier" mustmatch="yes" id="567" length="4"/>
+            <string name="Type" id="568" type="fixed-length" length="4"/>
+            <number name="Count" id="569" type="integer" length="4"/>
+            <structref name="Objects" id="571" repeatmax="Count" structure="id:570"/>
+        </structure>
+        <structure name="KeyValueObject" id="573" extends="id:556"/>
+        <structure name="ClassObject" id="578" extends="id:573">
+            <string name="Type" id="581" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Objc" value="Objc"/>
+                </fixedvalues>
+            </string>
+            <number name="ClassNameLength" id="582" type="integer" length="4"/>
+            <string name="ClassName" id="583" type="fixed-length" length="ClassNameLength * 2" encoding="UTF-16BE"/>
+            <structref name="List" id="584" structure="id:550"/>
+        </structure>
+        <structure name="BoolObject" id="656" extends="id:573">
+            <string name="Type" id="660" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="bool" value="bool"/>
+                </fixedvalues>
+            </string>
+            <number name="Value" id="661" type="integer" length="1"/>
+        </structure>
+        <structure name="DoubleObject" id="587" extends="id:573">
+            <string name="Type" id="590" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="doub" value="doub"/>
+                </fixedvalues>
+            </string>
+            <number name="Value" id="591" type="float" length="8"/>
+        </structure>
+        <structure name="EnumObject" id="593" extends="id:573">
+            <string name="Type" id="596" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="enum" value="enum"/>
+                </fixedvalues>
+            </string>
+            <number name="KeyStringLength" id="597" type="integer" length="4"/>
+            <string name="KeyString" id="598" type="fixed-length" length="KeyStringLength * 2" encoding="UTF-16BE"/>
+            <string name="Key" id="599" type="fixed-length" length="4"/>
+            <number name="ValueStringLength" id="600" type="integer" length="4"/>
+            <string name="ValueString" id="601" type="fixed-length" length="ValueStringLength * 2" encoding="UTF-16BE"/>
+            <string name="Value" id="602" type="fixed-length" length="4"/>
+        </structure>
+        <structure name="ListObject" id="604" extends="id:573">
+            <string name="Type" id="607" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="VlLs" value="VlLs"/>
+                </fixedvalues>
+            </string>
+            <number name="Count" id="608" type="integer" length="4"/>
+            <structure name="ListEntries" id="663" repeat="id:608" repeatmax="Count" order="variable">
+                <structref name="Class" id="665" repeatmin="0" structure="id:561"/>
+                <structref name="LongValue" id="672" repeatmin="0" structure="id:666"/>
+            </structure>
+        </structure>
+        <structure name="ClassList" id="611" extends="id:604"/>
+        <structure name="LongObject" id="618" extends="id:573">
+            <string name="Type" id="621" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="long" value="long"/>
+                </fixedvalues>
+            </string>
+            <number name="Value" id="622" type="integer" length="4"/>
+        </structure>
+        <structure name="RawDataObject" id="624" extends="id:573">
+            <string name="Type" id="627" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="tdta" value="tdta"/>
+                </fixedvalues>
+            </string>
+            <number name="DataLength" id="628" type="integer" length="4"/>
+            <binary name="Data" id="629" length="DataLength"/>
+        </structure>
+        <structure name="UnitFloatObject" id="631" extends="id:573">
+            <string name="Type" id="634" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="UntF" value="UntF"/>
+                </fixedvalues>
+            </string>
+            <string name="Unit" id="635" type="fixed-length" length="4"/>
+            <number name="Value" id="636" type="float" length="8"/>
+        </structure>
+        <structure name="TextObject" id="638" extends="id:573">
+            <string name="Type" id="641" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="TEXT" value="TEXT"/>
+                </fixedvalues>
+            </string>
+            <number name="StringLength" id="642" type="integer" length="4"/>
+            <string name="StringName" id="643" type="fixed-length" length="StringLength * 2" encoding="UTF-16BE"/>
+        </structure>
+        <structure name="Objects" id="570" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <structref name="ClassObject" id="646" repeatmin="0" structure="id:578"/>
+            <structref name="BoolObject" id="662" repeatmin="0" structure="id:656"/>
+            <structref name="DoubleObject" id="647" repeatmin="0" structure="id:587"/>
+            <structref name="EnumObject" id="648" repeatmin="0" structure="id:593"/>
+            <structref name="ListObject" id="649" repeatmin="0" structure="id:604"/>
+            <structref name="LongObject" id="650" repeatmin="0" structure="id:618"/>
+            <structref name="RawDataObject" id="651" repeatmin="0" structure="id:624"/>
+            <structref name="UnitFloatObject" id="652" repeatmin="0" structure="id:631"/>
+            <structref name="TextObject" id="653" repeatmin="0" structure="id:638"/>
+            <structref name="Object" id="654" repeatmin="0" structure="id:556"/>
+        </structure>
+        <structure name="Value" id="668" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="Type" mustmatch="yes" id="670" type="fixed-length" length="4"/>
+        </structure>
+        <structure name="LongValue" id="666" extends="id:668">
+            <string name="Type" id="671" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="long" value="long"/>
+                </fixedvalues>
+            </string>
+            <number name="Value" id="673" type="integer" length="4"/>
+        </structure>
+    </grammar>
+</ufwb>

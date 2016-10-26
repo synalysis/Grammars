@@ -1,0 +1,2229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.8">
+    <grammar name="Pokémon ROM File" start="id:21" author="Kelvin Chung" fileextension="GBA">
+        <description>Grammar for GBA files</description>
+        <scripts>
+            <script name="String Pool String" type="DataType" id="2161">
+                <description>Strings used in the string pool datatype.  Like regular C strings, except the charset is different.</description>
+                <source language="Python"># String Pool String
+# Strings in Pokémon G3 are represented by a custom charset.  Characters are always one byte, with
+# 0xFF acting as the null bit.
+
+lookupTable = {
+	0 : &quot; &quot;,
+	0x1B: &quot;é&quot;,
+	0x2D: &quot;&amp;&quot;, 0x2E: &quot;+&quot;,
+	0x35: &quot;=&quot;, 0x36: &quot;;&quot;,
+	0x5B: &quot;%&quot;, 0x5C: &quot;(&quot;, 0x5D: &quot;)&quot;,
+	0x85: &quot;&lt;&quot;, 0x86: &quot;&gt;&quot;,
+	0xA1: &quot;0&quot;, 0xA2: &quot;1&quot;, 0xA3: &quot;2&quot;, 0xA4: &quot;3&quot;, 0xA5: &quot;4&quot;, 0xA6: &quot;5&quot;, 0xA7: &quot;6&quot;,
+	0xA8: &quot;7&quot;, 0xA9: &quot;8&quot;, 0xAA: &quot;9&quot;, 0xAB: &quot;!&quot;, 0xAC: &quot;?&quot;, 0xAD: &quot;.&quot;, 0xAE: &quot;-&quot;,
+	0xB5: &quot;♂&quot;, 0xB6: &quot;♀&quot;,
+	0xB8: &quot;,&quot;, 0xB9: &quot;*&quot;, 0xBA: &quot;/&quot;, 0xBB: &quot;A&quot;, 0xBC: &quot;B&quot;, 0xBD: &quot;C&quot;, 0xBE: &quot;D&quot;, 0xBF: &quot;E&quot;,
+	0xC0: &quot;F&quot;, 0xC1: &quot;G&quot;, 0xC2: &quot;H&quot;, 0xC3: &quot;I&quot;, 0xC4: &quot;J&quot;, 0xC5: &quot;K&quot;, 0xC6: &quot;L&quot;, 0xC7: &quot;M&quot;,
+	0xC8: &quot;N&quot;, 0xC9: &quot;O&quot;, 0xCA: &quot;P&quot;, 0xCB: &quot;Q&quot;, 0xCC: &quot;R&quot;, 0xCD: &quot;S&quot;, 0xCE: &quot;T&quot;, 0xCF: &quot;U&quot;,
+	0xD0: &quot;V&quot;, 0xD1: &quot;W&quot;, 0xD2: &quot;X&quot;, 0xD3: &quot;Y&quot;, 0xD4: &quot;Z&quot;, 0xD5: &quot;a&quot;, 0xD6: &quot;b&quot;, 0xD7: &quot;c&quot;,
+	0xD8: &quot;d&quot;, 0xD9: &quot;e&quot;, 0xDA: &quot;f&quot;, 0xDB: &quot;g&quot;, 0xDC: &quot;h&quot;, 0xDD: &quot;i&quot;, 0xDE: &quot;j&quot;, 0xDF: &quot;k&quot;,
+	0xE0: &quot;l&quot;, 0xE1: &quot;m&quot;, 0xE2: &quot;n&quot;, 0xE3: &quot;o&quot;, 0xE4: &quot;p&quot;, 0xE5: &quot;q&quot;, 0xE6: &quot;r&quot;, 0xE7: &quot;s&quot;,
+	0xE8: &quot;t&quot;, 0xE9: &quot;u&quot;, 0xEA: &quot;v&quot;, 0xEB: &quot;w&quot;, 0xEC: &quot;x&quot;, 0xED: &quot;y&quot;, 0xEE: &quot;z&quot;,
+	0xF0: &quot;:&quot;, 0xF1: &quot;Ä&quot;, 0xF2: &quot;Ö&quot;, 0xF3: &quot;Ü&quot;, 0xF4: &quot;ä&quot;, 0xF5: &quot;ö&quot;, 0xF6: &quot;ü&quot;,
+	0xFE: &quot;\n&quot;
+}
+
+def parseByteRange(element, byteView, bitPos, bitLength, results):
+	# this method parses data starting at bitPos, bitLength bits are remaining
+	&quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
+	
+	byteRead = 0
+	startPos = bytePos = bitPos / 8
+	parsedString = &quot;&quot;
+	
+	while (byteRead != 0xFF):
+		byteRead = byteView.readByte(bytePos)
+		bytePos += 1
+		if (byteRead != 0xFF):
+			if (byteRead in lookupTable):
+				parsedString += lookupTable[byteRead]
+			else:
+				parsedString += &quot;[&quot; + str(&quot;%X&quot; % byteRead) + &quot;]&quot;
+	
+	processedBytes = bytePos - startPos
+	
+	# create and set new value
+	value = Value()
+	value.setString(parsedString)
+	
+	# TODO iteration (ie. array) support is unimplemented at this time
+	results.addElement(element, processedBytes, 0, value)
+
+	# return number of processed bytes
+	return processedBytes
+
+def fillByteRange(value, byteArray, bitPos, bitLength):
+	# Not implemented in this time.  Not meant to be writeable at the present.
+	# this method translates edited values back to the file
+	&quot;&quot;&quot;fillByteRange method&quot;&quot;&quot;
+
+	# write an integer back to file
+	# byteArray.writeUnsignedIntBits(highWord, bitPos, bitLength, ENDIAN_BIG)
+</source>
+            </script>
+        </scripts>
+        <structure name="Pokémon ROM File" id="21" encoding="ISO_8859-1:1987" endian="little" signed="no" order="variable">
+            <description>2 Unused Experience Tables, identical to Medium Fast.</description>
+            <structref name="Pokémon Ruby ROM" id="23" repeatmin="0" structure="id:22"/>
+            <structref name="Pokémon Sapphire ROM" id="25" repeatmin="0" structure="id:24"/>
+            <structref name="Pokémon FireRed ROM" id="27" repeatmin="0" structure="id:26"/>
+            <structref name="Pokémon LeafGreen ROM" id="29" repeatmin="0" structure="id:28"/>
+            <structref name="Pokémon Emerald ROM" id="31" repeatmin="0" structure="id:30"/>
+        </structure>
+        <structure name="Pokémon Ruby ROM" id="22" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Ruby ROM Header" id="34" structure="id:33"/>
+            <structure name="&lt;new structure-0.1&gt;" id="35" length="1997748"/>
+            <structure name="Enemy Y Table" id="37" length="1760"/>
+            <structref name="Pokémon Front Sprite Table" id="40" structure="id:39"/>
+            <structure name="Player Y Table" id="41" length="1760"/>
+            <structref name="Pokémon Back Sprite Table" id="43" structure="id:39"/>
+            <structref name="Pokémon Normal Palette Table" id="45" structure="id:44"/>
+            <structref name="Pokémon Shiny Palette Table" id="46" structure="id:44"/>
+            <structure name="&lt;new structure-0.2&gt;" id="47" length="2528">
+                <structure name="&lt;new structure&gt;" id="48" length="1032"/>
+                <structref name="RS Trainer Sprite Table" id="51" structure="id:50"/>
+                <structref name="RS Trainer Palette Table" id="53" structure="id:52"/>
+                <structure name="&lt;new structure-1&gt;" id="54" length="72"/>
+                <structure name="&lt;new structure-2&gt;" id="56" length="36"/>
+                <structure name="&lt;new structure-3&gt;" id="58" length="12"/>
+                <structure name="&lt;unknown sprite table&gt;" id="60" length="24">
+                    <structref name="Sprite Table Entry" id="62" repeatmin="3" repeatmax="3" structure="id:61"/>
+                </structure>
+                <structure name="&lt;unknown palette table&gt;" id="64" length="24">
+                    <structref name="Palette Table Entry" id="66" repeatmin="3" repeatmax="3" structure="id:65"/>
+                </structure>
+            </structure>
+            <structref name="Enemy Altitude Table" id="70" structure="id:69"/>
+            <binary name="Trainer's Pokémon Data" id="71" length="13656"/>
+            <structref name="Trainer Class Names" id="73" structure="id:72"/>
+            <structref name="RS Trainer Data" id="75" structure="id:74"/>
+            <structref name="Pokémon Names" id="77" structure="id:76"/>
+            <structref name="Move Names" id="79" structure="id:78"/>
+            <structure name="&lt;new structure-0.3&gt;" id="80" length="505"/>
+            <structure name="Type Chart" id="82" length="336">
+                <structref name="Type Chart Entry" id="84" repeatmin="112" repeatmax="112" structure="id:83"/>
+            </structure>
+            <structref name="Type Names" id="87" structure="id:86"/>
+            <structure name="&lt;new structure-1.1&gt;" id="88" length="220" alignment="4"/>
+            <structref name="Ability Description String Pool" id="91" structure="id:90"/>
+            <structref name="Ability Descriptions" id="93" structure="id:92"/>
+            <structref name="Ability Names" id="95" structure="id:94"/>
+            <structure name="&lt;new structure-1.2&gt;" id="96" length="1824"/>
+            <structure name="Pickup List" id="98" length="40"/>
+            <structure name="&lt;new structure-2&gt;" id="100" length="934"/>
+            <structref name="Move Data" id="103" structure="id:102"/>
+            <structure name="&lt;new structure-3&gt;" id="104" length="16" alignment="4"/>
+            <structref name="Pokédex Indices" id="107" structure="id:106"/>
+            <structure name="&lt;new structure-4&gt;" id="108" length="610"/>
+            <structure name="&lt;new structure-4.1&gt;" id="110" length="520">
+                <number name="&lt;unknown pointers&gt;" id="111" repeatmin="130" repeatmax="130" type="integer" length="4" display="hex"/>
+            </structure>
+            <structure name="&lt;new structure-4.2&gt;" id="113" length="260"/>
+            <structref name="TM Compatibility Data" id="116" structure="id:115"/>
+            <structure name="&lt;new structure-5.1&gt;" id="117" length="424"/>
+            <structref name="Experience Tables" id="120" structure="id:119"/>
+            <structref name="Pokémon Base Stats" id="122" structure="id:121"/>
+            <binary name="Pokémon Move List Data Pool" id="123" length="8766"/>
+            <structref name="Pokémon Evolution Data" id="125" structure="id:124"/>
+            <structref name="Pokémon Move List" id="127" structure="id:126"/>
+            <structure name="&lt;new structure-5.2&gt;" id="128" length="1499852"/>
+            <structref name="TM List " id="131" structure="id:130"/>
+            <structure name="&lt;new structure-5.3&gt;" id="132" length="151496"/>
+            <binary name="Pokémon Location Data Pool" id="134" length="7956"/>
+            <structref name="RS Location Pokémon Data" id="136" structure="id:135"/>
+            <structure name="&lt;new structure-6.1&gt;" id="137" length="10769"/>
+            <binary name="Pokédex Description String Pool" id="139" length="70239"/>
+            <structref name="RSFRLG Pokédex Entries" id="141" structure="id:140"/>
+            <structure name="&lt;new structure-6.2&gt;" id="142" length="28252"/>
+            <structref name="Pokémon Icon Sprite Table" id="145" structure="id:144"/>
+            <structure name="Pokémon Icon Palette Table" id="146" length="440"/>
+            <structure name="&lt;new structure-6.3&gt;" id="148" length="200"/>
+            <structref name="Move Description String Pool" id="151" structure="id:150"/>
+            <structref name="Move Descriptions" id="153" structure="id:152"/>
+            <structref name="Nature Name String Pool" id="155" structure="id:154"/>
+            <structref name="Nature Names" id="157" structure="id:156"/>
+            <structure name="&lt;new structure-6.4&gt;" id="158" length="3508"/>
+            <structure name="Berry Graphics Data" id="160" length="348"/>
+            <structure name="&lt;new structure-7&gt;" id="162" length="176"/>
+            <binary name="Item Description String Pool" id="164" length="13628"/>
+            <structref name="Item Data" id="166" structure="id:165"/>
+            <structure name="&lt;new structure-8&gt;" id="167" length="680"/>
+            <structref name="Contest Trainer Data" id="170" structure="id:169"/>
+            <structure name="&lt;new structure-8.1&gt;" id="171" length="484"/>
+            <structref name="Contest Description String Pool" id="174" structure="id:173"/>
+            <structref name="Contest Description Strings" id="176" structure="id:175"/>
+            <structure name="&lt;new structure-9&gt;" id="177" length="6316"/>
+            <structref name="Berry Description String Pool" id="180" structure="id:179"/>
+            <structref name="Berry Data" id="182" structure="id:181"/>
+            <structure name="&lt;new structure-10&gt;" id="183" length="7700" alignment="4"/>
+            <structref name="Contest Move Data" id="186" structure="id:185"/>
+            <structref name="Contest Description Data" id="188" structure="id:187"/>
+            <structure name="&lt;new structure-11&gt;" id="189" length="48576" alignment="4"/>
+            <structref name="RS Easy Chat Data" id="192" structure="id:191"/>
+            <structure name="&lt;new structure-12&gt;" id="193" length="3800" alignment="4"/>
+            <structref name="RS Easy Chat Addendum" id="196" structure="id:195"/>
+            <structure name="&lt;new structure-13&gt;" id="197" length="143420"/>
+            <structref name="RS Battle Tower Trainer Data" id="200" structure="id:199"/>
+            <structref name="RS Battle Tower Held Items" id="202" structure="id:201"/>
+            <structref name="RS Battle Tower Pokémon Data" id="204" structure="id:203"/>
+        </structure>
+        <structure name="Pokémon Sapphire ROM" id="24" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Sapphire ROM Header" id="207" structure="id:206"/>
+            <structure name="&lt;new structure-0.1&gt;" id="208" length="1997636"/>
+            <structure name="Enemy Y Table" id="210" length="1760"/>
+            <structref name="Pokémon Front Sprite Table" id="212" structure="id:39"/>
+            <structure name="Player Y Table" id="213" length="1760"/>
+            <structref name="Pokémon Back Sprite Table" id="215" structure="id:39"/>
+            <structref name="Pokémon Normal Palette Table" id="216" structure="id:44"/>
+            <structref name="Pokémon Shiny Palette Table" id="217" structure="id:44"/>
+            <structure name="&lt;new structure-0.2&gt;" id="218" length="2528">
+                <structure name="&lt;new structure&gt;" id="219" length="1032" alignment="0"/>
+                <structref name="RS Trainer Sprite Table" id="221" structure="id:50"/>
+                <structref name="RS Trainer Palette Table" id="222" structure="id:52"/>
+            </structure>
+            <structref name="Pokémon Altitude Table" id="224" structure="id:69"/>
+            <binary name="Trainer's Pokémon Data" id="225" length="13656"/>
+            <structref name="Trainer Class Names" id="226" structure="id:72"/>
+            <structref name="RS Trainer Data" id="227" structure="id:74"/>
+            <structref name="Pokémon Names" id="228" structure="id:76"/>
+            <structref name="Move Names" id="229" structure="id:78"/>
+            <structure name="&lt;new structure-0.3&gt;" id="230" length="505"/>
+            <structure name="Type Chart" id="232">
+                <structref name="Type Chart Entry" id="233" repeatmin="112" repeatmax="112" structure="id:83"/>
+            </structure>
+            <structref name="Type Names" id="235" structure="id:86"/>
+            <structure name="&lt;new structure-1.1&gt;" id="236" length="220"/>
+            <structref name="Ability Description String Pool" id="238" structure="id:90"/>
+            <structref name="Ability Descriptions" id="239" structure="id:92"/>
+            <structref name="Ability Names" id="240" structure="id:94"/>
+            <structure name="&lt;new structure-1.2&gt;" id="241" length="1824"/>
+            <structure name="Pickup List" id="243" length="40"/>
+            <structure name="&lt;new structure-2&gt;" id="245" length="934"/>
+            <structref name="Move Data" id="247" structure="id:102"/>
+            <structure name="&lt;new structure-3&gt;" id="248" length="16" alignment="4"/>
+            <structref name="Pokédex Indices" id="250" structure="id:106"/>
+            <structure name="&lt;new structure-4&gt;" id="251" length="610"/>
+            <structure name="&lt;new structure-4.1&gt;" id="253" length="520" alignment="0">
+                <number name="&lt;unknown pointers&gt;" id="254" repeatmin="130" repeatmax="130" type="integer" length="4" display="hex"/>
+            </structure>
+            <structure name="&lt;new structure-4.2&gt;" id="256" length="260" alignment="0"/>
+            <structref name="TM Compatibility Data" id="258" structure="id:115"/>
+            <structure name="&lt;new structure-5.1&gt;" id="259" length="424"/>
+            <structref name="Experience Tables" id="261" structure="id:119"/>
+            <structref name="Pokémon Base Stats" id="262" structure="id:121"/>
+            <binary name="Pokémon Move List Data Pool" id="263" length="8766"/>
+            <structref name="Pokémon Evolution Data" id="264" structure="id:124"/>
+            <structref name="Pokémon Move List" id="265" structure="id:126"/>
+            <structure name="&lt;new structure-5.2&gt;" id="266" length="1499852"/>
+            <structref name="TM List " id="268" structure="id:130"/>
+            <structure name="&lt;new structure-5.3&gt;" id="269" length="151496"/>
+            <binary name="Pokémon Location Data Pool" id="271" length="7956"/>
+            <structref name="RS Location Pokémon Data" id="272" structure="id:135"/>
+            <structure name="&lt;new structure-6.1&gt;" id="273" length="12885"/>
+            <binary name="Pokédex Description String Pool" id="275" length="70767"/>
+            <structref name="RSFRLG Pokédex Entries" id="276" structure="id:140"/>
+            <structure name="&lt;new structure-6.2&gt;" id="277" length="28252"/>
+            <structref name="Pokémon Icon Sprite Table" id="279" structure="id:144"/>
+            <structure name="Pokémon Icon Palette Table" id="280" length="440"/>
+            <structure name="&lt;new structure-6.3&gt;" id="282" length="200"/>
+            <structref name="Move Description String Pool" id="284" structure="id:150"/>
+            <structref name="Move Descriptions" id="285" structure="id:152"/>
+            <structref name="Nature Name String Pool" id="286" structure="id:154"/>
+            <structref name="Nature Names" id="287" structure="id:156"/>
+            <structure name="&lt;new structure-6.4&gt;" id="288" length="3508"/>
+            <structure name="Berry Graphics Data" id="290" length="348"/>
+            <structure name="&lt;new structure-7&gt;" id="292" length="176"/>
+            <binary name="Item Description String Pool" id="294" length="13628"/>
+            <structref name="Item Data" id="295" structure="id:165"/>
+            <structure name="&lt;new structure-8&gt;" id="296" length="680"/>
+            <structref name="Contest Trainer Data" id="298" structure="id:169"/>
+            <structure name="&lt;new structure-8.1&gt;" id="299" length="484"/>
+            <structref name="Contest Description String Pool" id="301" structure="id:173"/>
+            <structref name="Contest Description Strings" id="302" structure="id:175"/>
+            <structure name="&lt;new structure-9&gt;" id="303" length="6316"/>
+            <structref name="Berry Description String Pool" id="305" structure="id:179"/>
+            <structref name="Berry Data" id="306" structure="id:181"/>
+            <structure name="&lt;new structure-10&gt;" id="307" length="7700" alignment="4"/>
+            <structref name="Contest Move Data" id="309" structure="id:185"/>
+            <structref name="Contest Description Data" id="310" structure="id:187"/>
+            <structure name="&lt;new structure-11&gt;" id="311" length="48576" alignment="4"/>
+            <structref name="RS Easy Chat Data" id="313" structure="id:191"/>
+            <structure name="&lt;new structure-12&gt;" id="314" length="3800" alignment="4"/>
+            <structref name="RS Easy Chat Addendum" id="316" structure="id:195"/>
+            <structure name="&lt;new structure-13&gt;" id="317" length="143420"/>
+            <structref name="RS Battle Tower Trainer Data" id="319" structure="id:199"/>
+            <structref name="RS Battle Tower Held Items" id="320" structure="id:201"/>
+            <structref name="RS Battle Tower Pokémon Data" id="321" structure="id:203"/>
+        </structure>
+        <structure name="Pokémon FireRed ROM" id="26" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="FireRed ROM Header" id="324" structure="id:323"/>
+            <structure name="&lt;new structure-0.1&gt;" id="325" length="2312460"/>
+            <structure name="Enemy Y Table" id="327" length="1760"/>
+            <structref name="Pokémon Front Sprite Table" id="329" structure="id:39"/>
+            <structure name="Player Y Table" id="330" length="1760"/>
+            <structref name="Pokémon Back Sprite Table" id="332" structure="id:39"/>
+            <structref name="Pokémon Normal Palette Table" id="333" structure="id:44"/>
+            <structref name="Pokémon Shiny Palette Table" id="334" structure="id:44"/>
+            <structure name="&lt;new structure-0.2&gt;" id="335" length="4472">
+                <structure name="&lt;new structure-1&gt;" id="336" length="592"/>
+                <structure name="&lt;new structure-2&gt;" id="338" length="592"/>
+                <structure name="&lt;new structure-3&gt;" id="340" length="592"/>
+                <structref name="FRLG Trainer Sprite Table" id="343" structure="id:342"/>
+                <structref name="FRLG Trainer Palette Table" id="345" structure="id:344"/>
+                <structure name="&lt;new structure&gt;" id="346" length="136"/>
+                <structure name="&lt;new structure-4&gt;" id="348" length="72"/>
+                <structure name="&lt;new structure-5&gt;" id="350" length="24"/>
+                <structure name="&lt;unknown sprite table&gt;" id="352" length="48">
+                    <description>pointers to uncompressed sprites?</description>
+                </structure>
+                <structure name="&lt;unknown palette table&gt;" id="354" length="48">
+                    <structref name="Palette Table Entry" id="355" repeatmin="6" repeatmax="6" structure="id:65"/>
+                </structure>
+            </structure>
+            <structref name="Enemy Altitude Table" id="358" structure="id:69"/>
+            <binary name="Trainer's Pokémon Data" id="359" length="17336"/>
+            <structref name="FRLG Trainer Class Names" id="361" structure="id:360"/>
+            <structref name="FRLG Trainer Data" id="363" structure="id:362"/>
+            <structref name="Pokémon Names" id="364" structure="id:76"/>
+            <structref name="Move Names" id="365" structure="id:78"/>
+            <structure name="&lt;new structure-0.3&gt;" id="366" length="28085"/>
+            <structure name="Type Chart" id="368" length="336">
+                <structref name="Type Chart Entry" id="369" repeatmin="112" repeatmax="112" structure="id:83"/>
+            </structure>
+            <structref name="Type Names" id="371" structure="id:86"/>
+            <structure name="&lt;new structure-1&gt;" id="372" length="420" alignment="4"/>
+            <structref name="Ability Description String Pool" id="374" structure="id:90"/>
+            <structref name="Ability Descriptions" id="375" structure="id:92"/>
+            <structref name="Ability Names" id="376" structure="id:94"/>
+            <structure name="&lt;new structure-2&gt;" id="377" length="2066"/>
+            <structure name="Pickup Table" id="380" length="64"/>
+            <structure name="&lt;new structure-2.1&gt;" id="2163" length="892"/>
+            <structref name="Move Data" id="383" structure="id:102"/>
+            <structure name="&lt;new structure-3&gt;" id="384" length="16" alignment="4"/>
+            <structref name="Pokédex Indices" id="386" structure="id:106"/>
+            <structure name="&lt;new structure-4&gt;" id="387" length="1390"/>
+            <structref name="TM Compatibility Data" id="389" structure="id:115"/>
+            <structure name="&lt;new structure-5&gt;" id="390" length="572"/>
+            <structref name="Experience Tables" id="392" structure="id:119"/>
+            <structref name="Pokémon Base Stats" id="393" structure="id:121"/>
+            <binary name="Pokémon Move List Data Pool" id="394" length="8894"/>
+            <structref name="Pokémon Evolution Data" id="395" structure="id:124"/>
+            <structref name="Pokémon Move List" id="396" structure="id:126"/>
+            <structure name="&lt;new structure-6&gt;" id="398" length="1480060">
+                <structure name="&lt;new structure&gt;" id="399" length="4328"/>
+                <structure name="Egg Moves" id="401" length="2276"/>
+            </structure>
+            <binary name="Pokémon Location Data Pool" id="404" length="10520"/>
+            <structref name="Location Pokémon Data" id="406" structure="id:405"/>
+            <structure name="&lt;new structure-7&gt;" id="2167" length="37016"/>
+            <structref name="Pokémon Icon Sprite Table" id="408" structure="id:144"/>
+            <structure name="Pokémon Icon Palette Table" id="409" length="440"/>
+            <structure name="&lt;new structure-7.1&gt;" id="411" length="604">
+                <structure name="&lt;Pokémon Icon Palette Table&gt;" id="412" length="48"/>
+            </structure>
+            <structref name="FRLG Bag Sprite Table" id="416" structure="id:415"/>
+            <structure name="&lt;new structure-8&gt;" id="417" length="128"/>
+            <binary name="Item Description String Pool" id="419" strokecolor="919191" fillcolor="919191" length="24924"/>
+            <structref name="Item Data" id="421" structure="id:420"/>
+            <structure name="&lt;new structure-9&gt;" id="422" length="100"/>
+            <structref name="Berry Description String Pool" id="424" structure="id:179"/>
+            <structref name="Berry Data" id="425" structure="id:181"/>
+            <structref name="Berry Data 2" id="427" structure="id:426"/>
+            <structure name="&lt;new structure-9.1&gt;" id="428" length="32844"/>
+            <structref name="Easy Chat Data" id="431" structure="id:430"/>
+            <structure name="&lt;new structure-9.2&gt;" id="432" length="4116"/>
+            <structref name="Easy Chat Category Strings" id="435" structure="id:434"/>
+            <structure name="&lt;new structure-9.3&gt;" id="437" length="3340"/>
+            <binary name="Location Name String Pool" id="439" length="1344"/>
+            <structure name="&lt;new structure-9.4&gt;" id="440" length="10864"/>
+            <structure name="Location Names" id="442">
+                <structref name="String Pool String Pointer" id="444" repeatmin="109" repeatmax="109" structure="id:443"/>
+            </structure>
+            <structure name="&lt;new structure-9.5&gt;" id="436" length="180606"/>
+            <structref name="Easy Chat Category String Pool" id="448" structure="id:447"/>
+            <structure name="&lt;new structure-10&gt;" id="450" length="137757"/>
+            <structure name="Footprint Data" id="452" length="0">
+                <number name="&lt;pointer to 32 bytes?&gt;" id="453" repeatmin="412" repeatmax="412" type="integer" length="4" display="hex"/>
+            </structure>
+            <structure name="&lt;new structure-10.0.1&gt;" id="449" length="19221"/>
+            <binary name="Pokédex Description String Pool" id="456" strokecolor="919191" fillcolor="919191" length="39963"/>
+            <structref name="RSFRLG Pokédex Entries" id="457" structure="id:140"/>
+            <structure name="&lt;new structure-10.1&gt;" id="458" length="1556"/>
+            <binary name="Pokédex Habitat Data Pool" id="460" length="772"/>
+            <binary name="Pokédex Habitat Page Data Pool" id="461" length="1144"/>
+            <structref name="Pokédex Habitat Data Index" id="463" structure="id:462"/>
+            <structure name="&lt;new structure-11&gt;" id="464" length="28364"/>
+            <structref name="FRLG Move Tutor Data" id="467" structure="id:466"/>
+            <structure name="&lt;new structure-12&gt;" id="468" length="40710"/>
+            <structref name="Nature Name String Pool" id="470" structure="id:154"/>
+            <structref name="Nature Names" id="471" structure="id:156"/>
+            <structure name="&lt;new structure-13&gt;" id="472" length="91120"/>
+            <structref name="Trainer Tower Item Index" id="476" structure="id:475"/>
+            <structure name="&lt;new structure-13.1&gt;" id="2165" length="2266"/>
+            <structref name="Trainer Tower Data" id="479" structure="id:478"/>
+            <structref name="Move Description String Pool" id="480" structure="id:150"/>
+            <structref name="Move Descriptions" id="481" structure="id:152"/>
+            <structure name="&lt;new structure-14&gt;" id="482" length="15524"/>
+        </structure>
+        <structure name="Pokémon LeafGreen ROM" id="28" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="LeafGreen ROM Header" id="486" structure="id:485"/>
+            <structure name="&lt;new structure-0.1&gt;" id="487" length="2312424"/>
+            <structure name="Enemy Y Table" id="489" length="1760"/>
+            <structref name="Pokémon Front Sprite Table" id="491" structure="id:39"/>
+            <structure name="Player Y Table" id="492" length="1760"/>
+            <structref name="Pokémon Back Sprite Table" id="494" structure="id:39"/>
+            <structref name="Pokémon Normal Palette Table" id="495" structure="id:44"/>
+            <structref name="Pokémon Shiny Palette Table" id="496" structure="id:44"/>
+            <structure name="&lt;new structure-0.2&gt;" id="497" length="4472">
+                <structure name="&lt;new structure&gt;" id="498" length="1776"/>
+                <structref name="FRLG Trainer Sprite Table" id="500" structure="id:342"/>
+                <structref name="FRLG Trainer Palette Table" id="501" structure="id:344"/>
+            </structure>
+            <structref name="Enemy Altitude Table" id="503" structure="id:69"/>
+            <binary name="Trainer's Pokémon Data" id="504" length="17336"/>
+            <structref name="FRLG Trainer Class Names" id="505" structure="id:360"/>
+            <structref name="FRLG Trainer Data" id="506" structure="id:362"/>
+            <structref name="Pokémon Names" id="507" structure="id:76"/>
+            <structref name="Move Names" id="508" structure="id:78"/>
+            <structure name="&lt;new structure-0.3&gt;" id="509" length="28085"/>
+            <structure name="Type Chart" id="511" length="336" alignment="0">
+                <structref name="Type Chart Entry" id="512" repeatmin="112" repeatmax="112" structure="id:83"/>
+            </structure>
+            <structref name="Type Names" id="514" structure="id:86"/>
+            <structure name="&lt;new structure-1&gt;" id="515" length="420" alignment="4"/>
+            <structref name="Ability Description String Pool-1" id="517" structure="id:90"/>
+            <structref name="Ability Descriptions" id="518" structure="id:92"/>
+            <structref name="Ability Names" id="519" structure="id:94"/>
+            <structure name="&lt;new structure-2&gt;" id="520" length="3022">
+                <structure name="&lt;new structure&gt;" id="521" length="2066"/>
+                <structure name="Pickup Table" id="523" length="64"/>
+            </structure>
+            <structref name="Move Data" id="526" structure="id:102"/>
+            <structure name="&lt;new structure-3&gt;" id="527" length="16" alignment="4"/>
+            <structref name="Pokédex Indices" id="529" structure="id:106"/>
+            <structure name="&lt;new structure-4&gt;" id="530" length="1390"/>
+            <structref name="TM Compatibility Data" id="532" structure="id:115"/>
+            <structure name="&lt;new structure-5&gt;" id="533" length="572"/>
+            <structref name="Experience Tables" id="535" structure="id:119"/>
+            <structref name="Pokémon Base Stats" id="536" structure="id:121"/>
+            <binary name="Pokémon Move List Data Pool" id="537" length="8898"/>
+            <structref name="Pokémon Evolution Data" id="538" structure="id:124"/>
+            <structref name="Pokémon Move List" id="539" structure="id:126"/>
+            <structure name="&lt;new structure-7&gt;" id="540" length="1529816">
+                <structure name="&lt;new structure&gt;" id="541" length="1480060"/>
+                <binary name="Pokémon Location Data Pool" id="543" length="10520"/>
+                <structref name="Location Pokémon Data" id="544" structure="id:405"/>
+            </structure>
+            <structref name="Pokémon Icon Sprite Table" id="546" structure="id:144"/>
+            <structure name="Pokémon Icon Palette Table" id="547" length="440"/>
+            <structure name="&lt;new structure-8&gt;" id="549" length="3732">
+                <structure name="&lt;new structure&gt;" id="550" length="604"/>
+                <structref name="FRLG Bag Sprite Table" id="552" structure="id:415"/>
+            </structure>
+            <binary name="Item Description String Pool" id="554" length="24924"/>
+            <structref name="FRLG Item Data" id="555" structure="id:420"/>
+            <structure name="&lt;new structure-9&gt;" id="556" length="100"/>
+            <structref name="Berry Description String Pool" id="558" structure="id:179"/>
+            <structref name="Berry Data" id="559" structure="id:181"/>
+            <structref name="Berry Data 2" id="560" structure="id:426"/>
+            <structure name="&lt;new structure-9.1&gt;" id="561" length="32844"/>
+            <structref name="Easy Chat Data" id="563" structure="id:430"/>
+            <structure name="&lt;new structure-9.2&gt;" id="564" length="4116"/>
+            <structref name="Easy Chat Category Strings" id="566" structure="id:434"/>
+            <structure name="&lt;new structure-9.3&gt;" id="567" length="196590">
+                <structure name="&lt;new structure&gt;-1" id="568" length="3340"/>
+                <binary name="Location Name String Pool" id="570" length="1344"/>
+                <structure name="&lt;new structure&gt;" id="571" length="10864"/>
+                <structure name="Location Names" id="573">
+                    <structref name="String Pool String Pointer" id="574" repeatmin="109" repeatmax="109" structure="id:443"/>
+                </structure>
+            </structure>
+            <structref name="Easy Chat Category String Pool" id="577" structure="id:447"/>
+            <structure name="&lt;new structure-10&gt;" id="578" length="158626">
+                <structure name="&lt;new structure&gt;" id="579" length="137757" alignment="0"/>
+                <structure name="Footprint Data" id="581" length="0" alignment="0">
+                    <number name="&lt;pointer to 32 bytes?&gt;" id="582" repeatmin="412" repeatmax="412" type="integer" length="4" display="hex"/>
+                </structure>
+            </structure>
+            <binary name="Pokédex Description String Pool" id="585" length="38911"/>
+            <structref name="RSFRLG Pokédex Entries" id="586" structure="id:140"/>
+            <structure name="&lt;new structure-10.1&gt;" id="587" length="1556"/>
+            <binary name="Pokédex Habitat Data Pool" id="589" length="772"/>
+            <binary name="Pokédex Habitat Page Data Pool" id="590" length="1144"/>
+            <structref name="Pokédex Habitat Data Index" id="591" structure="id:462"/>
+            <structure name="&lt;new structure-11&gt;" id="592" length="28364"/>
+            <structref name="FRLG Move Tutor Data" id="594" structure="id:466"/>
+            <structure name="&lt;new structure-12&gt;" id="595" length="40710"/>
+            <structref name="Nature Name String Pool" id="597" structure="id:154"/>
+            <structref name="Nature Names" id="598" structure="id:156"/>
+            <structure name="&lt;new structure-13&gt;" id="599" length="93092">
+                <structure name="&lt;new structure&gt;" id="600" length="90796"/>
+                <structref name="Trainer Tower Item Index" id="602" structure="id:475"/>
+            </structure>
+            <structref name="Trainer Tower Data" id="604" structure="id:478"/>
+            <structref name="Move Description String Pool" id="605" structure="id:150"/>
+            <structref name="Move Descriptions" id="606" structure="id:152"/>
+        </structure>
+        <structure name="Pokémon Emerald ROM" id="30" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Emerald ROM Header" id="609" structure="id:608"/>
+            <structure name="&lt;new structure&gt;" id="610" length="2600167"/>
+            <structure name="&lt;string pool-1&gt;" id="612" length="7643">
+                <description>Strings used in Pokémon Contests.</description>
+            </structure>
+            <structref name="Contest Description String Pool" id="614" structure="id:173"/>
+            <structure name="&lt;string pool-2&gt;" id="615" length="62337"/>
+            <structure name="&lt;new structure-0.1&gt;" id="617" length="476495">
+                <structure name="&lt;new structure&gt;" id="618" length="2319"/>
+                <structure name="&lt;string pool&gt;" id="620" length="3950"/>
+                <structure name="&lt;new structure-1&gt;" id="622" length="331"/>
+                <structure name="&lt;string pool-2&gt;" id="624" length="803"/>
+            </structure>
+            <structure name="Enemy Y Table" id="627" length="1760"/>
+            <structref name="&lt;unknown Pokémon Sprite Table&gt;" id="629" structure="id:39"/>
+            <structure name="Player Y Table" id="630" length="1760"/>
+            <structref name="Pokémon Back Sprite Table" id="632" structure="id:39"/>
+            <structref name="Pokémon Normal Palette Table" id="633" structure="id:44"/>
+            <structref name="Pokémon Shiny Palette Table" id="634" structure="id:44"/>
+            <structure name="&lt;new structure-0.2&gt;" id="635" length="1116"/>
+            <structref name="Emerald Trainer Sprite Table" id="638" structure="id:637"/>
+            <structref name="Emerald Trainer Palette Table" id="640" structure="id:639"/>
+            <structure name="&lt;new structure-0.3&gt;" id="641" length="424">
+                <structure name="&lt;new structure&gt;" id="642" length="168"/>
+                <structure name="&lt;new structure-1&gt;" id="644" length="96"/>
+                <structure name="&lt;new structure-2&gt;" id="646" length="32"/>
+                <structure name="&lt;unknown sprite table&gt;" id="648" length="64"/>
+                <structure name="&lt;unknown palette table&gt;" id="650" length="64">
+                    <structref name="Palette Table Entry" id="651" repeatmin="8" repeatmax="8" structure="id:65"/>
+                </structure>
+            </structure>
+            <structref name="Enemy Altitude Table" id="654" structure="id:69"/>
+            <structure name="&lt;new structure-0.4&gt;" id="655" length="16932">
+                <structure name="Pokémon Animation Frame Timing Data" id="656" length="11604"/>
+                <structure name="&lt;new structure&gt;" id="658" length="3568"/>
+                <structure name="&lt;new structure-1&gt;" id="660">
+                    <number name="&lt;unknown list of pointers&gt;" id="661" repeatmin="440" repeatmax="440" type="integer" length="4" display="hex"/>
+                </structure>
+            </structure>
+            <structref name="Pokémon Front Sprite Table" id="664" structure="id:39"/>
+            <structure name="&lt;new structure-0.5&gt;" id="665" length="1760"/>
+            <binary name="Trainer's Pokémon Data" id="667" length="18088"/>
+            <structref name="Emerald Trainer Class Names" id="669" structure="id:668"/>
+            <structref name="Emerald Trainer Data" id="671" structure="id:670"/>
+            <structref name="Pokémon Names" id="672" structure="id:76"/>
+            <structref name="Move Names" id="673" structure="id:78"/>
+            <structure name="&lt;new structure-1&gt;" id="674" length="868" alignment="4"/>
+            <structure name="Type Chart" id="676" length="336">
+                <structref name="Type Chart Entry" id="677" repeatmin="112" repeatmax="112" structure="id:83"/>
+            </structure>
+            <structref name="Type Names" id="679" structure="id:86"/>
+            <structure name="&lt;new structure-3&gt;" id="680" length="226"/>
+            <structref name="Ability Description String Pool" id="682" structure="id:90"/>
+            <structref name="Ability Names" id="683" structure="id:94"/>
+            <structref name="Ability Descriptions" id="684" structure="id:92"/>
+            <structure name="&lt;new structure-3.1&gt;" id="685" length="2100"/>
+            <structref name="Emerald Pickup Table" id="688" structure="id:687"/>
+            <structure name="&lt;new structure-4&gt;" id="689" length="1045"/>
+            <structref name="Move Data" id="691" structure="id:102"/>
+            <structure name="&lt;new structure-5&gt;" id="692" length="16" alignment="4"/>
+            <structref name="Pokédex Indices" id="694" structure="id:106"/>
+            <structure name="&lt;new structure-6&gt;" id="695" length="1450"/>
+            <structref name="TM Compatibility Data" id="697" structure="id:115"/>
+            <structure name="&lt;new structure-7&gt;" id="698" length="436"/>
+            <structref name="Experience Tables" id="700" structure="id:119"/>
+            <structref name="Pokémon Base Stats" id="701" structure="id:121"/>
+            <binary name="Pokémon Move List Data Pool" id="702" length="8766"/>
+            <structref name="Pokémon Evolution Data" id="703" structure="id:124"/>
+            <structref name="Pokémon Move List" id="704" structure="id:126"/>
+            <structure name="&lt;new structure-8&gt;" id="705" length="2265948">
+                <structure name="&lt;new structure&gt;" id="706" length="5100"/>
+                <structure name="Egg Move Data" id="708" length="2276"/>
+            </structure>
+            <structure name="Location Pokémon Data" id="711" length="2480"/>
+            <structure name="&lt;new structure-9&gt;" id="713" length="39957"/>
+            <binary name="Pokédex Description String Pool" id="715" length="58019"/>
+            <structref name="Pokédex Entries" id="717" structure="id:716"/>
+            <structure name="&lt;new structure-10&gt;" id="718" length="54936">
+                <structure name="&lt;new structure&gt;" id="719" length="132"/>
+                <structure name="&lt;new structure-1&gt;" id="721" length="1652"/>
+                <structure name="&lt;new structure-2&gt;" id="723" length="260"/>
+                <structure name="&lt;new structure-3&gt;" id="725" length="408"/>
+            </structure>
+            <structref name="Pokémon Icon Sprite Table" id="728" structure="id:144"/>
+            <structure name="Pokémon Icon Palette Table" id="729" length="440"/>
+            <structure name="&lt;new structure-11&gt;" id="731" length="14164"/>
+            <structure name="Berry Graphics Data" id="733" length="344">
+                <structref name="Berry Graphics Data Entry" id="735" repeatmin="43" repeatmax="43" structure="id:734"/>
+            </structure>
+            <structure name="&lt;new structure-11.1&gt;" id="737" length="180"/>
+            <binary name="Item Description String Pool" id="739" length="15104"/>
+            <structref name="Emerald Item Data" id="741" structure="id:740"/>
+            <structure name="&lt;new structure-12&gt;" id="742" length="484"/>
+            <structref name="Contest Description Strings" id="744" structure="id:175"/>
+            <structure name="&lt;new structure-13&gt;" id="745" length="916"/>
+            <structref name="Emerald Contest Trainer Data" id="748" structure="id:747"/>
+            <structure name="&lt;new structure-14&gt;" id="749" length="576"/>
+            <structref name="Berry Description String Pool" id="751" structure="id:179"/>
+            <structref name="Berry Data" id="752" structure="id:181"/>
+            <structref name="Berry Data 2" id="753" structure="id:426"/>
+            <structure name="&lt;new structure-15&gt;" id="754" length="5860"/>
+            <structref name="Contest Move Data" id="756" structure="id:185"/>
+            <structref name="Contest Description Data" id="757" structure="id:187"/>
+            <structure name="&lt;new structure-16&gt;" id="758" length="45072" alignment="4"/>
+            <structref name="Easy Chat Data" id="761" structure="id:760"/>
+            <structure name="&lt;new structure-16.1&gt;" id="762" length="5408"/>
+            <structref name="Easy Chat Category Strings" id="764" structure="id:434"/>
+            <structure name="&lt;new structure-17&gt;" id="765" length="9444"/>
+            <structure name="Location String Pool" id="767" length="2412"/>
+            <structure name="Location Data" id="769" length="1704"/>
+            <structure name="&lt;new structure-18&gt;" id="771" length="184716"/>
+            <structref name="Battle Frontier Item Index" id="774" structure="id:773"/>
+            <structref name="Battle Frontier" id="776" structure="id:775"/>
+            <structure name="&lt;new structure-19&gt;" id="777" length="2096" alignment="4">
+                <structure name="&lt;new structure&gt;" id="778" length="252"/>
+                <structure name="&lt;string pool&gt;" id="780" length="1320">
+                    <structref name="String Pool String Pointer" id="781" repeatmin="330" repeatmax="330" structure="id:443"/>
+                </structure>
+                <structure name="&lt;new structure-1&gt;" id="783" length="400"/>
+                <structure name="&lt;new structure-2&gt;" id="785" length="64"/>
+            </structure>
+            <structref name="Slateport Battle Tent" id="789" structure="id:788"/>
+            <structref name="Verdanturf Battle Tent" id="791" structure="id:790"/>
+            <structref name="Fallarbor Battle Tent" id="793" structure="id:792"/>
+            <structure name="&lt;new structure-20&gt;" id="794" length="142" alignment="4"/>
+            <structure name="Battle Tower Trainer List" id="796" length="64"/>
+            <structure name="&lt;new structure-20.1&gt;" id="798" length="34785">
+                <structure name="&lt;new structure&gt;" id="799" length="27586"/>
+                <structure name="&lt;new structure-1&gt;" id="801" length="1272"/>
+                <structure name="&lt;new structure-2&gt;" id="803" length="1140"/>
+            </structure>
+            <structure name="&lt;string pool-3&gt;" id="806" length="3941"/>
+            <structure name="&lt;new structure-20.2&gt;" id="808" length="64">
+                <structref name="String Pool String Pointer" id="809" repeatmin="16" repeatmax="16" structure="id:443"/>
+            </structure>
+            <structure name="&lt;string pool-4&gt;" id="811" length="22477"/>
+            <structref name="Easy Chat Category String Pool" id="813" structure="id:447"/>
+            <structure name="&lt;string pool-5&gt;" id="814" length="4779"/>
+            <structure name="&lt;new structure-21&gt;" id="816" length="139181">
+                <structure name="&lt;new structure&gt;" id="817" length="135683"/>
+                <structure name="&lt;new structure-1&gt;" id="819" length="1152">
+                    <structref name="String Pool String Pointer" id="820" repeatmin="288" repeatmax="288" structure="id:443"/>
+                </structure>
+            </structure>
+            <structure name="Battle Tower Restricted Pokémon List" id="823" length="22">
+                <number name="Pokémon ID" id="824" repeatmin="10" repeatmax="10" type="integer" length="2"/>
+            </structure>
+            <structure name="&lt;new structure-21.1&gt;" id="826" length="272">
+                <structure name="&lt;string pool&gt;" id="827">
+                    <structref name="String Pool String Pointer" id="828" repeatmin="32" repeatmax="32" structure="id:443"/>
+                </structure>
+                <structure name="&lt;new structure-1&gt;" id="830" length="16"/>
+                <structure name="&lt;string pool 2&gt;" id="832" length="112">
+                    <structref name="String Pool String Pointer" id="833" repeatmin="28" repeatmax="28" structure="id:443"/>
+                </structure>
+                <structure name="&lt;pointers to string pool&gt;" id="835" length="16"/>
+            </structure>
+            <structref name="Battle Arena Mind Ratings" id="839" structure="id:838"/>
+            <structure name="&lt;new structure-22&gt;" id="840" length="156" alignment="4"/>
+            <structref name="Battle Style" id="843" structure="id:842"/>
+            <structure name="&lt;new structure-23&gt;" id="844" length="116"/>
+            <structure name="Battle Factory Rental Selection" id="846" length="64"/>
+            <structure name="&lt;new structure-24&gt;" id="848" length="11832">
+                <structure name="&lt;new structure&gt;-1" id="849" length="1244"/>
+                <structure name="Battle Pyramid Wild Pokémon" id="851" length="1920"/>
+                <structure name="Battle Pyramid Wild Pokémon Data" id="853" length="80">
+                    <offset name="Battle Pyramid Round Data" id="855" fillcolor="FF86D5" repeatmin="20" repeatmax="20" length="4" references="id:854" additional="-134217728" follownullreference="yes"/>
+                </structure>
+                <structure name="&lt;second Battle Pyramid Round Data&gt;" id="857" length="1920"/>
+                <structure name="&lt;second Battle Pyramid Round structure&gt;" id="859" length="80">
+                    <offset name="Battle Pyramid Round Data" id="860" fillcolor="FF86D5" repeatmin="20" repeatmax="20" length="4" references="id:854" additional="-134217728" follownullreference="yes"/>
+                </structure>
+                <structure name="&lt;new structure-1&gt;" id="862" length="332"/>
+                <structref name="Battle Pyramid Pickup List" id="865" structure="id:864"/>
+                <structure name="&lt;new structure-24.1&gt;" id="866" length="1226">
+                    <structure name="&lt;new structure&gt;" id="867" length="452"/>
+                    <structure name="&lt;unknown string pool&gt;" id="869" length="504"/>
+                    <structure name="&lt;pointers to string pool&gt;" id="871" length="96"/>
+                </structure>
+                <structure name="Battle Pyramid Pickup Probs" id="874" length="10">
+                    <number name="Probability" id="875" repeatmin="10" repeatmax="10" type="integer" length="1"/>
+                </structure>
+                <structure name="&lt;new structure-24.2&gt;" id="877" length="1152"/>
+                <structref name="Emerald Bag Sprite Table" id="880" structure="id:879"/>
+            </structure>
+            <structref name="Emerald Move Tutor Data" id="883" structure="id:882"/>
+            <structure name="&lt;new structure-25&gt;" id="884" length="11016">
+                <structure name="&lt;new structure&gt;" id="885" length="1084"/>
+                <structure name="&lt;new structure-1&gt;" id="887" length="160">
+                    <structref name="String Pool String Pointer" id="888" repeatmin="40" repeatmax="40" structure="id:443"/>
+                </structure>
+                <structure name="&lt;new structure-2&gt;" id="890" length="8932"/>
+                <structure name="&lt;string pool&gt;" id="892" length="656"/>
+                <structure name="&lt;new structure-3&gt;" id="894" length="184"/>
+            </structure>
+            <structref name="Move Description String Pool" id="898" structure="id:897"/>
+            <structref name="Move Descriptions" id="899" structure="id:152"/>
+            <structref name="Nature Name String Pool" id="900" structure="id:154"/>
+            <structref name="Nature Names" id="901" structure="id:156"/>
+            <structure name="&lt;new structure-26&gt;" id="902" length="40032">
+                <structure name="&lt;new structure&gt;" id="903" length="14300"/>
+                <structure name="&lt;unknown string pool strings&gt;" id="905">
+                    <structref name="String Pool String" id="907" repeatmin="312" repeatmax="312" structure="id:906"/>
+                </structure>
+                <structure name="&lt;unknown string pool&gt;" id="909" length="1248" alignment="4">
+                    <structref name="String Pool String Pointer" id="910" repeatmin="312" repeatmax="312" structure="id:443"/>
+                </structure>
+            </structure>
+            <structref name="Trainer Hill Data" id="914" structure="id:913"/>
+        </structure>
+        <structure name="GBA ROM Header" id="916" length="192" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="ARM B Jump Instruction" id="917" length="4"/>
+            <binary name="Nintendo Logo Data" id="918" length="156"/>
+            <string name="Game Title" id="919" type="fixed-length" length="12"/>
+            <string name="Game Code" id="920" type="fixed-length" length="4"/>
+            <binary name="Maker Code" id="921" length="2"/>
+            <binary name="&lt;fixed value&gt;" mustmatch="yes" id="922" length="1">
+                <fixedvalues>
+                    <fixedvalue value="96"/>
+                </fixedvalues>
+            </binary>
+            <binary name="Main Unit Code" id="923" length="1"/>
+            <binary name="Device Type" id="924" length="1"/>
+            <binary name="&lt;reserved&gt;" id="925" length="7"/>
+            <number name="Mask ROM Version" id="926" type="integer" length="1"/>
+            <number name="Complement Check" id="927" type="integer" length="1"/>
+            <binary name="&lt;reserved-2&gt;" id="928" length="2"/>
+        </structure>
+        <structure name="Ruby ROM Header" id="33" extends="id:916">
+            <string name="Game Title" mustmatch="yes" id="932" type="fixed-length" length="12">
+                <fixedvalues>
+                    <fixedvalue value="POKEMON RUBY"/>
+                </fixedvalues>
+            </string>
+            <string name="Game Code" mustmatch="yes" id="933" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="AXVE"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="Sapphire ROM Header" id="206" extends="id:916">
+            <string name="Game Title" mustmatch="yes" id="945" type="fixed-length" length="12">
+                <fixedvalues>
+                    <fixedvalue value="POKEMON SAPP"/>
+                </fixedvalues>
+            </string>
+            <string name="Game Code" mustmatch="yes" id="946" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="AXPE"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="FireRed ROM Header" id="323" extends="id:916">
+            <string name="Game Title" mustmatch="yes" id="958" type="fixed-length" length="12">
+                <fixedvalues>
+                    <fixedvalue value="POKEMON FIRE"/>
+                </fixedvalues>
+            </string>
+            <string name="Game Code" mustmatch="yes" id="959" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="BPRE"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="LeafGreen ROM Header" id="485" extends="id:916">
+            <string name="Game Title" mustmatch="yes" id="971" type="fixed-length" length="12">
+                <fixedvalues>
+                    <fixedvalue value="POKEMON LEAF"/>
+                </fixedvalues>
+            </string>
+            <string name="Game Code" mustmatch="yes" id="972" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="BPGE"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="Emerald ROM Header" id="608" extends="id:916">
+            <string name="Game Title" mustmatch="yes" id="984" type="fixed-length" length="12">
+                <fixedvalues>
+                    <fixedvalue value="POKEMON EMER"/>
+                </fixedvalues>
+            </string>
+            <string name="Game Code" mustmatch="yes" id="985" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="BPEE"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="Pokémon Sprite Table" id="39" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Pokémon Sprite Table Entry" id="995" repeatmin="440" repeatmax="440" structure="id:61"/>
+        </structure>
+        <structure name="RS Trainer Sprite Table" id="50" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Sprite Table Entry" id="997" repeatmin="83" repeatmax="83" structure="id:61"/>
+        </structure>
+        <structure name="FRLG Trainer Sprite Table" id="342" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Sprite Table Entry" id="999" repeatmin="148" repeatmax="148" structure="id:61"/>
+        </structure>
+        <structure name="Emerald Trainer Sprite Table" id="637" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Sprite Table Entry" id="1001" repeatmin="93" repeatmax="93" structure="id:61"/>
+        </structure>
+        <structure name="Sprite Table Entry" id="61" length="8" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <offset name="Compressed Sprite Pointer" id="1004" fillcolor="FF80FB" length="4" references="id:1003" additional="-134217728" follownullreference="yes"/>
+            <number name="&lt;new number&gt;" id="1005" type="integer" length="2"/>
+            <number name="&lt;new number-1&gt;" id="1006" type="integer" length="2"/>
+        </structure>
+        <structure name="Pokémon Palette Table" id="44" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Pokémon Palette Table Entry" id="1008" repeatmin="440" repeatmax="440" structure="id:65"/>
+        </structure>
+        <structure name="RS Trainer Palette Table" id="52" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Palette Table Entry" id="1010" repeatmin="83" repeatmax="83" structure="id:65"/>
+        </structure>
+        <structure name="FRLG Trainer Palette Table" id="344" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="Palette Table Entry" id="1012" repeatmin="148" repeatmax="148" structure="id:65"/>
+        </structure>
+        <structure name="Emerald Trainer Palette Table" id="639" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Palette Table Entry" id="1014" repeatmin="93" repeatmax="93" structure="id:65"/>
+        </structure>
+        <structure name="Palette Table Entry" id="65" length="8" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <offset name="Compressed Palette Pointer" id="1016" fillcolor="FF80FB" length="4" references="id:1003" additional="-134217728" follownullreference="yes"/>
+            <number name="&lt;new number&gt;" id="1017" type="integer" length="4"/>
+        </structure>
+        <structure name="Pokémon Altitude Table" id="69" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Altitude" id="1019" repeatmin="412" repeatmax="412" type="integer" length="1"/>
+        </structure>
+        <structure name="Trainer Class Names" id="72" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="Name" id="1021" strokecolor="FDD480" fillcolor="FCFD84" repeatmin="58" repeatmax="58" type="fixed-length" length="13"/>
+        </structure>
+        <structure name="FRLG Trainer Class Names" id="360" extends="id:72">
+            <string name="Name" id="1023" repeatmin="107" repeatmax="107" type="fixed-length" length="13"/>
+        </structure>
+        <structure name="Emerald Trainer Class Names" id="668" extends="id:72">
+            <string name="Name" id="1025" repeatmin="66" repeatmax="66" type="fixed-length" length="13"/>
+        </structure>
+        <structure name="Trainer's Pokémon Entry" id="1027" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="AI Value" id="1028" type="integer" length="2"/>
+            <number name="Level" id="1029" type="integer" length="2"/>
+            <number name="Species ID" id="1030" type="integer" length="2"/>
+            <number name="Held Item" id="1031" type="integer" length="2"/>
+        </structure>
+        <structure name="Trainer's Pokémon with Moveset Entry" id="1033" extends="id:1027">
+            <number name="Moves" id="1038" repeatmin="4" repeatmax="4" type="integer" length="2"/>
+        </structure>
+        <structure name="Trainer Data" id="1040" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Trainer Data Entry" id="1042" structure="id:1041"/>
+        </structure>
+        <structure name="RS Trainer Data" id="74" extends="id:1040">
+            <structref name="Trainer Data Entry" id="1044" repeatmin="694" repeatmax="694" structure="id:1041"/>
+        </structure>
+        <structure name="FRLG Trainer Data" id="362" extends="id:1040">
+            <structref name="Trainer Data Entry" id="1046" repeatmin="743" repeatmax="743" structure="id:1041"/>
+        </structure>
+        <structure name="Emerald Trainer Data" id="670" extends="id:1040">
+            <structref name="Trainer Data Entry" id="1048" repeatmin="855" repeatmax="855" structure="id:1041"/>
+        </structure>
+        <structure name="Trainer Data Entry" id="1041" length="40" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="&lt;new binary&gt;" id="1050" length="1"/>
+            <number name="Trainer Class" id="1051" type="integer" length="1"/>
+            <binary name="&lt;new binary-1&gt;" id="1052" length="2"/>
+            <string name="Name" id="1053" strokecolor="FDD480" fillcolor="FCFD84" type="fixed-length" length="12"/>
+            <number name="Items" id="1054" repeatmin="4" repeatmax="4" type="integer" length="2"/>
+            <binary name="&lt;new binary-2&gt;" id="1055" length="8"/>
+            <number name="Team Size" id="1056" type="integer" length="4"/>
+            <number name="Pokémon Lineup Pointer" id="1057" fillcolor="FF86D5" type="integer" length="4" display="hex"/>
+        </structure>
+        <structure name="Pokémon Names" id="76" length="4532" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="Pokémon Name" id="1059" strokecolor="FDD480" fillcolor="FCFD84" repeatmin="412" repeatmax="412" type="fixed-length" length="11"/>
+        </structure>
+        <structure name="Move Names" id="78" length="4615" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="Move Name" id="1061" strokecolor="FDD480" fillcolor="FCFD84" repeatmin="355" repeatmax="355" type="fixed-length" length="13"/>
+        </structure>
+        <structure name="Type Chart Entry" id="83" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Attacking Type" id="1063" type="integer" length="1"/>
+            <number name="Defending Type" id="1064" type="integer" length="1"/>
+            <number name="Damage Multiplier" id="1065" type="integer" length="1"/>
+        </structure>
+        <structure name="Type Names" id="86" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="Name" id="1067" strokecolor="FDD480" fillcolor="FCFD84" repeatmin="18" repeatmax="18" type="fixed-length" length="7"/>
+        </structure>
+        <structure name="Ability Description String Pool" id="90" extends="id:1069" endian="little">
+            <structref name="String" id="1070" repeatmin="78" repeatmax="78" structure="id:906"/>
+        </structure>
+        <structure name="Ability Descriptions" id="92" length="312" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Description Pointer" id="1072" repeatmin="78" repeatmax="78" structure="id:443"/>
+        </structure>
+        <structure name="Ability Names" id="94" length="1014" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="Name" id="1074" strokecolor="FDD480" fillcolor="FCFD84" repeatmin="78" repeatmax="78" type="fixed-length" length="13"/>
+        </structure>
+        <structure name="Emerald Pickup Table" id="687" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Common Items" id="1076" repeatmin="18" repeatmax="18" type="integer" length="2"/>
+            <number name="Rare Items" id="1077" repeatmin="11" repeatmax="11" type="integer" length="2"/>
+            <number name="Cumulative Probs" id="1078" repeatmin="9" repeatmax="9" type="integer" length="1"/>
+        </structure>
+        <structure name="Move Data" id="102" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Move Data Entry" id="1081" repeatmin="355" repeatmax="355" structure="id:1080"/>
+        </structure>
+        <structure name="Move Data Entry" id="1080" length="9" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Effect" id="1083" type="integer" length="1"/>
+            <number name="Base Power" id="1084" type="integer" length="1"/>
+            <number name="Type" id="1085" type="integer" length="1"/>
+            <number name="Accuracy" id="1086" type="integer" length="1"/>
+            <number name="PP" id="1087" type="integer" length="1"/>
+            <number name="Effect Accuracy" id="1088" type="integer" length="1"/>
+            <number name="Affects Whom" id="1089" type="integer" length="1"/>
+            <number name="Priority" id="1090" type="integer" length="1" signed="yes"/>
+            <number name="Flags" id="1091" type="integer" length="1"/>
+        </structure>
+        <structure name="Pokédex Indices" id="106" length="2466" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Hoenn Dex Indices" id="1093" length="822" alignment="1">
+                <number name="Hoenn ID Index" id="1094" repeatmin="411" repeatmax="411" type="integer" length="2"/>
+            </structure>
+            <structure name="National Dex Indices" id="1096" length="822" alignment="1">
+                <number name="National ID Index" id="1097" repeatmin="411" repeatmax="411" type="integer" length="2"/>
+            </structure>
+            <structure name="Hoenn to National Mapping" id="1099" length="822" alignment="1">
+                <number name="National Dex Number" id="1100" repeatmin="386" repeatmax="386" type="integer" length="2"/>
+                <binary name="Unused Mapping" id="1101" strokecolor="919191" fillcolor="919191" length="50">
+                    <description>Unused mapping for Hoenn to National</description>
+                </binary>
+            </structure>
+        </structure>
+        <structure name="TM Compatibility Data" id="115" length="3296" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="TM Compatibility Data Entry " id="1105" repeatmin="412" repeatmax="412" structure="id:1104"/>
+        </structure>
+        <structure name="TM Compatibility Data Entry " id="1104" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="TM08 Compatibility" id="1107" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM07 Compatibility" id="1108" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM06 Compatibility" id="1109" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM05 Compatibility" id="1110" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM04 Compatibility" id="1111" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM03 Compatibility" id="1112" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM02 Compatibility" id="1113" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM01 Compatibility" id="1114" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM16 Compatibility" id="1115" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM15 Compatibility" id="1116" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM14 Compatibility" id="1117" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM13 Compatibility" id="1118" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM12 Compatibility" id="1119" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM11 Compatibility" id="1120" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM10 Compatibility" id="1121" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM09 Compatibility" id="1122" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM24 Compatibility" id="1123" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM23 Compatibility" id="1124" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM22 Compatibility" id="1125" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM21 Compatibility" id="1126" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM20 Compatibility" id="1127" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM19 Compatibility" id="1128" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM18 Compatibility" id="1129" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM17 Compatibility" id="1130" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM32 Compatibility" id="1131" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM31 Compatibility" id="1132" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM30 Compatibility" id="1133" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM29 Compatibility" id="1134" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM28 Compatibility" id="1135" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM27 Compatibility" id="1136" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM26 Compatibility" id="1137" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM25 Compatibility" id="1138" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM40 Compatibility" id="1139" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM39 Compatibility" id="1140" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM38 Compatibility" id="1141" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM37 Compatibility" id="1142" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM36 Compatibility" id="1143" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM35 Compatibility" id="1144" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM34 Compatibility" id="1145" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM33 Compatibility" id="1146" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM48 Compatibility" id="1147" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM47 Compatibility" id="1148" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM46 Compatibility" id="1149" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM45 Compatibility" id="1150" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM44 Compatibility" id="1151" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM43 Compatibility" id="1152" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM42 Compatibility" id="1153" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM41 Compatibility" id="1154" type="integer" length="1" lengthunit="bit"/>
+            <number name="HM06 Compatibility" id="1155" type="integer" length="1" lengthunit="bit"/>
+            <number name="HM05 Compatibility" id="1156" type="integer" length="1" lengthunit="bit"/>
+            <number name="HM04 Compatibility" id="1157" type="integer" length="1" lengthunit="bit"/>
+            <number name="HM03 Compatibility" id="1158" type="integer" length="1" lengthunit="bit"/>
+            <number name="HM02 Compatibility" id="1159" type="integer" length="1" lengthunit="bit"/>
+            <number name="HM01 Compatibility" id="1160" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM50 Compatibility" id="1161" type="integer" length="1" lengthunit="bit"/>
+            <number name="TM49 Compatibility" id="1162" type="integer" length="1" lengthunit="bit"/>
+            <binary name="&lt;padding&gt;" id="1163" strokecolor="929292" fillcolor="929292" length="6" lengthunit="bit"/>
+            <number name="HM08 Compatibility" id="1164" type="integer" length="1" lengthunit="bit"/>
+            <number name="HM07 Compatibility" id="1165" type="integer" length="1" lengthunit="bit"/>
+        </structure>
+        <structure name="Experience Tables" id="119" length="3232" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Medium Fast" id="1168" structure="id:1167"/>
+            <structref name="Erratic" id="1169" structure="id:1167"/>
+            <structref name="Fluctuating" id="1170" structure="id:1167"/>
+            <structref name="Medium Slow" id="1171" structure="id:1167"/>
+            <structref name="Fast" id="1172" structure="id:1167"/>
+            <structref name="Slow" id="1173" structure="id:1167"/>
+            <binary name="Unused Tables" id="1174" strokecolor="919191" fillcolor="919191" length="808"/>
+        </structure>
+        <structure name="Experience Table" id="1167" length="404" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Experience for Level" id="1176" repeatmin="101" repeatmax="101" type="integer" length="4"/>
+        </structure>
+        <structure name="Pokémon Base Stats" id="121" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="Base Stats" id="1179" repeatmin="412" repeatmax="412" structure="id:1178"/>
+        </structure>
+        <structure name="Pokémon Base Stat Data" id="1178" length="28" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Base HP" id="1181" type="integer" length="1"/>
+            <number name="Base Attack" id="1182" type="integer" length="1"/>
+            <number name="Base Defense" id="1183" type="integer" length="1"/>
+            <number name="Base Speed" id="1184" type="integer" length="1"/>
+            <number name="Base Sp. Attack" id="1185" type="integer" length="1"/>
+            <number name="Base Sp. Defense" id="1186" type="integer" length="1"/>
+            <number name="Type" id="1187" repeatmin="2" repeatmax="2" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Normal" value="0"/>
+                    <fixedvalue name="Fighting" value="1"/>
+                    <fixedvalue name="Flying" value="2"/>
+                    <fixedvalue name="Poison" value="3"/>
+                    <fixedvalue name="Ground" value="4"/>
+                    <fixedvalue name="Rock" value="5"/>
+                    <fixedvalue name="Bug" value="6"/>
+                    <fixedvalue name="Ghost" value="7"/>
+                    <fixedvalue name="Steel" value="8"/>
+                    <fixedvalue name="???" value="9"/>
+                    <fixedvalue name="Fire" value="10"/>
+                    <fixedvalue name="Water" value="11"/>
+                    <fixedvalue name="Grass" value="12"/>
+                    <fixedvalue name="Electric" value="13"/>
+                    <fixedvalue name="Psychic" value="14"/>
+                    <fixedvalue name="Ice" value="15"/>
+                    <fixedvalue name="Dragon" value="16"/>
+                    <fixedvalue name="Dark" value="17"/>
+                </fixedvalues>
+            </number>
+            <number name="Catch Rate" id="1188" type="integer" length="1"/>
+            <number name="Base Exp. Yield" id="1189" type="integer" length="1"/>
+            <number name="Effort Yield" id="1190" type="integer" length="2"/>
+            <number name="Held Items" id="1191" repeatmin="2" repeatmax="2" type="integer" length="2"/>
+            <number name="Gender Ratio" id="1192" type="integer" length="1"/>
+            <number name="Steps to Hatch" id="1193" type="integer" length="1"/>
+            <number name="Base Happiness" id="1194" type="integer" length="1"/>
+            <number name="Growth Rate" id="1195" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Medium Fast" value="0"/>
+                    <fixedvalue name="Erratic" value="1"/>
+                    <fixedvalue name="Fluctuating" value="2"/>
+                    <fixedvalue name="Medium Slow" value="3"/>
+                    <fixedvalue name="Fast" value="4"/>
+                    <fixedvalue name="Slow" value="5"/>
+                </fixedvalues>
+            </number>
+            <number name="Egg Group" id="1196" repeatmin="2" repeatmax="2" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Monster" value="1"/>
+                    <fixedvalue name="Water 1" value="2"/>
+                    <fixedvalue name="Bug" value="4"/>
+                    <fixedvalue name="Flying" value="5"/>
+                    <fixedvalue name="Ground" value="6"/>
+                    <fixedvalue name="Fairy" value="7"/>
+                    <fixedvalue name="Plant" value="8"/>
+                    <fixedvalue name="Humanshape" value="9"/>
+                    <fixedvalue name="Water 3" value="10"/>
+                    <fixedvalue name="Mineral" value="11"/>
+                    <fixedvalue name="Indeterminate" value="12"/>
+                    <fixedvalue name="Water 2" value="13"/>
+                    <fixedvalue name="Ditto" value="14"/>
+                    <fixedvalue name="Dragon" value="15"/>
+                    <fixedvalue name="No Eggs" value="16"/>
+                </fixedvalues>
+            </number>
+            <number name="Ability" id="1197" repeatmin="2" repeatmax="2" type="integer" length="1"/>
+            <number name="Safari Zone Escape Rate" id="1198" type="integer" length="1"/>
+            <number name="Color" id="1199" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Red" value="0"/>
+                    <fixedvalue name="Blue" value="1"/>
+                    <fixedvalue name="Yellow" value="2"/>
+                    <fixedvalue name="Green" value="3"/>
+                    <fixedvalue name="Black" value="4"/>
+                    <fixedvalue name="Brown" value="5"/>
+                    <fixedvalue name="Purple" value="6"/>
+                    <fixedvalue name="Gray" value="7"/>
+                    <fixedvalue name="White" value="8"/>
+                    <fixedvalue name="Pink" value="9"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="Pokémon Evolution Data" id="124" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Pokémon Evolution Data Entry" id="1202" repeatmin="412" repeatmax="412" structure="id:1201"/>
+        </structure>
+        <structure name="Pokémon Evolution Data Entry" id="1201" length="40" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Pokémon Evolution Data Sub-Entry" id="1205" repeatmin="5" repeatmax="5" structure="id:1204"/>
+        </structure>
+        <structure name="Pokémon Evolution Data Sub-Entry" id="1204" length="6" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Method" id="1207" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="Level Up" value="4"/>
+                    <fixedvalue name="Use Item" value="6"/>
+                    <fixedvalue name="Trade with Item" value="7"/>
+                    <fixedvalue name="Trade" value="5"/>
+                    <fixedvalue name="Happiness" value="1"/>
+                    <fixedvalue name="Happiness (Day)" value="2"/>
+                    <fixedvalue name="Happiness (Night)" value="3"/>
+                    <fixedvalue name="Nincada Level Up" value="13"/>
+                    <fixedvalue name="Nincada Empty Space" value="14"/>
+                    <fixedvalue name="Wurmple Level Up 1" value="11"/>
+                    <fixedvalue name="Wurmple Level Up 2" value="12"/>
+                    <fixedvalue name="Beauty" value="15"/>
+                    <fixedvalue name="Tyrogue Level Up (A&gt;D)" value="8"/>
+                    <fixedvalue name="Tyrogue Level Up (A=D)" value="9"/>
+                    <fixedvalue name="Tyrogue Level Up (A&lt;D)" value="10"/>
+                </fixedvalues>
+            </number>
+            <number name="Method Parameter" id="1208" type="integer" length="2"/>
+            <number name="Target Pokémon" id="1209" type="integer" length="2"/>
+        </structure>
+        <structure name="Pokémon Move List" id="126" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Move List Pointer" id="1211" fillcolor="FF80FB" repeatmin="412" repeatmax="412" type="integer" length="4" display="hex"/>
+        </structure>
+        <structure name="RS Location Pokémon Data" id="135" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Location Pokémon Data Entry" id="1214" repeatmin="97" repeatmax="97" structure="id:1213"/>
+        </structure>
+        <structure name="FRLG Location Pokémon Data" id="405" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Location Pokémon Data Entry" id="1216" repeatmin="132" repeatmax="132" structure="id:1213"/>
+        </structure>
+        <structure name="Location Pokémon Data Entry" id="1213" length="20" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="&lt;new binary&gt;" id="1218" length="4"/>
+            <number name="Walking Pointer" id="1219" fillcolor="FF86D5" type="integer" length="4" display="hex"/>
+            <number name="Surfing Pointer" id="1220" fillcolor="FF86D5" type="integer" length="4" display="hex"/>
+            <binary name="&lt;new binary-1&gt;" id="1221" length="4"/>
+            <number name="Fishing Pointer" id="1222" fillcolor="FF86D5" type="integer" length="4" display="hex"/>
+        </structure>
+        <structure name="TM List " id="130" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Move ID" id="1224" repeatmin="58" repeatmax="58" type="integer" length="2"/>
+        </structure>
+        <structure name="Pokédex Entries" id="716" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Pokédex Entry" id="1227" repeatmin="387" repeatmax="387" structure="id:1226"/>
+        </structure>
+        <structure name="RSFRLG Pokédex Entries" id="140" extends="id:716">
+            <structref name="Pokédex Entry" id="1230" repeatmin="387" repeatmax="387" structure="id:1229"/>
+        </structure>
+        <structure name="Pokédex Entry" id="1226" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="Species" id="1232" strokecolor="FDD480" fillcolor="FCFD84" type="fixed-length" length="12"/>
+            <number name="Height" id="1233" type="integer" length="2"/>
+            <number name="Weight" id="1234" type="integer" length="2"/>
+            <structref name="Description Pointer" id="1235" structure="id:443"/>
+            <number name="Pokémon Scale" id="1236" type="integer" length="2"/>
+            <number name="Pokémon Offset" id="1237" type="integer" length="2" signed="yes"/>
+            <number name="Trainer Scale" id="1238" type="integer" length="2"/>
+            <number name="Trainer Offset" id="1239" type="integer" length="2" signed="yes"/>
+            <binary name="&lt;new binary&gt;" id="1240" length="4"/>
+        </structure>
+        <structure name="RSFRLG Pokédex Entry" id="1229" extends="id:1226">
+            <string name="Species" id="1242" type="fixed-length" length="12"/>
+            <structref name="Description Pointer" id="1245" repeatmin="2" repeatmax="2" structure="id:443"/>
+        </structure>
+        <structure name="Pokédex Habitat Data Index" id="462" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Grassland" id="1253" structure="id:1252"/>
+            <structref name="Forest" id="1254" structure="id:1252"/>
+            <structref name="Water's Edge" id="1255" structure="id:1252"/>
+            <structref name="Sea" id="1256" structure="id:1252"/>
+            <structref name="Cave" id="1257" structure="id:1252"/>
+            <structref name="Mountain" id="1258" structure="id:1252"/>
+            <structref name="Rough Terrain" id="1259" structure="id:1252"/>
+            <structref name="Urban" id="1260" structure="id:1252"/>
+            <structref name="Rare" id="1261" structure="id:1252"/>
+        </structure>
+        <structure name="Pokédex Habitat Data Entry" id="1252" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="First Page Pointer" id="1263" fillcolor="FF86D5" type="integer" length="4" display="hex"/>
+            <number name="Number of Pages" id="1264" fillcolor="FDD480" type="integer" length="4"/>
+            <scriptelement name="Render Pages" id="1265">
+                <script name="unnamed" type="Generic">
+                    <source language="Lua">local offsetField = &quot;First Page Pointer&quot;
+local lengthField = &quot;Number of Pages&quot;
+local elementStructureName = &quot;Pokédex Habitat Data Page&quot;
+
+logSrc = currentMapper:getCurrentLogSrc()
+
+-- START OF ARRAY OFFSET SCRIPT
+local currentResults = currentMapper:getCurrentResults()
+local currentGrammar = currentMapper:getCurrentGrammar()
+
+local currentOffset = currentMapper:getCurrentOffset()
+local elementStructure = currentGrammar:getStructureByName(elementStructureName)
+
+-- We presume that offsetField and lengthField are both part of the current structure
+-- Thus, a quick backwards Result search should get us the fields
+local offsetResult = currentResults:getResultByName(offsetField)
+local lengthResult = currentResults:getResultByName(lengthField)
+
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, &quot;Start render of array&quot;)
+
+-- Will need to modify this for different &quot;relative to&quot; if you want to simulate an Offset type
+local offsetValue = offsetResult:getValue():getUnsigned() - 0x8000000
+local lengthValue = lengthResult:getValue():getUnsigned()
+
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, string.format(&quot;offset: %d&quot;, offsetValue))
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO,
+string.format(&quot;length: %d&quot;, lengthValue))
+
+-- Relative to start of document
+local startOffset = offsetValue
+
+local offset = startOffset
+for i = 0,lengthValue - 1 do
+	logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, string.format(&quot;Now rendering element %d&quot;, i))
+	-- This redundant pseudo-structure wrapper exists only to record the iteration number
+	-- StructureMapper cannot render arrays of structures normally
+	currentResults:addStructureStartAtPosition(elementStructure, offset, i, elementStructure:getName())
+	currentMapper:setCurrentOffset(offset)
+	bytesProcessed = currentMapper:mapStructure(elementStructure)
+	offset = offset + bytesProcessed
+	currentResults:addStructureEnd(offset)
+end
+
+-- Reset the current offset
+currentMapper:setCurrentOffset(currentOffset)
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, &quot;Finish render of array&quot;)
+return 0
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="Pokédex Habitat Data Page" id="1267" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="First Pokémon Pointer" id="1268" fillcolor="FF86D5" type="integer" length="4" display="hex"/>
+            <number name="Number of Pokémon" id="1269" fillcolor="FDD480" type="integer" length="4"/>
+            <scriptelement name="Render Entries" id="1270">
+                <script name="unnamed" type="Generic">
+                    <source language="Lua">local offsetField = &quot;First Pokémon Pointer&quot;
+local lengthField = &quot;Number of Pokémon&quot;
+local elementStructureName = &quot;Pokédex Habitat Data Page Entry&quot;
+
+logSrc = currentMapper:getCurrentLogSrc()
+
+-- START OF ARRAY OFFSET SCRIPT
+local currentResults = currentMapper:getCurrentResults()
+local currentGrammar = currentMapper:getCurrentGrammar()
+
+local currentOffset = currentMapper:getCurrentOffset()
+local elementStructure = currentGrammar:getStructureByName(elementStructureName)
+
+-- We presume that offsetField and lengthField are both part of the current structure
+-- Thus, a quick backwards Result search should get us the fields
+local offsetResult = currentResults:getResultByName(offsetField)
+local lengthResult = currentResults:getResultByName(lengthField)
+
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, &quot;Start render of array&quot;)
+
+-- Will need to modify this for different &quot;relative to&quot; if you want to simulate an Offset type
+local offsetValue = offsetResult:getValue():getUnsigned() - 0x8000000
+local lengthValue = lengthResult:getValue():getUnsigned()
+
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, string.format(&quot;offset: %d&quot;, offsetValue))
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO,
+string.format(&quot;length: %d&quot;, lengthValue))
+
+-- Relative to start of document
+local startOffset = offsetValue
+
+local offset = startOffset
+for i = 0,lengthValue - 1 do
+	logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, string.format(&quot;Now rendering element %d&quot;, i))
+	-- This redundant pseudo-structure wrapper exists only to record the iteration number
+	-- StructureMapper cannot render arrays of structures normally
+	currentResults:addStructureStartAtPosition(elementStructure, offset, i, elementStructure:getName())
+	currentMapper:setCurrentOffset(offset)
+	bytesProcessed = currentMapper:mapStructure(elementStructure)
+	offset = offset + bytesProcessed
+	currentResults:addStructureEnd(offset)
+end
+
+-- Reset the current offset
+currentMapper:setCurrentOffset(currentOffset)
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, &quot;Finish render of array&quot;)
+return 0
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="Pokédex Habitat Data Page Entry" id="1272" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Pokémon ID" id="1273" type="integer" length="2"/>
+        </structure>
+        <structure name="Pokémon Icon Sprite Table" id="144" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <offset name="Sprite Pointer" id="1276" fillcolor="FF80FB" repeatmin="440" repeatmax="440" length="4" references="id:1275" additional="-134217728" follownullreference="yes"/>
+        </structure>
+        <structure name="Uncompressed Icon Sprite Data" id="1275" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="Sprite" id="1278" length="1024"/>
+        </structure>
+        <structure name="FRLG Bag Sprite Table" id="415" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="Bag Sprite Table Entry" id="1281" repeatmin="375" repeatmax="375" structure="id:1280"/>
+        </structure>
+        <structure name="Emerald Bag Sprite Table" id="879" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="Bag Sprite Table Entry" id="1283" repeatmin="378" repeatmax="378" structure="id:1280"/>
+        </structure>
+        <structure name="Bag Sprite Table Entry" id="1280" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <offset name="Sprite Data Pointer" id="1285" fillcolor="FF80FB" length="4" references="id:1003" additional="-134217728" follownullreference="yes"/>
+            <offset name="Palette Data Pointer" id="1286" fillcolor="FF80FB" length="4" references="id:1003" additional="-134217728" follownullreference="yes"/>
+        </structure>
+        <structure name="Berry Graphics Data Entry" id="734" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <offset name="Compressed Sprite Pointer" id="1288" fillcolor="FF80FB" length="4" references="id:1003" additional="-134217728" follownullreference="yes"/>
+            <offset name="Compressed Palette Pointer" id="1289" fillcolor="FF80FB" length="4" references="id:1003" additional="-134217728" follownullreference="yes"/>
+        </structure>
+        <structure name="Item Data" id="165" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Item Data Entry" id="1292" repeatmin="349" repeatmax="349" structure="id:1291"/>
+        </structure>
+        <structure name="FRLG Item Data" id="420" extends="id:165">
+            <structref name="Item Data Entry" id="1294" repeatmin="375" repeatmax="375" structure="id:1291"/>
+        </structure>
+        <structure name="Emerald Item Data" id="740" extends="id:165">
+            <structref name="Item Data Entry" id="1296" repeatmin="377" repeatmax="377" structure="id:1291"/>
+        </structure>
+        <structure name="Item Data Entry" id="1291" length="44" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="Name" id="1298" strokecolor="FDD480" fillcolor="FCFD84" type="fixed-length" length="14"/>
+            <number name="Index" id="1299" type="integer" length="2"/>
+            <number name="Price" id="1300" type="integer" length="2"/>
+            <binary name="&lt;new binary&gt;" id="1301" length="2"/>
+            <structref name="Description Pointer" id="1302" structure="id:443"/>
+            <binary name="&lt;new binary-1&gt;" id="1303" length="2"/>
+            <number name="Pocket" id="1304" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Items" value="1"/>
+                    <fixedvalue name="Poké Balls" value="2"/>
+                    <fixedvalue name="TMs and HMs" value="3"/>
+                    <fixedvalue name="Berries" value="4"/>
+                    <fixedvalue name="Key Items" value="5"/>
+                </fixedvalues>
+            </number>
+            <number name="Type" id="1305" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Mail" value="0"/>
+                    <fixedvalue name="Out of Battle" value="1"/>
+                    <fixedvalue name="Location-Dependent" value="2"/>
+                    <fixedvalue name="Pokéblock Case" value="3"/>
+                    <fixedvalue name="In Battle" value="4"/>
+                </fixedvalues>
+            </number>
+            <number name="Field Usage Code Pointer" id="1306" fillcolor="FF86D5" type="integer" length="4" display="hex"/>
+            <number name="Battle Usage" id="1307" type="integer" length="4"/>
+            <number name="Battle Usage Code Pointer" id="1308" fillcolor="FF86D5" type="integer" length="4" display="hex"/>
+            <binary name="&lt;new binary-2&gt;" id="1309" length="4"/>
+        </structure>
+        <structure name="Contest Description String Pool" id="173" extends="id:1069">
+            <structref name="String" id="1311" repeatmin="48" repeatmax="48" structure="id:906"/>
+        </structure>
+        <structure name="Contest Description Strings" id="175" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Description Pointer" id="1313" repeatmin="48" repeatmax="48" structure="id:443"/>
+        </structure>
+        <structure name="Contest Trainer Data" id="169" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Contest Trainer Entry" id="1316" repeatmin="60" repeatmax="60" structure="id:1315"/>
+        </structure>
+        <structure name="Emerald Contest Trainer Data" id="747" extends="id:169" endian="little">
+            <structref name="Contest Trainer Entry" id="1318" repeatmin="96" repeatmax="96" structure="id:1315"/>
+        </structure>
+        <structure name="Contest Trainer Entry" id="1315" length="64" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Species ID" id="1320" type="integer" length="2"/>
+            <string name="Nickname" id="1321" strokecolor="FDD480" fillcolor="FCFD84" type="fixed-length" length="11"/>
+            <string name="Trainer Name" id="1322" strokecolor="FDD480" fillcolor="FCFD84" type="fixed-length" length="8"/>
+            <structure name="&lt;new structure&gt;" id="1323" length="7"/>
+            <number name="Contests" id="1325" type="integer" length="1">
+                <mask name="Rank" value="0x3">
+                    <fixedvalue name="Rank" value="0x3"/>
+                </mask>
+                <mask name="Cool" value="0x4">
+                    <fixedvalue name="Cool" value="0x4"/>
+                </mask>
+                <mask name="Beauty" value="0x8">
+                    <fixedvalue name="Beauty" value="0x8"/>
+                </mask>
+                <mask name="Cute" value="0x10">
+                    <fixedvalue name="Cute" value="0x10"/>
+                </mask>
+                <mask name="Smart" value="0x20">
+                    <fixedvalue name="Smart" value="0x20"/>
+                </mask>
+                <mask name="Tough" value="0x40">
+                    <fixedvalue name="Tough" value="0x40"/>
+                </mask>
+            </number>
+            <structure name="&lt;new structure-1&gt;" id="1326" length="1"/>
+            <number name="Moves" id="1328" repeatmin="4" repeatmax="4" type="integer" length="2"/>
+            <number name="Cool" id="1329" type="integer" length="1"/>
+            <number name="Beauty" id="1330" type="integer" length="1"/>
+            <number name="Cute" id="1331" type="integer" length="1"/>
+            <number name="Smart" id="1332" type="integer" length="1"/>
+            <number name="Tough" id="1333" type="integer" length="1"/>
+            <number name="Sheen" id="1334" type="integer" length="1"/>
+        </structure>
+        <structure name="Berry Description String Pool" id="179" extends="id:1069" endian="little">
+            <structref name="String" id="1336" repeatmin="86" repeatmax="86" structure="id:906"/>
+        </structure>
+        <structure name="Berry Data" id="181" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Berry Data Entry" id="1339" repeatmin="43" repeatmax="43" structure="id:1338"/>
+        </structure>
+        <structure name="Berry Data Entry" id="1338" length="27" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="Name" id="1341" strokecolor="FDD480" fillcolor="FCFD84" type="fixed-length" length="7"/>
+            <number name="Firmness" id="1342" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Very Soft" value="1"/>
+                    <fixedvalue name="Soft" value="2"/>
+                    <fixedvalue name="Hard" value="3"/>
+                    <fixedvalue name="Very Hard" value="4"/>
+                    <fixedvalue name="Super Hard" value="5"/>
+                </fixedvalues>
+            </number>
+            <number name="Size" id="1343" type="integer" length="2"/>
+            <number name="Max Yield" id="1344" type="integer" length="1"/>
+            <number name="Min Yield" id="1345" type="integer" length="1"/>
+            <structref name="Description Pointer" id="1346" repeatmin="2" repeatmax="2" structure="id:443"/>
+            <number name="Growth Rate" id="1347" type="integer" length="1"/>
+            <number name="Spicy" id="1348" type="integer" length="1"/>
+            <number name="Dry" id="1349" type="integer" length="1"/>
+            <number name="Sweet" id="1350" type="integer" length="1"/>
+            <number name="Bitter" id="1351" type="integer" length="1"/>
+            <number name="Sour" id="1352" type="integer" length="1"/>
+            <number name="Smoothness" id="1353" type="integer" length="1"/>
+            <binary name="&lt;padding&gt;" id="1354" strokecolor="919191" fillcolor="919191" length="1"/>
+        </structure>
+        <structure name="Berry Data 2" id="426" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Berry Data 2 Entry" id="1357" repeatmin="43" repeatmax="43" structure="id:1356"/>
+        </structure>
+        <structure name="Berry Data 2 Entry" id="1356" length="4" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="&lt;unknown number&gt;" id="1359" type="integer" length="2"/>
+            <number name="Berry Powder" id="1360" type="integer" length="2"/>
+        </structure>
+        <structure name="Contest Move Data" id="185" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Contest Move Data Entry" id="1363" repeatmin="355" repeatmax="355" structure="id:1362"/>
+        </structure>
+        <structure name="Contest Move Data Entry" id="1362" length="8" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Move Description Index" id="1365" type="integer" length="1"/>
+            <number name="Contest Type" id="1366" type="integer" length="1"/>
+            <number name="Combo Identifier" id="1367" type="integer" length="1"/>
+            <number name="Combos" id="1368" repeatmin="3" repeatmax="3" type="integer" length="1"/>
+        </structure>
+        <structure name="Contest Description Data" id="187" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Contest Description Data Entry" id="1371" repeatmin="48" repeatmax="48" structure="id:1370"/>
+        </structure>
+        <structure name="Contest Description Data Entry" id="1370" length="3" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Effect" id="1373" type="integer" length="1"/>
+            <number name="Appeal" id="1374" type="integer" length="1"/>
+            <number name="Jam" id="1375" type="integer" length="1"/>
+        </structure>
+        <structure name="RS Easy Chat Data" id="191" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Data" id="1377">
+                <structure name="Pokémon (Hoenn - Japanese)" id="1378">
+                    <number name="Pokédex Number" id="1379" repeatmin="202" repeatmax="202" type="integer" length="2"/>
+                </structure>
+                <structure name="Trainer" id="1381">
+                    <structref name="String" id="1382" repeatmin="20" repeatmax="20" structure="id:906"/>
+                </structure>
+                <structure name="Status" id="1384">
+                    <structref name="String" id="1385" repeatmin="110" repeatmax="110" structure="id:906"/>
+                </structure>
+                <structure name="Battle" id="1387">
+                    <structref name="String" id="1388" repeatmin="64" repeatmax="64" structure="id:906"/>
+                </structure>
+                <structure name="Greetings" id="1390">
+                    <structref name="String Pool String" id="1391" repeatmin="43" repeatmax="43" structure="id:906"/>
+                </structure>
+                <structure name="People" id="1393">
+                    <structref name="String Pool String" id="1394" repeatmin="76" repeatmax="76" structure="id:906"/>
+                </structure>
+                <structure name="Voices" id="1396">
+                    <structref name="String Pool String" id="1397" repeatmin="64" repeatmax="64" structure="id:906"/>
+                </structure>
+                <structure name="Speech" id="1399">
+                    <structref name="String Pool String" id="1400" repeatmin="61" repeatmax="61" structure="id:906"/>
+                </structure>
+                <structure name="Endings" id="1402">
+                    <structref name="String Pool String" id="1403" repeatmin="70" repeatmax="70" structure="id:906"/>
+                </structure>
+                <structure name="Feelings" id="1405">
+                    <structref name="String Pool String" id="1406" repeatmin="70" repeatmax="70" structure="id:906"/>
+                </structure>
+                <structure name="Conditions" id="1408">
+                    <structref name="String Pool String" id="1409" repeatmin="70" repeatmax="70" structure="id:906"/>
+                </structure>
+                <structure name="Actions" id="1411">
+                    <structref name="String Pool String" id="1412" repeatmin="79" repeatmax="79" structure="id:906"/>
+                </structure>
+                <structure name="Lifestyle" id="1414">
+                    <structref name="String Pool String" id="1415" repeatmin="46" repeatmax="46" structure="id:906"/>
+                </structure>
+                <structure name="Hobbies" id="1417">
+                    <structref name="String Pool String" id="1418" repeatmin="55" repeatmax="55" structure="id:906"/>
+                </structure>
+                <structure name="Time" id="1420">
+                    <structref name="String Pool String" id="1421" repeatmin="46" repeatmax="46" structure="id:906"/>
+                </structure>
+                <structure name="Misc" id="1423">
+                    <structref name="String Pool String" id="1424" repeatmin="43" repeatmax="43" structure="id:906"/>
+                </structure>
+                <structure name="Adjectives" id="1426">
+                    <structref name="String Pool String" id="1427" repeatmin="37" repeatmax="37" structure="id:906"/>
+                </structure>
+                <structure name="Event" id="1429">
+                    <structref name="String" id="1430" repeatmin="23" repeatmax="23" structure="id:906"/>
+                </structure>
+                <structure name="Moves 1" id="1432">
+                    <number name="Move ID" id="1433" repeatmin="153" repeatmax="153" type="integer" length="2"/>
+                </structure>
+                <structure name="Moves 2" id="1435">
+                    <number name="Move ID" id="1436" repeatmin="194" repeatmax="194" type="integer" length="2"/>
+                </structure>
+                <structure name="Trendy Sayings" id="1438">
+                    <structref name="String" id="1439" repeatmin="34" repeatmax="34" structure="id:906"/>
+                </structure>
+                <structure name="Pokémon 2 (Kanto/Johto - Japanese)" id="1441">
+                    <number name="Pokédex Number" id="1442" repeatmin="251" repeatmax="251" type="integer" length="2"/>
+                </structure>
+            </structure>
+            <structure name="Index" id="1445" alignment="4">
+                <number name="Category Pointer" id="1446" fillcolor="FF86D5" repeatmin="22" repeatmax="22" type="integer" length="4" display="hex"/>
+            </structure>
+        </structure>
+        <structure name="RS Easy Chat Addendum" id="195" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Data" id="1449">
+                <structure name="Pokémon (Hoenn - Alphabetical)" id="1450">
+                    <number name="Pokédex Number" id="1451" repeatmin="202" repeatmax="202" type="integer" length="2"/>
+                </structure>
+                <structure name="Trainer" id="1453">
+                    <number name="Index" id="1454" repeatmin="19" repeatmax="19" type="integer" length="2"/>
+                </structure>
+                <structure name="Status" id="1456">
+                    <number name="Index" id="1457" repeatmin="109" repeatmax="109" type="integer" length="2"/>
+                </structure>
+                <structure name="Battle" id="1459">
+                    <number name="Index" id="1460" repeatmin="63" repeatmax="63" type="integer" length="2"/>
+                </structure>
+                <structure name="Greetings" id="1462">
+                    <number name="Index" id="1463" repeatmin="42" repeatmax="42" type="integer" length="2"/>
+                </structure>
+                <structure name="People" id="1465">
+                    <number name="Index" id="1466" repeatmin="75" repeatmax="75" type="integer" length="2"/>
+                </structure>
+                <structure name="Voices" id="1468">
+                    <number name="Index" id="1469" repeatmin="63" repeatmax="63" type="integer" length="2"/>
+                </structure>
+                <structure name="Speech" id="1471">
+                    <number name="Index" id="1472" repeatmin="60" repeatmax="60" type="integer" length="2"/>
+                </structure>
+                <structure name="Endings" id="1474">
+                    <number name="Index" id="1475" repeatmin="69" repeatmax="69" type="integer" length="2"/>
+                </structure>
+                <structure name="Feelings" id="1477">
+                    <number name="Index" id="1478" repeatmin="69" repeatmax="69" type="integer" length="2"/>
+                </structure>
+                <structure name="Conditions" id="1480">
+                    <number name="Index" id="1481" repeatmin="69" repeatmax="69" type="integer" length="2"/>
+                </structure>
+                <structure name="Actions" id="1483">
+                    <number name="Index" id="1484" repeatmin="78" repeatmax="78" type="integer" length="2"/>
+                </structure>
+                <structure name="Lifestyle" id="1486">
+                    <number name="Index" id="1487" repeatmin="45" repeatmax="45" type="integer" length="2"/>
+                </structure>
+                <structure name="Hobbies" id="1489">
+                    <number name="Index" id="1490" repeatmin="54" repeatmax="54" type="integer" length="2"/>
+                </structure>
+                <structure name="Time" id="1492">
+                    <number name="Index" id="1493" repeatmin="45" repeatmax="45" type="integer" length="2"/>
+                </structure>
+                <structure name="Misc" id="1495">
+                    <number name="Index" id="1496" repeatmin="42" repeatmax="42" type="integer" length="2"/>
+                </structure>
+                <structure name="Adjectives" id="1498">
+                    <number name="Index" id="1499" repeatmin="36" repeatmax="36" type="integer" length="2"/>
+                </structure>
+                <structure name="Event" id="1501">
+                    <number name="Index" id="1502" repeatmin="22" repeatmax="22" type="integer" length="2"/>
+                </structure>
+                <structure name="Moves (Alphabetical Order)" id="1504">
+                    <number name="Move ID" id="1505" repeatmin="347" repeatmax="347" type="integer" length="2"/>
+                </structure>
+                <structure name="Trendy Sayings" id="1507">
+                    <number name="Index" id="1508" repeatmin="33" repeatmax="33" type="integer" length="2"/>
+                </structure>
+                <structure name="Pokémon 2 (Kanto/Johto - Alphabetical)" id="1510">
+                    <number name="Pokédex Number" id="1511" repeatmin="251" repeatmax="251" type="integer" length="2"/>
+                </structure>
+            </structure>
+            <structure name="Index" id="1514" alignment="4">
+                <number name="Category Pointer" id="1515" fillcolor="FF86D5" repeatmin="22" repeatmax="22" type="integer" length="4" display="hex"/>
+            </structure>
+            <structure name="Category Names" id="1517">
+                <structref name="String Pool String Pointer" id="1518" repeatmin="22" repeatmax="22" structure="id:443"/>
+            </structure>
+        </structure>
+        <structure name="Easy Chat Data" id="430" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Data" id="1521">
+                <structure name="Pokémon (Hoenn - Alphabetical)" id="1522">
+                    <number name="Pokédex Number" id="1523" repeatmin="202" repeatmax="202" type="integer" length="2"/>
+                </structure>
+                <structure name="Trainer" id="1525">
+                    <structure name="String Pool" id="1526">
+                        <structref name="String" id="1527" repeatmin="26" repeatmax="26" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1529">
+                        <structref name="Easy Chat String Pool Entry" id="1531" repeatmin="26" repeatmax="26" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Status" id="1534">
+                    <structure name="String Pool" id="1535" endian="little">
+                        <structref name="String" id="1536" repeatmin="109" repeatmax="109" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1538">
+                        <structref name="Easy Chat String Pool Entry" id="1539" repeatmin="109" repeatmax="109" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Battle" id="1542">
+                    <structure name="String Pool" id="1543" endian="little">
+                        <structref name="String" id="1544" repeatmin="63" repeatmax="63" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1546">
+                        <structref name="Easy Chat String Pool Entry" id="1547" repeatmin="63" repeatmax="63" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Greetings" id="1550">
+                    <structure name="String Pool" id="1551">
+                        <structref name="String" id="1552" repeatmin="42" repeatmax="42" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1554">
+                        <structref name="Easy Chat String Pool Entry" id="1555" repeatmin="42" repeatmax="42" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="People" id="1558">
+                    <structure name="String Pool" id="1559">
+                        <structref name="String" id="1560" repeatmin="75" repeatmax="75" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1562">
+                        <structref name="Easy Chat String Pool Entry" id="1563" repeatmin="75" repeatmax="75" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Voices" id="1566">
+                    <structure name="String Pool" id="1567">
+                        <structref name="String" id="1568" repeatmin="63" repeatmax="63" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1570">
+                        <structref name="Easy Chat String Pool Entry" id="1571" repeatmin="63" repeatmax="63" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Speech" id="1574">
+                    <structure name="String Pool" id="1575">
+                        <structref name="String" id="1576" repeatmin="60" repeatmax="60" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1578">
+                        <structref name="Easy Chat String Pool Entry" id="1579" repeatmin="60" repeatmax="60" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Endings" id="1582">
+                    <structure name="String Pool" id="1583">
+                        <structref name="String" id="1584" repeatmin="69" repeatmax="69" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1586">
+                        <structref name="Easy Chat String Pool Entry" id="1587" repeatmin="69" repeatmax="69" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Feelings" id="1590">
+                    <structure name="String Pool" id="1591">
+                        <structref name="String" id="1592" repeatmin="69" repeatmax="69" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1594">
+                        <structref name="Easy Chat String Pool Entry" id="1595" repeatmin="69" repeatmax="69" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Conditions" id="1598">
+                    <structure name="String Pool" id="1599">
+                        <structref name="String" id="1600" repeatmin="69" repeatmax="69" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1602">
+                        <structref name="Easy Chat String Pool Entry" id="1603" repeatmin="69" repeatmax="69" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Actions" id="1606">
+                    <structure name="String Pool" id="1607">
+                        <structref name="String" id="1608" repeatmin="78" repeatmax="78" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1610">
+                        <structref name="Easy Chat String Pool Entry" id="1611" repeatmin="78" repeatmax="78" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Lifestyle" id="1614">
+                    <structure name="String Pool" id="1615">
+                        <structref name="String" id="1616" repeatmin="45" repeatmax="45" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1618">
+                        <structref name="Easy Chat String Pool Entry" id="1619" repeatmin="45" repeatmax="45" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Hobbies" id="1622">
+                    <structure name="String Pool" id="1623">
+                        <structref name="String" id="1624" repeatmin="54" repeatmax="54" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1626">
+                        <structref name="Easy Chat String Pool Entry" id="1627" repeatmin="54" repeatmax="54" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Time" id="1630">
+                    <structure name="String Pool" id="1631">
+                        <structref name="String" id="1632" repeatmin="45" repeatmax="45" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1634">
+                        <structref name="Easy Chat String Pool Entry" id="1635" repeatmin="45" repeatmax="45" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Misc" id="1638">
+                    <structure name="String Pool" id="1639">
+                        <structref name="String" id="1640" repeatmin="42" repeatmax="42" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1642">
+                        <structref name="Easy Chat String Pool Entry" id="1643" repeatmin="42" repeatmax="42" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Adjectives" id="1646">
+                    <structure name="String Pool" id="1647">
+                        <structref name="String" id="1648" repeatmin="36" repeatmax="36" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1650">
+                        <structref name="Easy Chat String Pool Entry" id="1651" repeatmin="36" repeatmax="36" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Event" id="1654">
+                    <structure name="String Pool" id="1655">
+                        <structref name="String" id="1656" repeatmin="28" repeatmax="28" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1658">
+                        <structref name="Easy Chat String Pool Entry" id="1659" repeatmin="28" repeatmax="28" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Moves (Alphabetical)" id="1662">
+                    <number name="Move ID" id="1663" repeatmin="354" repeatmax="354" type="integer" length="2"/>
+                </structure>
+                <structure name="Trendy Sayings" id="1665">
+                    <structure name="String Pool" id="1666">
+                        <structref name="String" id="1667" repeatmin="33" repeatmax="33" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1669">
+                        <structref name="Easy Chat String Pool Entry" id="1670" repeatmin="33" repeatmax="33" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Pokémon 2 (Kanto/Johto - Alphabetical)" id="1673">
+                    <number name="Pokédex Number" id="1674" repeatmin="251" repeatmax="251" type="integer" length="2"/>
+                </structure>
+            </structure>
+            <structure name="Index" id="1677" alignment="4">
+                <structref name="Easy Chat Index Entry" id="1679" repeatmin="22" repeatmax="22" structure="id:1678"/>
+            </structure>
+        </structure>
+        <structure name="Emerald Easy Chat Data" id="760" extends="id:430">
+            <structure name="Data" id="1682">
+                <structure name="Trainer" id="1683">
+                    <structure name="String Pool" id="1687">
+                        <structref name="String" id="1688" repeatmin="27" repeatmax="27" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1690">
+                        <structref name="Easy Chat String Pool Entry" id="1691" repeatmin="27" repeatmax="27" structure="id:1530"/>
+                    </structure>
+                </structure>
+                <structure name="Event" id="1694">
+                    <structure name="String Pool" id="1815">
+                        <structref name="String" id="1816" repeatmin="29" repeatmax="29" structure="id:906"/>
+                    </structure>
+                    <structure name="Data" id="1818">
+                        <structref name="Easy Chat String Pool Entry" id="1819" repeatmin="29" repeatmax="29" structure="id:1530"/>
+                    </structure>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="Easy Chat String Pool Entry" id="1530" length="12" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="String Pool String Pointer" id="1841" structure="id:443"/>
+            <number name="English Order" id="1842" type="integer" length="4"/>
+            <number name="&lt;unknown boolean flag&gt;" id="1843" type="integer" length="4"/>
+        </structure>
+        <structure name="Easy Chat Index Entry" id="1678" length="8" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Category Pointer" id="1845" fillcolor="FF86D5" type="integer" length="4"/>
+            <number name="Number of Strings" id="1846" type="integer" length="2"/>
+            <number name="&lt;unknown number&gt;" id="1847" type="integer" length="2"/>
+        </structure>
+        <structure name="Easy Chat Category Strings" id="434" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="String Pool String Pointer" id="1849" repeatmin="22" repeatmax="22" structure="id:443"/>
+        </structure>
+        <structure name="Easy Chat Category String Pool" id="447" extends="id:1069">
+            <structref name="String" id="1851" repeatmin="22" repeatmax="22" structure="id:906"/>
+        </structure>
+        <structure name="Move Tutor Data" id="1853" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Move List" id="1854">
+                <number name="Move ID" id="1855" type="integer" length="2"/>
+            </structure>
+            <structure name="Compatibility" id="1857">
+                <number name="Compatibility" id="1858" repeatmin="412" repeatmax="412" type="integer" length="1"/>
+            </structure>
+        </structure>
+        <structure name="FRLG Move Tutor Data" id="466" extends="id:1853">
+            <structure name="Move List" id="1861">
+                <number name="Move ID" id="1862" repeatmin="15" repeatmax="15" type="integer">
+                    <description>FRLG has 15 Move Tutor moves.</description>
+                </number>
+            </structure>
+            <structure name="Compatibility" id="1864">
+                <number name="Compatibility" id="1865" repeatmin="412" repeatmax="412" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="Emerald Move Tutor Data" id="882" extends="id:1853">
+            <structure name="Move List" id="1868">
+                <number name="Move ID" id="1869" repeatmin="30" repeatmax="30" type="integer">
+                    <description>Emerald has 30 Move Tutor moves.</description>
+                </number>
+            </structure>
+            <structure name="Compatibility" id="1871">
+                <structref name="Compatibility" id="1873" repeatmin="412" repeatmax="412" structure="id:1872"/>
+            </structure>
+        </structure>
+        <structure name="Emerald Move Tutor Compatibility" id="1872" length="0" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Compatibility" id="1876" type="integer" length="24" lengthunit="bit"/>
+            <binary name="&lt;padding&gt;" id="1877" strokecolor="929292" fillcolor="929292" length="2" lengthunit="bit"/>
+            <number name="Compatibility 2" id="1878" type="integer" length="6" lengthunit="bit"/>
+        </structure>
+        <structure name="Move Description String Pool" id="150" extends="id:1069">
+            <structref name="String" id="1880" repeatmin="354" repeatmax="354" structure="id:906"/>
+        </structure>
+        <structure name="Emerald Move Description String Pool" id="897" extends="id:1069">
+            <structref name="String" id="1882" repeatmin="355" repeatmax="355" structure="id:906"/>
+        </structure>
+        <structure name="Move Descriptions" id="152" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Description Pointer" id="1884" repeatmin="354" repeatmax="354" structure="id:443"/>
+        </structure>
+        <structure name="Nature Name String Pool" id="154" extends="id:1069" endian="little">
+            <structref name="String" id="1886" repeatmin="25" repeatmax="25" structure="id:906"/>
+        </structure>
+        <structure name="Nature Names" id="156" length="100" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Name" id="1888" repeatmin="25" repeatmax="25" structure="id:443"/>
+        </structure>
+        <structure name="RS Battle Tower Trainer Data" id="199" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="RS Battle Tower Trainer Entry" id="1891" repeatmin="100" repeatmax="100" structure="id:1890"/>
+        </structure>
+        <structure name="RS Battle Tower Trainer Entry" id="1890" length="24" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Trainer Class" id="1893" type="integer" length="1"/>
+            <string name="Name" id="1894" strokecolor="FDD480" fillcolor="FCFD84" type="fixed-length" length="8"/>
+            <number name="Choice Byte" id="1895" type="integer" length="1"/>
+            <structure name="Message" id="1896" alignment="4">
+                <structref name="Easy Chat Phrase" id="1898" repeatmin="6" repeatmax="6" structure="id:1897"/>
+            </structure>
+        </structure>
+        <structure name="RS Battle Tower Held Items" id="201" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Item ID" id="1901" repeatmin="63" repeatmax="63" type="integer" length="2"/>
+        </structure>
+        <structure name="RS Battle Tower Pokémon Data" id="203" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="RS Battle Tower Pokémon Entry" id="1904" repeatmin="600" repeatmax="600" structure="id:1903"/>
+        </structure>
+        <structure name="RS Battle Tower Pokémon Entry" id="1903" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Species ID" id="1906" type="integer" length="2"/>
+            <number name="Held Item" id="1907" type="integer" length="1"/>
+            <number name="Choice Byte" id="1908" type="integer" length="1"/>
+            <number name="Moves" id="1909" repeatmin="4" repeatmax="4" type="integer" length="2"/>
+            <number name="EV Spread" id="1910" type="integer" length="1"/>
+            <number name="Nature" id="1911" type="integer" length="1"/>
+        </structure>
+        <structure name="Battle Frontier Item Index" id="773" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Item ID" id="1913" repeatmin="63" repeatmax="63" type="integer" length="2"/>
+        </structure>
+        <structure name="Battle Frontier Area Data" id="1915" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Pokémon Used" id="1916"/>
+            <structure name="Trainers" id="1918">
+                <structref name="Battle Frontier Trainer Entry" id="1920" structure="id:1919"/>
+            </structure>
+            <structure name="Pokémon" id="1922">
+                <structref name="Battle Frontier Pokémon Entry" id="1924" structure="id:1923"/>
+            </structure>
+        </structure>
+        <structure name="Battle Frontier" id="775" extends="id:1915">
+            <structure name="Trainers" id="1927">
+                <structref name="Battle Frontier Trainer Entry" id="1930" repeatmin="300" repeatmax="300" structure="id:1919"/>
+            </structure>
+            <structure name="Pokémon" id="1932">
+                <structref name="Battle Frontier Pokémon Entry" id="1933" repeatmin="882" repeatmax="882" structure="id:1923"/>
+            </structure>
+        </structure>
+        <structure name="Slateport Battle Tent" id="788" extends="id:1915">
+            <structure name="Trainers" id="1936">
+                <structref name="Battle Frontier Trainer Entry" id="1939" repeatmin="30" repeatmax="30" structure="id:1919"/>
+            </structure>
+            <structure name="Pokémon" id="1941">
+                <structref name="Battle Frontier Pokémon Entry" id="1942" repeatmin="70" repeatmax="70" structure="id:1923"/>
+            </structure>
+        </structure>
+        <structure name="Verdanturf Battle Tent" id="790" alignment="4" extends="id:1915">
+            <structure name="Trainers" id="1945">
+                <structref name="Battle Frontier Trainer Entry" id="1948" repeatmin="30" repeatmax="30" structure="id:1919"/>
+            </structure>
+            <structure name="Pokémon" id="1950">
+                <structref name="Battle Frontier Pokémon Entry" id="1951" repeatmin="45" repeatmax="45" structure="id:1923"/>
+            </structure>
+        </structure>
+        <structure name="Fallarbor Battle Tent" id="792" alignment="4" extends="id:1915" endian="little">
+            <structure name="Trainers" id="1954">
+                <structref name="Battle Frontier Trainer Entry" id="1957" repeatmin="30" repeatmax="30" structure="id:1919"/>
+            </structure>
+            <structure name="Pokémon" id="1959">
+                <structref name="Battle Frontier Pokémon Entry" id="1960" repeatmin="45" repeatmax="45" structure="id:1923"/>
+            </structure>
+        </structure>
+        <structure name="Battle Frontier Trainer Entry" id="1919" length="52" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Trainer Class" id="1963" type="integer" length="4"/>
+            <string name="Name" id="1964" strokecolor="FDD480" fillcolor="FCFD84" type="fixed-length" length="8"/>
+            <structure name="Challenge Quote" id="1965">
+                <structref name="Easy Chat Phrase" id="1966" repeatmin="6" repeatmax="6" structure="id:1897"/>
+            </structure>
+            <structure name="Win Quote" id="1968">
+                <structref name="Easy Chat Phrase" id="1969" repeatmin="6" repeatmax="6" structure="id:1897"/>
+            </structure>
+            <structure name="Lose Quote" id="1971">
+                <structref name="Easy Chat Phrase" id="1972" repeatmin="6" repeatmax="6" structure="id:1897"/>
+            </structure>
+            <offset name="Battle Frontier Trainer Pokémon Used List" id="1975" fillcolor="FF86D5" length="4" references="id:1974" additional="-134217728" follownullreference="yes"/>
+        </structure>
+        <structure name="Battle Frontier Trainer Pokémon Used List" id="1974" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <scriptelement name="Populate List" id="1977">
+                <script name="unnamed" type="Generic">
+                    <source language="Lua">entryName = &quot;Battle Frontier Trainer Pokémon Used List Entry&quot;
+
+-- isNull :: Result -&gt; boolean
+-- Returns true if the array ends after the insertion of the current entry, represented as a Result
+function isNull(lastResult)
+	local number = lastResult:getValue():getUnsignedNumber()
+	return number == 0xFFFF
+end
+
+-- START OF NULL-TERMINATED ARRAY SCRIPT
+results = currentMapper:getCurrentResults()
+currentGrammar = currentMapper:getCurrentGrammar()
+logSrc = currentMapper:getCurrentLogSrc()
+
+offset = currentMapper:getCurrentOffset()
+
+structure = currentGrammar:getStructureByName(entryName)
+
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, &quot;Start Populating Array&quot;)
+startResult = results:addStructureStart(currentMapper:getCurrentStructure(), 0, &quot;Array&quot;)
+index = 0
+size = 0
+repeat
+	bytesProcessed = currentMapper:mapStructure(structure)
+	currentResult = results:getLastResult()
+	
+	index = index + 1
+	size = size + bytesProcessed
+until isNull(currentResult)
+results:addStructureEnd(offset + size)
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, &quot;Finish Populating Array&quot;)
+
+return size</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="Battle Frontier Trainer Pokémon Used List Entry" id="1979" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Pokémon Index ID" id="1980" type="integer" length="2"/>
+        </structure>
+        <structure name="Battle Frontier Pokémon Entry" id="1923" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Species" id="1982" type="integer" length="2"/>
+            <number name="Moves" id="1983" repeatmin="4" repeatmax="4" type="integer" length="2"/>
+            <number name="Held Item" id="1984" type="integer" length="1"/>
+            <structure name="EV Spread" id="1985">
+                <binary name="&lt;padding&gt;" id="1986" fillcolor="929292" length="2" lengthunit="bit"/>
+                <number name="Special Defense" id="1987" type="integer" length="1" lengthunit="bit"/>
+                <number name="Special Attack" id="1988" type="integer" length="1" lengthunit="bit"/>
+                <number name="Speed" id="1989" type="integer" length="1" lengthunit="bit"/>
+                <number name="Defense" id="1990" type="integer" length="1" lengthunit="bit"/>
+                <number name="Attack" id="1991" type="integer" length="1" lengthunit="bit"/>
+                <number name="HP" id="1992" type="integer" length="1" lengthunit="bit"/>
+            </structure>
+            <number name="Nature" id="1994" type="integer" length="1"/>
+        </structure>
+        <structure name="Battle Arena Mind Ratings" id="838" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Mind Rating" id="1996" repeatmin="355" repeatmax="355" type="integer" length="1"/>
+        </structure>
+        <structure name="Battle Style" id="842" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Thresholds" id="1998">
+                <number name="Threshold" id="1999" repeatmin="7" repeatmax="7" type="integer" length="1"/>
+            </structure>
+            <structure name="Move Data" id="2001" length="316" alignment="4"/>
+            <structure name="Move Categories" id="2003">
+                <structref name="Battle Style Move Category Entry" id="2005" repeatmin="7" repeatmax="7" structure="id:2004"/>
+            </structure>
+        </structure>
+        <structure name="Battle Style Move Category Entry" id="2004" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <offset name="Battle Style Move List" id="2009" fillcolor="FF86D5" length="4" references="id:2008" additional="-134217728" follownullreference="yes"/>
+        </structure>
+        <structure name="Battle Style Move List" id="2008" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <scriptelement name="Populate List" id="2011">
+                <script name="unnamed" type="Generic">
+                    <source language="Lua">entryName = &quot;Battle Style Move Data Entry&quot;
+
+-- isNull :: Result -&gt; boolean
+-- Returns true if the array ends after the insertion of the current entry, represented as a Result
+function isNull(lastResult)
+	local number = lastResult:getValue():getUnsignedNumber()
+	return number == 0
+end
+
+-- START OF NULL-TERMINATED ARRAY SCRIPT
+results = currentMapper:getCurrentResults()
+currentGrammar = currentMapper:getCurrentGrammar()
+logSrc = currentMapper:getCurrentLogSrc()
+
+offset = currentMapper:getCurrentOffset()
+
+structure = currentGrammar:getStructureByName(entryName)
+
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, &quot;Start Populating Array&quot;)
+startResult = results:addStructureStart(currentMapper:getCurrentStructure(), 0, &quot;Array&quot;)
+index = 0
+size = 0
+repeat
+	bytesProcessed = currentMapper:mapStructure(structure)
+	currentResult = results:getLastResult()
+	
+	index = index + 1
+	size = size + bytesProcessed
+until isNull(currentResult)
+results:addStructureEnd(offset + size)
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, &quot;Finish Populating Array&quot;)
+
+return size</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="Battle Style Move Data Entry" id="2013" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Move ID" id="2014" type="integer" length="2"/>
+        </structure>
+        <structure name="Battle Pyramid Round Data" id="854" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Battle Pyramid Wild Pokémon Data Entry" id="2017" repeatmin="8" repeatmax="8" structure="id:2016"/>
+        </structure>
+        <structure name="Battle Pyramid Wild Pokémon Data Entry" id="2016" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Pokémon ID" id="2019" type="integer" length="2"/>
+            <number name="Median Level" id="2020" type="integer" length="1"/>
+            <binary name="&lt;new binary&gt;" id="2021" length="1"/>
+            <number name="Move ID" id="2022" repeatmin="4" repeatmax="4" type="integer" length="2"/>
+        </structure>
+        <structure name="Battle Pyramid Pickup List" id="864" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="0-6 Floors Cleared" id="2025" structure="id:2024"/>
+            <structref name="7-13 Floors Cleared" id="2026" structure="id:2024"/>
+            <structref name="14-20 Floors Cleared" id="2027" structure="id:2024"/>
+            <structref name="21-27 Floors Cleared" id="2028" structure="id:2024"/>
+            <structref name="28-34 Floors Cleared" id="2029" structure="id:2024"/>
+            <structref name="35-41 Floors Cleared" id="2030" structure="id:2024"/>
+            <structref name="42-48 Floors Cleared" id="2031" structure="id:2024"/>
+            <structref name="49-55 Floors Cleared" id="2032" structure="id:2024"/>
+            <structref name="56-62 Floors Cleared" id="2033" structure="id:2024"/>
+            <structref name="63-69 Floors Cleared" id="2034" structure="id:2024"/>
+            <structref name="70-76 Floors Cleared" id="2035" structure="id:2024"/>
+            <structref name="77-83 Floors Cleared" id="2036" structure="id:2024"/>
+            <structref name="84-90 Floors Cleared" id="2037" structure="id:2024"/>
+            <structref name="91-97 Floors Cleared" id="2038" structure="id:2024"/>
+            <structref name="98-104 Floors Cleared" id="2039" structure="id:2024"/>
+            <structref name="105-111 Floors Cleared" id="2040" structure="id:2024"/>
+            <structref name="112-118 Floors Cleared" id="2041" structure="id:2024"/>
+            <structref name="119-125 Floors Cleared" id="2042" structure="id:2024"/>
+            <structref name="126-132 Floors Cleared" id="2043" structure="id:2024"/>
+            <structref name="133+ Floors Cleared" id="2044" structure="id:2024"/>
+            <binary name="&lt;unknown Pickup Lists&gt;" id="2045" length="400"/>
+        </structure>
+        <structure name="Battle Pyramid Pickup List Entry" id="2024" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Item ID" id="2047" repeatmin="10" repeatmax="10" type="integer" length="2"/>
+        </structure>
+        <structure name="Trainer Hill Data" id="913" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Trainer Hill Mode Data" id="2050" repeatmin="4" repeatmax="4" structure="id:2049"/>
+        </structure>
+        <structure name="Trainer Hill Mode Data" id="2049" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="&lt;new structure&gt;" id="2052" length="8"/>
+            <structref name="Trainer Hill Floor Data" id="2055" repeatmin="4" repeatmax="4" structure="id:2054"/>
+        </structure>
+        <structure name="Trainer Hill Floor Data" id="2054" length="952" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="&lt;new structure&gt;" id="2057" length="4"/>
+            <structref name="Trainer Hill Trainer Data" id="2060" repeatmin="2" repeatmax="2" structure="id:2059"/>
+            <structure name="&lt;floor data?&gt;" id="2061" length="256"/>
+        </structure>
+        <structure name="Trainer Tower Item Index" id="475" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Item ID" id="2064" repeatmin="15" repeatmax="15" type="integer" length="2"/>
+        </structure>
+        <structure name="Trainer Tower Data" id="478" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Trainer Pool" id="2066">
+                <structref name="Red Subset" id="2068" structure="id:2067"/>
+                <structref name="Green Subset" id="2069" structure="id:2067"/>
+                <structref name="Blue Subset" id="2070" structure="id:2067"/>
+                <structref name="Yellow Subset" id="2071" structure="id:2067"/>
+            </structure>
+            <structure name="&lt;new structure&gt;" id="2073" length="8"/>
+            <structure name="Floor Plan" id="2075">
+                <structref name="Single Mode" id="2077" structure="id:2076"/>
+                <structref name="Double Mode" id="2078" structure="id:2076"/>
+                <structref name="Knockout Mode" id="2079" structure="id:2076"/>
+                <structref name="Mixed Mode" id="2080" structure="id:2076"/>
+            </structure>
+        </structure>
+        <structure name="Trainer Tower Subset Data" id="2067" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Trainer Tower Card Data" id="2084" repeatmin="8" repeatmax="8" structure="id:2083"/>
+        </structure>
+        <structure name="Trainer Tower Card Data" id="2083" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Card Number" id="2086" type="integer" length="1"/>
+            <structure name="&lt;new structure&gt;" id="2087" length="1"/>
+            <number name="Battle Type" id="2089" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Single Battle" value="0"/>
+                    <fixedvalue name="Double Battle" value="1"/>
+                    <fixedvalue name="Knockout Battle" value="2"/>
+                </fixedvalues>
+            </number>
+            <number name="Reward Item" id="2090" type="integer" length="1"/>
+            <structref name="Trainer Hill Trainer Data" id="2091" repeatmin="3" repeatmax="3" structure="id:2059"/>
+            <structure name="&lt;new structure-1&gt;" id="2092" length="4"/>
+        </structure>
+        <structure name="Trainer Tower Mode Entry" id="2076" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <offset name="Trainer Tower Card Data" id="2095" fillcolor="FF80FB" repeatmin="8" repeatmax="8" length="4" references="id:2083" additional="-134217728" follownullreference="yes"/>
+        </structure>
+        <structure name="Trainer Hill/Tower Trainer Data" id="2059" length="328" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="Name" id="2097" strokecolor="FDD480" fillcolor="FCFD84" type="fixed-length" length="11"/>
+            <structure name="&lt;new structure&gt;" id="2098" length="3"/>
+            <structure name="&lt;new structure-1&gt;" id="2100" length="50"/>
+            <structref name="Trainer Hill Pokémon Data" id="2103" repeatmin="6" repeatmax="6" structure="id:2102"/>
+        </structure>
+        <structure name="Trainer Hill/Tower Pokémon Data" id="2102" length="44" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Species" id="2105" type="integer" length="2"/>
+            <number name="Held Item" id="2106" type="integer" length="2"/>
+            <number name="Moves" id="2107" repeatmin="4" repeatmax="4" type="integer" length="2"/>
+            <structure name="&lt;new structure&gt;" id="2108" length="20"/>
+            <string name="Nickname" id="2110" strokecolor="FDD480" fillcolor="FCFD84" type="fixed-length" length="11"/>
+        </structure>
+        <structure name="String Pool" id="1069" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="String" id="2112" structure="id:906"/>
+        </structure>
+        <structure name="String Pool String" id="906" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <custom name="String" id="2162" strokecolor="FFD478" fillcolor="FEFC78" script="id:2161"/>
+        </structure>
+        <structure name="String Pool String Pointer" id="443" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <offset name="String Pool String" id="2116" fillcolor="FF80FB" length="4" references="id:906" additional="-134217728" follownullreference="yes"/>
+        </structure>
+        <structure name="Easy Chat Phrase" id="1897" length="2" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="String Index" id="2118" type="integer" length="1"/>
+            <number name="List Index" id="2119" type="integer" length="1"/>
+        </structure>
+        <structure name="Compressed Data Header" id="1003" encoding="ISO_8859-1:1987" endian="little" signed="no" order="variable">
+            <structref name="Compressed Data Header (LZ77)" id="2122" repeatmin="0" structure="id:2121"/>
+            <structref name="Compressed Data Header (Huffman)" id="2124" repeatmin="0" structure="id:2123"/>
+            <structref name="Compressed Data Header (Run-Length)" id="2126" repeatmin="0" structure="id:2125"/>
+        </structure>
+        <structure name="Compressed Data Header (Root)" id="2128" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Compression Type" id="2129" fillcolor="77FDD6" type="integer" length="4" lengthunit="bit" display="hex"/>
+        </structure>
+        <structure name="Compressed Data Header (LZ77)" id="2121" extends="id:2128">
+            <number name="Compression Type" mustmatch="yes" id="2131" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="LZ77" value="0x1"/>
+                </fixedvalues>
+            </number>
+            <binary name="&lt;reserved&gt;" id="2132" length="4" lengthunit="bit"/>
+            <number name="Decompressed Size" id="2133" type="integer" length="3"/>
+            <structref name="LZ77 Compressed Flag Data" id="2135" structure="id:2134"/>
+        </structure>
+        <structure name="LZ77 Compressed Flag Data" id="2134" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Is Compressed" id="2137" repeatmin="8" repeatmax="8" type="integer" length="1" lengthunit="bit"/>
+            <scriptelement name="Render Blocks" id="2138">
+                <script name="unnamed" type="Generic">
+                    <source language="Lua">results = currentMapper:getCurrentResults()
+currentGrammar = currentMapper:getCurrentGrammar()
+
+compressedResults = {}
+compressedResults[7] = results:getLastResult()
+for i = 6,0,-1 do
+	compressedResults[i] = results:getPrevResult(compressedResults[i+1])
+end
+
+logSrc = currentMapper:getCurrentLogSrc()
+bytesProcessed = 0
+uncompressedSize = 0
+for i = 0,7 do
+	local isCompressed = compressedResults[i]:getValue():getUnsignedNumber()
+	local structure = nil
+	if (isCompressed == 0) then
+		structure = currentGrammar:getStructureByName(&quot;LZ77 Uncompressed Block&quot;)
+	else
+		structure = currentGrammar:getStructureByName(&quot;LZ77 Compressed Block&quot;)
+	end
+	bytesProcessed = bytesProcessed + currentMapper:mapStructure(structure)
+	logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, string.format(&quot;%d bytes so far&quot;, bytesProcessed))
+	logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, string.format(&quot;%s uncompressed&quot;, currentMapper:getCurrentResults():getResultByName(&quot;Decompressed Size&quot;):getValue():getString()))
+end
+
+-- log the activity
+--logSrc = currentMapper:getCurrentLogSrc()
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, &quot;Block Rendered&quot;)
+
+return bytesProcessed</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="LZ77 Uncompressed Block" id="2140" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="Uncompressed Data" id="2141" length="1"/>
+            <scriptelement name="Decompressed Size" id="2142">
+                <script name="unnamed" type="Generic">
+                    <source language="Lua">results = currentMapper:getCurrentResults()
+element = currentMapper:getCurrentElement()
+
+value = synalysis.Value()
+value:setString(string.format(&quot;%d&quot;,1))
+
+lastResult = results:addElement(element, 0, 0, value)
+
+-- Sanity Check
+logSrc = currentMapper:getCurrentLogSrc()
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, lastResult:getValue():getString())
+
+return 0 -- consumes no space</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="LZ77 Compressed Block" id="2144" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Bytes to Copy - 3" id="2145" type="integer" length="4" lengthunit="bit"/>
+            <number name="Window Size" id="2146" type="integer" length="12" lengthunit="bit"/>
+            <scriptelement name="Decompressed Size" id="2147">
+                <script name="unnamed" type="Generic">
+                    <source language="Lua">results = currentMapper:getCurrentResults()
+element = currentMapper:getCurrentElement()
+
+count = results:getResultByName(&quot;Bytes to Copy - 3&quot;):getValue():getUnsigned() + 3
+
+value = synalysis.Value()
+value:setString(string.format(&quot;%d&quot;, count))
+
+lastResult = results:addElement(element, 0, 0, value)
+
+-- Sanity Check
+logSrc = currentMapper:getCurrentLogSrc()
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, lastResult:getValue():getString())
+
+return 0 -- consumes no space</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="Compressed Data Header (Huffman)" id="2123" extends="id:2128">
+            <number name="Compression Type" mustmatch="yes" id="2149" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Huffman" value="0x2"/>
+                </fixedvalues>
+            </number>
+            <number name="Data Size (Bits)" id="2150" type="integer" length="4" lengthunit="bit"/>
+            <number name="Decompressed Size" id="2151" type="integer" length="3"/>
+        </structure>
+        <structure name="Compressed Data Header (Run-Length)" id="2125" extends="id:2128">
+            <number name="Compression Type" mustmatch="yes" id="2153" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Run-Length" value="0x3"/>
+                </fixedvalues>
+            </number>
+            <binary name="&lt;reserved&gt;" id="2154" length="4" lengthunit="bit"/>
+            <number name="Decompressed Size" id="2155" type="integer" length="3"/>
+        </structure>
+        <structure name="Run-Length Compressed Flag Data" id="2157" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Is Compressed" id="2158" type="integer" length="1" lengthunit="bit"/>
+            <number name="Expanded Data Length" id="2159" type="integer" length="7" lengthunit="bit"/>
+        </structure>
+    </grammar>
+</ufwb>

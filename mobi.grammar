@@ -1,0 +1,616 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.3">
+    <grammar name="Mobi" start="id:23" author="Andreas Pehnack" fileextension="azw3,mobi">
+        <description>Grammar for Mobi files (works also for Kindle AZW3 files)</description>
+        <structure name="Mobi file" id="23" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="PalmDatabase" id="25" structure="id:24"/>
+        </structure>
+        <structure name="PalmDatabase" id="24" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="DataBaseName" id="27" type="fixed-length" length="32" encoding="ISO_8859-1:1987"/>
+            <number name="Attributes" id="28" type="integer" length="2">
+                <mask name="Read-Only" value="0x2">
+                    <fixedvalue name="Read-Only" value="0x2"/>
+                </mask>
+                <mask name="Dirty AppInfoArea" value="0x4">
+                    <fixedvalue name="Dirty AppInfoArea" value="0x4"/>
+                </mask>
+                <mask name="Backup this database" value="0x8">
+                    <fixedvalue name="Backup this database" value="0x8"/>
+                </mask>
+                <mask name="Okay to install newer over existing copy, if present on PalmPilot" value="0x10">
+                    <fixedvalue name="Okay to install newer over existing copy, if present on PalmPilot" value="0x10"/>
+                </mask>
+                <mask name="Force the PalmPilot to reset after this database is installed" value="0x20">
+                    <fixedvalue name="Force the PalmPilot to reset after this database is installed" value="0x20"/>
+                </mask>
+                <mask name="Don't allow copy of file to be beamed to other Pilot" value="0x40">
+                    <fixedvalue name="Don't allow copy of file to be beamed to other Pilot" value="0x40"/>
+                </mask>
+            </number>
+            <number name="Version" id="29" type="integer" length="2"/>
+            <number name="CreationDate" id="30" type="integer" length="4"/>
+            <number name="ModificationDate" id="31" type="integer" length="4"/>
+            <number name="LastBackupDate" id="32" type="integer" length="4"/>
+            <number name="ModificationNumber" id="33" type="integer" length="4"/>
+            <number name="AppInfoID" id="34" type="integer" length="4"/>
+            <number name="SortInfoID" id="35" type="integer" length="4"/>
+            <string name="Type" id="36" type="fixed-length" length="4" encoding="ISO_8859-1:1987"/>
+            <string name="CreatorID" id="37" type="fixed-length" length="4" encoding="ISO_8859-1:1987"/>
+            <number name="UniqueIDSeed" id="38" type="integer" length="4"/>
+            <number name="NextRecordListID" id="39" type="integer" length="4"/>
+            <number name="NumberOfRecords" id="40" type="integer" length="2"/>
+            <structure name="FirstRecordInfo" id="41">
+                <offset name="RecordDataOffset" id="43" length="4" references="id:42" follownullreference="yes"/>
+                <number name="RecordAttributes" id="44" type="integer" length="1">
+                    <mask name="Secret record bit" value="0x10">
+                        <fixedvalue name="Secret record bit" value="0x10"/>
+                    </mask>
+                    <mask name="Record in use (busy bit)" value="0x20">
+                        <fixedvalue name="Record in use (busy bit)" value="0x20"/>
+                    </mask>
+                    <mask name="Dirty record bit" value="0x40">
+                        <fixedvalue name="Dirty record bit" value="0x40"/>
+                    </mask>
+                    <mask name="Delete record on next HotSync" value="0x80">
+                        <fixedvalue name="Delete record on next HotSync" value="0x80"/>
+                    </mask>
+                </number>
+                <number name="UniqueID" id="45" type="integer" length="3"/>
+            </structure>
+            <structure name="RecordInfo" id="47" repeatmax="NumberOfRecords-1">
+                <offset name="RecordDataOffset" id="49" length="4" references="id:48" follownullreference="yes"/>
+                <number name="RecordAttributes" id="50" type="integer" length="1">
+                    <mask name="Secret record bit" value="0x10">
+                        <fixedvalue name="Secret record bit" value="0x10"/>
+                    </mask>
+                    <mask name="Record in use (busy bit)" value="0x20">
+                        <fixedvalue name="Record in use (busy bit)" value="0x20"/>
+                    </mask>
+                    <mask name="Dirty record bit" value="0x40">
+                        <fixedvalue name="Dirty record bit" value="0x40"/>
+                    </mask>
+                    <mask name="Delete record on next HotSync" value="0x80">
+                        <fixedvalue name="Delete record on next HotSync" value="0x80"/>
+                    </mask>
+                </number>
+                <number name="UniqueID" id="51" type="integer" length="3"/>
+            </structure>
+        </structure>
+        <structure name="MobipocketInfoRecord" id="42" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Compression" id="54" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="No Compression" value="1"/>
+                    <fixedvalue name="PalmDOC Compression" value="2"/>
+                    <fixedvalue name="HUFF/CDIC Compression" value="17480"/>
+                </fixedvalues>
+            </number>
+            <number name="Unused" id="55" type="integer" length="2"/>
+            <number name="TextLength" id="56" type="integer" length="4"/>
+            <number name="RecordCount" id="57" type="integer" length="2"/>
+            <number name="RecordSize" id="58" type="integer" length="2"/>
+            <number name="EncryptionType" id="59" type="integer" length="2">
+                <description>In a regular PalmDOC file this and the next element are the current reading position
+</description>
+                <fixedvalues>
+                    <fixedvalue name="No Encryption" value="0"/>
+                    <fixedvalue name="Old Mobipocket Encryption" value="1"/>
+                    <fixedvalue name="Mobipocket Encryption" value="2"/>
+                </fixedvalues>
+            </number>
+            <number name="Unused2" id="60" type="integer" length="2"/>
+            <structref name="MOBI Header" id="62" structure="id:61"/>
+            <scriptelement name="Map EXTH Record" id="63">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+flagsResult = results.getResultByName(&quot;EXTH Flags&quot;)
+
+flagsValue = flagsResult.getValue()
+
+flags = flagsValue.getUnsignedNumber()
+
+print flags
+
+if flags != 0:
+	currentGrammar = currentMapper.getCurrentGrammar()
+	exthStructure = currentGrammar.getStructureByName(&quot;EXTH Header&quot;)
+	currentMapper.mapStructure(exthStructure)
+
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="MOBI Header" id="61" length="HeaderLength" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="Identifier" id="65" type="fixed-length" length="4" encoding="ISO_8859-1:1987"/>
+            <number name="HeaderLength" id="66" type="integer" length="4"/>
+            <number name="MobyType" id="67" type="integer" length="4"/>
+            <number name="TextEncoding" id="68" type="integer" length="4">
+                <fixedvalues>
+                    <fixedvalue name="WinLatin1" value="1252"/>
+                    <fixedvalue name="UTF-8" value="65001"/>
+                </fixedvalues>
+            </number>
+            <number name="Unique-ID" id="69" type="integer" length="4" display="hex"/>
+            <number name="FileVersion" id="70" type="integer" length="4"/>
+            <number name="OrthographicIndex" id="71" type="integer" length="4" display="hex"/>
+            <number name="InflectionIndex" id="72" type="integer" length="4" display="hex"/>
+            <number name="IndexNames" id="73" type="integer" length="4" display="hex"/>
+            <number name="IndexKeys" id="74" type="integer" length="4" display="hex"/>
+            <number name="ExtraIndex0" id="75" type="integer" length="4" display="hex"/>
+            <number name="ExtraIndex1" id="76" type="integer" length="4" display="hex"/>
+            <number name="ExtraIndex2" id="77" type="integer" length="4" display="hex"/>
+            <number name="ExtraIndex3" id="78" type="integer" length="4" display="hex"/>
+            <number name="ExtraIndex4" id="79" type="integer" length="4" display="hex"/>
+            <number name="ExtraIndex5" id="80" type="integer" length="4" display="hex"/>
+            <number name="FirstNonBookIndex" id="81" type="integer" length="4"/>
+            <number name="FullNameOffset" id="82" type="integer" length="4"/>
+            <number name="FullNameLength" id="83" type="integer" length="4"/>
+            <structure name="Locale" id="84">
+                <number name="Unused" id="85" type="integer" length="2"/>
+                <number name="Dialect" id="86" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="British" value="8"/>
+                        <fixedvalue name="US" value="4"/>
+                    </fixedvalues>
+                </number>
+                <number name="MainLanguage" id="87" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="English" value="9"/>
+                        <fixedvalue name="German" value="7"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+            <number name="InputLanguage" id="89" type="integer" length="4"/>
+            <number name="OutputLanguage" id="90" type="integer" length="4"/>
+            <number name="MinVersion" id="91" type="integer" length="4"/>
+            <number name="FirstImageIndex" id="92" type="integer" length="4"/>
+            <number name="HuffmanRecordOffset" id="93" type="integer" length="4"/>
+            <number name="HuffmanRecordCount" id="94" type="integer" length="4"/>
+            <number name="HuffmanTableOffset" id="95" type="integer" length="4"/>
+            <number name="HuffmanTableLength" id="96" type="integer" length="4"/>
+            <number name="EXTH Flags" id="97" type="integer" length="4"/>
+            <binary name="Unknown" id="98" length="32"/>
+            <number name="Unkown2" id="99" type="integer" length="4" display="hex"/>
+            <number name="DRM Offset" id="100" type="integer" length="4"/>
+            <number name="DRM Count" id="101" type="integer" length="4"/>
+            <number name="DRM Size" id="102" type="integer" length="4"/>
+            <number name="DRM Flags" id="103" type="integer" length="4" display="hex"/>
+            <binary name="Unknown3" id="104" length="8"/>
+            <number name="Unknown4" id="105" type="integer" length="4" display="hex"/>
+            <number name="FirstContentRecordNumber" id="106" type="integer" length="4"/>
+            <number name="LastContentRecordNumber" id="107" type="integer" length="4"/>
+            <number name="Unknown5" id="108" type="integer" length="4"/>
+            <number name="FCISRecordNumber" id="109" type="integer" length="4"/>
+            <number name="Unknown6" id="110" type="integer" length="4"/>
+            <number name="FLISRecordNumber" id="111" type="integer" length="4"/>
+            <number name="FLISRecordCount" id="112" type="integer" length="4"/>
+            <number name="Unknown7" id="113" type="integer" length="4" display="hex"/>
+            <number name="FirstCompilationDataSectionCount" id="114" type="integer" length="4"/>
+            <number name="NumberOfCompilationDataSections" id="115" type="integer" length="4"/>
+            <number name="Unknown8" id="116" type="integer" length="4"/>
+            <number name="ExtraRecordDataFlags" id="117" type="integer" length="4">
+                <mask name="Extra Multiple Bytes" value="0x1">
+                    <fixedvalue name="Extra Multiple Bytes" value="0x1"/>
+                </mask>
+                <mask name="TBS Indexing Description" value="0x2">
+                    <fixedvalue name="TBS Indexing Description" value="0x2"/>
+                </mask>
+                <mask name="Uncrossable Breaks" value="0x4">
+                    <fixedvalue name="Uncrossable Breaks" value="0x4"/>
+                </mask>
+            </number>
+            <number name="INDXRecordOffset" id="118" type="integer" length="4" display="hex"/>
+            <number name="Unknown9" id="119" type="integer" length="4" display="hex"/>
+            <number name="Unknown10" id="120" type="integer" length="4" display="hex"/>
+            <number name="Unknown11" id="121" type="integer" length="4" display="hex"/>
+            <number name="Unknown12" id="122" type="integer" length="4" display="hex"/>
+            <number name="Unknown13" id="123" type="integer" length="4" display="hex"/>
+            <number name="Unknown14" id="124" type="integer" length="4" display="hex"/>
+        </structure>
+        <structure name="EXTH Header" id="126" length="HeaderLength" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="Identifier" id="127" type="fixed-length" length="4" encoding="ISO_8859-1:1987"/>
+            <number name="HeaderLength" id="128" type="integer" length="4"/>
+            <number name="RecordCount" id="129" type="integer" length="4"/>
+            <structure name="Records" id="130" repeatmax="RecordCount" order="variable">
+                <structref name="DRM EBookBaseBookID Record" id="132" repeatmin="0" structure="id:131"/>
+                <structref name="AuthorRecord" id="134" repeatmin="0" structure="id:133"/>
+                <structref name="PublisherRecord" id="136" repeatmin="0" structure="id:135"/>
+                <structref name="SubjectRecord" id="138" repeatmin="0" structure="id:137"/>
+                <structref name="PublishingDateRecord" id="140" repeatmin="0" structure="id:139"/>
+                <structref name="ContributorRecord" id="736" repeatmin="0" structure="id:732"/>
+                <structref name="AsinRecord" id="142" repeatmin="0" structure="id:141"/>
+                <structref name="SampleRecord" id="144" repeatmin="0" structure="id:143"/>
+                <structref name="StartReadingRecord" id="146" repeatmin="0" structure="id:145"/>
+                <structref name="CoverOffsetRecord" id="148" repeatmin="0" structure="id:147"/>
+                <structref name="ThumbOffsetRecord" id="150" repeatmin="0" structure="id:149"/>
+                <structref name="HasFakeCoverRecord" id="152" repeatmin="0" structure="id:151"/>
+                <structref name="CreatorSoftwareRecord" id="154" repeatmin="0" structure="id:153"/>
+                <structref name="CreatorMajorVersionRecord" id="156" repeatmin="0" structure="id:155"/>
+                <structref name="CreatorMinorVersionRecord" id="158" repeatmin="0" structure="id:157"/>
+                <structref name="CreatorBuildNumberRecord" id="160" repeatmin="0" structure="id:159"/>
+                <structref name="FontSignatureRecord" id="341" repeatmin="0" structure="id:337"/>
+                <structref name="UpdatedTitleRecord" id="162" repeatmin="0" structure="id:161"/>
+                <structref name="UnknownRecord405" id="164" repeatmin="0" structure="id:163"/>
+                <structref name="UnknownRecord406" id="166" repeatmin="0" structure="id:165"/>
+                <structref name="AsinCopyRecord" id="168" repeatmin="0" structure="id:167"/>
+                <structref name="EXTH Record" id="170" repeatmin="0" structure="id:169"/>
+            </structure>
+        </structure>
+        <structure name="EXTH Record" id="169" length="RecordLength" encoding="ISO_8859-1:1987" endian="big" signed="no" strokecolor="FF7D78">
+            <number name="RecordType" id="173" fillcolor="FFD478" type="integer" length="4">
+                <fixedvalues>
+                    <fixedvalue name="drm_server_id" value="1"/>
+                    <fixedvalue name="drm_commerce_id" value="2"/>
+                    <fixedvalue name="drm_ebookbase_book_id" value="3"/>
+                    <fixedvalue name="author" value="100"/>
+                    <fixedvalue name="publisher" value="101"/>
+                    <fixedvalue name="imprint" value="102"/>
+                    <fixedvalue name="description" value="103"/>
+                    <fixedvalue name="isbn" value="104"/>
+                    <fixedvalue name="subject" value="105"/>
+                    <fixedvalue name="publishingdate" value="106"/>
+                    <fixedvalue name="review" value="107"/>
+                    <fixedvalue name="contributor" value="108"/>
+                    <fixedvalue name="rights" value="109"/>
+                    <fixedvalue name="subjectcode" value="110"/>
+                    <fixedvalue name="type" value="111"/>
+                    <fixedvalue name="source" value="112"/>
+                    <fixedvalue name="asin" value="113"/>
+                    <fixedvalue name="versionnumber" value="114"/>
+                    <fixedvalue name="sample" value="115"/>
+                    <fixedvalue name="startreading" value="116"/>
+                    <fixedvalue name="adult" value="117"/>
+                    <fixedvalue name="retail price" value="118"/>
+                    <fixedvalue name="retail price currency" value="119"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="174" fillcolor="D4FB78" type="integer" length="4"/>
+        </structure>
+        <structure name="DRM EBookBaseBookID Record" id="131" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="176" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="drm_ebookbase_book_id" value="3"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="177" type="integer"/>
+            <string name="BookID" id="178" type="fixed-length" length="0"/>
+        </structure>
+        <structure name="AuthorRecord" id="133" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="180" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="author" value="100"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="181" type="integer"/>
+            <string name="AuthorName" id="182" type="fixed-length" length="0" encoding="ISO_8859-1:1987"/>
+        </structure>
+        <structure name="PublisherRecord" id="135" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="184" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="publisher" value="101"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="185" type="integer"/>
+            <string name="Publisher" id="186" type="fixed-length" length="17" encoding="ISO_8859-1:1987"/>
+        </structure>
+        <structure name="SubjectRecord" id="137" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="188" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="subject" value="105"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="189" type="integer"/>
+            <string name="Subject" id="336" type="fixed-length" length="0" encoding="ISO_8859-1:1987"/>
+        </structure>
+        <structure name="PublishingDateRecord" id="139" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="191" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="publishingdate" value="106"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="192" type="integer"/>
+            <string name="PublishingDate" id="193" type="fixed-length" length="0" encoding="ISO_8859-1:1987"/>
+        </structure>
+        <structure name="ContributorRecord" id="732" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="734" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="contributor" value="108"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="735" type="integer"/>
+            <string name="Contributor" id="737" type="fixed-length" length="0" encoding="ISO_8859-1:1987"/>
+        </structure>
+        <structure name="AsinRecord" id="141" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="195" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="asin" value="113"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="196" type="integer"/>
+            <string name="ASIN" id="197" type="fixed-length" length="10" encoding="ISO_8859-1:1987"/>
+        </structure>
+        <structure name="SampleRecord" id="143" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="199" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="sample" value="115"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="200" type="integer"/>
+            <number name="Sample" id="201" type="integer" length="4">
+                <fixedvalues>
+                    <fixedvalue name="IsSample" value="1"/>
+                    <fixedvalue name="IsNotSample" value="0"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="StartReadingRecord" id="145" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="203" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="startreading" value="116"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="204" type="integer"/>
+            <number name="StartReadingOffset" id="205" type="integer" length="4"/>
+        </structure>
+        <structure name="CoverOffsetRecord" id="147" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="207" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="coveroffset" value="201"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="208" type="integer"/>
+            <number name="CoverOffset" id="209" type="integer" length="4"/>
+        </structure>
+        <structure name="ThumbOffsetRecord" id="149" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="211" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="thumboffset" value="202"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="212" type="integer"/>
+            <number name="ThumbOffset" id="213" type="integer" length="4"/>
+        </structure>
+        <structure name="HasFakeCoverRecord" id="151" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="215" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="hasfakecover" value="203"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="216" type="integer"/>
+            <number name="HasFakeCover" id="217" type="integer" length="4"/>
+        </structure>
+        <structure name="CreatorSoftwareRecord" id="153" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="219" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="CreatorSoftware" value="204"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="220" type="integer"/>
+            <number name="Creator Software" id="221" type="integer" length="4">
+                <fixedvalues>
+                    <fixedvalue name="mobigen" value="1"/>
+                    <fixedvalue name="Mobipocket Creator" value="2"/>
+                    <fixedvalue name="kindlegen (Windows)" value="200"/>
+                    <fixedvalue name="kindlegen (Linux)" value="201"/>
+                    <fixedvalue name="kindlegen (Mac)" value="202"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="CreatorMajorVersionRecord" id="155" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="223" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Creator Major Version" value="205"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="224" type="integer"/>
+            <number name="MajorVersion" id="225" type="integer" length="4"/>
+        </structure>
+        <structure name="CreatorMinorVersionRecord" id="157" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="227" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Creator Minor Version" value="206"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="228" type="integer"/>
+            <number name="MinorVersion" id="229" type="integer" length="4"/>
+        </structure>
+        <structure name="CreatorBuildNumberRecord" id="159" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="231" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Creator Build Number" value="207"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="232" type="integer"/>
+            <number name="BuildNumber" id="233" type="integer" length="4"/>
+        </structure>
+        <structure name="FontSignatureRecord" id="337" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="339" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="fontsignature" value="300"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="340" type="integer"/>
+            <binary name="FontSignature" id="724" length="0"/>
+        </structure>
+        <structure name="UpdatedTitleRecord" id="161" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="235" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="updatedtitle" value="503"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="236" type="integer"/>
+            <string name="UpdatedTitle" id="237" type="fixed-length" length="114" encoding="UTF-8"/>
+        </structure>
+        <structure name="UnknownRecord405" id="163" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="239" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="unknown405" value="405"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="240" type="integer"/>
+            <number name="Unknown" id="241" type="integer" length="1"/>
+        </structure>
+        <structure name="UnknownRecord406" id="165" extends="id:169" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="RecordType" mustmatch="yes" id="243" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="unknown406" value="406"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="244" type="integer" length="1"/>
+        </structure>
+        <structure name="AsinCopyRecord" id="167" extends="id:169">
+            <number name="RecordType" mustmatch="yes" id="246" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="AsinCopy" value="504"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordLength" id="247" type="integer"/>
+            <string name="AsinCopy" id="248" type="fixed-length" length="10" encoding="ISO_8859-1:1987"/>
+        </structure>
+        <structure name="Record" id="48" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <structref name="IndexMetaRecord" id="251" repeatmin="0" structure="id:250"/>
+            <structref name="TagXRecord" id="253" repeatmin="0" structure="id:252"/>
+            <structref name="CDICRecord" id="255" repeatmin="0" structure="id:254"/>
+            <structref name="FCisRecord" id="257" repeatmin="0" structure="id:256"/>
+            <structref name="FLisRecord" id="259" repeatmin="0" structure="id:258"/>
+            <structref name="DATPRecord" id="261" repeatmin="0" structure="id:260"/>
+            <structref name="HUFFRecord" id="263" repeatmin="0" structure="id:262"/>
+            <structref name="IDXTRecord" id="265" repeatmin="0" structure="id:264"/>
+            <structref name="SRCSRecord" id="730" repeatmin="0" structure="id:727"/>
+            <structref name="JPEGRecord" id="267" repeatmin="0" structure="id:266"/>
+            <structref name="EndOfFileRecord" id="269" repeatmin="0" structure="id:268"/>
+            <structref name="BinaryRecord" id="271" repeatmin="0" structure="id:270"/>
+        </structure>
+        <structure name="NonDataRecord" id="273" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="RecordType" mustmatch="yes" id="274" type="fixed-length" length="4"/>
+        </structure>
+        <structure name="IDXTRecord" id="264" extends="id:273">
+            <string name="RecordType" id="276" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="IDXT" value="IDXT"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="IndexMetaRecord" id="250" length="Length" extends="id:273">
+            <string name="RecordType" id="278" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="INDX" value="INDX"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="279" type="integer" length="4"/>
+            <number name="IndexType" id="280" type="integer" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Normal" value="0"/>
+                    <fixedvalue name="Inflections" value="2"/>
+                </fixedvalues>
+            </number>
+            <number name="Unknown1" id="281" type="integer" length="4"/>
+            <number name="Unknown2" id="282" type="integer" length="4"/>
+            <number name="OffsetToIDXT" id="283" type="integer" length="4"/>
+            <number name="NumberOfIndexRecords" id="284" type="integer" length="4"/>
+            <number name="IndexEncoding" id="285" type="integer" length="4"/>
+            <number name="IndexLanguage" id="286" type="integer" length="4" signed="yes" display="hex"/>
+            <number name="TotalIndexCount" id="287" type="integer" length="4"/>
+            <number name="OffsetToORDT" id="288" type="integer" length="4"/>
+            <number name="OffsetToLIGT" id="289" type="integer" length="4"/>
+            <number name="Unknown3" id="290" type="integer" length="4"/>
+            <number name="Unknown4" id="291" type="integer" length="4"/>
+        </structure>
+        <structure name="TagXRecord" id="252" length="Length" extends="id:273">
+            <string name="RecordType" id="293" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="TAGX" value="TAGX"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="294" type="integer" length="4"/>
+            <number name="ControlByteCount" id="295" type="integer" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Normal" value="0"/>
+                    <fixedvalue name="Inflections" value="2"/>
+                </fixedvalues>
+            </number>
+            <number name="TagTableEntry" id="296" repeatmax="-1" type="integer" length="1"/>
+        </structure>
+        <structure name="CDICRecord" id="254" extends="id:273">
+            <string name="RecordType" id="298" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="CDIC" value="CDIC"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="FLisRecord" id="258" length="36" extends="id:273">
+            <string name="RecordType" id="300" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="FLIS" value="FLIS"/>
+                </fixedvalues>
+            </string>
+            <number name="Unknown1" id="301" type="integer" length="4"/>
+            <number name="Unknown2" id="302" type="integer" length="2"/>
+            <number name="Unknown3" id="303" type="integer" length="2"/>
+            <number name="Unknown4" id="304" type="integer" length="4"/>
+            <number name="Unknown5" id="305" type="integer" length="4" signed="yes" display="hex"/>
+            <number name="Unknown6" id="306" type="integer" length="2"/>
+            <number name="Unknown7" id="307" type="integer" length="2"/>
+            <number name="Unknown8" id="308" type="integer" length="4"/>
+            <number name="Unknown9" id="309" type="integer" length="4"/>
+            <number name="Unknown10" id="310" type="integer" length="4" signed="yes" display="hex"/>
+        </structure>
+        <structure name="FCisRecord" id="256" length="44" extends="id:273">
+            <string name="RecordType" id="312" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="FCIS" value="FCIS"/>
+                </fixedvalues>
+            </string>
+            <number name="Unknown1" id="313" type="integer" length="4"/>
+            <number name="Unknown2" id="314" type="integer" length="4"/>
+            <number name="Unknown3" id="315" type="integer" length="4"/>
+            <number name="Unknown4" id="316" type="integer" length="4"/>
+            <number name="TextLength" id="317" type="integer" length="4"/>
+            <number name="Unknown5" id="318" type="integer" length="4"/>
+            <number name="Unknown6" id="319" type="integer" length="4"/>
+            <number name="Unknown7" id="320" type="integer" length="4"/>
+            <number name="Unknown8" id="321" type="integer" length="2"/>
+            <number name="Unknown9" id="322" type="integer" length="2"/>
+            <number name="Unknown10" id="323" type="integer" length="4"/>
+        </structure>
+        <structure name="DATPRecord" id="260" extends="id:273">
+            <string name="RecordType" id="325" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="DATP" value="DATP"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="HUFFRecord" id="262" extends="id:273">
+            <string name="RecordType" id="334" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="HUFF" value="HUFF"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="SRCSRecord" id="727" extends="id:273">
+            <string name="RecordType" id="729" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="SRCS" value="SRCS"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="JPEGRecord" id="266" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="&lt;new binary&gt;" mustmatch="yes" id="327" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Marker" value="FFD8FFE0"/>
+                </fixedvalues>
+            </binary>
+        </structure>
+        <structure name="EndOfFileRecord" id="268" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Unknown" id="329" length="2"/>
+            <binary name="CRLF" mustmatch="yes" id="330" length="2">
+                <fixedvalues>
+                    <fixedvalue name="CRLF" value="0D0A"/>
+                </fixedvalues>
+            </binary>
+        </structure>
+        <structure name="BinaryRecord" id="270" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="BinaryData" id="332" length="1"/>
+        </structure>
+    </grammar>
+</ufwb>

@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.0.3.1">
+    <grammar name="NASDAQ TotalView-ITCH 4.1" start="MessageSequence" author="Paul Wheeler">
+        <description>Grammar for my file format</description>
+        <structure name="MessageSequence" id="3" consists-of="Timestamp" encoding="ISO_8859-1:1987" endian="big" signed="no" strokecolor="940705">
+            <structure name="MessageContainer" id="5" repeatmax="100000">
+                <number name="Length" id="6" fillcolor="00FCFD" type="integer" length="2"/>
+                <structure name="Message" id="7" length="prev.Length" encoding="ISO_8859-1:1987" endian="big" signed="no">
+                    <structref name="Timestamp" id="8" repeatmin="0"/>
+                    <structref name="SystemEvent" id="10" repeatmin="0"/>
+                    <structref name="StockDirectory" id="12" repeatmin="0"/>
+                    <structref name="StockTradingAction" id="14" repeatmin="0"/>
+                    <structref name="ShortSaleRestriction" id="16" repeatmin="0"/>
+                    <structref name="MarketParticipantPosition" id="18" repeatmin="0"/>
+                    <structref name="AddOrder" id="20" repeatmin="0"/>
+                    <structref name="AddOrderWithMPID" id="22" repeatmin="0"/>
+                    <structref name="OrderExecuted" id="24" repeatmin="0"/>
+                    <structref name="OrderExecutedWIthPrice" id="26" repeatmin="0"/>
+                    <structref name="OrderCancel" id="28" repeatmin="0"/>
+                    <structref name="OrderDelete" id="30" repeatmin="0"/>
+                    <structref name="OrderReplace" id="32" repeatmin="0"/>
+                    <structref name="Cross" id="34" repeatmin="0"/>
+                    <structref name="Trade" id="36" repeatmin="0" repeatmax="0"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="Timestamp" id="4" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MessageType" mustmatch="yes" id="40" fillcolor="B5B239" type="fixed-length" length="1">
+                <fixedvalue name="Timestamp" value="T"/>
+            </string>
+            <number name="Seconds" id="41" fillcolor="B5B239" type="integer" length="4"/>
+        </structure>
+        <structure name="SystemEvent" id="9" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MessageType" mustmatch="yes" id="43" fillcolor="FF88CB" type="fixed-length" length="1">
+                <fixedvalue name="SystemEvent" value="S"/>
+            </string>
+            <number name="Nanoseconds" id="44" fillcolor="FF88CB" type="integer" length="4"/>
+            <string name="EventCode" mustmatch="yes" id="45" fillcolor="FF88CB" type="fixed-length" length="1">
+                <fixedvalue name="StartOfMessages" value="O"/>
+                <fixedvalue name="StartOfSystemHours" value="S"/>
+                <fixedvalue name="StartOfMarketHours" value="Q"/>
+                <fixedvalue name="EndOfMarketHours" value="M"/>
+                <fixedvalue name="EndOfSystemHours" value="E"/>
+                <fixedvalue name="EndOfMessages" value="C"/>
+                <fixedvalue name="MarketHalt" value="A"/>
+                <fixedvalue name="QuoteOnly" value="R"/>
+                <fixedvalue name="MarketResume" value="B"/>
+            </string>
+        </structure>
+        <structure name="StockDirectory" id="11" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MessageType" mustmatch="yes" id="47" fillcolor="C1A0F8" type="fixed-length" length="1">
+                <fixedvalue name="StockDirectory" value="R"/>
+            </string>
+            <number name="Nanoseconds" id="48" fillcolor="C1A0F8" type="integer" length="4"/>
+            <string name="Stock" id="49" fillcolor="C1A0F8" type="fixed-length" length="8"/>
+            <string name="MarketCategory" mustmatch="yes" id="50" fillcolor="C1A0F8" type="fixed-length" length="1">
+                <fixedvalue name="NYSE" value="N"/>
+                <fixedvalue name="NYSE Amex" value="A"/>
+                <fixedvalue name="NYSE Arca" value="P"/>
+                <fixedvalue name="NASDAQ Global Select" value="Q"/>
+                <fixedvalue name="NASDAQ Global" value="G"/>
+                <fixedvalue name="NASDAQ Capital" value="S"/>
+            </string>
+            <string name="FinancialStatus" id="51" fillcolor="C1A0F8" type="fixed-length" length="1">
+                <fixedvalue name="Deficient" value="D"/>
+                <fixedvalue name="Delinquent" value="E"/>
+                <fixedvalue name="Bankrupt" value="Q"/>
+                <fixedvalue name="Suspended" value="S"/>
+                <fixedvalue name="DeficientAndBankrupt" value="G"/>
+                <fixedvalue name="DeficientAndDelinquent" value="H"/>
+                <fixedvalue name="DelinquentAndBankrupt" value="J"/>
+                <fixedvalue name="AllOfAbove" value="K"/>
+                <fixedvalue name="Compliant" value=" "/>
+            </string>
+            <number name="RoundLotSize" id="52" fillcolor="C1A0F8" type="integer" length="4"/>
+            <string name="RoundLotsOnly" mustmatch="yes" id="53" fillcolor="C1A0F8" type="fixed-length" length="1">
+                <fixedvalue name="Yes" value="Y"/>
+                <fixedvalue name="No" value="N"/>
+            </string>
+        </structure>
+        <structure name="StockTradingAction" id="13" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MessageType" mustmatch="yes" id="55" fillcolor="C1A0F8" type="fixed-length" length="1">
+                <fixedvalue name="StockTradingAction" value="H"/>
+            </string>
+            <number name="Nanoseconds" id="56" fillcolor="C1A0F8" type="integer" length="4"/>
+            <string name="Stock" id="57" fillcolor="C1A0F8" type="fixed-length" length="8"/>
+            <string name="TradingState" id="58" fillcolor="C1A0F8" type="fixed-length" length="1">
+                <fixedvalue name="Halted" value="H"/>
+                <fixedvalue name="HaltedOnNASDAQ" value="V"/>
+                <fixedvalue name="QuotationOnly" value="Q"/>
+                <fixedvalue name="QuotationOnlyOnNASDAQ" value="R"/>
+                <fixedvalue name="NormalTrading" value="T"/>
+            </string>
+            <string name="Reserved" id="59" fillcolor="C1A0F8" type="fixed-length" length="1"/>
+            <string name="Reason" id="60" fillcolor="C1A0F8" type="fixed-length" length="4"/>
+        </structure>
+        <structure name="ShortSaleRestriction" id="15" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MessageType" mustmatch="yes" id="62" fillcolor="C1A0F8" type="fixed-length" length="1">
+                <fixedvalue name="ShortSaleRestriction" value="Y"/>
+            </string>
+            <number name="Nanoseconds" id="63" fillcolor="C1A0F8" type="integer" length="4"/>
+            <string name="Stock" id="64" fillcolor="C1A0F8" type="fixed-length" length="8"/>
+            <string name="RestrictionState" id="65" fillcolor="C1A0F8" type="fixed-length" length="1">
+                <fixedvalue name="NotRestricted" value="0"/>
+                <fixedvalue name="IntraDayRestriction" value="1"/>
+                <fixedvalue name="ContinuedRestriction" value="2"/>
+            </string>
+        </structure>
+        <structure name="MarketParticipantPosition" id="17" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MessageType" mustmatch="yes" id="67" fillcolor="C1A0F8" type="fixed-length" length="1">
+                <fixedvalue name="MarketParticipantPosition" value="L"/>
+            </string>
+            <number name="Nanoseconds" id="68" fillcolor="C1A0F8" type="integer" length="4"/>
+            <string name="MPID" id="69" fillcolor="C1A0F8" type="fixed-length" length="4"/>
+            <string name="Stock" id="70" fillcolor="C1A0F8" type="fixed-length" length="8"/>
+            <string name="PrimaryMarketMaker" id="71" fillcolor="C1A0F8" type="fixed-length" length="1">
+                <fixedvalue name="Yes" value="Y"/>
+                <fixedvalue name="No" value="N"/>
+            </string>
+            <string name="MarketMakerMode" id="72" fillcolor="C1A0F8" type="fixed-length" length="1">
+                <fixedvalue name="Normal" value="N"/>
+                <fixedvalue name="Passive" value="P"/>
+                <fixedvalue name="Syndicate" value="S"/>
+                <fixedvalue name="Pre-Syndicate" value="R"/>
+                <fixedvalue name="Penalty" value="L"/>
+            </string>
+            <string name="MarketParticipantState" id="73" fillcolor="C1A0F8" type="fixed-length" length="1">
+                <fixedvalue name="Active" value="A"/>
+                <fixedvalue name="Excused" value="E"/>
+                <fixedvalue name="Withdrawn" value="W"/>
+                <fixedvalue name="Suspended" value="S"/>
+                <fixedvalue name="Deleted" value="D"/>
+            </string>
+        </structure>
+        <structure name="AddOrder" id="19" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MessageType" mustmatch="yes" id="75" fillcolor="FAFB88" type="fixed-length" length="1">
+                <fixedvalue name="AddOrder" value="A"/>
+            </string>
+            <number name="Nanoseconds" id="76" fillcolor="FAFB88" type="integer" length="4"/>
+            <number name="ReferenceNumber" id="77" fillcolor="FAFB88" type="integer" length="8"/>
+            <string name="BuySellIndicator" mustmatch="yes" id="78" fillcolor="FAFB88" type="fixed-length" length="1">
+                <fixedvalue name="Buy" value="B"/>
+                <fixedvalue name="Sell" value="S"/>
+            </string>
+            <number name="Shares" id="79" fillcolor="FAFB88" type="integer" length="4"/>
+            <string name="Stock" id="80" fillcolor="FAFB88" type="fixed-length" length="8"/>
+            <number name="Price" id="81" fillcolor="FAFB88" type="integer" length="4"/>
+        </structure>
+        <structure name="AddOrderWithMPID" id="21" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MessageType" mustmatch="yes" id="83" fillcolor="FAFB88" type="fixed-length" length="1">
+                <fixedvalue name="AddOrderWithMPID" value="F"/>
+            </string>
+            <number name="Nanoseconds" id="84" fillcolor="FAFB88" type="integer" length="4"/>
+            <number name="ReferenceNumber" id="85" fillcolor="FAFB88" type="integer" length="8"/>
+            <string name="BuySellIndicator" mustmatch="yes" id="86" fillcolor="FAFB88" type="fixed-length" length="1">
+                <fixedvalue name="Buy" value="B"/>
+                <fixedvalue name="Sell" value="S"/>
+            </string>
+            <number name="Shares" id="87" fillcolor="FAFB88" type="integer" length="4"/>
+            <string name="Stock" id="88" fillcolor="FAFB88" type="fixed-length" length="8"/>
+            <number name="Price" id="89" fillcolor="FAFB88" type="integer" length="4"/>
+            <string name="Attribution" id="90" fillcolor="FAFB88" type="fixed-length" length="4"/>
+        </structure>
+        <structure name="OrderExecuted" id="23" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MessageType" mustmatch="yes" id="92" fillcolor="59FA74" type="fixed-length" length="1">
+                <fixedvalue name="OrderExecuted" value="E"/>
+            </string>
+            <number name="Nanoseconds" id="93" fillcolor="59FA74" type="integer" length="4"/>
+            <number name="ReferenceNumber" id="94" fillcolor="59FA74" type="integer" length="8"/>
+            <number name="ExecutedShares" id="95" fillcolor="59FA74" type="integer" length="4"/>
+            <number name="MatchNumber" id="96" fillcolor="59FA74" type="integer" length="8"/>
+        </structure>
+        <structure name="OrderExecutedWIthPrice" id="25" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MessageType" mustmatch="yes" id="98" fillcolor="59FA74" type="fixed-length" length="1">
+                <fixedvalue name="OrderExecutedWithPrice" value="C"/>
+            </string>
+            <number name="Nanoseconds" id="99" fillcolor="59FA74" type="integer" length="4"/>
+            <number name="ReferenceNumber" id="100" fillcolor="59FA74" type="integer" length="8"/>
+            <number name="ExecutedShares" id="101" fillcolor="59FA74" type="integer" length="4"/>
+            <number name="MatchNumber" id="102" fillcolor="59FA74" type="integer" length="8"/>
+            <string name="Printable" id="103" fillcolor="59FA74" type="fixed-length" length="1">
+                <fixedvalue name="Yes" value="Y"/>
+                <fixedvalue name="No" value="N"/>
+            </string>
+            <number name="ExecutionPrice" id="104" fillcolor="59FA74" type="integer" length="4"/>
+        </structure>
+        <structure name="OrderCancel" id="27" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MessageType" mustmatch="yes" id="106" fillcolor="59FA74" type="fixed-length" length="1">
+                <fixedvalue name="OrderCancel" value="X"/>
+            </string>
+            <number name="Nanoseconds" id="107" fillcolor="59FA74" type="integer" length="4"/>
+            <number name="ReferenceNumber" id="108" fillcolor="59FA74" type="integer" length="8"/>
+            <number name="CanceledShares" id="109" fillcolor="59FA74" type="integer" length="4"/>
+        </structure>
+        <structure name="OrderDelete" id="29" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MessageType" mustmatch="yes" id="111" fillcolor="59FA74" type="fixed-length" length="1">
+                <fixedvalue name="OrderDelete" value="D"/>
+            </string>
+            <number name="Nanoseconds" id="112" fillcolor="59FA74" type="integer" length="4"/>
+            <number name="ReferenceNumber" id="113" fillcolor="59FA74" type="integer" length="8"/>
+        </structure>
+        <structure name="OrderReplace" id="31" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MessageType" mustmatch="yes" id="115" fillcolor="59FA74" type="fixed-length" length="1">
+                <fixedvalue name="OrderReplace" value="U"/>
+            </string>
+            <number name="Nanoseconds" id="116" fillcolor="59FA74" type="integer" length="4"/>
+            <number name="OriginalReferenceNumber" id="117" fillcolor="59FA74" type="integer" length="8"/>
+            <number name="NewReferenceNumber" id="118" fillcolor="59FA74" type="integer" length="8"/>
+            <number name="NewShares" id="119" fillcolor="59FA74" type="integer" length="4"/>
+            <number name="NewPrice" id="120" fillcolor="59FA74" type="integer" length="4"/>
+        </structure>
+        <structure name="Cross" id="33" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MessageType" mustmatch="yes" id="122" fillcolor="FF8E2F" type="fixed-length" length="1">
+                <fixedvalue name="Cross" value="Q"/>
+            </string>
+            <number name="Nanoseconds" id="123" fillcolor="FF8E2F" type="integer" length="4"/>
+            <number name="Shares" id="124" fillcolor="FF8E2F" type="integer" length="4"/>
+            <string name="Stock" id="125" fillcolor="FF8E2F" type="fixed-length" length="8"/>
+            <number name="CrossPrice" id="126" fillcolor="FF8E2F" type="integer" length="4"/>
+            <number name="MatchNumber" id="127" fillcolor="FF8E2F" type="integer" length="8"/>
+            <string name="CrossType" id="128" fillcolor="FF8E2F" type="fixed-length" length="1">
+                <fixedvalue name="Opening Cross" value="O"/>
+                <fixedvalue name="Closing Cross" value="C"/>
+                <fixedvalue name="Halt/Pause/IPO Cross" value="H"/>
+                <fixedvalue name="Intraday" value="I"/>
+            </string>
+        </structure>
+        <structure name="Trade" id="35" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="MessageType" mustmatch="yes" id="130" fillcolor="7F8EF7" type="fixed-length" length="1">
+                <fixedvalue name="Trade" value="P"/>
+            </string>
+            <number name="Nanoseconds" id="131" fillcolor="7F8EF7" type="integer" length="4"/>
+            <number name="ReferenceNumber" id="132" fillcolor="7F8EF7" type="integer" length="8"/>
+            <string name="BuySellIndicator" mustmatch="yes" id="133" fillcolor="7F8EF7" type="fixed-length" length="1">
+                <fixedvalue name="Buy" value="B"/>
+                <fixedvalue name="Sell" value="S"/>
+            </string>
+            <number name="Shares" id="134" fillcolor="7F8EF7" type="integer" length="4"/>
+            <string name="Stock" id="135" fillcolor="7F8EF7" type="fixed-length" length="8"/>
+            <number name="Price" id="136" fillcolor="7F8EF7" type="integer" length="4"/>
+            <number name="Match" id="137" fillcolor="7F8EF7" type="integer" length="8"/>
+        </structure>
+    </grammar>
+</ufwb>

@@ -1,0 +1,1365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.2">
+    <grammar name="Warcraft II PUD" start="id:3634" author="Kelvin Chung" fileextension="pud">
+        <description>Grammar for PUD files</description>
+        <structure name="PUD file" id="3634" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="TYPE" id="3636" structure="id:3635"/>
+            <structref name="VER " id="3638" structure="id:3637"/>
+            <structref name="DESC" id="3640" structure="id:3639"/>
+            <structref name="OWNR" id="3642" structure="id:3641"/>
+            <structref name="ERA " id="3644" structure="id:3643"/>
+            <structref name="ERAX" id="3646" repeatmin="0" structure="id:3645"/>
+            <structref name="DIM " id="3648" structure="id:3647"/>
+            <structref name="UDTA" id="3650" structure="id:3649"/>
+            <structref name="ALOW" id="3652" repeatmin="0" structure="id:3651"/>
+            <structref name="UGRD" id="3654" structure="id:3653"/>
+            <structref name="SIDE" id="3656" structure="id:3655"/>
+            <structref name="SGLD" id="3658" structure="id:3657"/>
+            <structref name="SLBR" id="3660" structure="id:3659"/>
+            <structref name="SOIL" id="3662" structure="id:3661"/>
+            <structref name="AIPL" id="3664" structure="id:3663"/>
+            <structref name="MTXM" id="3666" structure="id:3665"/>
+            <structref name="SQM " id="3668" structure="id:3667"/>
+            <structref name="OILM" id="3670" structure="id:3669"/>
+            <structref name="REGM" id="3672" structure="id:3671"/>
+            <structref name="UNIT" id="3674" structure="id:3673"/>
+            <structref name="SIGN" id="3676" structure="id:3675"/>
+        </structure>
+        <structure name="Section" id="3678" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="Name" id="3679" fillcolor="2B25F9" type="fixed-length" length="4"/>
+            <number name="Length" id="3680" fillcolor="FE9227" type="integer" length="4"/>
+            <structure name="Data" id="3681" length="prev.Length"/>
+        </structure>
+        <structure name="TYPE" id="3635" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="3684" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="TYPE"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="3685" type="integer"/>
+            <structure name="Data" id="3686">
+                <string name="Identifier 2" mustmatch="yes" id="3687" type="fixed-length" length="8">
+                    <fixedvalues>
+                        <fixedvalue value="WAR2 MAP"/>
+                    </fixedvalues>
+                </string>
+                <number name="Unknown" mustmatch="yes" id="3688" type="integer" length="4" display="hex">
+                    <fixedvalues>
+                        <fixedvalue value="0xFF0A0000"/>
+                    </fixedvalues>
+                </number>
+                <number name="ID Tag" id="3689" fillcolor="73FC82" type="integer" length="4"/>
+            </structure>
+        </structure>
+        <structure name="VER " id="3637" extends="id:3678" endian="little">
+            <string name="Name" mustmatch="yes" id="3692" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="VER "/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="3693" type="integer"/>
+            <structure name="Data" id="3694">
+                <number name="Version" mustmatch="yes" id="3695" fillcolor="73FC82" type="integer" length="2" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="Tides of Darkness" value="0x11"/>
+                        <fixedvalue name="Beyond the Dark Portal" value="0x13"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+        <structure name="DESC" id="3639" extends="id:3678" consists-of="id:3678">
+            <string name="Name" mustmatch="yes" id="3698" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="DESC"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="3699" type="integer"/>
+            <structure name="Data" id="3700">
+                <string name="Description" id="3701" fillcolor="79FDFE" type="fixed-length" length="32"/>
+            </structure>
+        </structure>
+        <structure name="OWNR" id="3641" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="3704" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="OWNR"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="3705" type="integer"/>
+            <structure name="Data" id="3706">
+                <number name="Controllers" mustmatch="yes" id="3707" fillcolor="73FC82" repeatmin="16" repeatmax="16" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="Passive CPU" value="2"/>
+                        <fixedvalue name="Nobody" value="3"/>
+                        <fixedvalue name="Active CPU" value="4"/>
+                        <fixedvalue name="Player" value="5"/>
+                        <fixedvalue name="Passive Rescue" value="6"/>
+                        <fixedvalue name="Active Rescue" value="7"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+        <structure name="ERA " id="3643" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="3710" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="ERA "/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="3711" type="integer"/>
+            <structure name="Data" id="3712">
+                <number name="Tileset" mustmatch="yes" id="3713" fillcolor="73FC82" type="integer" length="2">
+                    <fixedvalues>
+                        <fixedvalue name="Forest" value="0"/>
+                        <fixedvalue name="Winter" value="1"/>
+                        <fixedvalue name="Wasteland" value="2"/>
+                        <fixedvalue name="Swamp" value="3"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+        <structure name="ERAX" id="3645" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="3716" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="ERAX"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="3717" type="integer"/>
+            <structure name="Data" id="3718">
+                <number name="Tileset" mustmatch="yes" id="3719" fillcolor="73FC82" type="integer" length="2">
+                    <fixedvalues>
+                        <fixedvalue name="Forest" value="0"/>
+                        <fixedvalue name="Winter" value="1"/>
+                        <fixedvalue name="Wasteland" value="2"/>
+                        <fixedvalue name="Swamp" value="3"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+        <structure name="DIM " id="3647" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="3722" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="DIM "/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="3723" type="integer"/>
+            <structure name="Data" id="3724">
+                <number name="Length" id="3725" fillcolor="73FC82" type="integer" length="2"/>
+                <number name="Width" id="3726" fillcolor="73FC82" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="UDTA" id="3649" extends="id:3678">
+            <string name="Name" id="3729" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="UDTA"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="3730" type="integer"/>
+            <structure name="Data" id="3731">
+                <number name="Use Default Data" id="3732" fillcolor="73FC82" type="integer" length="2"/>
+                <number name="Overlap Frames" id="3733" repeatmin="110" repeatmax="110" type="integer" length="2"/>
+                <number name="General Graphics Frames" id="3734" fillcolor="797979" repeatmin="127" repeatmax="127" type="integer" length="2">
+                    <description>Obsolete.</description>
+                </number>
+                <number name="Forest Graphics Frames" id="3735" fillcolor="797979" repeatmin="127" repeatmax="127" type="integer" length="2">
+                    <description>Obsolete.</description>
+                </number>
+                <number name="Winter Graphics Frames" id="3736" fillcolor="797979" repeatmin="127" repeatmax="127" type="integer" length="2">
+                    <description>Obsolete.</description>
+                </number>
+                <number name="Wastelands Graphics Frames" id="3737" fillcolor="797979" repeatmin="127" repeatmax="127" type="integer" length="2">
+                    <description>Obsolete.</description>
+                </number>
+                <structure name="Sight Range" id="4424">
+                    <number name="Footman" id="4426" type="integer" length="4"/>
+                    <number name="Grunt" id="4427" type="integer" length="4"/>
+                    <number name="Peasant" id="4428" type="integer" length="4"/>
+                    <number name="Peon" id="4429" type="integer" length="4"/>
+                    <number name="Ballista" id="4430" type="integer" length="4"/>
+                    <number name="Catapult" id="4431" type="integer" length="4"/>
+                    <number name="Knight" id="4432" type="integer" length="4"/>
+                    <number name="Ogre" id="4433" type="integer" length="4"/>
+                    <number name="Archer" id="4434" type="integer" length="4"/>
+                    <number name="Axethrower" id="4435" type="integer" length="4"/>
+                    <number name="Mage" id="4436" type="integer" length="4"/>
+                    <number name="Death Knight" id="4437" type="integer" length="4"/>
+                    <number name="Paladin" id="4438" type="integer" length="4"/>
+                    <number name="Ogre-Mage" id="4439" type="integer" length="4"/>
+                    <number name="Dwarven Demo Team" id="4440" type="integer" length="4"/>
+                    <number name="Goblin Sappers" id="4441" type="integer" length="4"/>
+                    <number name="Attack Peasant" id="4442" type="integer" length="4"/>
+                    <number name="Attack Peon" id="4443" type="integer" length="4"/>
+                    <number name="Ranger" id="4444" type="integer" length="4"/>
+                    <number name="Berserker" id="4445" type="integer" length="4"/>
+                    <number name="Alleria" id="4446" type="integer" length="4"/>
+                    <number name="Teron Gorefiend" id="4447" type="integer" length="4"/>
+                    <number name="Kurdran and Sky'ree" id="4448" type="integer" length="4"/>
+                    <number name="Dentarg" id="4449" type="integer" length="4"/>
+                    <number name="Khadgar" id="4450" type="integer" length="4"/>
+                    <number name="Grom Hellscream" id="4451" type="integer" length="4"/>
+                    <number name="Human Tanker" id="4452" type="integer" length="4"/>
+                    <number name="Orc Tanker" id="4453" type="integer" length="4"/>
+                    <number name="Human Transport" id="4454" type="integer" length="4"/>
+                    <number name="Orc Transport" id="4455" type="integer" length="4"/>
+                    <number name="Elven Destroyer" id="4456" type="integer" length="4"/>
+                    <number name="Troll Destroyer" id="4457" type="integer" length="4"/>
+                    <number name="Battleship" id="4458" type="integer" length="4"/>
+                    <number name="Juggernaut" id="4459" type="integer" length="4"/>
+                    <binary name="&lt;unused&gt;" id="4533" fillcolor="929292" length="4"/>
+                    <number name="Deathwing" id="4534" type="integer" length="4"/>
+                    <binary name="&lt;unused-2&gt;" id="4535" fillcolor="929292" length="8"/>
+                    <number name="Gnomish Submarine" id="4460" type="integer" length="4"/>
+                    <number name="Giant Turtle" id="4461" type="integer" length="4"/>
+                    <number name="Gnomish Flying Machine" id="4462" type="integer" length="4"/>
+                    <number name="Goblin Zeppelin" id="4463" type="integer" length="4"/>
+                    <number name="Gryphon Rider" id="4464" type="integer" length="4"/>
+                    <number name="Dragon" id="4465" type="integer" length="4"/>
+                    <number name="Turalyon" id="4466" type="integer" length="4"/>
+                    <number name="Eye of Kilrogg" id="4467" type="integer" length="4"/>
+                    <number name="Danath" id="4468" type="integer" length="4"/>
+                    <number name="Korgath Bladefist" id="4469" type="integer" length="4"/>
+                    <binary name="&lt;unused-3&gt;" id="4476" fillcolor="929292" length="4"/>
+                    <number name="Cho'gall" id="4471" type="integer" length="4"/>
+                    <number name="Lothar" id="4472" type="integer" length="4"/>
+                    <number name="Gul'dan" id="4473" type="integer" length="4"/>
+                    <number name="Uther Lightbringer" id="4474" type="integer" length="4"/>
+                    <number name="Zuljin" id="4475" type="integer" length="4"/>
+                    <binary name="&lt;unused-4&gt;" id="4477" fillcolor="929292" length="4"/>
+                    <number name="Skeleton" id="4478" type="integer" length="4"/>
+                    <number name="Daemon" id="4479" type="integer" length="4"/>
+                    <number name="Critter" id="4480" type="integer" length="4"/>
+                    <number name="Farm" id="4481" type="integer" length="4"/>
+                    <number name="Pig Farm" id="4482" type="integer" length="4"/>
+                    <number name="Human Barracks" id="4483" type="integer" length="4"/>
+                    <number name="Orc Barracks" id="4484" type="integer" length="4"/>
+                    <number name="Church" id="4485" type="integer" length="4"/>
+                    <number name="Altar of Storms" id="4486" type="integer" length="4"/>
+                    <number name="Human Scout Tower" id="4487" type="integer" length="4"/>
+                    <number name="Orc Scout Tower" id="4488" type="integer" length="4"/>
+                    <number name="Stables" id="4489" type="integer" length="4"/>
+                    <number name="Ogre Mound" id="4490" type="integer" length="4"/>
+                    <number name="Gnomish Inventor" id="4491" type="integer" length="4"/>
+                    <number name="Goblin Alchemist" id="4492" type="integer" length="4"/>
+                    <number name="Gryphon Aviary" id="4493" type="integer" length="4"/>
+                    <number name="Dragon Roost" id="4494" type="integer" length="4"/>
+                    <number name="Human Shipyard" id="4495" type="integer" length="4"/>
+                    <number name="Orc Shipyard" id="4496" type="integer" length="4"/>
+                    <number name="Town Hall" id="4497" type="integer" length="4"/>
+                    <number name="Great Hall" id="4498" type="integer" length="4"/>
+                    <number name="Elven Lumber Mill" id="4499" type="integer" length="4"/>
+                    <number name="Troll Lumber Mill" id="4500" type="integer" length="4"/>
+                    <number name="Human Foundry" id="4501" type="integer" length="4"/>
+                    <number name="Orc Foundry" id="4502" type="integer" length="4"/>
+                    <number name="Mage Tower" id="4503" type="integer" length="4"/>
+                    <number name="Temple of the Damned" id="4504" type="integer" length="4"/>
+                    <number name="Human Blacksmith" id="4505" type="integer" length="4"/>
+                    <number name="Orc Blacksmith" id="4506" type="integer" length="4"/>
+                    <number name="Human Refinery" id="4507" type="integer" length="4"/>
+                    <number name="Orc Refinery" id="4508" type="integer" length="4"/>
+                    <number name="Human Oil Platform" id="4509" type="integer" length="4"/>
+                    <number name="Orc Oil Platform" id="4510" type="integer" length="4"/>
+                    <number name="Keep" id="4511" type="integer" length="4"/>
+                    <number name="Stronghold" id="4512" type="integer" length="4"/>
+                    <number name="Castle" id="4513" type="integer" length="4"/>
+                    <number name="Fortress" id="4514" type="integer" length="4"/>
+                    <number name="Gold Mine" id="4515" type="integer" length="4"/>
+                    <number name="Oil Patch" id="4516" type="integer" length="4"/>
+                    <number name="Human Start Location" id="4517" type="integer" length="4"/>
+                    <number name="Orc Start Location" id="4518" type="integer" length="4"/>
+                    <number name="Human Guard Tower" id="4519" type="integer" length="4"/>
+                    <number name="Orc Guard Tower" id="4520" type="integer" length="4"/>
+                    <number name="Human Cannon Tower" id="4521" type="integer" length="4"/>
+                    <number name="Orc Cannon Tower" id="4522" type="integer" length="4"/>
+                    <number name="Circle of Power" id="4523" type="integer" length="4"/>
+                    <number name="Dark Portal" id="4524" type="integer" length="4"/>
+                    <number name="Runestone" id="4525" type="integer" length="4"/>
+                    <number name="Human Unbuilt Wall" id="4526" type="integer" length="4"/>
+                    <number name="Orc Unbuilt Wall" id="4527" type="integer" length="4"/>
+                    <number name="Dead Body" id="4528" type="integer" length="4"/>
+                    <number name="1x1 Destroyed Place" id="4529" type="integer" length="4"/>
+                    <number name="2x2 Destroyed Place" id="4530" type="integer" length="4"/>
+                    <number name="3x3 Destroyed Place" id="4531" type="integer" length="4"/>
+                    <number name="4x4 Destroyed Place" id="4532" type="integer" length="4"/>
+                </structure>
+                <structure name="HP" id="4536">
+                    <number name="HP" id="3739" repeatmin="110" repeatmax="110" type="integer" length="2"/>
+                </structure>
+                <structref name="Is Magic" id="4649" structure="id:4538"/>
+                <structref name="Build Tile" id="4650" structure="id:4538"/>
+                <structref name="Gold Cost" id="4651" structure="id:4538"/>
+                <structref name="Lumber Cost" id="4652" structure="id:4538"/>
+                <structref name="Oil Cost" id="4653" structure="id:4538"/>
+                <structure name="Unit Size" id="3745" repeatmin="110" repeatmax="110">
+                    <number name="X" id="3746" type="integer" length="2"/>
+                    <number name="Y" id="3747" type="integer" length="2"/>
+                </structure>
+                <structure name="Box Size" id="3749" repeatmin="110" repeatmax="110">
+                    <number name="X" id="3750" type="integer" length="2"/>
+                    <number name="Y" id="3751" type="integer" length="2"/>
+                </structure>
+                <structref name="Attack Range" id="4656" structure="id:4538"/>
+                <structref name="Reaction Range (CPU)" id="4657" structure="id:4538"/>
+                <structref name="Reaction Range (Player)" id="4658" structure="id:4538"/>
+                <structref name="Armor" id="4659" structure="id:4538"/>
+                <structref name="Selectable by Rectangle" id="4660" structure="id:4538"/>
+                <structref name="Priority" id="4661" structure="id:4538"/>
+                <structref name="Basic Damage" id="4662" structure="id:4538"/>
+                <structref name="Piercing Damage" id="4663" structure="id:4538"/>
+                <structref name="Weapon Upgradeable" id="4664" structure="id:4538"/>
+                <structref name="Armor Upgradeable" id="4665" structure="id:4538"/>
+                <number name="Missile Weapon Type" mustmatch="yes" id="3763" repeatmin="110" repeatmax="110" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="Lightning" value="0"/>
+                        <fixedvalue name="Griffon Hammer" value="1"/>
+                        <fixedvalue name="Dragon Breath / Fireball" value="2"/>
+                        <fixedvalue name="Flame Shield Fireball" value="3"/>
+                        <fixedvalue name="Flame Shield" value="4"/>
+                        <fixedvalue name="Blizzard" value="5"/>
+                        <fixedvalue name="Death and Decay" value="6"/>
+                        <fixedvalue name="Big Cannon" value="7"/>
+                        <fixedvalue name="Exorcism" value="8"/>
+                        <fixedvalue name="Heal" value="9"/>
+                        <fixedvalue name="Touch of Death" value="10"/>
+                        <fixedvalue name="Rune" value="11"/>
+                        <fixedvalue name="Whirlwind" value="12"/>
+                        <fixedvalue name="Catapult Rock" value="13"/>
+                        <fixedvalue name="Ballista Bolt" value="14"/>
+                        <fixedvalue name="Arrow" value="15"/>
+                        <fixedvalue name="Axe" value="16"/>
+                        <fixedvalue name="Submarine Missile" value="17"/>
+                        <fixedvalue name="Turtle Missile" value="18"/>
+                        <fixedvalue name="Small Fire" value="19"/>
+                        <fixedvalue name="Big Fire" value="20"/>
+                        <fixedvalue name="Ballista/Catapult Impact" value="21"/>
+                        <fixedvalue name="Normal Spell" value="22"/>
+                        <fixedvalue name="Explosion" value="23"/>
+                        <fixedvalue name="Small Cannon" value="24"/>
+                        <fixedvalue name="Cannon Explosion" value="25"/>
+                        <fixedvalue name="Cannon Tower Explosion" value="26"/>
+                        <fixedvalue name="Daemon Fire" value="27"/>
+                        <fixedvalue name="Green Cross" value="28"/>
+                        <fixedvalue name="None" value="29"/>
+                    </fixedvalues>
+                </number>
+                <number name="Unit Type" mustmatch="yes" id="3764" repeatmin="110" repeatmax="110" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="Land" value="0"/>
+                        <fixedvalue name="Air" value="1"/>
+                        <fixedvalue name="Sea" value="2"/>
+                    </fixedvalues>
+                </number>
+                <structref name="Decay Rate" id="4666" structure="id:4538"/>
+                <structref name="Annoy Computer Factor" id="4667" structure="id:4538"/>
+                <number name="Right Click Action" id="3767" repeatmin="58" repeatmax="58" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="Attack" value="1"/>
+                        <fixedvalue name="Move" value="2"/>
+                        <fixedvalue name="Harvest" value="3"/>
+                        <fixedvalue name="Haul Oil" value="4"/>
+                        <fixedvalue name="Demolish" value="5"/>
+                        <fixedvalue name="Sail" value="6"/>
+                    </fixedvalues>
+                </number>
+                <number name="Point Value per Kill" id="3768" repeatmin="110" repeatmax="110" type="integer" length="2"/>
+                <structure name="Terrain Targetable" id="3769" repeatmin="110" repeatmax="110">
+                    <binary name="&lt;padding&gt;" id="3770" fillcolor="929292" length="5" lengthunit="bit"/>
+                    <number name="Air" id="3771" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Sea" id="3772" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Land" id="3773" type="integer" length="1" lengthunit="bit"/>
+                </structure>
+                <structure name="Flags" id="3775" repeatmin="110" repeatmax="110">
+                    <number name="Can See Submarines" id="3776" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Is Submarine" id="3777" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Is Building" id="3778" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Is Critter" id="3779" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Is Sea Unit" id="3780" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Explodes When Killed" id="3781" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Is Air Unit" id="3782" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Is Land Unit" id="3783" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Is Undead" id="3784" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Can Attack Ground" id="3785" type="integer" length="1" lengthunit="bit"/>
+                    <binary name="&lt;unused&gt;" id="3786" fillcolor="929292" length="1" lengthunit="bit"/>
+                    <number name="Gold Storage" id="3787" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Place to Get Oil" id="3788" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Transport" id="3789" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Oil Tanker" id="3790" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Peon" id="3791" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Is Hero" id="3792" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Is Mine" id="3793" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Is Oil Patch" id="3794" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Is Tower" id="3795" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Can Attack" id="3796" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Lumber Storage" id="3797" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Casts Spells" id="3798" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Coastal Building" id="3799" type="integer" length="1" lengthunit="bit"/>
+                    <binary name="&lt;padding&gt;" id="3800" fillcolor="929292" length="4" lengthunit="bit"/>
+                    <number name="Organic" id="3801" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Acts as a mage" id="3802" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Killed by Invisibility/Unholy Armor" id="3803" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Oil Storage" id="3804" type="integer" length="1" lengthunit="bit"/>
+                </structure>
+                <number name="Swamp Graphics Frames" id="3806" fillcolor="797979" repeatmin="127" repeatmax="127" type="integer" length="2">
+                    <description>Obsolete.</description>
+                </number>
+            </structure>
+        </structure>
+        <structure name="ALOW" id="3651" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="3809" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="ALOW"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="3810" type="integer"/>
+            <structure name="Data" id="3811">
+                <structref name="Units Allowed" id="3813" repeatmin="16" repeatmax="16" structure="id:3812"/>
+                <structref name="Starting Spells" id="3815" repeatmin="16" repeatmax="16" structure="id:3814"/>
+                <structref name="Allowed Spells" id="3816" repeatmin="16" repeatmax="16" structure="id:3814"/>
+                <structref name="Spells Under Research" id="3817" repeatmin="16" repeatmax="16" structure="id:3814"/>
+                <structref name="Upgrades Allowed" id="3819" repeatmin="16" repeatmax="16" structure="id:3818"/>
+                <structref name="Upgrades Under Research" id="3820" repeatmin="16" repeatmax="16" structure="id:3818"/>
+            </structure>
+        </structure>
+        <structure name="UGRD" id="3653" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="3823" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="UGRD"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="3824" type="integer"/>
+            <structure name="Data" id="3825">
+                <number name="Use Default Data" id="3826" fillcolor="73FC82" type="integer" length="2"/>
+                <structure name="Upgrade Time" id="3827">
+                    <number name="Sword 1" id="3828" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Sword 2" id="3829" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Axe 1" id="3830" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Axe 2" id="3831" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Arrow 1" id="3832" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Arrow 2" id="3833" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Spear 1" id="3834" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Spear 2" id="3835" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Human Shield 1" id="3836" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Human Shield 2" id="3837" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Orc Shield 1" id="3838" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Orc Shield 2" id="3839" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Human Ship Cannon 1" id="3840" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Human Ship Cannon 2" id="3841" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Orc Ship Cannon 1" id="3842" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Orc Ship Cannon 2" id="3843" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Human Ship Armor 1" id="3844" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Human Ship Armor 2" id="3845" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Orc Ship Armor 1" id="3846" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Orc Ship Armor 2" id="3847" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Catapult 1" id="3848" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Catapult 2" id="3849" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Ballista 1" id="3850" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Ballista 2" id="3851" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Train Rangers" id="3852" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Longbow" id="3853" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Ranger Scouting" id="3854" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Ranger Marksmanship" id="3855" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Train Berserkers" id="3856" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Lighter Axes" id="3857" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Berserker Scouting" id="3858" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Berserker Regeneration" id="3859" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Train Ogre Mages" id="3860" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Train Paladins" id="3861" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Holy Vision" id="3862" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Healing" id="3863" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Exorcism" id="3864" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Flame Shield" id="3865" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Fireball" id="3866" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Slow" id="3867" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Invisibility" id="3868" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Polymorph" id="3869" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Blizzard" id="3870" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Eye of Killrogg" id="3871" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Bloodlust" id="3872" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Raise Dead" id="3873" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Death Coil" id="3874" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Whirlwind" id="3875" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Haste" id="3876" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Unholy Armor" id="3877" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Runes" id="3878" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Death and Decay" id="3879" fillcolor="73FC82" type="integer" length="1"/>
+                </structure>
+                <structure name="Upgrade Gold Cost" id="3881">
+                    <number name="Sword 1" id="3882" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Sword 2" id="3883" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Axe 1" id="3884" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Axe 2" id="3885" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Arrow 1" id="3886" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Arrow 2" id="3887" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Spear 1" id="3888" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Spear 2" id="3889" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Shield 1" id="3890" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Shield 2" id="3891" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Shield 1" id="3892" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Shield 2" id="3893" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Cannon 1" id="3894" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Cannon 2" id="3895" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Cannon 1" id="3896" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Cannon 2" id="3897" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Armor 1" id="3898" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Armor 2" id="3899" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Armor 1" id="3900" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Armor 2" id="3901" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Catapult 1" id="3902" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Catapult 2" id="3903" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ballista 1" id="3904" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ballista 2" id="3905" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Rangers" id="3906" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Longbow" id="3907" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ranger Scouting" id="3908" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ranger Marksmanship" id="3909" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Berserkers" id="3910" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Lighter Axes" id="3911" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Berserker Scouting" id="3912" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Berserker Regeneration" id="3913" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Ogre Mages" id="3914" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Paladins" id="3915" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Holy Vision" id="3916" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Healing" id="3917" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Exorcism" id="3918" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Flame Shield" id="3919" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Fireball" id="3920" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Slow" id="3921" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Invisibility" id="3922" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Polymorph" id="3923" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Blizzard" id="3924" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Eye of Killrogg" id="3925" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Bloodlust" id="3926" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Raise Dead" id="3927" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Death Coil" id="3928" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Whirlwind" id="3929" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Haste" id="3930" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Unholy Armor" id="3931" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Runes" id="3932" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Death and Decay" id="3933" fillcolor="73FC82" type="integer" length="2"/>
+                </structure>
+                <structure name="Upgrade Lumber Cost" id="3935">
+                    <number name="Sword 1" id="3936" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Sword 2" id="3937" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Axe 1" id="3938" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Axe 2" id="3939" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Arrow 1" id="3940" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Arrow 2" id="3941" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Spear 1" id="3942" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Spear 2" id="3943" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Shield 1" id="3944" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Shield 2" id="3945" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Shield 1" id="3946" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Shield 2" id="3947" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Cannon 1" id="3948" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Cannon 2" id="3949" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Cannon 1" id="3950" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Cannon 2" id="3951" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Armor 1" id="3952" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Armor 2" id="3953" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Armor 1" id="3954" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Armor 2" id="3955" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Catapult 1" id="3956" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Catapult 2" id="3957" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ballista 1" id="3958" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ballista 2" id="3959" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Rangers" id="3960" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Longbow" id="3961" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ranger Scouting" id="3962" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ranger Marksmanship" id="3963" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Berserkers" id="3964" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Lighter Axes" id="3965" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Berserker Scouting" id="3966" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Berserker Regeneration" id="3967" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Ogre Mages" id="3968" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Paladins" id="3969" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Holy Vision" id="3970" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Healing" id="3971" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Exorcism" id="3972" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Flame Shield" id="3973" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Fireball" id="3974" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Slow" id="3975" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Invisibility" id="3976" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Polymorph" id="3977" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Blizzard" id="3978" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Eye of Killrogg" id="3979" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Bloodlust" id="3980" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Raise Dead" id="3981" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Death Coil" id="3982" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Whirlwind" id="3983" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Haste" id="3984" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Unholy Armor" id="3985" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Runes" id="3986" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Death and Decay" id="3987" fillcolor="73FC82" type="integer" length="2"/>
+                </structure>
+                <structure name="Upgrade Oil Cost" id="3989">
+                    <number name="Sword 1" id="3990" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Sword 2" id="3991" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Axe 1" id="3992" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Axe 2" id="3993" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Arrow 1" id="3994" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Arrow 2" id="3995" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Spear 1" id="3996" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Spear 2" id="3997" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Shield 1" id="3998" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Shield 2" id="3999" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Shield 1" id="4000" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Shield 2" id="4001" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Cannon 1" id="4002" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Cannon 2" id="4003" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Cannon 1" id="4004" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Cannon 2" id="4005" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Armor 1" id="4006" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Armor 2" id="4007" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Armor 1" id="4008" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Armor 2" id="4009" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Catapult 1" id="4010" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Catapult 2" id="4011" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ballista 1" id="4012" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ballista 2" id="4013" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Rangers" id="4014" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Longbow" id="4015" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ranger Scouting" id="4016" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ranger Marksmanship" id="4017" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Berserkers" id="4018" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Lighter Axes" id="4019" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Berserker Scouting" id="4020" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Berserker Regeneration" id="4021" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Ogre Mages" id="4022" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Paladins" id="4023" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Holy Vision" id="4024" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Healing" id="4025" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Exorcism" id="4026" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Flame Shield" id="4027" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Fireball" id="4028" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Slow" id="4029" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Invisibility" id="4030" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Polymorph" id="4031" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Blizzard" id="4032" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Eye of Killrogg" id="4033" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Bloodlust" id="4034" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Raise Dead" id="4035" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Death Coil" id="4036" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Whirlwind" id="4037" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Haste" id="4038" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Unholy Armor" id="4039" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Runes" id="4040" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Death and Decay" id="4041" fillcolor="73FC82" type="integer" length="2"/>
+                </structure>
+                <structure name="Upgrade Icon" id="4043">
+                    <number name="Sword 1" id="4044" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Sword 2" id="4045" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Axe 1" id="4046" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Axe 2" id="4047" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Arrow 1" id="4048" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Arrow 2" id="4049" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Spear 1" id="4050" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Spear 2" id="4051" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Shield 1" id="4052" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Shield 2" id="4053" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Shield 1" id="4054" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Shield 2" id="4055" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Cannon 1" id="4056" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Cannon 2" id="4057" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Cannon 1" id="4058" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Cannon 2" id="4059" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Armor 1" id="4060" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Armor 2" id="4061" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Armor 1" id="4062" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Armor 2" id="4063" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Catapult 1" id="4064" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Catapult 2" id="4065" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ballista 1" id="4066" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ballista 2" id="4067" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Rangers" id="4068" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Longbow" id="4069" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ranger Scouting" id="4070" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ranger Marksmanship" id="4071" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Berserkers" id="4072" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Lighter Axes" id="4073" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Berserker Scouting" id="4074" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Berserker Regeneration" id="4075" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Ogre Mages" id="4076" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Paladins" id="4077" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Holy Vision" id="4078" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Healing" id="4079" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Exorcism" id="4080" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Flame Shield" id="4081" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Fireball" id="4082" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Slow" id="4083" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Invisibility" id="4084" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Polymorph" id="4085" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Blizzard" id="4086" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Eye of Killrogg" id="4087" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Bloodlust" id="4088" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Raise Dead" id="4089" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Death Coil" id="4090" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Whirlwind" id="4091" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Haste" id="4092" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Unholy Armor" id="4093" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Runes" id="4094" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Death and Decay" id="4095" fillcolor="73FC82" type="integer" length="2"/>
+                </structure>
+                <structure name="Upgrade Group" id="4097">
+                    <number name="Sword 1" id="4098" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Sword 2" id="4099" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Axe 1" id="4100" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Axe 2" id="4101" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Arrow 1" id="4102" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Arrow 2" id="4103" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Spear 1" id="4104" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Spear 2" id="4105" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Shield 1" id="4106" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Shield 2" id="4107" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Shield 1" id="4108" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Shield 2" id="4109" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Cannon 1" id="4110" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Cannon 2" id="4111" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Cannon 1" id="4112" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Cannon 2" id="4113" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Armor 1" id="4114" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Human Ship Armor 2" id="4115" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Armor 1" id="4116" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Orc Ship Armor 2" id="4117" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Catapult 1" id="4118" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Catapult 2" id="4119" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ballista 1" id="4120" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ballista 2" id="4121" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Rangers" id="4122" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Longbow" id="4123" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ranger Scouting" id="4124" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Ranger Marksmanship" id="4125" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Berserkers" id="4126" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Lighter Axes" id="4127" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Berserker Scouting" id="4128" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Berserker Regeneration" id="4129" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Ogre Mages" id="4130" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Train Paladins" id="4131" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Holy Vision" id="4132" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Healing" id="4133" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Exorcism" id="4134" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Flame Shield" id="4135" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Fireball" id="4136" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Slow" id="4137" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Invisibility" id="4138" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Polymorph" id="4139" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Blizzard" id="4140" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Eye of Killrogg" id="4141" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Bloodlust" id="4142" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Raise Dead" id="4143" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Death Coil" id="4144" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Whirlwind" id="4145" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Haste" id="4146" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Unholy Armor" id="4147" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Runes" id="4148" fillcolor="73FC82" type="integer" length="2"/>
+                    <number name="Death and Decay" id="4149" fillcolor="73FC82" type="integer" length="2"/>
+                </structure>
+                <structure name="Affect Flags" id="4151">
+                    <structref name="Sword 1" id="4152" structure="id:3818"/>
+                    <structref name="Sword 2" id="4153" structure="id:3818"/>
+                    <structref name="Axe 1" id="4154" structure="id:3818"/>
+                    <structref name="Axe 2" id="4155" structure="id:3818"/>
+                    <structref name="Arrow 1" id="4156" structure="id:3818"/>
+                    <structref name="Arrow 2" id="4157" structure="id:3818"/>
+                    <structref name="Spear 1" id="4158" structure="id:3818"/>
+                    <structref name="Spear 2" id="4159" structure="id:3818"/>
+                    <structref name="Human Shield 1" id="4160" structure="id:3818"/>
+                    <structref name="Human Shield 2" id="4161" structure="id:3818"/>
+                    <structref name="Orc Shield 1" id="4162" structure="id:3818"/>
+                    <structref name="Orc Shield 2" id="4163" structure="id:3818"/>
+                    <structref name="Human Ship Cannon 1" id="4164" structure="id:3818"/>
+                    <structref name="Human Ship Cannon 2" id="4165" structure="id:3818"/>
+                    <structref name="Orc Ship Cannon 1" id="4166" structure="id:3818"/>
+                    <structref name="Orc Ship Cannon 2" id="4167" structure="id:3818"/>
+                    <structref name="Human Ship Armor 1" id="4168" structure="id:3818"/>
+                    <structref name="Human Ship Armor 2" id="4169" structure="id:3818"/>
+                    <structref name="Orc Ship Armor 1" id="4170" structure="id:3818"/>
+                    <structref name="Orc Ship Armor 2" id="4171" structure="id:3818"/>
+                    <structref name="Catapult 1" id="4172" structure="id:3818"/>
+                    <structref name="Catapult 2" id="4173" structure="id:3818"/>
+                    <structref name="Ballista 1" id="4174" structure="id:3818"/>
+                    <structref name="Ballista 2" id="4175" structure="id:3818"/>
+                    <structref name="Train Rangers" id="4176" structure="id:3818"/>
+                    <structref name="Longbow" id="4177" structure="id:3818"/>
+                    <structref name="Ranger Scouting" id="4178" structure="id:3818"/>
+                    <structref name="Ranger Marksmanship" id="4179" structure="id:3818"/>
+                    <structref name="Train Berserkers" id="4180" structure="id:3818"/>
+                    <structref name="Lighter Axes" id="4181" structure="id:3818"/>
+                    <structref name="Berserker Scouting" id="4182" structure="id:3818"/>
+                    <structref name="Berserker Regeneration" id="4183" structure="id:3818"/>
+                    <structref name="Train Ogre-Mages" id="4184" structure="id:3818"/>
+                    <structref name="Train Paladins" id="4185" structure="id:3818"/>
+                    <structref name="Holy Vision" id="4186" structure="id:3818"/>
+                    <structref name="Healing" id="4187" structure="id:3818"/>
+                    <structref name="Exorcism" id="4188" structure="id:3818"/>
+                    <structref name="Flame Shield" id="4189" structure="id:3818"/>
+                    <structref name="Fireball" id="4190" structure="id:3818"/>
+                    <structref name="Slow" id="4191" structure="id:3818"/>
+                    <structref name="Invisibility" id="4192" structure="id:3818"/>
+                    <structref name="Polymorph" id="4193" structure="id:3818"/>
+                    <structref name="Blizzard" id="4194" structure="id:3818"/>
+                    <structref name="Eye of Kilrogg" id="4195" structure="id:3818"/>
+                    <structref name="Bloodlust" id="4196" structure="id:3818"/>
+                    <structref name="Raise Dead" id="4197" structure="id:3818"/>
+                    <structref name="Death Coil" id="4198" structure="id:3818"/>
+                    <structref name="Whirlwind" id="4199" structure="id:3818"/>
+                    <structref name="Haste" id="4200" structure="id:3818"/>
+                    <structref name="Unholy Armor" id="4201" structure="id:3818"/>
+                    <structref name="Runes" id="4202" structure="id:3818"/>
+                    <structref name="Death and Decay" id="4203" structure="id:3818"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="SIDE" id="3655" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="4207" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="SIDE"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="4208" type="integer"/>
+            <structure name="Data" id="4209">
+                <number name="Race" mustmatch="yes" id="4210" fillcolor="73FC82" repeatmin="16" repeatmax="16" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="Human" value="0"/>
+                        <fixedvalue name="Orc" value="1"/>
+                        <fixedvalue name="Neutral" value="2"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+        <structure name="SGLD" id="3657" extends="id:3678">
+            <string name="Name" id="4213" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="SGLD"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="4214" type="integer"/>
+            <structure name="Data" id="4215">
+                <number name="Starting Gold" id="4216" fillcolor="73FC82" repeatmin="16" repeatmax="16" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="SLBR" id="3659" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="4219" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="SLBR"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="4220" type="integer"/>
+            <structure name="Data" id="4221">
+                <number name="Starting Lumber" id="4222" fillcolor="73FC82" repeatmin="16" repeatmax="16" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="SOIL" id="3661" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="4225" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="SOIL"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="4226" type="integer"/>
+            <structure name="Data" id="4227">
+                <number name="Starting Oil" id="4228" fillcolor="73FC82" repeatmin="16" repeatmax="16" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="AIPL" id="3663" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="4231" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="AIPL"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="4232" type="integer"/>
+            <structure name="Data" id="4233">
+                <number name="AI Used" id="4234" fillcolor="73FC82" repeatmin="16" repeatmax="16" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="Land Attack" value="0"/>
+                        <fixedvalue name="Passive" value="1"/>
+                        <fixedvalue name="Orc 3" value="2"/>
+                        <fixedvalue name="Human 4" value="3"/>
+                        <fixedvalue name="Orc 4" value="4"/>
+                        <fixedvalue name="Human 5" value="5"/>
+                        <fixedvalue name="Orc 5" value="6"/>
+                        <fixedvalue name="Human 6" value="7"/>
+                        <fixedvalue name="Orc 6" value="8"/>
+                        <fixedvalue name="Human 7" value="9"/>
+                        <fixedvalue name="Orc 7" value="10"/>
+                        <fixedvalue name="Human 8" value="11"/>
+                        <fixedvalue name="Orc 8" value="12"/>
+                        <fixedvalue name="Human 9" value="13"/>
+                        <fixedvalue name="Orc 9" value="14"/>
+                        <fixedvalue name="Human 10" value="15"/>
+                        <fixedvalue name="Orc 10" value="16"/>
+                        <fixedvalue name="Human 11" value="17"/>
+                        <fixedvalue name="Orc 11 " value="18"/>
+                        <fixedvalue name="Human 12" value="19"/>
+                        <fixedvalue name="Orc 12" value="20"/>
+                        <fixedvalue name="Human 13" value="21"/>
+                        <fixedvalue name="Orc 13" value="22"/>
+                        <fixedvalue name="Human 14 (Orange)" value="17"/>
+                        <fixedvalue name="Orc 14 (Blue)" value="18"/>
+                        <fixedvalue name="Sea Attack" value="19"/>
+                        <fixedvalue name="Air Attack" value="20"/>
+                        <fixedvalue name="Human 14 (Red)" value="21"/>
+                        <fixedvalue name="Human 14 (White)" value="22"/>
+                        <fixedvalue name="Human 14 (Black)" value="23"/>
+                        <fixedvalue name="Orc 14 (Green)" value="24"/>
+                        <fixedvalue name="Orc 14 (White)" value="25"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+        <structure name="MTXM" id="3665" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="4237" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="MTXM"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="4238" type="integer"/>
+            <structure name="Data" id="4239">
+                <structref name="Tile Data" id="4241" repeatmin="0" repeatmax="-1" structure="id:4240"/>
+            </structure>
+        </structure>
+        <structure name="SQM " id="3667" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="4244" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="SQM "/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="4245" type="integer"/>
+            <structure name="Data" id="4246">
+                <structure name="Movement Tile Map" id="4247" repeatmin="0" repeatmax="-1">
+                    <number name="Movement Tile" id="4248" type="integer" length="1" display="hex">
+                        <fixedvalues>
+                            <fixedvalue name="Bridge" value="0x0"/>
+                            <fixedvalue name="Land" value="0x1"/>
+                            <fixedvalue name="Coast" value="0x2"/>
+                            <fixedvalue name="Dirt" value="0x11"/>
+                            <fixedvalue name="Water" value="0x40"/>
+                            <fixedvalue name="Forest/Rocks" value="0x81"/>
+                            <fixedvalue name="Coast" value="0x82"/>
+                            <fixedvalue name="Wall" value="0x8D"/>
+                        </fixedvalues>
+                    </number>
+                    <binary name="&lt;padding&gt;" id="4249" fillcolor="929292" length="4" lengthunit="bit"/>
+                    <number name="Building Present" id="4250" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Sea Unit Present" id="4251" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Air Unit Present" id="4252" type="integer" length="1" lengthunit="bit"/>
+                    <number name="Land Unit Present" id="4253" type="integer" length="1" lengthunit="bit"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="OILM" id="3669" extends="id:3678">
+            <description>Obsolete - was only used in the beta versions.</description>
+            <string name="Name" mustmatch="yes" id="4257" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="OILM"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="4258" type="integer"/>
+            <structure name="Data" id="4259">
+                <number name="Oil Concentration" id="4260" fillcolor="797979" repeatmin="0" repeatmax="-1" type="integer" length="1"/>
+            </structure>
+        </structure>
+        <structure name="REGM" id="3671" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="4263" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="REGM"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="4264" type="integer"/>
+            <structure name="Data" id="4265">
+                <number name="Reaction Map Tile" id="4266" repeatmin="0" repeatmax="-1" type="integer" length="2" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="Water" value="0x0"/>
+                        <fixedvalue name="Land" value="0x4000"/>
+                        <fixedvalue name="Island" value="0xFFFA"/>
+                        <fixedvalue name="Wall" value="0xFFFB"/>
+                        <fixedvalue name="Rocks" value="0xFFFD"/>
+                        <fixedvalue name="Forest" value="0xFFFE"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+        <structure name="UNIT" id="3673" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="4269" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="UNIT"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="4270" type="integer"/>
+            <structure name="Data" id="4271">
+                <structure name="Unit" id="4272" repeatmax="600">
+                    <number name="X" id="4273" fillcolor="D2FC83" type="integer" length="2"/>
+                    <number name="Y" id="4274" fillcolor="D2FC83" type="integer" length="2"/>
+                    <number name="Type" mustmatch="yes" id="4275" fillcolor="73FC82" type="integer" length="1">
+                        <fixedvalues>
+                            <fixedvalue name="Footman" value="0"/>
+                            <fixedvalue name="Grunt" value="1"/>
+                            <fixedvalue name="Peasant" value="2"/>
+                            <fixedvalue name="Peon" value="3"/>
+                            <fixedvalue name="Ballista" value="4"/>
+                            <fixedvalue name="Catapult" value="5"/>
+                            <fixedvalue name="Knight" value="6"/>
+                            <fixedvalue name="Ogre" value="7"/>
+                            <fixedvalue name="Archer" value="8"/>
+                            <fixedvalue name="Axethrower" value="9"/>
+                            <fixedvalue name="Mage" value="10"/>
+                            <fixedvalue name="Death Knight" value="11"/>
+                            <fixedvalue name="Paladin" value="12"/>
+                            <fixedvalue name="Ogre-Mage" value="13"/>
+                            <fixedvalue name="Dwarves" value="14"/>
+                            <fixedvalue name="Goblin Sappers" value="15"/>
+                            <fixedvalue name="Attack Peasant" value="16"/>
+                            <fixedvalue name="Attack Peon" value="17"/>
+                            <fixedvalue name="Ranger" value="18"/>
+                            <fixedvalue name="Berserker" value="19"/>
+                            <fixedvalue name="Alleria" value="20"/>
+                            <fixedvalue name="Teron Gorefiend" value="21"/>
+                            <fixedvalue name="Kurdran and Sky'ree" value="22"/>
+                            <fixedvalue name="Dentarg" value="23"/>
+                            <fixedvalue name="Khadgar" value="24"/>
+                            <fixedvalue name="Grom Hellscream" value="25"/>
+                            <fixedvalue name="Human Tanker" value="26"/>
+                            <fixedvalue name="Orc Tanker" value="27"/>
+                            <fixedvalue name="Human Transport" value="28"/>
+                            <fixedvalue name="Orc Transport" value="29"/>
+                            <fixedvalue name="Elven Destroyer" value="30"/>
+                            <fixedvalue name="Troll Destroyer" value="31"/>
+                            <fixedvalue name="Battleship" value="32"/>
+                            <fixedvalue name="Juggernaut" value="33"/>
+                            <fixedvalue name="Deathwing" value="35"/>
+                            <fixedvalue name="Gnomish Submarine" value="38"/>
+                            <fixedvalue name="Giant Turtle" value="39"/>
+                            <fixedvalue name="Gnomish Flying Machine" value="40"/>
+                            <fixedvalue name="Goblin Zepplin" value="41"/>
+                            <fixedvalue name="Gryphon Rider" value="42"/>
+                            <fixedvalue name="Dragon" value="43"/>
+                            <fixedvalue name="Turalyon" value="44"/>
+                            <fixedvalue name="Eye of Kilrogg" value="45"/>
+                            <fixedvalue name="Danath" value="46"/>
+                            <fixedvalue name="Korgath Bladefist" value="47"/>
+                            <fixedvalue name="Gho'gall" value="49"/>
+                            <fixedvalue name="Lothar" value="50"/>
+                            <fixedvalue name="Gul'dan" value="51"/>
+                            <fixedvalue name="Uther Lightbringer" value="52"/>
+                            <fixedvalue name="Zul'jin" value="53"/>
+                            <fixedvalue name="Skeleton" value="55"/>
+                            <fixedvalue name="Daemon" value="56"/>
+                            <fixedvalue name="Critter" value="57"/>
+                            <fixedvalue name="Farm" value="58"/>
+                            <fixedvalue name="Pig Farm" value="59"/>
+                            <fixedvalue name="Human Barracks" value="60"/>
+                            <fixedvalue name="Orc Barracks" value="61"/>
+                            <fixedvalue name="Church" value="62"/>
+                            <fixedvalue name="Altar of Storms" value="63"/>
+                            <fixedvalue name="Human Scout Tower" value="64"/>
+                            <fixedvalue name="Orc Scout Tower" value="65"/>
+                            <fixedvalue name="Stables" value="66"/>
+                            <fixedvalue name="Ogre Mound" value="67"/>
+                            <fixedvalue name="Gnomish Inventor" value="68"/>
+                            <fixedvalue name="Goblin Alchemist" value="69"/>
+                            <fixedvalue name="Gryphon Aviary" value="70"/>
+                            <fixedvalue name="Dragon Roost" value="71"/>
+                            <fixedvalue name="Human Shipyard" value="72"/>
+                            <fixedvalue name="Orc Shipyard" value="73"/>
+                            <fixedvalue name="Town Hall" value="74"/>
+                            <fixedvalue name="Great Hall" value="75"/>
+                            <fixedvalue name="Elven Lumber Mill" value="76"/>
+                            <fixedvalue name="Troll Lumber Mill" value="77"/>
+                            <fixedvalue name="Human Foundry" value="78"/>
+                            <fixedvalue name="Orc Foundry" value="79"/>
+                            <fixedvalue name="Mage Tower" value="80"/>
+                            <fixedvalue name="Temple of the Damned" value="81"/>
+                            <fixedvalue name="Human Blacksmith" value="82"/>
+                            <fixedvalue name="Orc Blacksmith" value="83"/>
+                            <fixedvalue name="Human Refinery" value="84"/>
+                            <fixedvalue name="Orc Refinery" value="85"/>
+                            <fixedvalue name="Human Oil Platform" value="86"/>
+                            <fixedvalue name="Orc Oil Platform" value="87"/>
+                            <fixedvalue name="Keep" value="88"/>
+                            <fixedvalue name="Stronghold" value="89"/>
+                            <fixedvalue name="Castle" value="90"/>
+                            <fixedvalue name="Fortress" value="91"/>
+                            <fixedvalue name="Gold Mine" value="92"/>
+                            <fixedvalue name="Oil Patch" value="93"/>
+                            <fixedvalue name="Human Start Location" value="94"/>
+                            <fixedvalue name="Orc Start Location" value="95"/>
+                            <fixedvalue name="Human Guard Tower" value="96"/>
+                            <fixedvalue name="Orc Guard Tower" value="97"/>
+                            <fixedvalue name="Human Cannon Tower" value="98"/>
+                            <fixedvalue name="Orc Cannon Tower" value="99"/>
+                            <fixedvalue name="Circle of Power" value="100"/>
+                            <fixedvalue name="Dark Portal" value="101"/>
+                            <fixedvalue name="Runestone" value="102"/>
+                            <fixedvalue name="Human Unbuilt Wall" value="103"/>
+                            <fixedvalue name="Orc Unbuilt Wall" value="104"/>
+                            <fixedvalue name="Dead Body" value="105"/>
+                            <fixedvalue name="1x1 Destroyed" value="106"/>
+                            <fixedvalue name="2x2 Destroyed" value="107"/>
+                            <fixedvalue name="3x3 Destroyed" value="108"/>
+                            <fixedvalue name="4x4 Destroyed" value="109"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="Owner" id="4276" fillcolor="73FC82" type="integer" length="1"/>
+                    <number name="Gold/Oil Amount / Passive/Active" id="4277" fillcolor="73FC82" type="integer" length="2"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="SIGN" id="3675" extends="id:3678">
+            <string name="Name" mustmatch="yes" id="4281" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue value="SIGN"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="4282" type="integer"/>
+        </structure>
+        <structure name="Units Bitfield" id="3812" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Destroyer" id="4286" type="integer" length="1" lengthunit="bit"/>
+            <number name="Oil Tanker" id="4287" type="integer" length="1" lengthunit="bit"/>
+            <number name="Mage / Death Knight" id="4288" type="integer" length="1" lengthunit="bit"/>
+            <number name="Archer / Axe Thrower" id="4289" type="integer" length="1" lengthunit="bit"/>
+            <number name="Knight / Ogre" id="4290" type="integer" length="1" lengthunit="bit"/>
+            <number name="Ballista / Catapult" id="4291" type="integer" length="1" lengthunit="bit"/>
+            <number name="Peasant / Peon" id="4292" type="integer" length="1" lengthunit="bit"/>
+            <number name="Footman / Grunt" id="4293" type="integer" length="1" lengthunit="bit"/>
+            <number name="Aviary / Roost" id="4294" type="integer" length="1" lengthunit="bit"/>
+            <number name="Demo Squad / Sapper" id="4295" type="integer" length="1" lengthunit="bit"/>
+            <binary name="&lt;unused&gt;" id="4296" fillcolor="929292" length="1" lengthunit="bit"/>
+            <number name="Gryphon / Dragon" id="4297" type="integer" length="1" lengthunit="bit"/>
+            <number name="Flying Machine / Zeppelin" id="4298" type="integer" length="1" lengthunit="bit"/>
+            <number name="Submarine / Turtle" id="4299" type="integer" length="1" lengthunit="bit"/>
+            <number name="Battleship / Juggernaut" id="4300" type="integer" length="1" lengthunit="bit"/>
+            <number name="Transport" id="4301" type="integer" length="1" lengthunit="bit"/>
+            <number name="Inventor / Alchemist" id="4302" type="integer" length="1" lengthunit="bit"/>
+            <number name="Refinery" id="4303" type="integer" length="1" lengthunit="bit"/>
+            <number name="Foundry" id="4304" type="integer" length="1" lengthunit="bit"/>
+            <number name="Mage Tower / Temple" id="4305" type="integer" length="1" lengthunit="bit"/>
+            <number name="Stables / Ogre Mound" id="4306" type="integer" length="1" lengthunit="bit"/>
+            <number name="Lumber Mill" id="4307" type="integer" length="1" lengthunit="bit"/>
+            <number name="Barracks" id="4308" type="integer" length="1" lengthunit="bit"/>
+            <number name="Farm" id="4309" type="integer" length="1" lengthunit="bit"/>
+            <number name="Wall" id="4310" type="integer" length="1" lengthunit="bit"/>
+            <number name="Shipyard" id="4311" type="integer" length="1" lengthunit="bit"/>
+            <number name="Blacksmith" id="4312" type="integer" length="1" lengthunit="bit"/>
+            <number name="Castle / Fortress" id="4313" type="integer" length="1" lengthunit="bit"/>
+            <number name="Keep / Stronghold" id="4314" type="integer" length="1" lengthunit="bit"/>
+            <number name="Town Hall / Great Hall" id="4315" type="integer" length="1" lengthunit="bit"/>
+            <number name="Tower" id="4316" type="integer" length="1" lengthunit="bit"/>
+            <number name="Church / Altar of Storms" id="4317" type="integer" length="1" lengthunit="bit"/>
+        </structure>
+        <structure name="Spells Bitfield" id="3814" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Invisibility" id="4319" type="integer" length="1" lengthunit="bit"/>
+            <number name="Slow" id="4320" type="integer" length="1" lengthunit="bit"/>
+            <number name="Fireball" id="4321" type="integer" length="1" lengthunit="bit"/>
+            <number name="Flame Shield" id="4322" type="integer" length="1" lengthunit="bit"/>
+            <number name="Exorcism" id="4323" type="integer" length="1" lengthunit="bit"/>
+            <binary name="&lt;unused&gt;" id="4324" fillcolor="929292" length="1" lengthunit="bit"/>
+            <number name="Healing" id="4325" type="integer" length="1" lengthunit="bit"/>
+            <number name="Holy Vision" id="4326" type="integer" length="1" lengthunit="bit"/>
+            <number name="Whirlwind" id="4327" type="integer" length="1" lengthunit="bit"/>
+            <number name="Death Coil" id="4328" type="integer" length="1" lengthunit="bit"/>
+            <number name="Raise Dead" id="4329" type="integer" length="1" lengthunit="bit"/>
+            <binary name="&lt;unused-1&gt;" id="4330" fillcolor="929292" length="1" lengthunit="bit"/>
+            <number name="Bloodlust" id="4331" type="integer" length="1" lengthunit="bit"/>
+            <number name="Eye of Kilrogg" id="4332" type="integer" length="1" lengthunit="bit"/>
+            <number name="Blizzard" id="4333" type="integer" length="1" lengthunit="bit"/>
+            <number name="Polymorph" id="4334" type="integer" length="1" lengthunit="bit"/>
+            <binary name="&lt;unused-2&gt;" id="4335" fillcolor="929292" length="4" lengthunit="bit"/>
+            <number name="Death and Decay" id="4336" type="integer" length="1" lengthunit="bit"/>
+            <number name="Runes" id="4337" type="integer" length="1" lengthunit="bit"/>
+            <number name="Unholy Armor" id="4338" type="integer" length="1" lengthunit="bit"/>
+            <number name="Haste" id="4339" type="integer" length="1" lengthunit="bit"/>
+            <binary name="&lt;unused-3&gt;" id="4340" fillcolor="929292" length="8" lengthunit="bit"/>
+        </structure>
+        <structure name="Upgrades Bitfield" id="3818" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Ship Cannon 2" id="4342" type="integer" length="1" lengthunit="bit"/>
+            <number name="Ship Cannon 1" id="4343" type="integer" length="1" lengthunit="bit"/>
+            <number name="Shield 2" id="4344" type="integer" length="1" lengthunit="bit"/>
+            <number name="Shield 1" id="4345" type="integer" length="1" lengthunit="bit"/>
+            <number name="Sword 2" id="4346" type="integer" length="1" lengthunit="bit"/>
+            <number name="Sword 1" id="4347" type="integer" length="1" lengthunit="bit"/>
+            <number name="Arrow 2" id="4348" type="integer" length="1" lengthunit="bit"/>
+            <number name="Arrow 1" id="4349" type="integer" length="1" lengthunit="bit"/>
+            <binary name="&lt;unused&gt;" id="4350" fillcolor="929292" length="2" lengthunit="bit"/>
+            <number name="Ballista 2" id="4351" type="integer" length="1" lengthunit="bit"/>
+            <number name="Ballista 1" id="4352" type="integer" length="1" lengthunit="bit"/>
+            <binary name="&lt;unused-2&gt;" id="4353" fillcolor="929292" length="2" lengthunit="bit"/>
+            <number name="Ship Armor 2" id="4354" type="integer" length="1" lengthunit="bit"/>
+            <number name="Ship Armor 1" id="4355" type="integer" length="1" lengthunit="bit"/>
+            <binary name="&lt;unused-3&gt;" id="4356" fillcolor="929292" length="3" lengthunit="bit"/>
+            <number name="Paladins" id="4357" type="integer" length="1" lengthunit="bit"/>
+            <number name="Ranger Marksmanship" id="4358" type="integer" length="1" lengthunit="bit"/>
+            <number name="Scouting" id="4359" type="integer" length="1" lengthunit="bit"/>
+            <number name="Longbow" id="4360" type="integer" length="1" lengthunit="bit"/>
+            <number name="Elven Rangers" id="4361" type="integer" length="1" lengthunit="bit"/>
+            <binary name="&lt;unused-4&gt;" id="4362" fillcolor="929292" length="8" lengthunit="bit"/>
+        </structure>
+        <structure name="Tile Data" id="4240" encoding="ISO_8859-1:1987" endian="little" signed="no" order="variable">
+            <structref name="Solid Tile" id="4365" repeatmin="0" structure="id:4364"/>
+            <structref name="Boundary Tile" id="4367" repeatmin="0" structure="id:4366"/>
+        </structure>
+        <structure name="Solid Tile" id="4364" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Tile Type" mustmatch="yes" id="4369" type="integer" length="4" lengthunit="bit">
+                <fixedvalues>
+                    <fixedvalue name="Light Water" value="1"/>
+                    <fixedvalue name="Dark Water" value="2"/>
+                    <fixedvalue name="Light Dirt" value="3"/>
+                    <fixedvalue name="Dark Dirt" value="4"/>
+                    <fixedvalue name="Light Grass" value="5"/>
+                    <fixedvalue name="Dark Grass" value="6"/>
+                    <fixedvalue name="Trees" value="7"/>
+                    <fixedvalue name="Rocks" value="8"/>
+                    <fixedvalue name="Human Wall" value="9"/>
+                    <fixedvalue name="Orc Wall" value="10"/>
+                    <fixedvalue name="Human Wall 2" value="11"/>
+                    <fixedvalue name="Orc Wall 2" value="12"/>
+                </fixedvalues>
+            </number>
+            <number name="Variation" id="4370" type="integer" length="4" lengthunit="bit"/>
+            <number name="Identifier" mustmatch="yes" id="4371" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue value="0"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="Boundary Tile" id="4366" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Filled / Clear" mustmatch="yes" id="4373" type="integer" length="4" lengthunit="bit">
+                <fixedvalues>
+                    <fixedvalue name="UL" value="0"/>
+                    <fixedvalue name="UR" value="1"/>
+                    <fixedvalue name="UL/UR" value="2"/>
+                    <fixedvalue name="LL" value="3"/>
+                    <fixedvalue name="UL/LL" value="4"/>
+                    <fixedvalue name="UR/LL" value="5"/>
+                    <fixedvalue name="UL/UR/LL" value="6"/>
+                    <fixedvalue name="LR" value="7"/>
+                    <fixedvalue name="UL/LR" value="8"/>
+                    <fixedvalue name="UR/LR" value="9"/>
+                    <fixedvalue name="UL/UR/LR" value="10"/>
+                    <fixedvalue name="LL/LR" value="11"/>
+                    <fixedvalue name="UL/LL/LR" value="12"/>
+                    <fixedvalue name="UR/LL/LR" value="13"/>
+                </fixedvalues>
+            </number>
+            <number name="Variation" id="4374" type="integer" length="4" lengthunit="bit"/>
+            <number name="Boundary Type" mustmatch="yes" id="4375" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Dark Water / Light Water" value="1"/>
+                    <fixedvalue name="Light Water / Light Dirt" value="2"/>
+                    <fixedvalue name="Dark Dirt / Light Dirt" value="3"/>
+                    <fixedvalue name="Rocks / Light Dirt" value="4"/>
+                    <fixedvalue name="Light Dirt / Grass" value="5"/>
+                    <fixedvalue name="Dark Grass / Light Grass" value="6"/>
+                    <fixedvalue name="Forest / Light Grass" value="7"/>
+                    <fixedvalue name="Human Wall" value="8"/>
+                    <fixedvalue name="Orc Wall" value="9"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="Unit Byte Structure" id="4538" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Footman" id="4648" type="integer" length="1"/>
+            <number name="Grunt" id="4647" type="integer" length="1"/>
+            <number name="Peasant" id="4646" type="integer" length="1"/>
+            <number name="Peon" id="4645" type="integer" length="1"/>
+            <number name="Ballista" id="4644" type="integer" length="1"/>
+            <number name="Catapult" id="4643" type="integer" length="1"/>
+            <number name="Knight" id="4642" type="integer" length="1"/>
+            <number name="Ogre" id="4641" type="integer" length="1"/>
+            <number name="Archer" id="4640" type="integer" length="1"/>
+            <number name="Axethrower" id="4639" type="integer" length="1"/>
+            <number name="Mage" id="4638" type="integer" length="1"/>
+            <number name="Death Knight" id="4637" type="integer" length="1"/>
+            <number name="Paladin" id="4636" type="integer" length="1"/>
+            <number name="Ogre-Mage" id="4635" type="integer" length="1"/>
+            <number name="Dwarven Demo Team" id="4634" type="integer" length="1"/>
+            <number name="Goblin Sappers" id="4633" type="integer" length="1"/>
+            <number name="Attack Peasant" id="4632" type="integer" length="1"/>
+            <number name="Attack Peon" id="4631" type="integer" length="1"/>
+            <number name="Ranger" id="4630" type="integer" length="1"/>
+            <number name="Berserker" id="4629" type="integer" length="1"/>
+            <number name="Alleria" id="4628" type="integer" length="1"/>
+            <number name="Teron Gorefiend" id="4627" type="integer" length="1"/>
+            <number name="Kurdran and Sky'ree" id="4626" type="integer" length="1"/>
+            <number name="Dentarg" id="4625" type="integer" length="1"/>
+            <number name="Khadgar" id="4624" type="integer" length="1"/>
+            <number name="Grom Hellscream" id="4623" type="integer" length="1"/>
+            <number name="Human Tanker" id="4622" type="integer" length="1"/>
+            <number name="Orc Tanker" id="4621" type="integer" length="1"/>
+            <number name="Human Transport" id="4620" type="integer" length="1"/>
+            <number name="Orc Transport" id="4619" type="integer" length="1"/>
+            <number name="Elven Destroyer" id="4618" type="integer" length="1"/>
+            <number name="Troll Destroyer" id="4617" type="integer" length="1"/>
+            <number name="Battleship" id="4616" type="integer" length="1"/>
+            <number name="Juggernaut" id="4615" type="integer" length="1"/>
+            <binary name="&lt;unused&gt;" id="4614" fillcolor="929292" length="1"/>
+            <number name="Deathwing" id="4613" type="integer" length="1"/>
+            <binary name="&lt;unused-2&gt;" id="4612" fillcolor="929292" length="2"/>
+            <number name="Gnomish Submarine" id="4611" type="integer" length="1"/>
+            <number name="Giant Turtle" id="4610" type="integer" length="1"/>
+            <number name="Gnomish Flying Machine" id="4609" type="integer" length="1"/>
+            <number name="Goblin Zeppelin" id="4608" type="integer" length="1"/>
+            <number name="Gryphon Rider" id="4607" type="integer" length="1"/>
+            <number name="Dragon" id="4606" type="integer" length="1"/>
+            <number name="Turalyon" id="4605" type="integer" length="1"/>
+            <number name="Eye of Kilrogg" id="4604" type="integer" length="1"/>
+            <number name="Danath" id="4603" type="integer" length="1"/>
+            <number name="Korgath Bladefist" id="4602" type="integer" length="1"/>
+            <binary name="&lt;unused-3&gt;" id="4601" fillcolor="929292" length="1"/>
+            <number name="Cho'gall" id="4600" type="integer" length="1"/>
+            <number name="Lothar" id="4599" type="integer" length="1"/>
+            <number name="Gul'dan" id="4598" type="integer" length="1"/>
+            <number name="Uther Lightbringer" id="4597" type="integer" length="1"/>
+            <number name="Zuljin" id="4596" type="integer" length="1"/>
+            <binary name="&lt;unused-4&gt;" id="4595" fillcolor="929292" length="1"/>
+            <number name="Skeleton" id="4594" type="integer" length="1"/>
+            <number name="Daemon" id="4593" type="integer" length="1"/>
+            <number name="Critter" id="4592" type="integer" length="1"/>
+            <number name="Farm" id="4591" type="integer" length="1"/>
+            <number name="Pig Farm" id="4590" type="integer" length="1"/>
+            <number name="Human Barracks" id="4589" type="integer" length="1"/>
+            <number name="Orc Barracks" id="4588" type="integer" length="1"/>
+            <number name="Church" id="4587" type="integer" length="1"/>
+            <number name="Altar of Storms" id="4586" type="integer" length="1"/>
+            <number name="Human Scout Tower" id="4585" type="integer" length="1"/>
+            <number name="Orc Scout Tower" id="4584" type="integer" length="1"/>
+            <number name="Stables" id="4583" type="integer" length="1"/>
+            <number name="Ogre Mound" id="4582" type="integer" length="1"/>
+            <number name="Gnomish Inventor" id="4581" type="integer" length="1"/>
+            <number name="Goblin Alchemist" id="4580" type="integer" length="1"/>
+            <number name="Gryphon Aviary" id="4579" type="integer" length="1"/>
+            <number name="Dragon Roost" id="4578" type="integer" length="1"/>
+            <number name="Human Shipyard" id="4577" type="integer" length="1"/>
+            <number name="Orc Shipyard" id="4576" type="integer" length="1"/>
+            <number name="Town Hall" id="4575" type="integer" length="1"/>
+            <number name="Great Hall" id="4574" type="integer" length="1"/>
+            <number name="Elven Lumber Mill" id="4573" type="integer" length="1"/>
+            <number name="Troll Lumber Mill" id="4572" type="integer" length="1"/>
+            <number name="Human Foundry" id="4571" type="integer" length="1"/>
+            <number name="Orc Foundry" id="4570" type="integer" length="1"/>
+            <number name="Mage Tower" id="4569" type="integer" length="1"/>
+            <number name="Temple of the Damned" id="4568" type="integer" length="1"/>
+            <number name="Human Blacksmith" id="4567" type="integer" length="1"/>
+            <number name="Orc Blacksmith" id="4566" type="integer" length="1"/>
+            <number name="Human Refinery" id="4565" type="integer" length="1"/>
+            <number name="Orc Refinery" id="4564" type="integer" length="1"/>
+            <number name="Human Oil Platform" id="4563" type="integer" length="1"/>
+            <number name="Orc Oil Platform" id="4562" type="integer" length="1"/>
+            <number name="Keep" id="4561" type="integer" length="1"/>
+            <number name="Stronghold" id="4560" type="integer" length="1"/>
+            <number name="Castle" id="4559" type="integer" length="1"/>
+            <number name="Fortress" id="4558" type="integer" length="1"/>
+            <number name="Gold Mine" id="4557" type="integer" length="1"/>
+            <number name="Oil Patch" id="4556" type="integer" length="1"/>
+            <number name="Human Start Location" id="4555" type="integer" length="1"/>
+            <number name="Orc Start Location" id="4554" type="integer" length="1"/>
+            <number name="Human Guard Tower" id="4553" type="integer" length="1"/>
+            <number name="Orc Guard Tower" id="4552" type="integer" length="1"/>
+            <number name="Human Cannon Tower" id="4551" type="integer" length="1"/>
+            <number name="Orc Cannon Tower" id="4550" type="integer" length="1"/>
+            <number name="Circle of Power" id="4549" type="integer" length="1"/>
+            <number name="Dark Portal" id="4548" type="integer" length="1"/>
+            <number name="Runestone" id="4547" type="integer" length="1"/>
+            <number name="Human Unbuilt Wall" id="4546" type="integer" length="1"/>
+            <number name="Orc Unbuilt Wall" id="4545" type="integer" length="1"/>
+            <number name="Dead Body" id="4544" type="integer" length="1"/>
+            <number name="1x1 Destroyed Place" id="4543" type="integer" length="1"/>
+            <number name="2x2 Destroyed Place" id="4542" type="integer" length="1"/>
+            <number name="3x3 Destroyed Place" id="4541" type="integer" length="1"/>
+            <number name="4x4 Destroyed Place" id="4540" type="integer" length="1"/>
+        </structure>
+    </grammar>
+</ufwb>

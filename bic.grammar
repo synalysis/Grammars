@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.0.3.8">
+    <grammar name="Civilization saved game" start="BIC file" author="Andreas Pehnack" fileextension="bic">
+        <description>Grammar for Civilization saved games</description>
+        <structure name="==== Structures ====" id="1035" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+        <structure name="Structure" id="1037" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Length" id="1038" type="integer" length="4"/>
+            <structure name="Data" id="1039" length="prev.Length"/>
+        </structure>
+        <structure name="CONT Structure" id="1042" extends="Structure"/>
+        <structure name="VER# Structure" id="1047" extends="Structure"/>
+        <structure name="TILE Structure" id="1052" extends="Structure"/>
+        <structure name="WCHR Structure" id="1057" extends="Structure"/>
+        <structure name="WMAP Structure" id="1062" extends="Structure"/>
+        <structure name="==== Sections ====" id="1067" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+        <structure name="Section" id="1069" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="Type" mustmatch="yes" id="1070" type="fixed-length" length="4"/>
+            <number name="StructureCount" id="1071" type="integer" length="4"/>
+            <structure name="Structures" id="1072" repeat="id:1071" repeatmax="unlimited">
+                <structref name="Structure" id="1073"/>
+            </structure>
+        </structure>
+        <structure name="CONT Section" id="1076" extends="Section">
+            <string name="Type" id="1077" type="fixed-length" length="4">
+                <fixedvalue name="CONT" value="CONT"/>
+            </string>
+            <number name="StructureCount" id="1078" type="integer"/>
+            <structure name="Structures" id="1079" repeat="id:1078">
+                <structref name="Structure" id="1080" structure="CONT Structure"/>
+            </structure>
+        </structure>
+        <structure name="TILE Section" id="1083" extends="Section">
+            <string name="Type" id="1084" type="fixed-length" length="4">
+                <fixedvalue name="TILE" value="TILE"/>
+            </string>
+            <number name="StructureCount" id="1085" type="integer"/>
+            <structure name="Structures" id="1086" repeat="id:1085">
+                <structref name="Structure" id="1087" structure="TILE Structure"/>
+            </structure>
+        </structure>
+        <structure name="VER# Section" id="1090" extends="Section">
+            <string name="Type" id="1091" type="fixed-length" length="4">
+                <fixedvalue name="VER#" value="VER#"/>
+            </string>
+            <number name="StructureCount" id="1092" type="integer"/>
+            <structure name="Structures" id="1093" repeat="id:1092">
+                <structref name="Structure" id="1124" structure="VER# Structure"/>
+            </structure>
+        </structure>
+        <structure name="WCHR Section" id="1096" extends="Section">
+            <string name="Type" id="1097" type="fixed-length" length="4">
+                <fixedvalue name="WCHR" value="WCHR"/>
+            </string>
+            <number name="StructureCount" id="1098" type="integer"/>
+            <structure name="Structures" id="1099" repeat="id:1098">
+                <structref name="Structure" id="1100" structure="WCHR Structure"/>
+            </structure>
+        </structure>
+        <structure name="WMAP Section" id="1103" extends="Section">
+            <string name="Type" id="1104" type="fixed-length" length="4">
+                <fixedvalue name="WMAP" value="WMAP"/>
+            </string>
+            <number name="StructureCount" id="1105" type="integer"/>
+            <structure name="Structures" id="1106" repeat="id:1105">
+                <structref name="Structure" id="1107" structure="WMAP Structure"/>
+            </structure>
+        </structure>
+        <structure name="BIC file" id="1034" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="EyeCatcher" mustmatch="yes" id="1110" type="fixed-length" length="4" encoding="ISO_8859-1:1987">
+                <fixedvalue name="EyeCatcher" value="BIC "/>
+            </string>
+            <structure name="Sections" id="1111" repeatmax="unlimited" order="variable">
+                <structref name="CONT Section" id="1112" repeatmin="0"/>
+                <structref name="TILE Section" id="1113" repeatmin="0"/>
+                <structref name="VER# Section" id="1114" repeatmin="0"/>
+                <structref name="WCHR Section" id="1115" repeatmin="0"/>
+                <structref name="WMAP Section" id="1116" repeatmin="0"/>
+                <structref name="Section" id="1117"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

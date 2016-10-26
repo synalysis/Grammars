@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9">
+    <grammar name="Registry hive" start="id:48" author="eric">
+        <structure name="RegistryHive" id="48" extends="id:49" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Header" id="50" length="4096" fillcolor="EAFEFF">
+                <string name="Signature" mustmatch="yes" id="51" fillcolor="00FF7F" type="fixed-length" length="4" encoding="ANSI_X3.4-1968">
+                    <fixedvalues>
+                        <fixedvalue name="regf" value="regf"/>
+                    </fixedvalues>
+                </string>
+                <binary name="Sequence1" id="52" fillcolor="FFFF00" length="4"/>
+                <binary name="Sequence2" id="53" fillcolor="FFAA7F" length="4"/>
+                <number name="LastWriteTimestamp" id="54" fillcolor="AA00FF" type="integer" length="8">
+                    <description>64 bit Windows timestamp</description>
+                </number>
+                <number name="MajorVersion" id="55" fillcolor="FFAAFF" type="integer" length="4"/>
+                <number name="MinorVersion" id="56" fillcolor="FF5500" type="integer" length="4"/>
+                <binary name="Type" id="57" fillcolor="AA557F" length="4"/>
+                <binary name="Format" id="58" fillcolor="55AA00" length="4"/>
+                <number name="RootCellIndex" id="59" fillcolor="00FFFF" type="integer" length="4"/>
+                <number name="Length" id="60" fillcolor="00FF00" type="integer" length="4"/>
+                <binary name="Cluster" id="61" fillcolor="AA0000" length="4"/>
+                <string name="EmbeddedFilename" id="62" fillcolor="FF4C9D" type="delimiter-terminated" encoding="Adobe-Standard-Encoding"/>
+                <binary name="Reserved1" id="63" length="396"/>
+                <binary name="Checksum" id="64" fillcolor="5500FF" length="4"/>
+                <binary name="Reserved2" id="65" length="3576"/>
+                <binary name="BootType" id="66" fillcolor="FF5500" length="4"/>
+                <binary name="BootRecover" id="67" fillcolor="AA55FF" length="4"/>
+            </structure>
+            <structure name="HBin record" id="69" length="hbinSize" repeatmax="Length/4096" fillcolor="AAAAFF">
+                <string name="hbin Signature" id="70" fillcolor="FF0000" type="fixed-length" length="4" encoding="Adobe-Standard-Encoding"/>
+                <number name="Relative offset" id="71" fillcolor="5555FF" type="integer" length="4"/>
+                <number name="hbinSize" id="72" fillcolor="00FF7F" type="integer" length="4"/>
+                <binary name="Reserved" id="73" length="8"/>
+                <number name="LastWriteTimestamp" id="74" fillcolor="00AA7F" type="integer" length="8"/>
+                <binary name="Spare" id="75" length="4"/>
+                <structure name="Records" id="76" repeatmax="-1" order="variable">
+                    <structref name="LFRecord" id="78" repeatmin="0" structure="id:77"/>
+                    <structref name="LKRecord" id="80" repeatmin="0" structure="id:79"/>
+                    <structref name="NKRecord" id="82" repeatmin="0" structure="id:81"/>
+                    <structref name="PERecord" id="84" repeatmin="0" structure="id:83"/>
+                    <structref name="SKRecord" id="86" repeatmin="0" structure="id:85"/>
+                    <structref name="VKRecord" id="88" repeatmin="0" structure="id:87"/>
+                    <structref name="FallbackRecord" id="90" repeatmin="0" structure="id:89"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="Record" id="89" length="abs(Size)" alignment="0" extends="id:49" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Size" id="94" fillcolor="55FF7F" type="integer" length="4" signed="yes" display="hex"/>
+            <string name="Signature" mustmatch="yes" id="95" fillcolor="00AA7F" type="fixed-length" length="2" encoding="Adobe-Standard-Encoding"/>
+        </structure>
+        <structure name="LFRecord" id="77" extends="id:89">
+            <number name="Size" id="97" type="integer"/>
+            <string name="Signature" id="98" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Sig" value="lf"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="LKRecord" id="79" extends="id:89">
+            <number name="Size" id="100" type="integer"/>
+            <string name="Signature" id="101" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Sig" value="lk"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="NKRecord" id="81" alignment="0" extends="id:89" fillcolor="FC7DBD">
+            <number name="Size" id="103" type="integer"/>
+            <string name="Signature" id="104" type="fixed-length" length="2" encoding="Adobe-Standard-Encoding">
+                <fixedvalues>
+                    <fixedvalue name="Signature" value="nk"/>
+                </fixedvalues>
+            </string>
+            <number name="Flags" id="105" fillcolor="AA55FF" type="integer" length="2" display="binary"/>
+            <number name="LastWriteTimestamp" id="106" fillcolor="00AAFF" type="integer" length="8"/>
+            <binary name="Spare" id="107" length="4"/>
+            <number name="ParentCellIndex" id="108" fillcolor="FF00FF" type="integer" length="4"/>
+            <number name="SubkeyCountStable" id="109" fillcolor="00FF00" type="integer" length="4"/>
+            <number name="SubkeyCountVolatile" id="110" fillcolor="AA007F" type="integer" length="4"/>
+            <number name="SubkeyCellIndex" id="111" fillcolor="AAAA00" type="integer" length="4"/>
+            <number name="SubkeyListVolatile" id="112" fillcolor="FFFF7F" type="integer" length="4"/>
+            <number name="ValueCount" id="113" fillcolor="AAFFFF" type="integer" length="4"/>
+            <number name="ValueListCellIndex" id="114" fillcolor="FF5500" type="integer" length="4"/>
+            <number name="SecurityKeyOffset" id="115" fillcolor="00FFFF" type="integer" length="4"/>
+            <number name="ClassCellOffset" id="116" fillcolor="00D000" type="integer" length="4"/>
+            <number name="MaxNameLength" id="117" fillcolor="FFAA00" type="integer" length="2"/>
+            <number name="UserFlags" id="118" fillcolor="00AAFF" type="integer" length="1" display="binary"/>
+            <binary name="Debug" id="119" length="1"/>
+            <number name="MaxClassnameLength" id="120" fillcolor="00557F" type="integer" length="4"/>
+            <number name="MaxValueNameLength" id="121" fillcolor="FF00FF" type="integer" length="4"/>
+            <number name="MaxValueDataLength" id="122" fillcolor="0055FF" type="integer" length="4"/>
+            <binary name="WorkVar" id="123" length="4"/>
+            <number name="NameLength" id="124" fillcolor="AAAA00" type="integer" length="2"/>
+            <number name="ClassLength" id="125" fillcolor="00FF7F" type="integer" length="2"/>
+            <string name="Name" id="126" fillcolor="7A9F2B" type="fixed-length" length="NameLength" encoding="Adobe-Standard-Encoding"/>
+            <binary name="Padding" id="127" length="remaining"/>
+        </structure>
+        <structure name="PERecord" id="83" extends="id:89">
+            <number name="Size" id="129" type="integer"/>
+            <string name="Signature" id="130" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Sig" value="pe"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="SKRecord" id="85" extends="id:89" fillcolor="FFFF7F">
+            <number name="Size" id="132" fillcolor="00FF00" type="integer" length="4"/>
+            <string name="Signature" id="133" fillcolor="FFAA00" type="fixed-length" length="2" encoding="Adobe-Standard-Encoding">
+                <fixedvalues>
+                    <fixedvalue name="Sig" value="sk"/>
+                </fixedvalues>
+            </string>
+            <binary name="Reserved" id="134" length="2"/>
+            <number name="FLinkOffset" id="135" fillcolor="5234FF" type="integer" length="4"/>
+            <number name="BlinkOffset" id="136" fillcolor="FF9CA3" type="integer" length="4"/>
+            <number name="ReferenceCount" id="137" fillcolor="FF5133" type="integer" length="4"/>
+            <number name="DescriptorLength" id="138" type="integer" length="4"/>
+            <structure name="Descriptor" id="139" length="DescriptorLength" fillcolor="C2BFE8">
+                <binary name="Revision" id="140" length="1"/>
+                <binary name="Spare" id="141" length="1"/>
+                <number name="ControlFlags" id="142" fillcolor="FFFF7F" type="integer" length="2" display="binary"/>
+                <number name="OffsetToOwner" id="143" type="integer" length="4"/>
+                <number name="OffsetToGroup" id="144" type="integer" length="4"/>
+                <number name="OffsetToSACL" id="145" type="integer" length="4"/>
+                <number name="OffsetToDACL" id="146" type="integer" length="4"/>
+                <structref name="SACL" id="148" structure="id:147"/>
+                <structref name="DACL" id="150" structure="id:149"/>
+                <binary name="OwnerSID" id="151" fillcolor="F6FF3C" length="OffsetToGroup - OffsetToOwner"/>
+                <binary name="GroupSID" id="152" fillcolor="55AA00" length="DescriptorLength - OffsetToOwner"/>
+                <binary name="Padding" id="153" length="remaining"/>
+            </structure>
+        </structure>
+        <structure name="VKRecord" id="87" extends="id:89">
+            <number name="Size" id="156" type="integer"/>
+            <string name="Signature" id="157" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Sig" value="vk"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="ACL" id="159" extends="id:49" endian="little">
+            <binary name="SBz1" id="160" fillcolor="FF2205" length="1"/>
+            <number name="ACLRevision" id="161" fillcolor="FF9F4B" type="integer" length="1"/>
+            <number name="ACLSize" id="162" fillcolor="FF9B97" type="integer" length="2"/>
+            <number name="ACECount" id="163" fillcolor="FFDBE0" type="integer" length="2"/>
+            <binary name="SBz2" id="164" fillcolor="18FFF8" length="2"/>
+            <structure name="ACE" id="165" length="0" alignment="0" repeatmax="-1"/>
+        </structure>
+        <structure name="SACL" id="147" extends="id:159">
+            <binary name="SBz1" id="168"/>
+            <number name="ACLRevision" id="169" type="integer"/>
+            <number name="ACLSize" id="170" type="integer"/>
+            <number name="ACECount" id="171" type="integer"/>
+            <binary name="SBz2" id="172"/>
+        </structure>
+        <structure name="DACL" id="149" extends="id:159">
+            <binary name="SBz1" id="176"/>
+            <number name="ACLRevision" id="177" type="integer"/>
+            <number name="ACLSize" id="178" type="integer"/>
+            <number name="ACECount" id="179" type="integer"/>
+            <binary name="SBz2" id="180"/>
+            <structure name="ACE" id="181" repeatmax="-1">
+                <number name="ACeType" id="182" type="integer" length="1"/>
+                <number name="ACEFlags" id="183" type="integer" length="1" display="binary"/>
+                <number name="AceSize" id="184" type="integer" length="2"/>
+                <number name="Mask" id="185" type="integer" length="4" display="binary"/>
+                <binary name="SID" id="186" length="remaining"/>
+            </structure>
+        </structure>
+        <structure name="Defaults" id="49" encoding="ISO_8859-1:1987" endian="little" signed="no"/>
+    </grammar>
+</ufwb>

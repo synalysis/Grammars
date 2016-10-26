@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.3">
+    <grammar name="Shape File Index" start="id:218" author="Andreas Pehnack" email="andreas@synalysis.net" fileextension="shx">
+        <description>Grammar for Shapefile Index (.shx)</description>
+        <structure name="SHX file" id="218" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Header" id="219" length="100">
+                <description>The main file header is 100 bytes long</description>
+                <number name="FileCode" mustmatch="yes" id="220" type="integer" length="4">
+                    <fixedvalues>
+                        <fixedvalue name="FileCode" value="9994"/>
+                    </fixedvalues>
+                </number>
+                <number name="Unused1" id="221" type="integer" length="4"/>
+                <number name="Unused2" id="222" type="integer" length="4"/>
+                <number name="Unused3" id="223" type="integer" length="4"/>
+                <number name="Unused4" id="224" type="integer" length="4"/>
+                <number name="Unused5" id="225" type="integer" length="4"/>
+                <number name="FileLength" id="226" type="integer" length="4">
+                    <description>The value for file length is the total length of the file in 16-bit words (including the fifty 16-bit words that make up the header).</description>
+                </number>
+                <number name="Version" id="227" type="integer" length="4" endian="little"/>
+                <number name="ShapeType" id="228" type="integer" length="4" endian="little">
+                    <description>All the non-Null shapes in a shapefile are required to be of the same shape type.
+Currently, shapefiles are restricted to contain the same type of shape as specified above. In the future, shapefiles may be allowed to contain more than one shape type. If mixed shape types are implemented, the shape type field in the header will flag the file as such.</description>
+                    <fixedvalues>
+                        <fixedvalue name="Null Shape" value="0"/>
+                        <fixedvalue name="Point" value="1"/>
+                        <fixedvalue name="PolyLine" value="3"/>
+                        <fixedvalue name="Polygon" value="5"/>
+                        <fixedvalue name="MultiPoint" value="8"/>
+                        <fixedvalue name="PointZ" value="11"/>
+                        <fixedvalue name="PolyLineZ" value="13"/>
+                        <fixedvalue name="PolygonZ" value="15"/>
+                        <fixedvalue name="MultiPointZ" value="18"/>
+                        <fixedvalue name="PointM" value="21"/>
+                        <fixedvalue name="PolyLineM" value="23"/>
+                        <fixedvalue name="PolygonM" value="25"/>
+                        <fixedvalue name="MultiPointM" value="28"/>
+                        <fixedvalue name="MultiPatch" value="31"/>
+                    </fixedvalues>
+                </number>
+                <structure name="BoundingBox" id="229" length="64" endian="little">
+                    <description>The Bounding Box in the main file header stores the actual extent of the shapes in the file: the minimum bounding rectangle orthogonal to the X and Y (and potentially the M and Z) axes that contains all shapes. If the shapefile is empty (that is, has no records), the values for Xmin, Ymin, Xmax, and Ymax are unspecified. Mmin and Mmax can contain &quot;no data&quot; values for shapefiles of measured shape types that contain no measures.</description>
+                    <number name="Xmin" id="230" type="float" length="8"/>
+                    <number name="Ymin" id="231" type="float" length="8"/>
+                    <number name="Xmax" id="232" type="float" length="8"/>
+                    <number name="Ymax" id="233" type="float" length="8"/>
+                    <number name="Zmin" id="234" type="float" length="8"/>
+                    <number name="Zmax" id="235" type="float" length="8"/>
+                </structure>
+            </structure>
+            <structure name="Record" id="273" repeatmax="-1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+                <number name="Offset" mustmatch="yes" id="274" fillcolor="FFD478" type="integer" length="4"/>
+                <number name="ContentLength" mustmatch="yes" id="401" fillcolor="FF9300" type="integer" length="4"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

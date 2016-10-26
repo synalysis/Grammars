@@ -1,0 +1,1964 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.8">
+    <grammar name="OpenType" start="id:113" author="Andreas Pehnack" email="andreas@synalysis.net" fileextension="otf,ttf" uti="public.opentype-font">
+        <description>Grammar for OpenType font files</description>
+        <structure name="OTF file" id="113" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="sfnt version" id="114" length="4">
+                <fixedvalues>
+                    <fixedvalue name="OTTO" value="4F54544F"/>
+                </fixedvalues>
+            </binary>
+            <number name="numTables" id="115" type="integer" length="2"/>
+            <number name="searchRange" id="116" type="integer" length="2"/>
+            <number name="entrySelector" id="117" type="integer" length="2"/>
+            <number name="rangeShift" id="118" type="integer" length="2"/>
+            <structure name="TableRecords" id="119" repeat="id:115" repeatmax="-1" order="variable">
+                <structref name="CMapTableRecord" id="121" repeatmin="0" structure="id:120"/>
+                <structref name="CompactFontFormatTableRecord" id="123" repeatmin="0" structure="id:122"/>
+                <structref name="ControlValueProgramTableRecord" id="969" repeatmin="0" structure="id:963"/>
+                <structref name="ControlValueTableRecord" id="811" repeatmin="0" structure="id:803"/>
+                <structref name="DigitalSignatureTableRecord" id="125" repeatmin="0" structure="id:124"/>
+                <structref name="FontHeaderTableRecord" id="127" repeatmin="0" structure="id:126"/>
+                <structref name="FontProgramTableRecord" id="821" repeatmin="0" structure="id:813"/>
+                <structref name="GlyfDataTableRecord" id="846" repeatmin="0" structure="id:838"/>
+                <structref name="GPosTableRecord" id="129" repeatmin="0" structure="id:128"/>
+                <structref name="GridFittingAndScanConversionProcedureTable" id="831" repeatmin="0" structure="id:823"/>
+                <structref name="HorizontalDeviceMetricsTableRecord" id="987" repeatmin="0" structure="id:971"/>
+                <structref name="HorizontalHeaderTableRecord" id="131" repeatmin="0" structure="id:130"/>
+                <structref name="HorizontalMetricsTableRecord" id="133" repeatmin="0" structure="id:132"/>
+                <structref name="IndexToLocationTableRecord" id="959" repeatmin="0" structure="id:951"/>
+                <structref name="KerningTableRecord" id="886" repeatmin="0" structure="id:878"/>
+                <structref name="LinearThresholdTableRecord" id="135" repeatmin="0" structure="id:134"/>
+                <structref name="MaximumProfileTableRecord" id="137" repeatmin="0" structure="id:136"/>
+                <structref name="NamingTableRecord" id="139" repeatmin="0" structure="id:138"/>
+                <structref name="OS2TableRecord" id="141" repeatmin="0" structure="id:140"/>
+                <structref name="PostScriptTableRecord" id="143" repeatmin="0" structure="id:142"/>
+                <structref name="VerticalDeviceMetricsTableRecord" id="145" repeatmin="0" structure="id:144"/>
+                <structref name="TableRecord" id="147" repeatmin="0" structure="id:146"/>
+            </structure>
+        </structure>
+        <structure name="TableRecord" id="146" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="tag" id="150" fillcolor="57FCD8" type="integer" length="4" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="CFF " value="0x43464620"/>
+                    <fixedvalue name="DSIG" value="0x44534947"/>
+                    <fixedvalue name="OS/2" value="0x4F532F32"/>
+                    <fixedvalue name="cmap" value="0x636D6170"/>
+                    <fixedvalue name="head" value="0x68656164"/>
+                    <fixedvalue name="hhea" value="0x68686561"/>
+                    <fixedvalue name="hmtx" value="0x686D7478"/>
+                    <fixedvalue name="maxp" value="0x6D617870"/>
+                    <fixedvalue name="name" value="0x6E616D65"/>
+                    <fixedvalue name="post" value="0x706F7374"/>
+                    <fixedvalue name="LTSH" value="0x47535542"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="151" fillcolor="DE83F7" type="integer" length="4" display="hex"/>
+            <offset name="offset" id="153" fillcolor="FEFB8C" length="4" references="id:152" referenced-size="id:154" follownullreference="yes"/>
+            <number name="length" id="154" fillcolor="68D6FB" type="integer" length="4"/>
+        </structure>
+        <structure name="CMapTableRecord" id="120" extends="id:146" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="tag" mustmatch="yes" id="156" type="integer" length="4" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="cmap" value="0x636D6170"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="157" type="integer" length="4"/>
+            <offset name="offset" id="159" length="4" references="id:158" referenced-size="id:160"/>
+            <number name="length" id="160" type="integer" length="4"/>
+        </structure>
+        <structure name="ControlValueProgramTableRecord" id="963" extends="id:146">
+            <number name="tag" mustmatch="yes" id="965" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="prep" value="0x70726570"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="966" type="integer"/>
+            <offset name="offset" id="967" references="id:961" referenced-size="id:968"/>
+            <number name="length" id="968" type="integer"/>
+        </structure>
+        <structure name="ControlValueTableRecord" id="803" extends="id:146">
+            <number name="tag" mustmatch="yes" id="807" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="cvt " value="0x63767420"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="808" type="integer"/>
+            <offset name="offset" id="809" references="id:805" referenced-size="id:810"/>
+            <number name="length" id="810" type="integer"/>
+        </structure>
+        <structure name="CompactFontFormatTableRecord" id="122" extends="id:146">
+            <number name="tag" mustmatch="yes" id="162" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="CFF " value="0x43464620"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="163" type="integer"/>
+            <offset name="offset" id="165" references="id:164" referenced-size="id:166"/>
+            <number name="length" id="166" type="integer"/>
+        </structure>
+        <structure name="DigitalSignatureTableRecord" id="124" extends="id:146">
+            <number name="tag" mustmatch="yes" id="168" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="DSIG" value="0x44534947"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="169" type="integer"/>
+            <offset name="offset" id="171" references="id:170" referenced-size="id:172"/>
+            <number name="length" id="172" type="integer"/>
+        </structure>
+        <structure name="FontHeaderTableRecord" id="126" extends="id:146">
+            <number name="tag" mustmatch="yes" id="174" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="head" value="0x68656164"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="175" type="integer"/>
+            <offset name="offset" id="177" references="id:176" referenced-size="id:178"/>
+            <number name="length" id="178" type="integer"/>
+        </structure>
+        <structure name="FontProgramTableRecord" id="813" extends="id:146">
+            <number name="tag" mustmatch="yes" id="817" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="fpgm" value="0x6670676D"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="818" type="integer"/>
+            <offset name="offset" id="819" references="id:815" referenced-size="id:820"/>
+            <number name="length" id="820" type="integer"/>
+        </structure>
+        <structure name="GlyfDataTableRecord" id="838" extends="id:146">
+            <number name="tag" mustmatch="yes" id="842" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="glyf" value="0x676C7966"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="843" type="integer"/>
+            <offset name="offset" id="844" references="id:840" referenced-size="id:845"/>
+            <number name="length" id="845" type="integer"/>
+        </structure>
+        <structure name="GPosTableRecord" id="128" extends="id:146">
+            <number name="tag" mustmatch="yes" id="180" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="GPOS" value="0x47504F53"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="181" type="integer"/>
+            <offset name="offset" id="183" references="id:182" referenced-size="id:184"/>
+            <number name="length" id="184" type="integer"/>
+        </structure>
+        <structure name="GridFittingAndScanConversionProcedureTable" id="823" extends="id:146">
+            <number name="tag" mustmatch="yes" id="827" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="gasp" value="0x67617370"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="828" type="integer"/>
+            <offset name="offset" id="829" references="id:825" referenced-size="id:830"/>
+            <number name="length" id="830" type="integer"/>
+        </structure>
+        <structure name="HorizontalDeviceMetricsTableRecord" id="971" extends="id:146">
+            <number name="tag" mustmatch="yes" id="975" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="hdmx" value="0x68646D78"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="976" type="integer"/>
+            <offset name="offset" id="977" references="id:973" referenced-size="id:978"/>
+            <number name="length" id="978" type="integer"/>
+        </structure>
+        <structure name="HorizontalHeaderTableRecord" id="130" extends="id:146">
+            <number name="tag" mustmatch="yes" id="186" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="hhea" value="0x68686561"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="187" type="integer"/>
+            <offset name="offset" id="189" references="id:188" referenced-size="id:190"/>
+            <number name="length" id="190" type="integer"/>
+        </structure>
+        <structure name="HorizontalMetricsTableRecord" id="132" extends="id:146">
+            <number name="tag" mustmatch="yes" id="192" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="hmtx" value="0x686D7478"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="193" type="integer"/>
+            <offset name="offset" id="195" references="id:194" referenced-size="id:196"/>
+            <number name="length" id="196" type="integer"/>
+        </structure>
+        <structure name="IndexToLocationTableRecord" id="951" extends="id:146">
+            <number name="tag" mustmatch="yes" id="955" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="loca" value="0x6C6F6361"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="956" type="integer"/>
+            <offset name="offset" id="957" references="id:953" referenced-size="id:958"/>
+            <number name="length" id="958" type="integer"/>
+        </structure>
+        <structure name="KerningTableRecord" id="878" extends="id:146">
+            <number name="tag" mustmatch="yes" id="882" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="kern" value="0x6B65726E"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="883" type="integer"/>
+            <offset name="offset" id="884" references="id:880" referenced-size="id:885"/>
+            <number name="length" id="885" type="integer"/>
+        </structure>
+        <structure name="LinearThresholdTableRecord" id="134" extends="id:146">
+            <number name="tag" mustmatch="yes" id="198" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="LTSH" value="0x4C545348"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="199" type="integer"/>
+            <offset name="offset" id="201" references="id:200" referenced-size="id:202"/>
+            <number name="length" id="202" type="integer"/>
+        </structure>
+        <structure name="MaximumProfileTableRecord" id="136" extends="id:146">
+            <number name="tag" mustmatch="yes" id="204" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="maxp" value="0x6D617870"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="205" type="integer"/>
+            <offset name="offset" id="207" references="id:206" referenced-size="id:208"/>
+            <number name="length" id="208" type="integer"/>
+        </structure>
+        <structure name="NamingTableRecord" id="138" extends="id:146">
+            <number name="tag" mustmatch="yes" id="210" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="name" value="0x6E616D65"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="211" type="integer"/>
+            <offset name="offset" id="213" references="id:212" referenced-size="id:214"/>
+            <number name="length" id="214" type="integer"/>
+        </structure>
+        <structure name="OS2TableRecord" id="140" extends="id:146">
+            <number name="tag" mustmatch="yes" id="216" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="OS/2" value="0x4F532F32"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="217" type="integer"/>
+            <offset name="offset" id="219" references="id:218" referenced-size="id:220"/>
+            <number name="length" id="220" type="integer"/>
+        </structure>
+        <structure name="PostScriptTableRecord" id="142" extends="id:146">
+            <number name="tag" mustmatch="yes" id="222" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="post" value="0x706F7374"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="223" type="integer"/>
+            <offset name="offset" id="225" references="id:224" referenced-size="id:226"/>
+            <number name="length" id="226" type="integer"/>
+        </structure>
+        <structure name="VerticalDeviceMetricsTableRecord" id="144" extends="id:146">
+            <number name="tag" mustmatch="yes" id="228" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="VDMX" value="0x56444D58"/>
+                </fixedvalues>
+            </number>
+            <number name="checkSum" id="229" type="integer"/>
+            <offset name="offset" id="231" references="id:230" referenced-size="id:232"/>
+            <number name="length" id="232" type="integer"/>
+        </structure>
+        <structure name="Table" id="152" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Non-decodedBinary" id="234" length="remaining"/>
+        </structure>
+        <structure name="ShortVersionTable" id="236" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="version" id="237" type="integer" length="2" display="hex"/>
+        </structure>
+        <structure name="FixedVersionTable" id="239" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="version" id="240" type="integer" length="4" display="hex"/>
+        </structure>
+        <structure name="CharacterToGlyphIndexMappingTable" id="158" extends="id:239" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="version" id="242" type="integer" length="2"/>
+            <number name="numTables" id="243" type="integer" length="2"/>
+            <structure name="EncodingRecord" id="244" repeat="id:243" repeatmax="-1">
+                <number name="platformID" id="245" type="integer" length="2"/>
+                <number name="encodingID" id="246" type="integer" length="2"/>
+                <offset name="Subtable" id="248" length="4" references="id:247" relative-to="id:158" follownullreference="yes"/>
+            </structure>
+        </structure>
+        <structure name="CompactFontFormatTable" id="164" extends="id:152">
+            <description>This table contains a compact representation of a PostScript Type 1, or CIDFont and is structured according to Adobe Technical Note #5176: “The Compact Font Format Specification,” and Adobe Technical Note #5177: “Type 2 Charstring Format.”
+Existing TrueType fonts use a glyph index to specify and access glyphs within a font, e.g. to index the loca table and thereby access glyph data in the glyf table. This concept is retained in OpenType™ PostScript fonts except that glyph data is accessed through the CharStrings INDEX of the CFF table</description>
+        </structure>
+        <structure name="DigitalSignatureTable" id="170" extends="id:239">
+            <description>The DSIG table contains the digital signature of the OpenType™ font. Signature formats are widely documented and rely on a key pair architecture. Software developers, or publishers posting material on the Internet, create signatures using a private key. Operating systems or applications authenticate the signature using a public key.
+The W3C and major software and operating system developers have specified security standards that describe signature formats, specify secure collections of web objects, and recommend authentication architecture. OpenType fonts with signatures will support these standards.
+OpenType fonts offer many security features:
+Operating systems and browsing applications can identify the source and integrity of font files before using them,
+Font developers can specify embedding restrictions in OpenType fonts, and these restrictions cannot be altered in a font signed by the developer.
+The enforcement of signatures is an administrative policy, enabled by the operating system. Windows will soon require installed software components, including fonts, to be signed. Internet browsers will also give users and administrators the ability to screen out unsigned objects obtained on-line, including web pages, fonts, graphics, and software components.
+Anyone can obtain identity certificates and encryption keys from a certifying agency, such as Verisign or GTE's Cybertrust, free or at a very low cost</description>
+            <number name="version" id="253" type="integer">
+                <description>Version number of the DSIG table (0x00000001)</description>
+            </number>
+            <number name="usNumSigs" id="254" type="integer" length="2">
+                <description>Number of signatures in the table</description>
+            </number>
+            <number name="usFlag" id="255" type="integer" length="2">
+                <description>Permission flags
+
+Permission bit 0 allows a party signing the font to prevent any other parties from also signing the font (counter-signatures). If this bit is set to zero (0) the font may have a signature applied over the existing digital signature(s). A party who wants to ensure that their signature is the last signature can set this bit</description>
+                <mask name="cannot be resigned" value="0x1">
+                    <fixedvalue name="cannot be resigned" value="0x1"/>
+                </mask>
+                <mask name="Reserved" value="0xFE">
+                    <fixedvalue name="Reserved" value="0xFE"/>
+                </mask>
+            </number>
+            <structure name="DSigReference" id="256" repeat="id:254">
+                <number name="ulFormat" id="257" type="integer" length="4">
+                    <description>Format of the signature
+
+The format identifier specifies both the format of the signature object, as well as the hashing algorithm used to create and authenticate the signature. Currently only one format is defined, but at least one other format will soon be defined to handle subsetting scenarios. Format 1 supports PKCS#7 signatures with X.509 certificates and counter-signatures, as these signatures have been standardized for use by the W3C with the participation of numerous software developers.
+For more information about PKCS#7 signatures, see ftp://ftp.rsa.com/pub/pkcs/ascii/pkcs-7.asc
+For more information about counter-signatures, see ftp://ftp.rsa.com/pub/pkcs/ascii/pkcs-9.asc
+
+Format 1: For whole fonts, with either TrueType outlines and/or CFF data
+PKCS#7 or PKCS#9. The signed content digest is created as follows:
+If there is an existing DSIG table in the font,
+Remove DSIG table from font.
+Remove DSIG table entry from sfnt Table Directory.
+Adjust table offsets as necessary.
+Zero out the file checksum in the head table.
+Add the usFlag (reserved, set at 1 for now) to the stream of bytes
+Hash the full stream of bytes using a secure one-way hash (such as MD5) to create the content digest.
+Create the PKCS#7 signature block using the content digest.
+Create a new DSIG table containing the signature block.
+Add the DSIG table to the font, adjusting table offsets as necessary.
+Add a DSIG table entry to the sfnt Table Directory.
+Recalculate the checksum in the head table.
+Prior to signing a font file, ensure that all the following attributes are true.
+The magic number in the head table is correct.
+Given the number of tables value in the offset table, the other values in the offset table are consistent.
+The tags of the tables are ordered alphabetically and there are no duplicate tags.
+The offset of each table is a multiple of 4. (That is, tables are long word aligned.)
+The first actual table in the file comes immediately after the directory of tables.
+If the tables are sorted by offset, then for all tables i (where index 0 means the the table with the smallest offset), Offset[i] + Length[i] &lt;= Offset[i+1] and Offset[i] + Length[i] &gt;= Offset[i+1] - 3. In other words, the tables do not overlap, and there are at most 3 bytes of padding between tables.
+The pad bytes between tables are all zeros.
+The offset of the last table in the file plus its length is not greater than the size of the file.
+The checksums of all tables are correct.
+The head table's checkSumAdjustment field is correct</description>
+                </number>
+                <number name="ulLength" id="258" type="integer" length="4">
+                    <description>Length of signature in bytes</description>
+                </number>
+                <offset name="SignatureBlock" id="260" length="4" references="id:259" referenced-size="id:258" relative-to="id:170" follownullreference="yes"/>
+            </structure>
+        </structure>
+        <structure name="SignatureBlock" id="259" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="usReserved1" id="263" type="integer" length="2">
+                <description>Reserved for later use; 0 for now</description>
+            </number>
+            <number name="usReserved2" id="264" type="integer" length="2">
+                <description>Reserved for later use; 0 for now</description>
+            </number>
+            <number name="cbSignature" id="265" type="integer" length="4">
+                <description>Length (in bytes) of the PKCS#7 packet in pbSignature</description>
+            </number>
+            <binary name="bSignature" id="266" length="cbSignature"/>
+        </structure>
+        <structure name="EncodingTable" id="268" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="format" id="269" fillcolor="FEFB8C" type="integer" length="2"/>
+        </structure>
+        <structure name="ExtEncodingTable" id="271" length="length" extends="id:268">
+            <number name="format" id="272" type="integer"/>
+            <number name="length" id="273" fillcolor="FF7B7A" type="integer" length="2"/>
+            <number name="language" id="274" fillcolor="FF9130" type="integer" length="2"/>
+        </structure>
+        <structure name="Format0EncodingTable" id="276" extends="id:271">
+            <number name="format" mustmatch="yes" id="277" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Format0" value="0"/>
+                </fixedvalues>
+            </number>
+            <number name="length" id="278" type="integer"/>
+            <number name="language" id="279" type="integer"/>
+            <number name="glyphIdArray" id="280" fillcolor="FDFA53" repeatmin="256" repeatmax="256" type="integer" length="1"/>
+        </structure>
+        <structure name="Format4EncodingTable" id="282" extends="id:271" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="format" mustmatch="yes" id="283" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Format4" value="4"/>
+                </fixedvalues>
+            </number>
+            <number name="length" id="284" type="integer"/>
+            <number name="language" id="285" type="integer"/>
+            <number name="segCountX2" id="286" type="integer" length="2"/>
+            <number name="searchRange" id="287" type="integer" length="2"/>
+            <number name="entrySelector" id="288" type="integer" length="2"/>
+            <number name="rangeShift" id="289" type="integer" length="2"/>
+            <number name="endCount" id="290" fillcolor="CEFA8B" repeatmax="segCountX2 / 2" type="integer" length="2"/>
+            <number name="reservedPad" id="291" type="integer" length="2"/>
+            <number name="startCount" id="292" fillcolor="68D6FB" repeatmax="segCountX2 / 2" type="integer" length="2"/>
+            <number name="idDelta" id="293" fillcolor="FF88D3" repeatmax="segCountX2 / 2" type="integer" length="2" signed="yes"/>
+            <number name="idRangeOffset" id="294" fillcolor="FF3EF5" repeatmax="segCountX2 / 2" type="integer" length="2"/>
+            <number name="glyphIdArray" id="295" fillcolor="FDFA53" repeatmax="-1" type="integer" length="2"/>
+        </structure>
+        <structure name="EncodingTables" id="247" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <structref name="Format0EncodingTable" id="297" repeatmin="0" structure="id:276"/>
+            <structref name="Format4EncodingTable" id="298" repeatmin="0" structure="id:282"/>
+            <structref name="EncodingTable" id="299" repeatmin="0" structure="id:268"/>
+        </structure>
+        <structure name="FontHeaderTable" id="176" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>This table gives global information about the font. The bounding box values should be computed using only glyphs that have contours. Glyphs with no contours should be ignored for the purposes of these calculations</description>
+            <number name="TableVersionNumber" id="301" type="integer" length="4" display="hex">
+                <description>0x00010000 for version 1.0</description>
+            </number>
+            <number name="fontRevision" id="302" type="integer" length="4" display="hex">
+                <description>Set by font manufacturer</description>
+            </number>
+            <number name="checkSumAdjustment" id="303" type="integer" length="4">
+                <description>To compute: set it to 0, sum the entire font as ULONG, then store 0xB1B0AFBA - sum</description>
+            </number>
+            <number name="magicNumber" id="304" type="integer" length="4" display="hex">
+                <description>Set to 0x5F0F3CF5</description>
+                <fixedvalues>
+                    <fixedvalue name="magic" value="0x5F0F3CF5"/>
+                </fixedvalues>
+            </number>
+            <number name="flags" id="305" type="integer" length="2" display="hex">
+                <mask name="Baseline for font at y=0" value="0x1">
+                    <fixedvalue name="Baseline for font at y=0" value="0x1"/>
+                </mask>
+                <mask name="Left sidebearing point at x=0" value="0x2">
+                    <fixedvalue name="Left sidebearing point at x=0" value="0x2"/>
+                </mask>
+                <mask name="Instructions may depend on point size" value="0x4">
+                    <fixedvalue name="Instructions may depend on point size" value="0x4"/>
+                </mask>
+                <mask name="Force ppem to integer values for all internal scaler math; may use fractional ppem sizes if this bit is clear" value="0x8">
+                    <fixedvalue name="Force ppem to integer values for all internal scaler math; may use fractional ppem sizes if this bit is clear" value="0x8"/>
+                </mask>
+                <mask name="Instructions may alter advance width (the advance widths might not scale linearly)" value="0x10">
+                    <fixedvalue name="Instructions may alter advance width (the advance widths might not scale linearly)" value="0x10"/>
+                </mask>
+                <mask name="These should be set according to Apple's specification . However, they are not implemented in OpenType" value="0x7E0">
+                    <fixedvalue name="These should be set according to Apple's specification . However, they are not implemented in OpenType" value="0x7E0"/>
+                </mask>
+                <mask name="Font data is 'lossless,' as a result of having been compressed and decompressed with the Agfa MicroType Express engine" value="0x800">
+                    <fixedvalue name="Font data is 'lossless,' as a result of having been compressed and decompressed with the Agfa MicroType Express engine" value="0x8000"/>
+                </mask>
+                <mask name="Font converted (produce compatible metrics)" value="0x1000">
+                    <fixedvalue name="Font converted (produce compatible metrics)" value="0x10000"/>
+                </mask>
+                <mask name="Font optimized for ClearType™. Note, fonts that rely on embedded bitmaps (EBDT) for rendering should not be considered optimized for ClearType, and therefore should keep this bit cleared" value="0x2000">
+                    <fixedvalue name="Font optimized for ClearType™. Note, fonts that rely on embedded bitmaps (EBDT) for rendering should not be considered optimized for ClearType, and therefore should keep this bit cleared" value="0x2000"/>
+                </mask>
+                <mask name="Reserved1" value="0x4000">
+                    <fixedvalue name="Reserved" value="0x4000"/>
+                </mask>
+                <mask name="Reserved2" value="0x8000">
+                    <fixedvalue name="Reserved2" value="0x8000"/>
+                </mask>
+            </number>
+            <number name="unitsPerEm" id="306" type="integer" length="2">
+                <description>Valid range is from 16 to 16384. This value should be a power of 2 for fonts that have TrueType outlines</description>
+            </number>
+            <number name="created" id="307" type="integer" length="8">
+                <description>Number of seconds since 12:00 midnight, January 1, 1904. 64-bit integer</description>
+            </number>
+            <number name="modified" id="308" type="integer" length="8">
+                <description>Number of seconds since 12:00 midnight, January 1, 1904. 64-bit integer</description>
+            </number>
+            <number name="xMin" id="309" type="integer" length="2" signed="yes">
+                <description>For all glyph bounding boxes</description>
+            </number>
+            <number name="yMin" id="310" type="integer" length="2" signed="yes">
+                <description>For all glyph bounding boxes</description>
+            </number>
+            <number name="xMax" id="311" type="integer" length="2" signed="yes">
+                <description>For all glyph bounding boxes</description>
+            </number>
+            <number name="yMax" id="312" type="integer" length="2" signed="yes">
+                <description>For all glyph bounding boxes</description>
+            </number>
+            <number name="macStyle" id="313" type="integer" length="2">
+                <mask name="Bold" value="0x1">
+                    <fixedvalue name="Bold" value="0x1"/>
+                </mask>
+                <mask name="Italic" value="0x2">
+                    <fixedvalue name="Italic" value="0x2"/>
+                </mask>
+                <mask name="Underline" value="0x4">
+                    <fixedvalue name="Underline" value="0x4"/>
+                </mask>
+                <mask name="Outline" value="0x8">
+                    <fixedvalue name="Outline" value="0x8"/>
+                </mask>
+                <mask name="Shadow" value="0x10">
+                    <fixedvalue name="Shadow" value="0x10"/>
+                </mask>
+                <mask name="Condensed" value="0x20">
+                    <fixedvalue name="Condensed" value="0x20"/>
+                </mask>
+                <mask name="Extended" value="0x40">
+                    <fixedvalue name="Extended" value="0x40"/>
+                </mask>
+                <mask name="Reserved" value="0xFF80">
+                    <fixedvalue name="Reserved" value="0xFF80"/>
+                </mask>
+            </number>
+            <number name="lowestRecPPEM" id="314" type="integer" length="2">
+                <description>Smallest readable size in pixels</description>
+            </number>
+            <number name="fontDirectionHint" id="315" type="integer" length="2" signed="yes">
+                <description>Deprecated (Set to 2)</description>
+                <fixedvalues>
+                    <fixedvalue name="Fully mixed directional glyphs" value="0"/>
+                    <fixedvalue name="Only strongly left to right" value="1"/>
+                    <fixedvalue name="Like 1 but also contains neutrals" value="2"/>
+                    <fixedvalue name="Only strongly right to left" value="-1"/>
+                    <fixedvalue name="Like -1 but also contains neutrals" value="-2"/>
+                </fixedvalues>
+            </number>
+            <number name="indexToLocFormat" id="316" type="integer" length="2" signed="yes">
+                <fixedvalues>
+                    <fixedvalue name="short offsets" value="0"/>
+                    <fixedvalue name="long offsets" value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="glyphDataFormat" id="317" type="integer" length="2" signed="yes">
+                <fixedvalues>
+                    <fixedvalue name="current format" value="0"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="GPosTable" id="182" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Version" id="319" type="integer" length="4" display="hex"/>
+            <offset name="ScriptListTable" id="321" length="2" references="id:320" relative-to="id:182" follownullreference="yes"/>
+            <offset name="FeatureListTable" id="323" length="2" references="id:322" relative-to="id:182" follownullreference="yes"/>
+            <offset name="LookupListTable" id="325" length="2" references="id:324" relative-to="id:182" follownullreference="yes"/>
+        </structure>
+        <structure name="HorizontalHeaderTable" id="188" extends="id:239" signed="yes">
+            <number name="Ascender" id="328" type="integer" length="2">
+                <description>Typographic ascent. (Distance from baseline of highest ascender)</description>
+            </number>
+            <number name="Descender" id="329" type="integer" length="2">
+                <description>Typographic descent. (Distance from baseline of lowest descender)</description>
+            </number>
+            <number name="LineGap" id="330" type="integer" length="2">
+                <description>Typographic line gap. 
+Negative LineGap values are treated as zero in Windows 3.1, System 6, and  System 7</description>
+            </number>
+            <number name="advanceWidthMax" id="331" type="integer" length="2" signed="no">
+                <description>Maximum advance width value in 'hmtx' table</description>
+            </number>
+            <number name="minLeftSideBearing" id="332" type="integer" length="2">
+                <description>Minimum left sidebearing value in 'hmtx' table</description>
+            </number>
+            <number name="minRightSideBearing" id="333" type="integer" length="2">
+                <description>Minimum right sidebearing value; calculated as Min(aw - lsb - (xMax - xMin))</description>
+            </number>
+            <number name="xMaxExtent" id="334" type="integer" length="2">
+                <description>Max(lsb + (xMax - xMin))</description>
+            </number>
+            <number name="caretSlopeRise" id="335" type="integer" length="2">
+                <description>Used to calculate the slope of the cursor (rise/run); 1 for vertical</description>
+            </number>
+            <number name="caretSlopeRun" id="336" type="integer" length="2">
+                <description>0 for vertical</description>
+            </number>
+            <number name="caretOffset" id="337" type="integer" length="2">
+                <description>The amount by which a slanted highlight on a glyph needs to be shifted to produce the best appearance. Set to 0 for non-slanted fonts</description>
+            </number>
+            <number name="(reserved)" id="338" repeatmax="4" type="integer" length="2">
+                <description>set to 0</description>
+            </number>
+            <number name="metricDataFormat" id="339" type="integer" length="2">
+                <description>0 for current format</description>
+            </number>
+            <number name="numberOfHMetrics" id="340" type="integer" length="2" signed="no">
+                <description>Number of hMetric entries in 'hmtx' table</description>
+            </number>
+        </structure>
+        <structure name="HorizontalMetricsTable" id="194" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="longHorMetric" id="342" repeatmax="numberOfHMetrics">
+                <number name="advanceWidth" id="343" fillcolor="57FCD8" type="integer" length="2"/>
+                <number name="lsb" id="344" fillcolor="CEFA8B" type="integer" length="2" signed="yes"/>
+            </structure>
+            <number name="leftSideBearing" id="346" repeatmax="-1" type="integer" length="2" signed="yes"/>
+        </structure>
+        <structure name="MaximumProfileTable" id="206" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <structref name="MaximumProfileTable05" id="349" repeatmin="0" structure="id:348"/>
+            <structref name="MaximumProfileTable10" id="351" repeatmin="0" structure="id:350"/>
+        </structure>
+        <structure name="MaximumProfileTable05" id="348" extends="id:239">
+            <number name="version" id="353" type="integer">
+                <description>0x00005000 for version 0.5 
+(Note the difference in the representation of a non-zero fractional part, in Fixed numbers.)</description>
+                <fixedvalues>
+                    <fixedvalue name="version 0.5" value="0x5000"/>
+                </fixedvalues>
+            </number>
+            <number name="numGlyphs" id="354" type="integer" length="2">
+                <description>The number of glyphs in the font</description>
+            </number>
+        </structure>
+        <structure name="MaximumProfileTable10" id="350" extends="id:348">
+            <number name="version" mustmatch="yes" id="356" type="integer">
+                <description>0x00005000 for version 0.5 
+(Note the difference in the representation of a non-zero fractional part, in Fixed numbers.)</description>
+                <fixedvalues>
+                    <fixedvalue name="version 1.0" value="0x10000"/>
+                </fixedvalues>
+            </number>
+            <number name="maxPoints" id="358" type="integer" length="2">
+                <description>Maximum points in a non-composite glyph</description>
+            </number>
+            <number name="maxContours" id="359" type="integer" length="2">
+                <description>Maximum contours in a non-composite glyph</description>
+            </number>
+            <number name="maxCompositePoints" id="360" type="integer" length="2">
+                <description>Maximum points in a composite glyph</description>
+            </number>
+            <number name="maxCompositeContours" id="361" type="integer" length="2">
+                <description>Maximum contours in a composite glyph</description>
+            </number>
+            <number name="maxZones" id="362" type="integer" length="2">
+                <description>should be set to 2 in most cases</description>
+                <fixedvalues>
+                    <fixedvalue name="instructions do not use the twilight zone (Z0)" value="1"/>
+                    <fixedvalue name="instructions do use Z0" value="2"/>
+                </fixedvalues>
+            </number>
+            <number name="maxTwilightPoints" id="363" type="integer" length="2">
+                <description>Maximum points used in Z0</description>
+            </number>
+            <number name="maxStorage" id="364" type="integer" length="2">
+                <description>Number of Storage Area locations</description>
+            </number>
+            <number name="maxFunctionDefs" id="365" type="integer" length="2">
+                <description>Number of FDEFs</description>
+            </number>
+            <number name="maxInstructionDefs" id="366" type="integer" length="2">
+                <description>Number of IDEFs</description>
+            </number>
+            <number name="maxStackElements" id="367" type="integer" length="2">
+                <description>Maximum stack depth</description>
+            </number>
+            <number name="maxSizeOfInstructions" id="368" type="integer" length="2">
+                <description>Maximum byte count for glyph instructions</description>
+            </number>
+            <number name="maxComponentElements" id="369" type="integer" length="2">
+                <description>Maximum number of components referenced at “top level” for any composite glyph</description>
+            </number>
+            <number name="maxComponentDepth" id="370" type="integer" length="2">
+                <description>Maximum levels of recursion; 1 for simple components</description>
+            </number>
+        </structure>
+        <structure name="NamingTable" id="212" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <structref name="NamingTable0" id="373" repeatmin="0" structure="id:372"/>
+            <structref name="NamingTable1" id="375" repeatmin="0" structure="id:374"/>
+        </structure>
+        <structure name="NamingTable0" id="372" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="format" mustmatch="yes" id="377" type="integer" length="2">
+                <description>Format selector (=0)</description>
+                <fixedvalues>
+                    <fixedvalue name="Format 0" value="0"/>
+                </fixedvalues>
+            </number>
+            <number name="count" id="378" type="integer" length="2">
+                <description>Number of name records</description>
+            </number>
+            <number name="stringOffset" id="379" type="integer" length="2">
+                <description>Offset to start of string storage (from start of table)</description>
+            </number>
+            <structure name="NameRecord" id="380" length="0" alignment="0" repeat="id:378" repeatmax="-1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+                <number name="platformID" id="381" type="integer" length="2"/>
+                <number name="encodingID" id="382" type="integer" length="2"/>
+                <number name="languageID" id="383" type="integer" length="2"/>
+                <number name="nameID" id="384" type="integer" length="2"/>
+                <number name="length" id="385" type="integer" length="2"/>
+                <offset name="ReferencedName" id="387" length="2" references="id:386" referenced-size="id:385" relative-to="id:372" additional="stringOffset" follownullreference="yes"/>
+            </structure>
+        </structure>
+        <structure name="NamingTable1" id="374" extends="id:372">
+            <number name="format" id="390" type="integer">
+                <description>Format selector (=0)</description>
+                <fixedvalues>
+                    <fixedvalue name="Format 1" value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="count" id="391" type="integer">
+                <description>Number of name records</description>
+            </number>
+            <structure name="NameRecord" id="392" length="0" alignment="0" repeat="id:391" repeatmax="-1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+                <number name="length" id="398" type="integer" length="2"/>
+                <offset name="ReferencedName" id="399" length="2" references="id:386" referenced-size="id:398" relative-to="id:390" additional="stringOffset" display="decimal"/>
+            </structure>
+            <number name="langTagCount" id="401" type="integer" length="2"/>
+            <structref name="LangTagRecord" id="403" repeatmax="langTagCount" structure="id:402"/>
+        </structure>
+        <structure name="NameRecord" id="405" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="platformID" id="406" type="integer" length="2"/>
+            <number name="encodingID" id="407" type="integer" length="2"/>
+            <number name="languageID" id="408" type="integer" length="2"/>
+            <number name="nameID" id="409" type="integer" length="2"/>
+            <number name="length" id="410" type="integer" length="2"/>
+            <offset name="ReferencedName" id="411" length="2" references="id:386" referenced-size="id:410" relative-to="id:405" follownullreference="yes"/>
+        </structure>
+        <structure name="UnicodeNameRecord" id="413" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+        <structure name="LangTagRecord" id="402" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="length" id="415" type="integer" length="2">
+                <description>Language-tag string length (in bytes)</description>
+            </number>
+            <number name="offset" id="416" type="integer" length="2">
+                <description>Language-tag string offset from start of storage area (in bytes)</description>
+            </number>
+        </structure>
+        <structure name="ReferencedName" id="386" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="Name" id="418" type="fixed-length" length="remaining"/>
+        </structure>
+        <structure name="OS2Table" id="218" extends="id:236" encoding="ISO_8859-1:1987" endian="big" signed="yes">
+            <number name="version" id="420" type="integer" length="2">
+                <description>OS/2 table version number 
+
+The version number for this OS/2 table.
+
+The version number allows for identification of the precise contents and layout for the OS/2 table. The version number for this layout is four (4). Versions zero (0, TrueType rev 1.5), one (1, TrueType rev 1.66), two (2, OpenType rev 1.2) and three (3, OpenType rev 1.4) have been used previously.
+</description>
+                <fixedvalues>
+                    <fixedvalue name="TrueType rev 1.5" value="0x0"/>
+                    <fixedvalue name="TrueType rev 1.66" value="0x1"/>
+                    <fixedvalue name="TrueType rev 1.2" value="0x2"/>
+                    <fixedvalue name="TrueType rev 1.4" value="0x3"/>
+                </fixedvalues>
+            </number>
+            <number name="xAvgCharWidth" id="421" type="integer" length="2">
+                <description>Average weighted escapement 
+
+The Average Character Width parameter specifies the arithmetic average of the escapement (width) of all non-zero width glyphs in the font. 
+
+The value for xAvgCharWidth is calculated by obtaining the arithmetic average of the width of all non-zero width glyphs in the font. Furthermore, it is strongly recommended that implementers do not rely on this value for computing layout for lines of text. Especially, for cases where complex scripts are used.
+</description>
+            </number>
+            <number name="usWeightClass" id="422" type="integer" length="2" signed="no">
+                <description>Weight class
+
+Indicates the visual weight (degree of blackness or thickness of strokes) of the characters in the font.
+</description>
+                <fixedvalues>
+                    <fixedvalue name="Thin" value="100"/>
+                    <fixedvalue name="Extra-light (Ultra-light)" value="200"/>
+                    <fixedvalue name="Light" value="300"/>
+                    <fixedvalue name="Normal (Regular)" value="400"/>
+                    <fixedvalue name="Medium" value="500"/>
+                    <fixedvalue name="Semi-bold (Demi-bold)" value="600"/>
+                    <fixedvalue name="Bold" value="700"/>
+                    <fixedvalue name="Extra-bold (Ultra-bold)" value="800"/>
+                    <fixedvalue name="Black (Heavy)" value="900"/>
+                </fixedvalues>
+            </number>
+            <number name="usWidthClass" id="423" type="integer" length="2" signed="no">
+                <description>Width class
+
+Indicates a relative change from the normal aspect ratio (width to height ratio) as specified by a font designer for the glyphs in a font.
+
+Although every character in a font may have a different numeric aspect ratio, each character in a font of normal width has a relative aspect ratio of one. When a new type style is created of a different width class (either by a font designer or by some automated means) the relative aspect ratio of the characters in the new font is some percentage greater or less than those same characters in the normal font -- it is this difference that this parameter specifies.</description>
+            </number>
+            <number name="fsType" id="424" type="integer" length="2" signed="no">
+                <description>Type flags
+
+Indicates font embedding licensing rights for the font. Embeddable fonts may be stored in a document. When a document with embedded fonts is opened on a system that does not have the font installed (the remote system), the embedded font may be loaded for temporary (and in some cases, permanent) use on that system by an embedding-aware application. Embedding licensing rights are granted by the vendor of the font. 
+
+The OpenType Font Embedding DLL Specification and DLL release notes describe the APIs used to implement support for OpenType font embedding and loading. Applications that implement support for font embedding, either through use of the Font Embedding DLL or through other means, must not embed fonts which are not licensed to permit embedding. Further, applications loading embedded fonts for temporary use (see Preview &amp; Print and Editable embedding below) must delete the fonts when the document containing the embedded font is closed.
+
+This version of the OS/2 table makes bits 0 - 3 a set of exclusive bits. In other words, at most one bit in this range may be set at a time. The purpose is to remove misunderstandings caused by previous behavior of using the least restrictive of the bits that are set.
+
+Installable Embedding: No fsType bit is set. Thus fsType is zero. 
+Fonts with this setting indicate that they may be embedded and permanently installed on the remote system by an application. The user of the remote system acquires the identical rights, obligations and licenses for that font as the original purchaser of the font, and is subject to the same end-user license agreement, copyright, design patent, and/or trademark as was the original purchaser
+</description>
+                <mask name="Restricted License embedding" value="0x2">
+                    <fixedvalue name="Must not be modified, embedded or exchanged" value="0x2"/>
+                </mask>
+                <mask name="Preview &amp; Print embedding" value="0x4">
+                    <fixedvalue name="Open read-only" value="0x4"/>
+                </mask>
+                <mask name="Editable embedding" value="0x8">
+                    <fixedvalue name="Must only be installed temporarily" value="0x8"/>
+                </mask>
+                <mask name="No subsetting" value="0x100">
+                    <fixedvalue name="May not be subsetted" value="0x100"/>
+                </mask>
+                <mask name="Bitmap embedding only" value="0x200">
+                    <fixedvalue name="Only bitmaps may be embedded" value="0x200"/>
+                </mask>
+            </number>
+            <number name="ySubscriptXSize" id="425" type="integer" length="2">
+                <description>Subscript horizontal font size
+
+The recommended horizontal size in font design units for subscripts for this font.
+
+If a font has two recommended sizes for subscripts, e.g., numerics and other, the numeric sizes should be stressed. This size field maps to the em square size of the font being used for a subscript. The horizontal font size specifies a font designer's recommended horizontal font size for subscript characters associated with this font. If a font does not include all of the required subscript characters for an application, and the application can substitute characters by scaling the character of a font or by substituting characters from another font, this parameter specifies the recommended em square for those subscript characters.
+
+For example, if the em square for a font is 2048 and ySubScriptXSize is set to 205, then the horizontal size for a simulated subscript character would be 1/10th the size of the normal character.</description>
+            </number>
+            <number name="ySubscriptYSize" id="426" type="integer" length="2">
+                <description>Subscript vertical font size.
+
+The recommended vertical size in font design units for subscripts for this font.
+
+If a font has two recommended sizes for subscripts, e.g. numerics and other, the numeric sizes should be stressed. This size field maps to the emHeight of the font being used for a subscript. The horizontal font size specifies a font designer's recommendation for horizontal font size of subscript characters associated with this font. If a font does not include all of the required subscript characters for an application, and the application can substitute characters by scaling the characters in a font or by substituting characters from another font, this parameter specifies the recommended horizontal EmInc for those subscript characters. 
+
+For example, if the em square for a font is 2048 and ySubScriptYSize is set to 205, then the vertical size for a simulated subscript character would be 1/10th the size of the normal character.
+</description>
+            </number>
+            <number name="ySubscriptXOffset" id="427" type="integer" length="2">
+                <description>Subscript x offset.
+
+The recommended horizontal offset in font design untis for subscripts for this font.
+
+The Subscript X Offset parameter specifies a font designer's recommended horizontal offset -- from the character origin of the font to the character origin of the subscript's character -- for subscript characters associated with this font. If a font does not include all of the required subscript characters for an application, and the application can substitute characters, this parameter specifies the recommended horizontal position from the character escapement point of the last character before the first subscript character. For upright characters, this value is usually zero; however, if the characters of a font have an incline (italic characters) the reference point for subscript characters is usually adjusted to compensate for the angle of incline.</description>
+            </number>
+            <number name="ySubscriptYOffset" id="428" type="integer" length="2">
+                <description>Subscript y offset.
+
+The recommended vertical offset in font design units from the baseline for subscripts for this font.
+
+The Subscript Y Offset parameter specifies a font designer's recommended vertical offset from the character baseline to the character baseline for subscript characters associated with this font. Values are expressed as a positive offset below the character baseline. If a font does not include all of the required subscript for an application, this parameter specifies the recommended vertical distance below the character baseline for those subscript characters.</description>
+            </number>
+            <number name="ySuperscriptXSize" id="429" type="integer" length="2">
+                <description>Superscript horizontal font size.
+
+The recommended horizontal size in font design units for superscripts for this font.
+
+If a font has two recommended sizes for subscripts, e.g., numerics and other, the numeric sizes should be stressed. This size field maps to the em square size of the font being used for a subscript. The horizontal font size specifies a font designer's recommended horizontal font size for superscript characters associated with this font. If a font does not include all of the required superscript characters for an application, and the application can substitute characters by scaling the character of a font or by substituting characters from another font, this parameter specifies the recommended em square for those superscript characters. 
+
+For example, if the em square for a font is 2048 and ySuperScriptXSize is set to 205, then the horizontal size for a simulated superscript character would be 1/10th the size of the normal character.</description>
+            </number>
+            <number name="ySuperscriptYSize" id="430" type="integer" length="2">
+                <description>Superscript vertical font size.
+
+The recommended vertical size in font design units for superscripts for this font.
+
+If a font has two recommended sizes for subscripts, e.g., numerics and other, the numeric sizes should be stressed. This size field maps to the emHeight of the font being used for a subscript. The vertical font size specifies a font designer's recommended vertical font size for superscript characters associated with this font. If a font does not include all of the required superscript characters for an application, and the application can substitute characters by scaling the character of a font or by substituting characters from another font, this parameter specifies the recommended EmHeight for those superscript characters. 
+
+For example, if the em square for a font is 2048 and ySuperScriptYSize is set to 205, then the vertical size for a simulated superscript character would be 1/10th the size of the normal character.</description>
+            </number>
+            <number name="ySuperscriptXOffset" id="431" type="integer" length="2">
+                <description>Superscript x offset.
+
+The recommended horizontal offset in font design units for superscripts for this font.
+
+The Superscript X Offset parameter specifies a font designer's recommended horizontal offset -- from the character origin to the superscript character's origin for the superscript characters associated with this font. If a font does not include all of the required superscript characters for an application, this parameter specifies the recommended horizontal position from the escapement point of the character before the first superscript character. For upright characters, this value is usually zero; however, if the characters of a font have an incline (italic characters) the reference point for superscript characters is usually adjusted to compensate for the angle of incline.
+</description>
+            </number>
+            <number name="ySuperscriptYOffset" id="432" type="integer" length="2">
+                <description>Superscript y offset.
+
+The recommended vertical offset in font design units from the baseline for superscripts for this font.
+
+The Superscript Y Offset parameter specifies a font designer's recommended vertical offset -- from the character baseline to the superscript character's baseline associated with this font. Values for this parameter are expressed as a positive offset above the character baseline. If a font does not include all of the required superscript characters for an application, this parameter specifies the recommended vertical distance above the character baseline for those superscript characters.</description>
+            </number>
+            <number name="yStrikeoutSize" id="433" type="integer" length="2">
+                <description>Strikeout size.
+
+Width of the strikeout stroke in font design units.
+
+This field should normally be the width of the em dash for the current font. If the size is one, the strikeout line will be the line represented by the strikeout position field. If the value is two, the strikeout line will be the line represented by the strikeout position and the line immediately above the strikeout position. For a Roman font with a 2048 em square, 102 is suggested.</description>
+            </number>
+            <number name="yStrikeoutPosition" id="434" type="integer" length="2">
+                <description>Strikeout position.
+
+The position of the top of the strikeout stroke relative to the baseline in font design units.
+
+Positive values represent distances above the baseline, while negative values represent distances below the baseline. A value of zero falls directly on the baseline, while a value of one falls one pel above the baseline. The value of strikeout position should not interfere with the recognition of standard characters, and therefore should not line up with crossbars in the font. For a Roman font with a 2048 em square, 460 is suggested.</description>
+            </number>
+            <number name="sFamilyClass" id="435" type="integer" length="2">
+                <description>Font-family class and subclass.
+
+This parameter is a classification of font-family design.
+
+The font class and font subclass are registered values assigned by IBM to each font family. This parameter is intended for use in selecting an alternate font when the requested font is not available. The font class is the most general and the font subclass is the most specific. The high byte of this field contains the family class, while the low byte contains the family subclass.</description>
+                <fixedvalues>
+                    <fixedvalue name="No Classification" value="0"/>
+                    <fixedvalue name="Oldstyle Serifs" value="1"/>
+                    <fixedvalue name="Transitional Serifs" value="2"/>
+                    <fixedvalue name="Modern Serifs" value="3"/>
+                    <fixedvalue name="Clarendon Serifs" value="4"/>
+                    <fixedvalue name="Slab Serifs" value="5"/>
+                    <fixedvalue name="Freeform Serifs" value="7"/>
+                    <fixedvalue name="Sans Serif" value="8"/>
+                    <fixedvalue name="Ornamentals" value="9"/>
+                    <fixedvalue name="Scripts" value="10"/>
+                    <fixedvalue name="Symbolic" value="12"/>
+                    <fixedvalue name="Reserved" value="13"/>
+                    <fixedvalue name="Reserved" value="14"/>
+                </fixedvalues>
+            </number>
+            <structure name="panose" id="436" signed="no">
+                <number name="bFamilyType" id="437" type="integer" length="1"/>
+                <number name="bSerifStyle" id="438" type="integer" length="1"/>
+                <number name="bWeight" id="439" type="integer" length="1"/>
+                <number name="bProportion" id="440" type="integer" length="1"/>
+                <number name="bContrast" id="441" type="integer" length="1"/>
+                <number name="bStrokeVariation" id="442" type="integer" length="1"/>
+                <number name="bArmStyle" id="443" type="integer" length="1"/>
+                <number name="bLetterform" id="444" type="integer" length="1"/>
+                <number name="bMidline" id="445" type="integer" length="1"/>
+                <number name="bXHeight" id="446" type="integer" length="1"/>
+            </structure>
+            <number name="ulUnicodeRange1" id="448" type="integer" length="4" signed="no" display="hex">
+                <description>Unicode Character Range
+
+This field is used to specify the Unicode blocks or ranges encompassed by the font file in the 'cmap' subtables for platform 3, encoding ID 1 (Microsoft platform, Unicode) and platform 3, encoding ID 10 (Microsoft platform, UCS-4). If the bit is set (1) then the Unicode range is considered functional. If the bit is clear (0) then the range is not considered functional. Each of the bits is treated as an independent flag and the bits can be set in any combination. The determination of “functional” is left up to the font designer, although character set selection should attempt to be functional by ranges if at all possible. 
+
+All reserved fields must be zero. Each long is in Big-Endian form. See ISO/IEC 10646 or the most recent version of the Unicode Standard for the list of Unicode ranges and characters.
+</description>
+                <mask name="Basic Latin" value="0x1">
+                    <fixedvalue name="Basic Latin" value="0x1"/>
+                </mask>
+                <mask name="Latin-1 Supplement" value="0x2">
+                    <fixedvalue name="Latin-1 Supplement" value="0x2"/>
+                </mask>
+                <mask name="Latin Extended-A" value="0x4">
+                    <fixedvalue name="Latin Extended-A" value="0x4"/>
+                </mask>
+                <mask name="Latin Extended-B" value="0x8">
+                    <fixedvalue name="Latin Extended-B" value="0x8"/>
+                </mask>
+                <mask name="IPA Extensions" value="0x10">
+                    <fixedvalue name="IPA Extensions" value="0x10"/>
+                </mask>
+                <mask name="Spacing Modifier Letters" value="0x20">
+                    <fixedvalue name="Spacing Modifier Letters" value="0x20"/>
+                </mask>
+                <mask name="Combining Diacritical Marks" value="0x40">
+                    <fixedvalue name="Combining Diacritical Marks" value="0x40"/>
+                </mask>
+                <mask name="Greek and Coptic" value="0x80">
+                    <fixedvalue name="Greek and Coptic" value="0x80"/>
+                </mask>
+                <mask name="Coptic" value="0x100">
+                    <fixedvalue name="Coptic" value="0x100"/>
+                </mask>
+                <mask name="Cyrillic" value="0x200">
+                    <fixedvalue name="Cyrillic" value="0x200"/>
+                </mask>
+                <mask name="Armenian" value="0x400">
+                    <fixedvalue name="Armenian" value="0x400"/>
+                </mask>
+                <mask name="Hebrew" value="0x800">
+                    <fixedvalue name="Hebrew" value="0x800"/>
+                </mask>
+                <mask name="Vai" value="0x1000">
+                    <fixedvalue name="Vai" value="0x1000"/>
+                </mask>
+                <mask name="Arabic" value="0x2000">
+                    <fixedvalue name="Arabic" value="0x2000"/>
+                </mask>
+                <mask name="NKo" value="0x4000">
+                    <fixedvalue name="NKo" value="0x4000"/>
+                </mask>
+                <mask name="Devanagari" value="0x8000">
+                    <fixedvalue name="Devanagari" value="0x8000"/>
+                </mask>
+                <mask name="Bengali" value="0x10000">
+                    <fixedvalue name="Bengali" value="0x10000"/>
+                </mask>
+                <mask name="Gurmukhi" value="0x20000">
+                    <fixedvalue name="Gurmukhi" value="0x20000"/>
+                </mask>
+                <mask name="Gujarati" value="0x40000">
+                    <fixedvalue name="Gujarati" value="0x40000"/>
+                </mask>
+                <mask name="Oriya" value="0x80000">
+                    <fixedvalue name="Oriya" value="0x80000"/>
+                </mask>
+                <mask name="Tamil" value="0x100000">
+                    <fixedvalue name="Tamil" value="0x100000"/>
+                </mask>
+                <mask name="Telugu" value="0x200000">
+                    <fixedvalue name="Telugu" value="0x200000"/>
+                </mask>
+                <mask name="Kannada" value="0x400000">
+                    <fixedvalue name="Kannada" value="0x400000"/>
+                </mask>
+                <mask name="Malayalam" value="0x800000">
+                    <fixedvalue name="Malayalam" value="0x800000"/>
+                </mask>
+                <mask name="Thai" value="0x1000000">
+                    <fixedvalue name="Thai" value="0x1000000"/>
+                </mask>
+                <mask name="Lao" value="0x2000000">
+                    <fixedvalue name="Lao" value="0x2000000"/>
+                </mask>
+                <mask name="Georgian" value="0x4000000">
+                    <fixedvalue name="Georgian" value="0x4000000"/>
+                </mask>
+                <mask name="Balinese" value="0x8000000">
+                    <fixedvalue name="Balinese" value="0x8000000"/>
+                </mask>
+                <mask name="Hangul Jamo" value="0x10000000">
+                    <fixedvalue name="Hangul Jamo" value="0x10000000"/>
+                </mask>
+                <mask name="Latin Extended Additional" value="0x20000000">
+                    <fixedvalue name="Latin Extended Additional" value="0x20000000"/>
+                </mask>
+                <mask name="Greek Extended" value="0x40000000">
+                    <fixedvalue name="Greek Extended" value="0x40000000"/>
+                </mask>
+                <mask name="General Punctuation" value="0x80000000">
+                    <fixedvalue name="General Punctuation" value="0x80000000"/>
+                </mask>
+            </number>
+            <number name="ulUnicodeRange2" id="449" type="integer" length="4" signed="no" display="hex">
+                <mask name="Superscripts And Subscripts" value="0x1">
+                    <fixedvalue name="Superscripts And Subscripts" value="0x1"/>
+                </mask>
+                <mask name="Currency Symbols" value="0x2">
+                    <fixedvalue name="Currency Symbols" value="0x2"/>
+                </mask>
+                <mask name="Combining Diacritical Marks For Symbols" value="0x4">
+                    <fixedvalue name="Combining Diacritical Marks For Symbols" value="0x4"/>
+                </mask>
+                <mask name="Letterlike Symbols" value="0x8">
+                    <fixedvalue name="Letterlike Symbols" value="0x8"/>
+                </mask>
+                <mask name="Number Forms" value="0x10">
+                    <fixedvalue name="Number Forms" value="0x10"/>
+                </mask>
+                <mask name="Arrows" value="0x20">
+                    <fixedvalue name="Arrows" value="0x20"/>
+                </mask>
+                <mask name="Mathematical Operators" value="0x40">
+                    <fixedvalue name="Mathematical Operators" value="0x40"/>
+                </mask>
+                <mask name="Miscellaneous Technical" value="0x80">
+                    <fixedvalue name="Miscellaneous Technical" value="0x80"/>
+                </mask>
+                <mask name="Control Pictures" value="0x100">
+                    <fixedvalue name="Control Pictures" value="0x100"/>
+                </mask>
+                <mask name="Optical Character Recognition" value="0x200">
+                    <fixedvalue name="Optical Character Recognition" value="0x200"/>
+                </mask>
+                <mask name="Enclosed Alphanumerics" value="0x400">
+                    <fixedvalue name="Enclosed Alphanumerics" value="0x400"/>
+                </mask>
+                <mask name="Box Drawing" value="0x800">
+                    <fixedvalue name="Box Drawing" value="0x800"/>
+                </mask>
+                <mask name="Block Elements" value="0x1000">
+                    <fixedvalue name="Block Elements" value="0x1000"/>
+                </mask>
+                <mask name="Geometric Shapes" value="0x2000">
+                    <fixedvalue name="Geometric Shapes" value="0x2000"/>
+                </mask>
+                <mask name="Miscellaneous Symbols" value="0x4000">
+                    <fixedvalue name="Miscellaneous Symbols" value="0x4000"/>
+                </mask>
+                <mask name="Dingbats" value="0x8000">
+                    <fixedvalue name="Dingbats" value="0x8000"/>
+                </mask>
+                <mask name="CJK Symbols And Punctuation" value="0x10000">
+                    <fixedvalue name="CJK Symbols And Punctuation" value="0x10000"/>
+                </mask>
+                <mask name="Hiragana" value="0x20000">
+                    <fixedvalue name="Hiragana" value="0x20000"/>
+                </mask>
+                <mask name="Katakana" value="0x40000">
+                    <fixedvalue name="Katakana" value="0x40000"/>
+                </mask>
+                <mask name="Bopomofo" value="0x80000">
+                    <fixedvalue name="Bopomofo" value="0x80000"/>
+                </mask>
+                <mask name="Hangul Compatibility Jamo" value="0x100000">
+                    <fixedvalue name="Hangul Compatibility Jamo" value="0x100000"/>
+                </mask>
+                <mask name="Phags-pa" value="0x200000">
+                    <fixedvalue name="Phags-pa" value="0x200000"/>
+                </mask>
+                <mask name="Enclosed CJK Letters And Months" value="0x400000">
+                    <fixedvalue name="Enclosed CJK Letters And Months" value="0x400000"/>
+                </mask>
+                <mask name="CJK Compatibility" value="0x800000">
+                    <fixedvalue name="CJK Compatibility" value="0x800000"/>
+                </mask>
+                <mask name="Hangul Syllables" value="0x1000000">
+                    <fixedvalue name="Hangul Syllables" value="0x1000000"/>
+                </mask>
+                <mask name="Non-Plane 0" value="0x2000000">
+                    <fixedvalue name="Non-Plane 0" value="0x2000000"/>
+                </mask>
+                <mask name="Phoenician" value="0x4000000">
+                    <fixedvalue name="Phoenician" value="0x4000000"/>
+                </mask>
+                <mask name="CJK Unified Ideographs" value="0x8000000">
+                    <fixedvalue name="CJK Unified Ideographs" value="0x8000000"/>
+                </mask>
+                <mask name="Private Use Area (plane 0)" value="0x10000000">
+                    <fixedvalue name="Private Use Area (plane 0)" value="0x10000000"/>
+                </mask>
+                <mask name="CJK Strokes" value="0x20000000">
+                    <fixedvalue name="CJK Strokes" value="0x20000000"/>
+                </mask>
+                <mask name="Alphabetic Presentation Forms" value="0x40000000">
+                    <fixedvalue name="Alphabetic Presentation Forms" value="0x40000000"/>
+                </mask>
+                <mask name="Arabic Presentation Forms-A" value="0x80000000">
+                    <fixedvalue name="Arabic Presentation Forms-A" value="0x80000000"/>
+                </mask>
+            </number>
+            <number name="ulUnicodeRange3" id="450" type="integer" length="4" signed="no" display="hex">
+                <mask name="Combining Half Marks" value="0x1">
+                    <fixedvalue name="Combining Half Marks" value="0x1"/>
+                </mask>
+                <mask name="Vertical Forms" value="0x2">
+                    <fixedvalue name="Vertical Forms" value="0x2"/>
+                </mask>
+                <mask name="Small Form Variants" value="0x4">
+                    <fixedvalue name="Small Form Variants" value="0x4"/>
+                </mask>
+                <mask name="Arabic Presentation Forms-B" value="0x8">
+                    <fixedvalue name="Arabic Presentation Forms-B" value="0x8"/>
+                </mask>
+                <mask name="Halfwidth And Fullwidth Forms" value="0x10">
+                    <fixedvalue name="Halfwidth And Fullwidth Forms" value="0x10"/>
+                </mask>
+                <mask name="Specials" value="0x20">
+                    <fixedvalue name="Specials" value="0x20"/>
+                </mask>
+                <mask name="Tibetan" value="0x40">
+                    <fixedvalue name="Tibetan" value="0x40"/>
+                </mask>
+                <mask name="Syriac" value="0x80">
+                    <fixedvalue name="Syriac" value="0x80"/>
+                </mask>
+                <mask name="Thaana" value="0x100">
+                    <fixedvalue name="Thaana" value="0x100"/>
+                </mask>
+                <mask name="Sinhala" value="0x200">
+                    <fixedvalue name="Sinhala" value="0x200"/>
+                </mask>
+                <mask name="Myanmar" value="0x400">
+                    <fixedvalue name="Myanmar" value="0x400"/>
+                </mask>
+                <mask name="Ethiopic" value="0x800">
+                    <fixedvalue name="Ethiopic" value="0x800"/>
+                </mask>
+                <mask name="Cherokee" value="0x1000">
+                    <fixedvalue name="Cherokee" value="0x1000"/>
+                </mask>
+                <mask name="Unified Canadian Aboriginal Syllabics" value="0x2000">
+                    <fixedvalue name="Unified Canadian Aboriginal Syllabics" value="0x2000"/>
+                </mask>
+                <mask name="Ogham" value="0x4000">
+                    <fixedvalue name="Ogham" value="0x4000"/>
+                </mask>
+                <mask name="Runic" value="0x8000">
+                    <fixedvalue name="Runic" value="0x8000"/>
+                </mask>
+                <mask name="Khmer" value="0x10000">
+                    <fixedvalue name="Khmer" value="0x10000"/>
+                </mask>
+                <mask name="Mongolian" value="0x20000">
+                    <fixedvalue name="Mongolian" value="0x20000"/>
+                </mask>
+                <mask name="Braille Patterns" value="0x40000">
+                    <fixedvalue name="Braille Patterns" value="0x40000"/>
+                </mask>
+                <mask name="Yi Syllables" value="0x80000">
+                    <fixedvalue name="Yi Syllables" value="0x80000"/>
+                </mask>
+                <mask name="Tagalog" value="0x100000">
+                    <fixedvalue name="Tagalog" value="0x100000"/>
+                </mask>
+                <mask name="Old Italic" value="0x200000">
+                    <fixedvalue name="Old Italic" value="0x200000"/>
+                </mask>
+                <mask name="Gothic" value="0x400000">
+                    <fixedvalue name="Gothic" value="0x400000"/>
+                </mask>
+                <mask name="Deseret" value="0x800000">
+                    <fixedvalue name="Deseret" value="0x800000"/>
+                </mask>
+                <mask name="Byzantine Musical Symbols" value="0x1000000">
+                    <fixedvalue name="Byzantine Musical Symbols" value="0x1000000"/>
+                </mask>
+                <mask name="Mathematical Alphanumeric Symbols&#9;" value="0x2000000">
+                    <fixedvalue name="Mathematical Alphanumeric Symbols&#9;" value="0x2000000"/>
+                </mask>
+                <mask name="Private Use (plane 15)" value="0x4000000">
+                    <fixedvalue name="Private Use (plane 15)" value="0x4000000"/>
+                </mask>
+                <mask name="Variation Selectors" value="0x8000000">
+                    <fixedvalue name="Variation Selectors" value="0x8000000"/>
+                </mask>
+                <mask name="Tags" value="0x10000000">
+                    <fixedvalue name="Tags" value="0x10000000"/>
+                </mask>
+                <mask name="Limbu" value="0x20000000">
+                    <fixedvalue name="Limbu" value="0x20000000"/>
+                </mask>
+                <mask name="Tai Le" value="0x40000000">
+                    <fixedvalue name="Tai Le" value="0x40000000"/>
+                </mask>
+                <mask name="New Tai Lue" value="0x80000000">
+                    <fixedvalue name="New Tai Lue" value="0x80000000"/>
+                </mask>
+            </number>
+            <number name="ulUnicodeRange4" id="451" type="integer" length="4" signed="no" display="hex">
+                <mask name="Buginese" value="0x1">
+                    <fixedvalue name="Buginese" value="0x1"/>
+                </mask>
+                <mask name="Glagolitic" value="0x2">
+                    <fixedvalue name="Glagolitic" value="0x2"/>
+                </mask>
+                <mask name="Tifinagh" value="0x4">
+                    <fixedvalue name="Tifinagh" value="0x4"/>
+                </mask>
+                <mask name="Yijing Hexagram Symbols" value="0x8">
+                    <fixedvalue name="Yijing Hexagram Symbols" value="0x8"/>
+                </mask>
+                <mask name="Syloti Nagri" value="0x10">
+                    <fixedvalue name="Syloti Nagri" value="0x10"/>
+                </mask>
+                <mask name="Linear B Syllabary" value="0x20">
+                    <fixedvalue name="Linear B Syllabary" value="0x20"/>
+                </mask>
+                <mask name="Ancient Greek Numbers" value="0x40">
+                    <fixedvalue name="Ancient Greek Numbers" value="0x40"/>
+                </mask>
+                <mask name="Ugaritic" value="0x80">
+                    <fixedvalue name="Ugaritic" value="0x80"/>
+                </mask>
+                <mask name="Old Persian" value="0x100">
+                    <fixedvalue name="Old Persian" value="0x100"/>
+                </mask>
+                <mask name="Shavian" value="0x200">
+                    <fixedvalue name="Shavian" value="0x200"/>
+                </mask>
+                <mask name="Osmanya" value="0x400">
+                    <fixedvalue name="Osmanya" value="0x400"/>
+                </mask>
+                <mask name="Cypriot Syllabary" value="0x800">
+                    <fixedvalue name="Cypriot Syllabary" value="0x800"/>
+                </mask>
+                <mask name="Kharoshthi" value="0x1000">
+                    <fixedvalue name="Kharoshthi" value="0x1000"/>
+                </mask>
+                <mask name="Tai Xuan Jing Symbols" value="0x2000">
+                    <fixedvalue name="Tai Xuan Jing Symbols" value="0x2000"/>
+                </mask>
+                <mask name="Cuneiform" value="0x4000">
+                    <fixedvalue name="Cuneiform" value="0x4000"/>
+                </mask>
+                <mask name="Counting Rod Numerals" value="0x8000">
+                    <fixedvalue name="Counting Rod Numerals" value="0x8000"/>
+                </mask>
+                <mask name="Sundanese" value="0x10000">
+                    <fixedvalue name="Sundanese" value="0x10000"/>
+                </mask>
+                <mask name="Lepcha" value="0x20000">
+                    <fixedvalue name="Lepcha" value="0x20000"/>
+                </mask>
+                <mask name="Ol Chiki" value="0x40000">
+                    <fixedvalue name="Ol Chiki" value="0x40000"/>
+                </mask>
+                <mask name="Saurashtra" value="0x80000">
+                    <fixedvalue name="Saurashtra" value="0x80000"/>
+                </mask>
+                <mask name="Kayah Li" value="0x100000">
+                    <fixedvalue name="Kayah Li" value="0x100000"/>
+                </mask>
+                <mask name="Rejang" value="0x200000">
+                    <fixedvalue name="Rejang" value="0x200000"/>
+                </mask>
+                <mask name="Cham" value="0x400000">
+                    <fixedvalue name="Cham" value="0x400000"/>
+                </mask>
+                <mask name="Ancient Symbols" value="0x800000">
+                    <fixedvalue name="Ancient Symbols" value="0x800000"/>
+                </mask>
+                <mask name="Phaistos Disc" value="0x1000000">
+                    <fixedvalue name="Phaistos Disc" value="0x1000000"/>
+                </mask>
+                <mask name="Carian" value="0x2000000">
+                    <fixedvalue name="Carian" value="0x2000000"/>
+                </mask>
+                <mask name="Domino Tiles" value="0x4000000">
+                    <fixedvalue name="Domino Tiles" value="0x4000000"/>
+                </mask>
+            </number>
+            <string name="achVendID" id="452" type="fixed-length" length="4">
+                <description>Font Vendor Identification
+
+The four character identifier for the vendor of the given type face.
+
+This is not the royalty owner of the original artwork. This is the company responsible for the marketing and distribution of the typeface that is being classified. It is reasonable to assume that there will be 6 vendors of ITC Zapf Dingbats for use on desktop platforms in the near future (if not already). It is also likely that the vendors will have other inherent benefits in their fonts (more kern pairs, unregularized data, hand hinted, etc.). This identifier will allow for the correct vendor's type to be used over another, possibly inferior, font file. The Vendor ID value is not required. 
+
+Microsoft has assigned values for some font suppliers as listed below. Uppercase vendor ID's are reserved by Microsoft. Other suppliers can choose their own mixed case or lowercase ID's, or leave the field blank.</description>
+            </string>
+            <number name="fsSelection" id="453" type="integer" length="2" signed="no">
+                <description>Font selection flags.
+
+Contains information concerning the nature of the font patterns</description>
+                <mask name="ITALIC" value="0x1">
+                    <fixedvalue name="ITALIC" value="0x1"/>
+                </mask>
+                <mask name="UNDERSCORE" value="0x2">
+                    <fixedvalue name="UNDERSCORE" value="0x2"/>
+                </mask>
+                <mask name="NEGATIVE" value="0x4">
+                    <fixedvalue name="NEGATIVE" value="0x4"/>
+                </mask>
+                <mask name="OUTLINED" value="0x8">
+                    <fixedvalue name="OUTLINED" value="0x8"/>
+                </mask>
+                <mask name="STRIKEOUT" value="0x10">
+                    <fixedvalue name="STRIKEOUT" value="0x10"/>
+                </mask>
+                <mask name="BOLD" value="0x20">
+                    <fixedvalue name="BOLD" value="0x20"/>
+                </mask>
+                <mask name="REGULAR" value="0x40">
+                    <fixedvalue name="REGULAR" value="0x40"/>
+                </mask>
+                <mask name="USE_TYPO_METRICS" value="0x80">
+                    <fixedvalue name="USE_TYPO_METRICS" value="0x80"/>
+                </mask>
+                <mask name="WWS" value="0x100">
+                    <fixedvalue name="WWS" value="0x100"/>
+                </mask>
+                <mask name="OBLIQUE" value="0x200">
+                    <fixedvalue name="OBLIQUE" value="0x200"/>
+                </mask>
+            </number>
+            <number name="usFirstCharIndex" id="454" type="integer" length="2" signed="no">
+                <description>The minimum Unicode index (character code) in this font, according to the cmap subtable for platform ID 3 and platform- specific encoding ID 0 or 1. For most fonts supporting Win-ANSI or other character sets, this value would be 0x0020. This field cannot represent supplementary character values (codepoints greater than 0xFFFF). Fonts that support supplementary characters should set the value in this field to 0xFFFF if the minimum index value is a supplementary character.</description>
+            </number>
+            <number name="usLastCharIndex" id="455" type="integer" length="2" signed="no">
+                <description>The maximum Unicode index (character code) in this font, according to the cmap subtable for platform ID 3 and encoding ID 0 or 1. This value depends on which character sets the font supports. This field cannot represent supplementary character values (codepoints greater than 0xFFFF). Fonts that support supplementary characters should set the value in this field to 0xFFFF.</description>
+            </number>
+            <number name="sTypoAscender" id="456" type="integer" length="2">
+                <description>The typographic ascender for this font. Remember that this is not the same as the Ascender value in the 'hhea' table, which Apple defines in a far different manner. One good source for sTypoAscender in Latin based fonts is the Ascender value from an AFM file. For CJK fonts see below. 
+
+The suggested usage for sTypoAscender is that it be used in conjunction with unitsPerEm to compute a typographically correct default line spacing. The goal is to free applications from Macintosh or Windows-specific metrics which are constrained by backward compatibility requirements. These new metrics, when combined with the character design widths, will allow applications to lay out documents in a typographically correct and portable fashion. These metrics will be exposed through Windows APIs. Macintosh applications will need to access the 'sfnt' resource and parse it to extract this data from the “OS/2” table. 
+
+For CJK (Chinese, Japanese, and Korean) fonts that are intended to be used for vertical writing (in addition to horizontal writing), the required value for sTypoAscender is that which describes the top of the of the ideographic em-box. For example, if the ideographic em-box of the font extends from coordinates 0,-120 to 1000,880 (that is, a 1000x1000 box set 120 design units below the Latin baseline), then the value of sTypoAscender must be set to 880. Failing to adhere to these requirements will result in incorrect vertical layout.</description>
+            </number>
+            <number name="sTypoDescender" id="457" type="integer" length="2">
+                <description>The typographic descender for this font. Remember that this is not the same as the Descender value in the 'hhea' table, which Apple defines in a far different manner. One good source for sTypoDescender in Latin based fonts is the Descender value from an AFM file. For CJK fonts see below. 
+
+The suggested usage for sTypoDescender is that it be used in conjunction with unitsPerEm to compute a typographically correct default line spacing. The goal is to free applications from Macintosh or Windows-specific metrics which are constrained by backward compatability requirements. These new metrics, when combined with the character design widths, will allow applications to lay out documents in a typographically correct and portable fashion. These metrics will be exposed through Windows APIs. Macintosh applications will need to access the 'sfnt' resource and parse it to extract this data from the “OS/2” table (unless Apple exposes the 'OS/2' table through a new API). 
+
+For CJK (Chinese, Japanese, and Korean) fonts that are intended to be used for vertical writing (in addition to horizontal writing), the required value for sTypoDescender is that which describes the bottom of the of the ideographic em-box. For example, if the ideographic em-box of the font extends from coordinates 0,-120 to 1000,880 (that is, a 1000x1000 box set 120 design units below the Latin baseline), then the value of sTypoDescender must be set to -120. Failing to adhere to these requirements will result in incorrect vertical layout.</description>
+            </number>
+            <number name="sTypoLineGap" id="458" type="integer" length="2">
+                <description>The typographic line gap for this font. Remember that this is not the same as the LineGap value in the 'hhea' table, which Apple defines in a far different manner. 
+
+The suggested usage for usTypoLineGap is that it be used in conjunction with unitsPerEm to compute a typographically correct default line spacing. Typical values average 7-10% of units per em. The goal is to free applications from Macintosh or Windows-specific metrics which are constrained by backward compatability requirements (see chapter, “Recommendations for OpenType Fonts”). These new metrics, when combined with the character design widths, will allow applications to lay out documents in a typographically correct and portable fashion. These metrics will be exposed through Windows APIs. Macintosh applications will need to access the 'sfnt' resource and parse it to extract this data from the “OS/2” table (unless Apple exposes the 'OS/2' table through a new API)</description>
+            </number>
+            <number name="usWinAscent" id="459" type="integer" length="2" signed="no">
+                <description>The ascender metric for Windows. This, too, is distinct from Apple's Ascender value and from the usTypoAscender values. usWinAscent is computed as the yMax for all characters in the Windows ANSI character set. usWinAscent is used to compute the Windows font height and default line spacing. For platform 3 encoding 0 fonts, it is the same as yMax. Windows will clip the bitmap of any portion of a glyph that appears above this value. Some applications use this value to determine default line spacing. This is strongly discouraged. The typographic ascender, descender and line gap fields in conjunction with unitsPerEm should be used for this purpose. Developers should set this field keeping the above factors in mind. 
+If any clipping is unacceptable, then the value should be set to yMax. 
+However, if a developer desires to provide appropriate default line spacing using this field, for those applications that continue to use this field for doing so (against OpenType recommendations), then the value should be set appropriately. In such a case, it may result in some glyph bitmaps being clipped.
+</description>
+            </number>
+            <number name="usWinDescent" id="460" type="integer" length="2" signed="no">
+                <description>The descender metric for Windows. This, too, is distinct from Apple's Descender value and from the usTypoDescender values. usWinDescent is computed as the -yMin for all characters in the Windows ANSI character set. usWinDescent is used to compute the Windows font height and default line spacing. For platform 3 encoding 0 fonts, it is the same as -yMin. Windows will clip the bitmap of any portion of a glyph that appears below this value. Some applications use this value to determine default line spacing. This is strongly discouraged. The typographic ascender, descender and line gap fields in conjunction with unitsPerEm should be used for this purpose. Developers should set this field keeping the above factors in mind. 
+If any clipping is unacceptable, then the value should be set to yMin. 
+However, if a developer desires to provide appropriate default line spacing using this field, for those applications that continue to use this field for doing so (against OpenType recommendations), then the value should be set appropriately. In such a case, it may result in some glyph bitmaps being clipped.
+</description>
+            </number>
+            <number name="ulCodePageRange1" id="461" type="integer" length="4" signed="no">
+                <description>Code Page Character Range
+
+This field is used to specify the code pages encompassed by the font file in the 'cmap' subtable for platform 3, encoding ID 1 (Microsoft platform). If the font file is encoding ID 0, then the Symbol Character Set bit should be set. If the bit is set (1) then the code page is considered functional. If the bit is clear (0) then the code page is not considered functional. Each of the bits is treated as an independent flag and the bits can be set in any combination. The determination of “functional” is left up to the font designer, although character set selection should attempt to be functional by code pages if at all possible. 
+
+Symbol character sets have a special meaning. If the symbol bit (31) is set, and the font file contains a 'cmap' subtable for platform of 3 and encoding ID of 1, then all of the characters in the Unicode range 0xF000 - 0xF0FF (inclusive) will be used to enumerate the symbol character set. If the bit is not set, any characters present in that range will not be enumerated as a symbol character set. 
+</description>
+                <mask name="Latin 1 (1252)" value="0x1">
+                    <fixedvalue name="Latin 1 (1252)" value="0x1"/>
+                </mask>
+                <mask name="Latin 2: Eastern Europe (1250)" value="0x2">
+                    <fixedvalue name="Latin 2: Eastern Europe (1250)" value="0x2"/>
+                </mask>
+                <mask name="Cyrillic (1251)" value="0x4">
+                    <fixedvalue name="Cyrillic (1251)" value="0x4"/>
+                </mask>
+                <mask name="Greek (1253)" value="0x8">
+                    <fixedvalue name="Greek (1253)" value="0x8"/>
+                </mask>
+                <mask name="Turkish (1254)" value="0x10">
+                    <fixedvalue name="Turkish (1254)" value="0x10"/>
+                </mask>
+                <mask name="Hebrew (1255)" value="0x20">
+                    <fixedvalue name="Hebrew (1255)" value="0x20"/>
+                </mask>
+                <mask name="Arabic (1256)" value="0x40">
+                    <fixedvalue name="Arabic (1256)" value="0x40"/>
+                </mask>
+                <mask name="Windows Baltic (1257)" value="0x80">
+                    <fixedvalue name="Windows Baltic (1257)" value="0x80"/>
+                </mask>
+                <mask name="Vietnamese (1258)" value="0x100">
+                    <fixedvalue name="Vietnamese (1258)" value="0x100"/>
+                </mask>
+                <mask name="Reserved for Alternate ANSI" value="0xFE00">
+                    <fixedvalue name="Reserved for Alternate ANSI" value="0xFE00"/>
+                </mask>
+                <mask name="Thai (874)" value="0x10000">
+                    <fixedvalue name="Thai (874)" value="0x10000"/>
+                </mask>
+                <mask name="JIS/Japan (932)" value="0x20000">
+                    <fixedvalue name="JIS/Japan (932)" value="0x20000"/>
+                </mask>
+                <mask name="Chinese: Simplified chars--PRC and Singapore (936)" value="0x40000">
+                    <fixedvalue name="Chinese: Simplified chars--PRC and Singapore (936)" value="0x40000"/>
+                </mask>
+                <mask name="Korean Wansung (949)" value="0x80000">
+                    <fixedvalue name="Korean Wansung (949)" value="0x80000"/>
+                </mask>
+                <mask name="Chinese: Traditional chars--Taiwan and Hong Kong (950)" value="0x100000">
+                    <fixedvalue name="Chinese: Traditional chars--Taiwan and Hong Kong (950)" value="0x100000"/>
+                </mask>
+                <mask name="Korean Johab (1361)" value="0x200000">
+                    <fixedvalue name="Korean Johab (1361)" value="0x200000"/>
+                </mask>
+                <mask name="Reserved for Alternate ANSI &amp; OEM" value="0x1FC00000">
+                    <fixedvalue name="Reserved for Alternate ANSI &amp; OEM" value="0x1FC00000"/>
+                </mask>
+                <mask name="Macintosh Character Set (US Roman)" value="0x20000000">
+                    <fixedvalue name="Macintosh Character Set (US Roman)" value="0x2000000"/>
+                </mask>
+                <mask name="OEM Character Set" value="0x40000000">
+                    <fixedvalue name="OEM Character Set" value="0x40000000"/>
+                </mask>
+                <mask name="Symbol Character Set" value="0x80000000">
+                    <fixedvalue name="Symbol Character Set" value="0x80000000"/>
+                </mask>
+            </number>
+            <number name="ulCodePageRange2" id="462" type="integer" length="4" signed="no">
+                <mask name="Reserved for OEM" value="0xFFFF">
+                    <fixedvalue name="Reserved for OEM" value="0xFFFF"/>
+                </mask>
+                <mask name="IBM Greek (869)" value="0x10000">
+                    <fixedvalue name="IBM Greek" value="0x10000"/>
+                </mask>
+                <mask name="MS-DOS Russian (866)" value="0x20000">
+                    <fixedvalue name="MS-DOS Russian (866)" value="0x20000"/>
+                </mask>
+                <mask name="MS-DOS Nordic (865)" value="0x40000">
+                    <fixedvalue name="MS-DOS Nordic (865)" value="0x40000"/>
+                </mask>
+                <mask name="Arabic (864)" value="0x80000">
+                    <fixedvalue name="Arabic (864)" value="0x80000"/>
+                </mask>
+                <mask name="MS-DOS Canadian French (863)" value="0x100000">
+                    <fixedvalue name="MS-DOS Canadian French (863)" value="0x100000"/>
+                </mask>
+                <mask name="Hebrew (862)" value="0x200000">
+                    <fixedvalue name="Hebrew (862)" value="0x200000"/>
+                </mask>
+                <mask name="MS-DOS Icelandic (861)" value="0x400000">
+                    <fixedvalue name="MS-DOS Icelandic (861)" value="0x400000"/>
+                </mask>
+                <mask name="MS-DOS Portuguese (860)" value="0x800000">
+                    <fixedvalue name="MS-DOS Portuguese (860)" value="0x800000"/>
+                </mask>
+                <mask name="IBM Turkish (857)" value="0x1000000">
+                    <fixedvalue name="IBM Turkish (857)" value="0x1000000"/>
+                </mask>
+                <mask name="IBM Cyrillic; primarily Russian (855)" value="0x2000000">
+                    <fixedvalue name="IBM Cyrillic; primarily Russian (855)" value="0x2000000"/>
+                </mask>
+                <mask name="Latin 2 (852)" value="0x4000000">
+                    <fixedvalue name="Latin 2 (852)" value="0x4000000"/>
+                </mask>
+                <mask name="MS-DOS Baltic (775)" value="0x8000000">
+                    <fixedvalue name="MS-DOS Baltic (775)" value="0x8000000"/>
+                </mask>
+                <mask name="Greek; former 437 G (737)" value="0x10000000">
+                    <fixedvalue name="Greek; former 437 G (737)" value="0x10000000"/>
+                </mask>
+                <mask name="Arabic; ASMO 708 (708)" value="0x20000000">
+                    <fixedvalue name="Arabic; ASMO 708 (708)" value="0x20000000"/>
+                </mask>
+                <mask name="WE/Latin 1 (850)" value="0x40000000">
+                    <fixedvalue name="WE/Latin 1 (850)" value="0x40000000"/>
+                </mask>
+                <mask name="US (437)" value="0x80000000">
+                    <fixedvalue name="US (437)" value="0x80000000"/>
+                </mask>
+            </number>
+            <number name="sxHeight" id="463" type="integer" length="2">
+                <description>This metric specifies the distance between the baseline and the approximate height of non-ascending lowercase letters measured in FUnits. This value would normally be specified by a type designer but in situations where that is not possible, for example when a legacy font is being converted, the value may be set equal to the top of the unscaled and unhinted glyph bounding box of the glyph encoded at U+0078 (LATIN SMALL LETTER X). If no glyph is encoded in this position the field should be set to 0. 
+
+This metric, if specified, can be used in font substitution: the xHeight value of one font can be scaled to approximate the apparent size of another.
+</description>
+            </number>
+            <number name="sCapHeight" id="464" type="integer" length="2">
+                <description>This metric specifies the distance between the baseline and the approximate height of uppercase letters measured in FUnits. This value would normally be specified by a type designer but in situations where that is not possible, for example when a legacy font is being converted, the value may be set equal to the top of the unscaled and unhinted glyph bounding box of the glyph encoded at U+0048 (LATIN CAPITAL LETTER H). If no glyph is encoded in this position the field should be set to 0. 
+
+This metric, if specified, can be used in systems that specify type size by capital height measured in millimeters. It can also be used as an alignment metric; the top of a drop capital, for instance, can be aligned to the sCapHeight metric of the first line of text.
+</description>
+            </number>
+            <number name="usDefaultChar" id="465" type="integer" length="2" signed="no">
+                <description>Whenever a request is made for a character that is not in the font, Windows provides this default character. If the value of this field is zero, glyph ID 0 is to be used for the default character otherwise this is the Unicode encoding of the glyph that Windows uses as the default character. This field cannot represent supplementary character values (codepoints greater than 0xFFFF), and so applications are strongly discouraged from using this field.
+</description>
+            </number>
+            <number name="usBreakChar" id="466" type="integer" length="2" signed="no">
+                <description>This is the Unicode encoding of the glyph that Windows uses as the break character. The break character is used to separate words and justify text. Most fonts specify 'space' as the break character. This field cannot represent supplementary character values (codepoints greater than 0xFFFF) , and so applications are strongly discouraged from using this field.
+</description>
+            </number>
+            <number name="usMaxContext" id="467" type="integer" length="2" signed="no">
+                <description>The maximum length of a target glyph context for any feature in this font. For example, a font which has only a pair kerning feature should set this field to 2. If the font also has a ligature feature in which the glyph sequence 'f f i' is substituted by the ligature 'ffi', then this field should be set to 3. This field could be useful to sophisticated line-breaking engines in determining how far they should look ahead to test whether something could change that effects the line breaking. For chaining contextual lookups, the length of the string (covered glyph) + (input sequence) + (lookahead sequence) should be considered.
+</description>
+            </number>
+        </structure>
+        <structure name="PostScriptTable" id="224" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <structref name="PostScriptTable10" id="470" repeatmin="0" structure="id:469"/>
+            <structref name="PostScriptTable20" id="472" repeatmin="0" structure="id:471"/>
+            <structref name="PostScriptTable25" id="474" repeatmin="0" structure="id:473"/>
+            <structref name="PostScriptTable30" id="476" repeatmin="0" structure="id:475"/>
+        </structure>
+        <structure name="PostScriptTable10" id="469" extends="id:239">
+            <description>This TrueType-based font file contains exactly the 258 glyphs in the standard Macintosh TrueType font file (see The WGL4.0 Character Set chapter for a list of the Macintosh glyphs). As a result, the glyph names are taken from the system with no storage required by the font</description>
+            <number name="version" mustmatch="yes" id="478" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Version 1.0" value="0x10000"/>
+                </fixedvalues>
+            </number>
+            <number name="italicAngle" id="479" type="integer" length="4" signed="yes">
+                <description>Italic angle in counter-clockwise degrees from the vertical. Zero for upright text, negative for text that leans to the right (forward)</description>
+            </number>
+            <number name="underlinePosition" id="480" type="integer" length="2" signed="yes">
+                <description>This is the suggested distance of the top of the underline from the baseline (negative values indicate below baseline). 
+The PostScript definition of this FontInfo dictionary key (the y coordinate of the center of the stroke) is not used for historical reasons. The value of the PostScript key may be calculated by subtracting half the underlineThickness from the value of this field</description>
+            </number>
+            <number name="underlineThickness" id="481" type="integer" length="2" signed="yes">
+                <description>Suggested values for the underline thickness</description>
+            </number>
+            <number name="isFixedPitch" id="482" type="integer" length="4">
+                <description>Set to 0 if the font is proportionally spaced, non-zero if the font is not proportionally spaced (i.e. monospaced)</description>
+                <fixedvalues>
+                    <fixedvalue name="proportionally spaced" value="0"/>
+                    <fixedvalue name="monospaced" value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="minMemType42" id="483" type="integer" length="4">
+                <description>Minimum memory usage when an OpenType font is downloaded</description>
+            </number>
+            <number name="maxMemType42" id="484" type="integer" length="4">
+                <description>Maximum memory usage when an OpenType font is downloaded</description>
+            </number>
+            <number name="minMemType1" id="485" type="integer" length="4">
+                <description>Minimum memory usage when an OpenType font is downloaded as a Type 1 font</description>
+            </number>
+            <number name="maxMemType1" id="486" type="integer" length="4">
+                <description>Maximum memory usage when an OpenType font is downloaded as a Type 1 font</description>
+            </number>
+        </structure>
+        <structure name="PostScriptTable20" id="471" extends="id:469">
+            <description>This is the version required by TrueType-based fonts to be used on Windows</description>
+            <number name="version" id="488" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Version 2.0" value="0x20000"/>
+                </fixedvalues>
+            </number>
+            <number name="numberOfGlyphs" id="497" type="integer" length="2">
+                <description>Number of glyphs (this should be the same as numGlyphs in 'maxp' table)</description>
+            </number>
+            <number name="glyphNameIndex" id="498" repeatmax="numberOfGlyphs" type="integer" length="2"/>
+            <string name="names" id="499" repeatmax="numberOfGlyphs" type="pascal"/>
+        </structure>
+        <structure name="PostScriptTable25" id="473" extends="id:469">
+            <description>This version of the 'post' table has been deprecated as of OpenType Specification v1.3.
+This version provides a space saving table for TrueType-based fonts which contain a pure subset of, or a simple reordering of, the standard Macintosh glyph set</description>
+            <number name="version" id="501" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Version 2.5" value="0x25000"/>
+                </fixedvalues>
+            </number>
+            <number name="numberOfGlyphs" id="510" type="integer" length="2">
+                <description>Number of glyphs</description>
+            </number>
+            <number name="offset" id="511" repeatmax="numberOfGlyphs" type="integer" length="1">
+                <description>Difference between graphic index and standard order of glyph</description>
+            </number>
+        </structure>
+        <structure name="PostScriptTable30" id="475" extends="id:469">
+            <description>This version is used by OpenType fonts with TrueType or CFF data. The version makes it possible to create a special font that is not burdened with a large 'post' table set of glyph names.
+This version specifies that no PostScript name information is provided for the glyphs in this font file. The printing behavior of this version on PostScript printers is unspecified, except that it should not result in a fatal or unrecoverable error. Some drivers may print nothing, other drivers may attempt to print using a default naming scheme.
+Windows makes use of the italic angle value in the 'post' table but does not actually require any glyph names to be stored as Pascal strings</description>
+            <number name="version" id="513" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Version 3.0" value="0x30000"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="ScriptListTable" id="320" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="ScriptCount" id="523" type="integer" length="2"/>
+            <structure name="ScriptRecord" id="524" repeatmax="ScriptCount">
+                <string name="ScriptTag" id="525" type="fixed-length" length="4"/>
+                <offset name="ScriptTable" id="527" length="2" references="id:526" relative-to="id:320" follownullreference="yes"/>
+            </structure>
+        </structure>
+        <structure name="FeatureListTable" id="322" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="FeatureCount" id="530" type="integer" length="2"/>
+            <structure name="FeatureRecord" id="531" length="0" alignment="0" repeatmax="FeatureCount">
+                <string name="FeatureTag" id="532" type="fixed-length" length="4"/>
+                <offset name="FeatureTable" id="534" length="2" references="id:533" relative-to="id:322" follownullreference="no"/>
+            </structure>
+        </structure>
+        <structure name="LookupListTable" id="324" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="LookupCount" id="537" type="integer" length="2"/>
+            <offset name="LookupTable" id="539" repeatmax="LookupCount" length="2" references="id:538" relative-to="id:324" follownullreference="yes"/>
+        </structure>
+        <structure name="LookupTable" id="538" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="LookupType" id="541" type="integer" length="2"/>
+            <number name="LookupFlag" id="542" type="integer" length="2" display="hex">
+                <mask name="RightToLeft" value="0x1">
+                    <fixedvalue name="RightToLeft" value="0x1"/>
+                </mask>
+                <mask name="IgnoreBaseGlyphs" value="0x2">
+                    <fixedvalue name="IgnoreBaseGlyphs" value="0x2"/>
+                </mask>
+                <mask name="IgnoreLigatures" value="0x4">
+                    <fixedvalue name="IgnoreLigatures" value="0x4"/>
+                </mask>
+                <mask name="IgnoreMarks" value="0x8">
+                    <fixedvalue name="IgnoreMarks" value="0x8"/>
+                </mask>
+                <mask name="UseMarkFilteringSet" value="0x10">
+                    <fixedvalue name="UseMarkFilteringSet" value="0x10"/>
+                </mask>
+                <mask name="Reserved" value="0xE0">
+                    <fixedvalue name="Reserved" value="0xE0"/>
+                </mask>
+                <mask name="MarkAttachmentType" value="0xFF00">
+                    <fixedvalue name="MarkAttachmentType" value="0xFF00"/>
+                </mask>
+            </number>
+            <number name="SubTableCount" id="543" type="integer" length="2"/>
+            <offset name="CoverageTable" id="545" repeatmax="SubTableCount" length="2" references="id:544" relative-to="id:538" follownullreference="yes"/>
+            <number name="MarkFilteringSet" id="546" type="integer" length="2"/>
+        </structure>
+        <structure name="ScriptTable" id="526" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="DefaultLangSys" id="548" type="integer" length="2"/>
+            <number name="LangSysCount" id="549" type="integer" length="2"/>
+            <structure name="LangSysRecord" id="550" repeatmax="LangSysCount">
+                <binary name="LangSysTag" id="551" length="4"/>
+                <number name="LangSys" id="552" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="FeatureTable" id="533" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <offset name="FeatureParams" id="556" length="2" references="id:555" relative-to="id:533" follownullreference="no"/>
+            <number name="LookupCount" id="557" type="integer" length="2"/>
+        </structure>
+        <structure name="FeatureParams" id="555" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+        <structure name="CoverageTable" id="544" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <structref name="CoverageFormatTable1" id="561" repeatmin="0" structure="id:560"/>
+            <structref name="CoverageFormatTable2" id="563" repeatmin="0" structure="id:562"/>
+            <structref name="CoverageFormatTable" id="565" repeatmin="0" structure="id:564"/>
+        </structure>
+        <structure name="CoverageFormatTable" id="564" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="CoverageFormat" mustmatch="yes" id="567" type="integer" length="2"/>
+        </structure>
+        <structure name="CoverageFormatTable1" id="560" extends="id:564">
+            <number name="CoverageFormat" id="569" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Format1" value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="GlyphCount" id="570" type="integer" length="2"/>
+            <number name="GlyphID" id="571" repeatmax="GlyphCount" type="integer" length="2"/>
+        </structure>
+        <structure name="CoverageFormatTable2" id="562" extends="id:564">
+            <number name="CoverageFormat" id="573" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Format2" value="2"/>
+                </fixedvalues>
+            </number>
+            <number name="RangeCount" id="574" type="integer" length="1"/>
+            <structure name="RangeRecord" id="575" repeat="id:574" repeatmax="RangeCount">
+                <number name="Start" id="576" type="integer" length="2"/>
+                <number name="End" id="577" type="integer" length="2"/>
+                <number name="StartCoverageIndex" id="578" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="LinearThresholdTable" id="200" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="version" id="581" type="integer" length="2"/>
+            <number name="numGlyphs" id="582" type="integer" length="2"/>
+            <number name="yPels" id="583" repeatmax="numGlyphs" type="integer" length="1"/>
+        </structure>
+        <structure name="VerticalDeviceMetricsTable" id="230" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="version" id="585" type="integer" length="2"/>
+            <number name="numRecs" id="586" type="integer" length="2"/>
+            <number name="numRatios" id="587" type="integer" length="2"/>
+            <structure name="ratRange" id="786" repeat="id:587" repeatmax="numRatios">
+                <number name="bCharSet" id="791" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="No subset" value="0"/>
+                        <fixedvalue name="Windows ANSI subset" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="xRatio" id="788" type="integer" length="1"/>
+                <number name="yStartRatio" id="790" type="integer" length="1"/>
+                <number name="yEndRatio" id="789" type="integer" length="1"/>
+            </structure>
+            <number name="offset" id="792" repeatmax="numRatios" type="integer" length="2"/>
+            <structure name="Groups" id="793">
+                <number name="recs" id="795" repeatmax="numRatios" type="integer" length="2"/>
+                <number name="startsz" id="797" type="integer" length="1"/>
+                <number name="endsz" id="796" type="integer" length="1"/>
+                <structure name="vTable" id="798" repeat="id:795" repeatmax="-1">
+                    <number name="yPelHeight" id="800" repeatmax="numRatios" type="integer" length="2"/>
+                    <number name="yMax" id="801" repeatmax="numRatios" type="integer" length="2" signed="yes"/>
+                    <number name="yMin" id="802" repeatmax="numRatios" type="integer" length="2" signed="yes"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="ControlValueTable" id="805" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>This table contains a list of values that can be referenced by instructions. They can be used, among other things, to control characteristics for different glyphs.</description>
+            <number name="value" id="812" repeatmax="-1" type="integer" length="2" signed="yes"/>
+        </structure>
+        <structure name="FontProgramTable" id="815" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>This table is similar to the CVT Program, except that it is only run once, when the font is first used. It is used only for FDEFs and IDEFs. Thus the CVT Program need not contain function definitions. However, the CVT Program may redefine existing FDEFs or IDEFs.
+This table is optional.</description>
+            <number name="Instructions" id="822" repeatmax="-1" type="integer" length="1"/>
+        </structure>
+        <structure name="GridFittingAndScanConversionProcedure" id="825" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="version" id="832" type="integer" length="2"/>
+            <number name="numRanges" id="833" type="integer" length="2"/>
+            <structure name="gaspRange" id="834" repeat="id:833" repeatmax="-1">
+                <number name="rangeMaxPPEM" id="836" type="integer" length="2">
+                    <description>Upper limit of range, in PPEM</description>
+                </number>
+                <number name="rangeGaspBehavior" id="837" type="integer" length="2" display="hex">
+                    <description>Flags describing desired rasterizer behavior</description>
+                    <mask name="GASP_DOGRAY" value="0x2">
+                        <fixedvalue name="GASP_DOGRAY" value="0x2"/>
+                    </mask>
+                    <mask name="GASP_GRIDFIT" value="0x1">
+                        <fixedvalue name="GASP_GRIDFIT" value="0x1"/>
+                    </mask>
+                    <mask name="GASP_SYMMETRIC_SMOOTHING" value="0x8">
+                        <fixedvalue name="GASP_SYMMETRIC_SMOOTHING" value="0x8"/>
+                    </mask>
+                    <mask name="GASP_SYMMETRIC_GRIDFIT" value="0x4">
+                        <fixedvalue name="GASP_SYMMETRIC_GRIDFIT" value="0x4"/>
+                    </mask>
+                </number>
+            </structure>
+        </structure>
+        <structure name="GlyfDataTable" id="840" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Glyph" id="852" order="variable">
+                <description>This table contains information that describes the glyphs in the font in the TrueType outline format. Information regarding the rasterizer (scaler) refers to the TrueType rasterizer</description>
+                <structref name="SimpleGlyphDescription" id="874" repeatmin="0" structure="id:856"/>
+                <structref name="CompositeGlyphDescription" id="875" repeatmin="0" structure="id:863"/>
+            </structure>
+        </structure>
+        <structure name="GlyphDescription" id="854" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="numberOfContours" id="847" type="integer" length="2" signed="yes">
+                <description>If the number of contours is greater than or equal to zero, this is a single glyph; if negative, this is a composite glyph</description>
+            </number>
+            <number name="xMin" id="848" type="integer" length="2" signed="yes">
+                <description>If the number of contours is greater than or equal to zero, this is a single glyph; if negative, this is a composite glyph</description>
+            </number>
+            <number name="yMin" id="851" type="integer" length="2" signed="yes">
+                <description>If the number of contours is greater than or equal to zero, this is a single glyph; if negative, this is a composite glyph</description>
+            </number>
+            <number name="xMax" id="850" type="integer" length="2" signed="yes">
+                <description>If the number of contours is greater than or equal to zero, this is a single glyph; if negative, this is a composite glyph</description>
+            </number>
+            <number name="yMax" id="849" type="integer" length="2" signed="yes">
+                <description>If the number of contours is greater than or equal to zero, this is a single glyph; if negative, this is a composite glyph</description>
+            </number>
+        </structure>
+        <structure name="SimpleGlyphDescription" id="856" extends="id:854">
+            <number name="numberOfContours" id="858" type="integer" minval="0">
+                <description>If the number of contours is greater than or equal to zero, this is a single glyph; if negative, this is a composite glyph</description>
+            </number>
+            <number name="endPtsOfContours" id="870" repeatmax="numberOfContours" type="integer" length="2">
+                <description>Array of last points of each contour; n is the number of contours</description>
+            </number>
+            <number name="instructionLength" id="871" type="integer" length="2">
+                <description>Total number of bytes for instructions</description>
+            </number>
+            <number name="instructions" id="872" repeatmax="instructionLength" type="integer" length="1">
+                <description>Array of instructions for each glyph</description>
+            </number>
+            <number name="flags" id="873" type="integer" length="1">
+                <description>Array of flags for each coordinate in outline</description>
+                <mask name="On Curve" value="0x1">
+                    <fixedvalue name="On Curve" value="0x1"/>
+                </mask>
+                <mask name="x-Short Vector" value="0x2">
+                    <fixedvalue name="x-Short Vector" value="0x2"/>
+                </mask>
+                <mask name="y-Short Vector" value="0x4">
+                    <fixedvalue name="y-Short Vector" value="0x4"/>
+                </mask>
+                <mask name="Repeat" value="0x8">
+                    <fixedvalue name="Repeat" value="0x8"/>
+                </mask>
+                <mask name="This x is same" value="0x10">
+                    <fixedvalue name="This x is same" value="0x10"/>
+                </mask>
+                <mask name="This y is same" value="0x20">
+                    <fixedvalue name="This y is same" value="0x20"/>
+                </mask>
+                <mask name="Reserved" value="0x40">
+                    <fixedvalue name="Reserved" value="0x40"/>
+                </mask>
+                <mask name="Reserved" value="0x80">
+                    <fixedvalue name="Reserved" value="0x80"/>
+                </mask>
+            </number>
+            <number name="xCoordinates" id="876" type="integer" length="1"/>
+            <number name="yCoordinates" id="877" type="integer" length="1"/>
+        </structure>
+        <structure name="CompositeGlyphDescription" id="863" extends="id:854">
+            <number name="numberOfContours" id="865" type="integer" maxval="-1">
+                <description>If the number of contours is greater than or equal to zero, this is a single glyph; if negative, this is a composite glyph</description>
+            </number>
+        </structure>
+        <structure name="KerningTable" id="880" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="version" id="887" type="integer" length="2"/>
+            <number name="nTables" id="888" type="integer" length="2"/>
+            <structure name="Tables" id="898" repeat="id:888" repeatmax="-1" order="variable">
+                <structref name="KerningSubtableFormat0" id="900" repeatmin="0" structure="id:894"/>
+                <structref name="KerningSubtableFormat2" id="901" repeatmin="0" structure="id:896"/>
+            </structure>
+        </structure>
+        <structure name="KerningSubtable" id="889" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="version" id="892" type="integer" length="2"/>
+            <number name="length" id="891" type="integer" length="2"/>
+            <structure name="coverage" id="908">
+                <number name="format" mustmatch="yes" id="910" type="integer" length="8" lengthunit="bit">
+                    <description>Format of the subtable. Only formats 0 and 2 have been defined. Formats 1 and 3 through 255 are reserved for future use</description>
+                </number>
+                <number name="reserved1" id="911" type="integer" length="4" lengthunit="bit">
+                    <description>Reserved. This should be set to zero.</description>
+                </number>
+                <number name="override" id="912" type="integer" length="1" lengthunit="bit">
+                    <description>If this bit is set to 1 the value in this table should replace the value currently being accumulated</description>
+                </number>
+                <number name="cross-stream" id="913" type="integer" length="1" lengthunit="bit">
+                    <description>If set to 1, kerning is perpendicular to the flow of the text. 
+
+If the text is normally written horizontally, kerning will be done in the up and down directions. If kerning values are positive, the text will be kerned upwards; if they are negative, the text will be kerned downwards.
+
+If the text is normally written vertically, kerning will be done in the left and right directions. If kerning values are positive, the text will be kerned to the right; if they are negative, the text will be kerned to the left. 
+
+The value 0x8000 in the kerning data resets the cross-stream kerning back to 0</description>
+                </number>
+                <number name="minimum" id="914" type="integer" length="1" lengthunit="bit">
+                    <description>If this bit is set to 1, the table has minimum values. If set to 0, the table has kerning values</description>
+                </number>
+                <number name="horizontal" id="915" type="integer" length="1" lengthunit="bit">
+                    <description>1 if table has horizontal data, 0 if vertical</description>
+                </number>
+            </structure>
+        </structure>
+        <structure name="KerningSubtableFormat0" id="894" extends="id:889">
+            <number name="version" id="902" type="integer">
+                <description>Kern subtable version number</description>
+                <fixedvalues/>
+            </number>
+            <number name="length" id="903" type="integer">
+                <description>Length of the subtable, in bytes (including this header)</description>
+            </number>
+            <structure name="coverage" id="916">
+                <number name="format" id="917" type="integer">
+                    <description>Format of the subtable. Only formats 0 and 2 have been defined. Formats 1 and 3 through 255 are reserved for future use</description>
+                    <fixedvalues>
+                        <fixedvalue name="Format0" value="0"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+            <number name="nPairs" id="932" type="integer" length="2">
+                <description>This gives the number of kerning pairs in the table</description>
+            </number>
+            <number name="searchRange" id="933" type="integer" length="2">
+                <description>The largest power of two less than or equal to the value of nPairs, multiplied by the size in bytes of an entry in the table</description>
+            </number>
+            <number name="entrySelector" id="934" type="integer" length="2">
+                <description>This is calculated as log2 of the largest power of two less than or equal to the value of nPairs. This value indicates how many iterations of the search loop will have to be made. (For example, in a list of eight items, there would have to be three iterations of the loop)</description>
+            </number>
+            <number name="rangeShift" id="935" type="integer" length="2">
+                <description>The value of nPairs minus the largest power of two less than or equal to nPairs, and then multiplied by the size in bytes of an entry in the table</description>
+            </number>
+            <structure name="KerningPairs" id="936" repeat="id:932" repeatmax="-1">
+                <number name="left" id="938" type="integer" length="2">
+                    <description>The glyph index for the left-hand glyph in the kerning pair</description>
+                </number>
+                <number name="right" id="939" type="integer" length="2">
+                    <description>The glyph index for the right-hand glyph in the kerning pair</description>
+                </number>
+                <number name="value" id="940" type="integer" length="2" signed="yes">
+                    <description>The kerning value for the above pair, in FUnits. If this value is greater than zero, the characters will be moved apart. If this value is less than zero, the character will be moved closer together</description>
+                </number>
+            </structure>
+        </structure>
+        <structure name="KerningSubtableFormat2" id="896" extends="id:889">
+            <description>This subtable is a two-dimensional array of kerning values. The glyphs are mapped to classes, using a different mapping for left- and right-hand glyphs. This allows glyphs that have similar right- or left-side shapes to be handled together. Each similar right- or left-hand shape is said to be single class.
+Each row in the kerning array represents one left-hand glyph class, each column represents one right-hand glyph class, and each cell contains a kerning value. Row and column 0 always represent glyphs that do not kern and contain all zeros.
+The values in the right class table are stored pre-multiplied by the number of bytes in a single kerning value, and the values in the left class table are stored pre-multiplied by the number of bytes in one row. This eliminates needing to multiply the row and column values together to determine the location of the kerning value. The array can be indexed by doing the right- and left-hand class mappings, adding the class values to the address of the array, and fetching the kerning value to which the new address points</description>
+            <structure name="coverage" id="924">
+                <number name="format" id="925" type="integer">
+                    <description>Format of the subtable. Only formats 0 and 2 have been defined. Formats 1 and 3 through 255 are reserved for future use</description>
+                    <fixedvalues>
+                        <fixedvalue name="Format2" value="2"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+            <number name="rowWidth" id="941" type="integer" length="2"/>
+            <offset name="leftClassTable" id="949" length="2" references="id:944" relative-to="id:896" follownullreference="yes"/>
+            <offset name="rightClassTable" id="950" length="2" references="id:944" follownullreference="yes"/>
+        </structure>
+        <structure name="ClassTable" id="944" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="firstGlyph" id="946" type="integer" length="2"/>
+            <number name="nGlyphs" id="947" type="integer" length="2"/>
+            <number name="values" id="948" repeatmax="nGlyphs" type="integer" length="2"/>
+        </structure>
+        <structure name="IndexToLocationTable" id="953" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>The indexToLoc table stores the offsets to the locations of the glyphs in the font, relative to the beginning of the glyphData table. In order to compute the length of the last glyph element, there is an extra entry after the last valid index.
+By definition, index zero points to the “missing character,” which is the character that appears if a character is not found in the font. The missing character is commonly represented by a blank box or a space. If the font does not contain an outline for the missing character, then the first and second offsets should have the same value. This also applies to any other characters without an outline, such as the space character. If a glyph has no outline, then loca[n] = loca [n+1]. In the particular case of the last glyph(s), loca[n] will be equal the length of the glyph data ('glyf') table. The offsets must be in ascending order with loca[n] &lt;= loca[n+1].
+Most routines will look at the 'maxp' table to determine the number of glyphs in the font, but the value in the 'loca' table must agree.
+There are two versions of this table, the short and the long. The version is specified in the indexToLocFormat entry in the 'head' table</description>
+            <number name="offsets" id="960" repeatmax="-1" type="integer" length="2"/>
+        </structure>
+        <structure name="ControlValueProgramTable" id="961" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>The Control Value Program consists of a set of TrueType instructions that will be executed whenever the font or point size or transformation matrix change and before each glyph is interpreted. Any instruction is legal in the CV Program but since no glyph is associated with it, instructions intended to move points within a particular glyph outline cannot be used in the CV Program. The name 'prep' is anachronistic (the table used to be known as the Pre Program table.)</description>
+            <number name="instructions" id="970" repeatmax="-1" type="integer" length="1">
+                <description>Set of instructions executed whenever point size or font or transformation change. n is the number of BYTE items that fit in the size of the table</description>
+            </number>
+        </structure>
+        <structure name="HorizontalDeviceMetricsTable" id="973" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>The hdmx table relates to OpenType™ fonts with TrueType outlines. The Horizontal Device Metrics table stores integer advance widths scaled to particular pixel sizes. This allows the font manager to build integer width tables without calling the scaler for each glyph. Typically this table contains only selected screen sizes. This table is sorted by pixel size. The checksum for this table applies to both subtables listed.
+Note that for non-square pixel grids, the character width (in pixels) will be used to determine which device record to use. For example, a 12 point character on a device with a resolution of 72x96 would be 12 pixels high and 16 pixels wide. The hdmx device record for 16 pixel characters would be used.
+If bit 4 of the flag field in the 'head' table is not set, then it is assumed that the font scales linearly; in this case an 'hdmx' table is not necessary and should not be built. If bit 4 of the flag field is set, then one or more glyphs in the font are assumed to scale nonlinearly. In this case, performance can be improved by including the 'hdmx' table with one or more important DeviceRecord's for important sizes</description>
+            <number name="version" id="979" type="integer" length="2">
+                <description>Table version number (0)</description>
+            </number>
+            <number name="numRecords" id="980" type="integer" length="2" signed="yes">
+                <description>Number of device records</description>
+            </number>
+            <number name="sizeDeviceRecord" id="981" type="integer" length="4" signed="yes">
+                <description>Size of a device record, long aligned</description>
+            </number>
+            <structure name="DeviceRecord" id="982" length="sizeDeviceRecord" repeat="id:980" repeatmax="-1">
+                <number name="pixelSize" id="984" type="integer" length="1">
+                    <description>Pixel size for following widths (as ppem)</description>
+                </number>
+                <number name="maxWidth" id="985" type="integer" length="1">
+                    <description>Maximum width</description>
+                </number>
+                <number name="widths" id="986" repeatmax="-1" type="integer" length="1"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

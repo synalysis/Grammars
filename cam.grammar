@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9">
+    <grammar name="CAM Archive" start="id:156" author="Kelvin Chung" fileextension="cam" uti="public.c-source">
+        <description>Grammar for CAM archives</description>
+        <structure name="CAM Archive" id="156" length="0" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="Identifier" mustmatch="yes" id="157" type="fixed-length" length="8">
+                <fixedvalues>
+                    <fixedvalue value="CYLBPC  "/>
+                </fixedvalues>
+            </string>
+            <number name="Major Version" id="158" fillcolor="73FC82" type="integer" length="2"/>
+            <number name="Minor Version" id="159" fillcolor="73FC82" type="integer" length="2"/>
+            <number name="Number of File Formats" id="160" fillcolor="FE9227" type="integer" length="4"/>
+            <number name="Length" id="161" fillcolor="FE9227" type="integer" length="4"/>
+            <structure name="File Types" id="162" length="prev.Length">
+                <structure name="File Type" id="163" length="0" repeat="id:160" repeatmin="0" repeatmax="-1">
+                    <string name="File Type Description" id="164" fillcolor="79FDFE" type="fixed-length" length="4"/>
+                    <offset name="File Type Directory" id="166" fillcolor="FF30FA" length="4" references="id:165" follownullreference="yes"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="File Type Directory" id="165" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Number of Files" id="170" fillcolor="FE9227" type="integer" length="4"/>
+            <number name="File ID type" id="171" type="integer" length="4">
+                <fixedvalues>
+                    <fixedvalue name="String" value="0"/>
+                    <fixedvalue name="Number" value="1"/>
+                </fixedvalues>
+            </number>
+            <structure name="File Type Data" id="172" repeat="id:170" repeatmin="0" repeatmax="-1">
+                <binary name="ID" id="173" fillcolor="FCFD84" length="4"/>
+                <binary name="Padding" id="174" length="16"/>
+                <offset name="File" id="176" fillcolor="FF30FA" length="4" references="id:175" follownullreference="yes"/>
+                <number name="File Size" id="177" fillcolor="FDD480" type="integer" length="4"/>
+            </structure>
+        </structure>
+        <structure name="File" id="175" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="File Data" id="180" strokecolor="009054" length="remaining"/>
+        </structure>
+    </grammar>
+</ufwb>

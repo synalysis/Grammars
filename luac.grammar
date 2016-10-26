@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9">
+    <grammar name="LUAC 5.1/32bit" start="id:3" author="h4x" email="h4x3rotab@gmail.com" fileextension="luac" complete="yes">
+        <description>Grammar for LUAC files (compiled by lua 5.1 32bits).</description>
+        <scripts>
+            <script name="HexStringLength" type="DataType" id="25">
+                <description>This scripted data type interprets a hex string of characters ended with 0x0a as a number that can be used as length</description>
+                <source language="Python"># custom data type script
+
+def parseByteRange(element, byteView, bitPos, bitLength, results):
+	# this method parses data starting at bitPos, bitLength bits are remaining
+	&quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
+
+	# how many bytes were processed?
+	processedBytes = 0
+	iteration = 0
+	byteRead = 0
+	hexString = &quot;&quot;
+	startPos = bytePos = bitPos / 8
+
+	# read hex bytes unless \n is found
+	while (byteRead != 0x0A):
+		byteRead = byteView.readByte(bytePos)
+		bytePos += 1
+		if ((byteRead &gt;= ord('0') and byteRead &lt;= ord('9')) or \
+			(byteRead &gt;= ord('A') and byteRead &lt;= ord('F')) or \
+			(byteRead &gt;= ord('a') and byteRead &lt;= ord('f'))   ):
+				hexString += chr(byteRead)
+
+	processedBytes = bytePos - startPos
+
+	if (hexString != &quot;&quot;):
+		sum = int(hexString, 16)
+
+	# create and set new value
+	value = NumberValue()
+	value.setUnsigned(sum)
+
+	results.addElement(element, processedBytes, iteration, value)
+
+	# return number of processed bytes
+	return processedBytes
+
+def fillByteRange(value, byteArray, bitPos, bitLength):
+	# this method translates edited values back to the file
+	&quot;&quot;&quot;fillByteRange method&quot;&quot;&quot;
+
+	# get number edited by user
+	number = value.getUnsigned()
+
+	# hex string representation of edited number
+	hexString = &quot;%x&quot;%(number)
+
+	currentPos = startPos = bitPos/8
+
+	# remove old hex string
+	byteArray.deleteRange(startPos, bitLength/8)
+
+	# insert hex string in file
+	for digit in hexString:
+		byteArray.insertByte(currentPos, ord(digit))
+		currentPos += 1
+
+	# append trailing 0x0A
+	byteArray.insertByte(currentPos, ord('\n'))
+</source>
+            </script>
+        </scripts>
+        <structure name="LUAC file" id="3" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="LUAC Header" id="4" length="0">
+                <binary name="PrecompMark" mustmatch="yes" id="5" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="PrecompileMark" value="1B"/>
+                    </fixedvalues>
+                </binary>
+                <string name="Lua" id="6" type="fixed-length" length="3">
+                    <fixedvalues>
+                        <fixedvalue name="Lua" value="Lua"/>
+                    </fixedvalues>
+                </string>
+                <number name="Version" id="7" type="integer" length="1" display="hex"/>
+                <number name="Format" id="8" type="integer" length="1"/>
+                <number name="Endianness" id="9" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="BigEndian" value="0"/>
+                        <fixedvalue name="LittleEndian" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="IntSize" id="10" type="integer" length="1"/>
+                <number name="PointerSize" id="11" type="integer" length="1"/>
+                <number name="InstSize" id="12" type="integer" length="1"/>
+                <number name="LuaNumSize" id="13" type="integer" length="1"/>
+                <number name="LuaNumIsInt" id="14" type="integer" length="1"/>
+            </structure>
+            <structref name="MainFunction" id="17" structure="id:16"/>
+            <binary name="other" id="18" length="remaining"/>
+        </structure>
+        <structure name="LuaString" id="20" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Length" id="21" strokecolor="2629D7" type="integer" length="4"/>
+            <string name="Data" id="22" strokecolor="CF3125" type="fixed-length" length="Length"/>
+        </structure>
+        <structure name="ConstElement" id="24" length="0" encoding="ISO_8859-1:1987" endian="little" signed="no" order="variable">
+            <structref name="ConstNil" id="26" repeatmin="0" structure="id:25"/>
+            <structref name="ConstBoolean" id="28" repeatmin="0" structure="id:27"/>
+            <structref name="ConstNumber" id="30" repeatmin="0" structure="id:29"/>
+            <structref name="ConstString" id="32" repeatmin="0" structure="id:31"/>
+        </structure>
+        <structure name="ConstNil" id="25" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="NilHead" mustmatch="yes" id="34" strokecolor="B60096" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Type" value="00"/>
+                </fixedvalues>
+            </binary>
+        </structure>
+        <structure name="ConstBoolean" id="27" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="BooleanHead" mustmatch="yes" id="36" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Type" value="01"/>
+                </fixedvalues>
+            </binary>
+            <number name="LuaBoolean" mustmatch="yes" id="37" strokecolor="B60096" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="false" value="0"/>
+                    <fixedvalue name="true" value="1"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="ConstNumber" id="29" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="NumberHead" mustmatch="yes" id="39" strokecolor="B60096" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Type" value="03"/>
+                </fixedvalues>
+            </binary>
+            <number name="LuaNumber" id="40" strokecolor="2629D7" type="float" length="8"/>
+        </structure>
+        <structure name="ConstString" id="31" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="StringHead" mustmatch="yes" id="42" strokecolor="B60096" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Type" value="04"/>
+                </fixedvalues>
+            </binary>
+            <structref name="LuaString" id="43" structure="id:20"/>
+        </structure>
+        <structure name="Function" id="16" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Func Header" id="45">
+                <structref name="Source" id="46" structure="id:20"/>
+                <number name="LineDefined" id="47" type="integer" length="4"/>
+                <number name="LastLineDefined" id="48" type="integer" length="4"/>
+                <number name="Upvalues" id="49" type="integer" length="1"/>
+                <number name="Params" id="50" type="integer" length="1"/>
+                <number name="IsVaArg" id="51" type="integer" length="1">
+                    <mask name="HASARG" value="0x1">
+                        <fixedvalue name="HASARG" value="0x1"/>
+                    </mask>
+                    <mask name="ISVAARG" value="0x2">
+                        <fixedvalue name="ISVAARG" value="0x2"/>
+                    </mask>
+                    <mask name="NEEDSARG" value="0x4">
+                        <fixedvalue name="NEEDSARG" value="0x4"/>
+                    </mask>
+                </number>
+                <number name="MaxStackSize" id="52" type="integer" length="1"/>
+            </structure>
+            <structure name="Code Section" id="54">
+                <number name="Length" id="55" type="integer" length="4"/>
+                <structref name="Instructions" id="57" repeatmin="Length" repeatmax="Length" structure="id:56"/>
+            </structure>
+            <structure name="Const Section" id="59">
+                <number name="Length" id="60" type="integer" length="4"/>
+                <structref name="ConstElement" id="61" repeatmin="Length" repeatmax="Length" structure="id:24"/>
+                <number name="FuncCount" id="62" type="integer" length="4"/>
+                <structref name="Function" id="63" repeatmin="FuncCount" repeatmax="FuncCount" structure="id:16"/>
+            </structure>
+            <structure name="Debug Section" id="65">
+                <number name="LineInfoLength" id="66" type="integer" length="4"/>
+                <number name="LineInfo" id="67" repeatmin="LineInfoLength" repeatmax="LineInfoLength" type="integer" length="4"/>
+                <number name="LocVarLength" id="68" type="integer" length="4"/>
+                <structref name="LocVar" id="70" repeatmin="LocVarLength" repeatmax="LocVarLength" structure="id:69"/>
+                <number name="UpvalueNameLength" id="71" type="integer" length="4"/>
+                <structref name="LuaString" id="72" repeatmin="UpvalueNameLength" repeatmax="UpvalueNameLength" structure="id:20"/>
+            </structure>
+        </structure>
+        <structure name="LocVar" id="69" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="VarName" id="75" structure="id:20"/>
+            <number name="StartPC" id="76" type="integer" length="4"/>
+            <number name="EndPC" id="77" type="integer" length="4"/>
+        </structure>
+        <structure name="Instruction" id="56" encoding="ISO_8859-1:1987" endian="little" signed="no" fillcolor="B60096">
+            <number name="ByteCode" id="79" type="integer" length="4" display="hex">
+                <mask name="Op" value="0x3F">
+                    <fixedvalue name="Op" value="0x3F"/>
+                </mask>
+                <mask name="A" value="0x3FC0">
+                    <fixedvalue name="A" value="0x3FC0"/>
+                </mask>
+                <mask name="Bx" value="0xFFFFC000">
+                    <fixedvalue name="Bx" value="0xFFFFC000"/>
+                </mask>
+                <mask name="B" value="0x7FC000">
+                    <fixedvalue name="B" value="0x7FC000"/>
+                </mask>
+                <mask name="C" value="0xFF800000">
+                    <fixedvalue name="C" value="0xFF800000"/>
+                </mask>
+                <mask name="s" value="0x80000000">
+                    <fixedvalue name="s" value="0x80000000"/>
+                </mask>
+            </number>
+        </structure>
+    </grammar>
+</ufwb>

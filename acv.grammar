@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.2">
+    <grammar name="Adobe Curve" start="id:3" author="Jonathan Wight" email="jwight@mac.com" fileextension="ACV" complete="yes">
+        <description>Grammar for Adobe Photoshop Curve (&quot;ACV&quot;) files. (See http://www.adobe.com/devnet-apps/photoshop/fileformatashtml/PhotoshopFileFormats.htm#50577411_32675)</description>
+        <structure name="ACV file" id="3" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Version" id="4" type="integer" length="2"/>
+            <number name="Count of Curves" id="6" type="integer" length="2"/>
+            <structure name="Curve" id="5" repeat="id:6" repeatmax="-1">
+                <number name="Point Count" id="18" type="integer" length="2"/>
+                <structure name="Point" id="7" repeat="id:18" repeatmin="0" repeatmax="-1">
+                    <number name="output" id="8" type="integer" length="2"/>
+                    <number name="input" id="9" type="integer" length="2"/>
+                </structure>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

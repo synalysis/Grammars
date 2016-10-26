@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.6">
+    <grammar name="ITC grammar" start="id:5" author="Ivan Moscoso" email="moscoso@gmail.com" fileextension="itc">
+        <description>Grammar for ITC files</description>
+        <scripts>
+            <script name="PreambleType" type="Generic" id="41">
+                <source language="Python">print &quot;Generic Python Script did run&quot;
+</source>
+            </script>
+        </scripts>
+        <structure name="ITC file" id="5" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="FirstFrame" id="7" fillcolor="000000" structure="id:6"/>
+            <structref name="Item" id="9" fillcolor="000000" repeatmax="-1" structure="id:8"/>
+        </structure>
+        <structure name="ITCH Frame" id="6" length="FrameSize" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="FrameSize" id="11" fillcolor="248E3A" type="integer" length="4">
+                <description>The size (in bytes) of this frame</description>
+            </number>
+            <string name="FrameType" id="12" fillcolor="B9FCDF" type="fixed-length" length="4" encoding="ISO_8859-1:1987">
+                <description>'itch' or 'item'</description>
+            </string>
+            <binary name="Data" id="13" fillcolor="F8E1CF" length="16">
+                <description>iTunes 11: Unclear what this data represents, but value is always set as follows:
+  0000 0002 0000 0002
+  0000 0002 0000 0000</description>
+            </binary>
+            <string name="Artwork" mustmatch="yes" id="14" fillcolor="E1DDD0" type="fixed-length" length="4" encoding="ISO_8859-1:1987">
+                <description>An identifier for this file.  Always set to 'arts'.</description>
+                <fixedvalues>
+                    <fixedvalue value="artw"/>
+                </fixedvalues>
+            </string>
+            <binary name="Data2" id="15" fillcolor="BDB9B0" length="remaining">
+                <description>iTunes 11 : zero padding for the remainder of this frame</description>
+            </binary>
+        </structure>
+        <structure name="ITEM Frame" id="8" length="FrameSize" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="FrameSize" id="17" fillcolor="248E3A" type="integer" length="4"/>
+            <string name="FrameType" mustmatch="yes" id="18" fillcolor="B9FCDF" type="fixed-length" length="4" encoding="ISO_8859-1:1987">
+                <description>iTunes 11: Always 'item' for this frame type</description>
+                <fixedvalues>
+                    <fixedvalue value="item"/>
+                </fixedvalues>
+            </string>
+            <structref name="ImageOffset" id="20" structure="id:19">
+                <description>The offset &amp; preamble length varies based on iTunes version.</description>
+            </structref>
+            <number name="LibraryID" id="21" fillcolor="F2F2E4" repeatmin="0" type="integer" length="8" display="hex">
+                <description>Unique 64 bit ID for the iTunes library.  This ID should be shared for all tracks within the library.</description>
+            </number>
+            <number name="TrackID" id="22" fillcolor="F2F2E4" repeatmin="0" type="integer" length="8" display="hex">
+                <description>Unique 64 bit ID for this track.</description>
+            </number>
+            <string name="Method" mustmatch="yes" id="23" type="fixed-length" length="4">
+                <description>Access method for this track's artwork?
+
+- Local : Artwork locally cached
+- iCloud : Normally located in &quot;Album Artwork/Cloud&quot;
+- iCloud Purchases : Non-music (artwork for movies, tv episodes)
+- Downloaded : Artwork that has been downloaded (i.e. not attached to file)</description>
+                <fixedvalues>
+                    <fixedvalue name="iCloud" value="CLOD"/>
+                    <fixedvalue name="iCloud Purchase" value="CLPU"/>
+                    <fixedvalue name="Downloaded" value="down"/>
+                    <fixedvalue name="Local" value="locl"/>
+                </fixedvalues>
+            </string>
+            <binary name="Format" id="24" length="4">
+                <description>Embedded image format for this frame.
+- ARGb/PNG for music artwork (haven't seen JPEG for music)
+- JPEG appears for iCloud purchases, and some iCloud content</description>
+                <fixedvalues>
+                    <fixedvalue name="PNG" value="0000000E"/>
+                    <fixedvalue name="ARGb" value="41524762"/>
+                    <fixedvalue name="JPEG" value="0000000D"/>
+                </fixedvalues>
+            </binary>
+            <binary name="Data" id="25" length="4">
+                <description>Undefined - seems to be zero..</description>
+            </binary>
+            <number name="Width" id="26" type="integer" length="4">
+                <description>Image width</description>
+            </number>
+            <number name="Height" id="27" type="integer" length="4">
+                <description>Image height</description>
+            </number>
+            <structure name="Image Header" id="28" length="0">
+                <description>This structure is a combination of padding between the frame metadata and the start of the encoded image.
+
+The last four bytes before the start of the image appears to be the same Identifier.</description>
+                <binary name="padding" id="29" strokecolor="DBDBDB" length="140"/>
+                <string name="identifier" mustmatch="yes" id="30" type="fixed-length" length="4">
+                    <fixedvalues>
+                        <fixedvalue value="data"/>
+                    </fixedvalues>
+                </string>
+            </structure>
+            <structref name="ImageData" id="33" structure="id:32">
+                <description>ARGb, PNG, JPEG data encoded in the remainder of the frame</description>
+            </structref>
+        </structure>
+        <structure name="ImageData" id="32" length="FrameSize - imageOffset" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <binary name="ImageData" id="35" fillcolor="EDF2E0" length="remaining"/>
+        </structure>
+        <structure name="ImageOffset" id="19" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <structure name="iTunes9_Preamble" id="37">
+                <number name="imageOffset" id="38" fillcolor="FFF66C" type="integer" length="4">
+                    <fixedvalues>
+                        <fixedvalue value="208"/>
+                    </fixedvalues>
+                </number>
+                <binary name="Preamble" id="39" fillcolor="E4E2E6" repeatmin="0" length="16"/>
+            </structure>
+            <structure name="iTunesOLD_Preamble" id="41" length="0">
+                <number name="imageOffset" mustmatch="yes" id="42" fillcolor="FFF66C" type="integer" length="4">
+                    <description>The iTunes 9+ image offset is 208 bytes.
+The previous iTunes image offset is 216 bytes.</description>
+                    <fixedvalues>
+                        <fixedvalue value="216"/>
+                    </fixedvalues>
+                </number>
+                <binary name="Preamble" id="43" fillcolor="E4E2E6" repeatmin="0" length="20"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

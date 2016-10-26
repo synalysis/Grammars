@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.16">
+    <grammar name="FOND" start="id:52" author="Gabriel Gritsch" fileextension="dat">
+        <description>Grammar for FOND files</description>
+        <structure name="FOND file" id="52" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="FlagWord" id="53" type="integer" length="2"/>
+            <number name="FamilyID" id="54" type="integer" length="2"/>
+            <number name="FirstChar" id="55" type="integer" length="2"/>
+            <number name="LastChar" id="56" type="integer" length="2"/>
+            <number name="Ascent" id="57" type="integer" length="2" signed="yes"/>
+            <number name="Descent" id="58" type="integer" length="2" signed="yes"/>
+            <number name="Leading" id="59" type="integer" length="2"/>
+            <number name="WidMax" id="60" type="integer" length="2"/>
+            <offset name="WidthTableOffset" id="62" length="4" references="id:61" follownullreference="no"/>
+            <offset name="KerningTableOffset" id="64" length="4" references="id:63" follownullreference="no"/>
+            <offset name="Style Mapping Table Offset" id="66" length="4" references="id:65" follownullreference="no"/>
+            <structure name="FamilyStyleProperty (unhandled)" id="67" length="18" strokecolor="FF9200" fillcolor="FF9200">
+                <number name="SomeValues (unhandled)" id="68" repeatmin="9" repeatmax="9" type="integer" length="2"/>
+            </structure>
+            <number name="ReservedforInternationalFonts (unhandled)" id="70" strokecolor="FF9200" fillcolor="FF9200" type="integer" length="4"/>
+            <number name="FontVersionCode" id="71" type="integer" length="2"/>
+            <number name="FontAssociationCount" id="72" type="integer" length="2" valueexpression="FontAssociationCount+1"/>
+            <structure name="FontAssociationTable" id="73" length="6" repeat="id:72" repeatmax="100" valueexpression="FontStyleCode">
+                <number name="FontPointSize" id="74" type="integer" length="2"/>
+                <number name="FontStyleCode" id="75" type="integer" length="2"/>
+                <number name="FontResourceNumber" id="76" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="StyleMappingTable" id="65" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="FontClass" id="79" type="integer" length="2"/>
+            <number name="EncodingTableOffset (unhandled)" id="80" strokecolor="FF9200" fillcolor="FF9200" type="integer" length="4"/>
+            <binary name="Reserved" id="81" fillcolor="000000" length="4"/>
+            <structure name="StyleIndexTable" id="82" length="0">
+                <number name="Index" id="83" repeatmin="48" repeatmax="48" type="integer" length="1"/>
+            </structure>
+            <structure name="StyleNameTable" id="85" length="0">
+                <number name="NumberOfStrings" id="86" type="integer" length="2"/>
+                <structure name="Names" id="87" length="0" repeat="id:86" repeatmax="100" valueexpression="Name">
+                    <string name="Name" id="88" type="pascal"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="KerningTable" id="63" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="NumberOfEntries" id="92" type="integer" length="2" valueexpression="NumberOfEntries+1"/>
+            <structure name="KerningTableEntry (unhandled)" id="93" length="0" repeat="id:92" repeatmax="100000">
+                <binary name="StyleCode" id="94" length="2"/>
+                <number name="NumberOfKernPairs" id="95" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="WidthTable" id="61" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="NumberOfEntries" id="98" type="integer" length="2" valueexpression="NumberOfEntries+1"/>
+            <structure name="WidthTableEntry (unhandled)" id="99" length="(LastChar-FirstChar+4)*2" repeat="id:98" repeatmax="1000"/>
+        </structure>
+    </grammar>
+</ufwb>

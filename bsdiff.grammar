@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9">
+    <grammar name="BSDIFF patch grammar" start="id:17" author="Andreas Pehnack" email="andreas@synalysis.com" fileextension="bsdiff">
+        <description>Grammar for BSDIFF patches</description>
+        <structure name="BSDIFF file" id="17" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Header" id="23">
+                <string name="Identifier" id="19" fillcolor="FF84FF" type="fixed-length" length="8" encoding="ISO_8859-3:1988"/>
+                <number name="CtrlBlockLength" id="20" fillcolor="7980FF" type="integer" length="8"/>
+                <number name="DiffBlockLength" id="21" fillcolor="72FA78" type="integer" length="8"/>
+                <number name="NewFileLength" id="22" fillcolor="FF7D78" type="integer" length="8"/>
+            </structure>
+            <binary name="ControlBlock" id="25" fillcolor="FFD478" length="CtrlBlockLength"/>
+            <binary name="DiffBlock" id="26" fillcolor="D4FB78" length="DiffBlockLength"/>
+            <binary name="ExtraBlock" id="27" fillcolor="75D5FF" length="remaining"/>
+        </structure>
+    </grammar>
+</ufwb>

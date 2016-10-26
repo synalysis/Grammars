@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.0.3">
+    <grammar name="Canon Preset File" start="Canon Preset File" author="Chriss" fileextension="CPF" complete="yes">
+        <description>Grammatik für Canon Preset File (CPF-Dateien)</description>
+        <structure name="Canon Preset File" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Device Name" length="1">
+                <fixedvalue name="XH A1/G1" value="28"/>
+            </binary>
+            <binary name="-1" length="1"/>
+            <string name="Preset Titel" type="fixed-length" length="8"/>
+            <number name="Color Gain" type="integer" length="1" signed="yes" display="hex" minval="0x7FFFFFFFFFFFFFFF" maxval="0x32">
+                <fixedvalue name="0" value="0x32"/>
+            </number>
+            <number name="Color Phase" type="integer" length="1" signed="yes" display="hex" minval="0x0">
+                <fixedvalue name="0" value="0x9"/>
+            </number>
+            <number name="Sharpness" type="integer" length="1" signed="yes" display="hex" minval="0x0">
+                <fixedvalue name="0" value="0x9"/>
+            </number>
+            <number name="Setup Level" type="integer" length="1" signed="yes" display="hex">
+                <fixedvalue name="0" value="0x9"/>
+            </number>
+            <number name="Red gain" type="integer" length="1" signed="yes" display="hex">
+                <fixedvalue name="0" value="0x32"/>
+            </number>
+            <number name="Green gain" type="integer" length="1" signed="yes" display="hex" minval="0x0">
+                <fixedvalue name="0" value="0x32"/>
+            </number>
+            <number name="Blue gain" type="integer" length="1" signed="yes" display="hex" minval="0x0">
+                <fixedvalue name="0" value="0x32"/>
+            </number>
+            <binary name="Noise Reduction 1" mustmatch="yes" length="1">
+                <fixedvalue name="Off" value="00"/>
+                <fixedvalue name="Low" value="03"/>
+                <fixedvalue name="Middle" value="02"/>
+                <fixedvalue name="High" value="01"/>
+            </binary>
+            <binary name="-2" length="1"/>
+            <binary name="Color Matrix" mustmatch="yes" length="1">
+                <fixedvalue name="Normal" value="00"/>
+                <fixedvalue name="Cinema 1" value="01"/>
+                <fixedvalue name="Cinema 2" value="02"/>
+            </binary>
+            <binary name="Gamma" mustmatch="yes" length="1">
+                <fixedvalue name="Normal" value="00"/>
+                <fixedvalue name="Cine1" value="01"/>
+                <fixedvalue name="Cine2" value="02"/>
+            </binary>
+            <binary name="Knee" mustmatch="yes" length="1">
+                <fixedvalue name="Auto" value="03"/>
+                <fixedvalue name="Low" value="02"/>
+                <fixedvalue name="Middle" value="01"/>
+                <fixedvalue name="High" value="00"/>
+            </binary>
+            <binary name="Black" mustmatch="yes" length="1">
+                <fixedvalue name="Middle" value="01"/>
+                <fixedvalue name="Press" value="02"/>
+                <fixedvalue name="Stretch" value="00"/>
+            </binary>
+            <number name="Coring" type="integer" length="1" signed="yes" display="hex">
+                <fixedvalue name="0" value="0x9"/>
+            </number>
+            <number name="Master Pedestal" type="integer" length="1" signed="yes" display="hex" minval="0x0">
+                <fixedvalue name="0" value="0x9"/>
+            </number>
+            <binary name="-3" length="1"/>
+            <binary name="H DTL FREQ" mustmatch="yes" length="1">
+                <fixedvalue name="Middle" value="01"/>
+                <fixedvalue name="Low" value="02"/>
+                <fixedvalue name="High" value="00"/>
+            </binary>
+            <number name="DTL H/V BA" type="integer" length="1" signed="yes" display="hex" minval="0x0">
+                <fixedvalue name="0" value="0x9"/>
+            </number>
+            <number name="R-G Matrix" type="integer" length="1" signed="yes" display="hex" minval="0x0">
+                <fixedvalue name="0" value="0x32"/>
+            </number>
+            <number name="R-B Matrix" type="integer" length="1" signed="yes" display="hex">
+                <fixedvalue name="0" value="0x32"/>
+            </number>
+            <number name="G-R Matrix" type="integer" length="1" signed="yes" display="hex">
+                <fixedvalue name="0" value="0x32"/>
+            </number>
+            <number name="G-B Matrix" type="integer" length="1" signed="yes" display="hex">
+                <fixedvalue name="0" value="0x32"/>
+            </number>
+            <number name="B-R Matrix" type="integer" length="1" signed="yes" display="hex">
+                <fixedvalue name="0" value="0x32"/>
+            </number>
+            <number name="B-G Matrix" type="integer" length="1" signed="yes" display="hex">
+                <fixedvalue name="0" value="0x32"/>
+            </number>
+            <binary name="Noise Reduction 2" mustmatch="yes" length="1">
+                <fixedvalue name="Off" value="00"/>
+                <fixedvalue name="Low" value="03"/>
+                <fixedvalue name="Middle" value="02"/>
+                <fixedvalue name="High" value="01"/>
+            </binary>
+        </structure>
+    </grammar>
+</ufwb>

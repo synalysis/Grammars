@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.6">
+    <grammar name="Eudora Mailbox TOC" start="id:90" author="Andreas Pehnack" fileextension="toc">
+        <description>Grammar for TOC files</description>
+        <structure name="TOC" id="90" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Header" id="91" length="0" order="variable">
+                <structref name="MacEudoraLite3File" id="93" repeatmin="0" structure="id:92"/>
+                <structref name="WinEudoraFile" id="126" repeatmin="0" structure="id:119"/>
+            </structure>
+        </structure>
+        <structure name="TOC File" id="96" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Header" id="97">
+                <number name="Version" mustmatch="yes" id="98" type="integer" length="2" display="hex"/>
+            </structure>
+        </structure>
+        <structure name="MacEudoraLite3File" id="92" length="0" extends="id:96">
+            <structure name="Header" id="101" length="278">
+                <number name="Version" id="102" type="integer" length="2">
+                    <fixedvalues>
+                        <fixedvalue name="Version 3" value="0x1"/>
+                    </fixedvalues>
+                </number>
+                <binary name="Unknown1" id="103" length="42"/>
+                <string name="Unknown2" id="104" type="fixed-length" length="14"/>
+                <string name="Name" id="105" type="pascal" length="46"/>
+            </structure>
+            <structure name="Detail" id="107" length="220" repeatmax="-1">
+                <number name="Offset" id="108" type="integer" length="4"/>
+                <number name="Length" id="109" type="integer" length="4"/>
+                <number name="BodyOffset" id="110" type="integer" length="4"/>
+                <number name="Status" id="111" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="Unread" value="0"/>
+                        <fixedvalue name="Read" value="1"/>
+                        <fixedvalue name="Replied" value="2"/>
+                    </fixedvalues>
+                </number>
+                <string name="DateTime" id="112" type="pascal" length="33" encoding="ISO_8859-1:1987"/>
+                <binary name="&lt;Binary Fill Bytes&gt;" id="113" unused="yes" length="32"/>
+                <string name="To" id="114" type="pascal" length="58" encoding="ISO_8859-1:1987"/>
+                <binary name="&lt;Binary Fill Bytes-1&gt;" id="115" unused="yes" length="6"/>
+                <string name="Subject" id="116" type="pascal" length="59" encoding="ISO_8859-1:1987"/>
+            </structure>
+        </structure>
+        <structure name="WinEudoraFile" id="119" extends="id:96" endian="little">
+            <structure name="Header" id="121" endian="little">
+                <number name="Version" id="122" type="integer" endian="little">
+                    <fixedvalues>
+                        <fixedvalue name="Pro 5" value="0x3"/>
+                        <fixedvalue name="Linte 1.x" value="0x2A"/>
+                    </fixedvalues>
+                </number>
+                <binary name="Unknown1" id="124" length="6"/>
+                <string name="Name" id="125" type="pascal" length="32"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

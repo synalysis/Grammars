@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.15">
+    <grammar name="ELF grammar" start="id:72" author="Matt" fileextension="elf">
+        <description>Grammar for ELF files</description>
+        <scripts>
+            <script name="SamplePython" type="Grammar" id="101">
+                <source language="Python">def init():
+	print &quot;init&quot;
+
+def processGrammar(grammar):
+	print &quot;grammar&quot;
+
+	currentGrammar = grammar
+	elfFile = currentGrammar:getStructureByName(&quot;ELF_file”)
+	shHdr = elfFile:getStructureByName(&quot;Elf32_Shdr”)
+
+	print elfFile
+	print shHdr
+
+
+def terminate():
+	print &quot;terminate&quot;
+</source>
+            </script>
+            <script name="SampleLua" type="Grammar" id="101">
+                <source language="Lua">function init()
+	print &quot;hello init&quot;
+end
+
+function processGrammar(grammar)
+	print &quot;hello grammar&quot;
+
+	print (grammar)
+	elfFile = grammar:getStructureByName(&quot;ELF_file&quot;)
+	print (elfFile)
+	shHdrElement = elfFile:getElementByName(&quot;Elf32_Shdr&quot;)
+	print (shHdrElement)
+	shHdr = shHdrElement:getStructure()
+	print (shHdr:getName())
+end
+
+function terminate()
+	print &quot;end of processing&quot;
+end
+</source>
+            </script>
+        </scripts>
+        <structure name="ELF_file" id="72" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="ELF32_Ehdr" id="73">
+                <structure name="e_ident" id="74">
+                    <number name="EI_MAG0" mustmatch="yes" id="75" strokecolor="FF2600" type="integer" length="1" endian="little" display="hex" valueexpression="0x7f"/>
+                    <string name="ELF_MAG123" mustmatch="yes" id="76" type="fixed-length" length="3">
+                        <fixedvalues>
+                            <fixedvalue name="ELF_MAGIC123" value="ELF"/>
+                        </fixedvalues>
+                    </string>
+                    <number name="EI_CLASS" mustmatch="yes" id="77" type="integer" length="1" minval="0" maxval="2">
+                        <fixedvalues>
+                            <fixedvalue name="ELFCLASS32" value="1"/>
+                            <fixedvalue name="ELFCLASSNONE" value="0"/>
+                            <fixedvalue name="ELFCLASS64" value="2"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="EI_DATA" mustmatch="yes" id="78" type="integer" length="1" minval="0" maxval="2">
+                        <fixedvalues>
+                            <fixedvalue name="ELFDATANONE" value="0"/>
+                            <fixedvalue name="ELFDATA2LSB" value="1"/>
+                            <fixedvalue name="ELFDATA2MSB" value="2"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="EI_VERSION" id="79" type="integer" length="1" minval="0" maxval="1">
+                        <fixedvalues>
+                            <fixedvalue name="EV_NONE" value="0"/>
+                            <fixedvalue name="EV_CURRENT" value="1"/>
+                        </fixedvalues>
+                    </number>
+                    <binary name="EI_PAD" id="80" length="9">
+                        <fixedvalues>
+                            <fixedvalue name="EI_PAD" value="00"/>
+                        </fixedvalues>
+                    </binary>
+                </structure>
+                <number name="e_type" mustmatch="yes" id="82" type="integer" length="2" endian="little" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="ET_NONE" value="0x0"/>
+                        <fixedvalue name="ET_REL" value="0x1"/>
+                        <fixedvalue name="ET_EXEC" value="0x2"/>
+                        <fixedvalue name="ET_DYN" value="0x3"/>
+                        <fixedvalue name="ET_CORE" value="0x4"/>
+                        <fixedvalue name="ET_LOPROC" value="0xFF00"/>
+                        <fixedvalue name="ET_HIPROC" value="0xFFFF"/>
+                    </fixedvalues>
+                </number>
+                <number name="e_machine" mustmatch="yes" id="83" type="integer" length="2" endian="little">
+                    <fixedvalues>
+                        <fixedvalue name="EM_NONE" value="0"/>
+                        <fixedvalue name="EM_M32" value="1"/>
+                        <fixedvalue name="EM_SPARC" value="2"/>
+                        <fixedvalue name="EM_386" value="3"/>
+                        <fixedvalue name="EM_68K" value="4"/>
+                        <fixedvalue name="EM_88K" value="5"/>
+                        <fixedvalue name="EM_860" value="7"/>
+                        <fixedvalue name="EM_MIPS" value="8"/>
+                    </fixedvalues>
+                </number>
+                <number name="e_version" mustmatch="yes" id="84" type="integer" length="4" endian="little">
+                    <fixedvalues>
+                        <fixedvalue name="EV_NONE" value="0"/>
+                        <fixedvalue name="EV_CURRENT" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="e_entry" id="85" type="integer" length="4" endian="little" display="hex"/>
+                <number name="e_phoff" id="86" type="integer" length="4" endian="little" display="hex">
+                    <description>Program Header Offset - offset into this file</description>
+                </number>
+                <number name="e_shoff" id="87" type="integer" length="4" endian="little" display="hex">
+                    <description>Section Header Offset - offset into this file</description>
+                </number>
+                <number name="e_flags" id="88" type="integer" length="4" endian="little"/>
+                <number name="e_hsize" id="89" type="integer" length="2" endian="little">
+                    <description>E Header Size</description>
+                </number>
+                <number name="e_phentsize" id="90" type="integer" length="2" endian="little">
+                    <description>This member holds the size in bytes of one entry in the file’s program header table; all entries are the same size.</description>
+                </number>
+                <number name="e_phnum" id="91" type="integer" length="2" endian="little">
+                    <description>This member holds the number of entries in the program header table. Thus the pro- duct of e_phentsize and e_phnum gives the table’s size in bytes. If a file has no pro- gram header table, e_phnum holds the value zero.</description>
+                </number>
+                <number name="e_shentsize" id="92" type="integer" length="2" endian="little">
+                    <description>This member holds a section header’s size in bytes. A section header is one entry in the section header table; all entries are the same size.</description>
+                </number>
+                <number name="e_shnum" id="93" type="integer" length="2" endian="little">
+                    <description>This member holds the number of entries in the section header table. Thus the product of e_shentsize and e_shnum gives the section header table’s size in bytes. If a file has no section header table, e_shnum holds the value zero.</description>
+                </number>
+                <number name="e_shstrndx" id="94" type="integer" length="2" endian="little">
+                    <description>This member holds the section header table index of the entry associated with the sec- tion name string table. If the file has no section name string table, this member holds the value SHN_UNDEF. See ‘‘Sections’’ and ‘‘String Table’’ below for more information.</description>
+                </number>
+            </structure>
+            <scriptelement name="find_shdr" id="96">
+                <script name="unnamed" type="Generic">
+                    <source language="Lua">logSrc = currentMapper:getCurrentLogSrc()
+
+currentResults = currentMapper:getCurrentResults()
+currentOffset  = currentMapper:getCurrentOffset()
+shoffsStr = currentResults:getResultByName(&quot;e_shoff&quot;)
+shoffVal  = shoffsStr:getValue():getUnsigned()
+shnumStr  = currentResults:getResultByName(&quot;e_shnum&quot;)
+shnumVal  = shnumStr:getValue():getUnsigned()
+
+currentGrammar = currentMapper:getCurrentGrammar()
+shHdr = currentGrammar:getStructureByName(&quot;sh_name&quot;)
+currentResults:addStructureStartAtPosition(
+               shHdr, shoffVal, 0, shHdr:getName())
+</source>
+                </script>
+            </scriptelement>
+            <structure name="Elf32_Shdr" id="97" endian="little">
+                <number name="sh_name" id="98" type="integer" length="4" display="hex">
+                    <description>This member specifies the name of the section. Its value is an index into the section header string table section [see ‘‘String Table’’ below], giving the location of a null- terminated string.</description>
+                </number>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

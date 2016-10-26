@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.3">
+    <grammar name="FTL save" start="id:239" author="Luke Toop" fileextension="sav">
+        <description>Grammar for FTL SAV files</description>
+        <structure name="SAV file" id="239" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Header" id="240" length="24" fillcolor="FF9300">
+                <number name="Version" id="241" fillcolor="FF9300" type="integer" length="4"/>
+                <number name="Ships defeated" id="242" fillcolor="FF9300" type="integer" length="4"/>
+                <number name="Jumps in Sector" id="243" fillcolor="FF9300" type="integer" length="4"/>
+                <number name="Scrap collected" id="244" fillcolor="FF9300" type="integer" length="4"/>
+                <number name="Crew Recruited" id="245" fillcolor="FF9300" type="integer" length="4"/>
+            </structure>
+            <number name="PlayerName length" id="247" fillcolor="4E8F00" type="integer" length="4"/>
+            <string name="Player Name" id="248" fillcolor="4E8F00" type="fixed-length" length="7" encoding="UTF-8"/>
+            <number name="Ship ID Length" id="249" fillcolor="4E8F00" type="integer" length="4"/>
+            <string name="Ship ID" id="250" fillcolor="4E8F00" type="fixed-length" length="16" encoding="UTF-8"/>
+            <binary name="Unknown" id="251" fillcolor="4E8F00" length="8"/>
+            <structure name="Score category" id="252">
+                <number name="count" id="253" fillcolor="0432FF" type="integer" length="4"/>
+                <structure name="Score Element" id="254" length="0" repeat="id:253" repeatmin="0" repeatmax="-1" consists-of="id:252">
+                    <number name="length" id="255" fillcolor="0432FF" type="integer" length="4"/>
+                    <string name="name" id="256" fillcolor="0432FF" type="fixed-length" length="length" encoding="UTF-8"/>
+                    <number name="score" id="257" fillcolor="0432FF" type="integer" length="4"/>
+                </structure>
+            </structure>
+            <structure name="Ship Details" id="260" length="47" fillcolor="0432FF">
+                <number name="ShipIDLength" id="261" fillcolor="0096FF" type="integer" length="4"/>
+                <string name="ShipID" id="262" fillcolor="0096FF" type="fixed-length" length="ShipIDLength" encoding="UTF-8"/>
+                <number name="ShipNameLength" id="263" fillcolor="0096FF" type="integer" length="4"/>
+                <string name="ShipName" id="264" fillcolor="0096FF" type="fixed-length" length="7" encoding="UTF-8"/>
+                <number name="ShipID2Length" id="265" fillcolor="0096FF" type="integer" length="4"/>
+                <string name="ShipID2" id="266" fillcolor="0096FF" type="fixed-length" length="ShipID2Length" encoding="UTF-8"/>
+            </structure>
+            <structure name="Crew" id="268">
+                <number name="CrewMemberCount" id="269" fillcolor="FF84FF" type="integer" length="4"/>
+                <structure name="crewMember" id="270" length="0" repeat="id:269" repeatmax="-1">
+                    <number name="raceLength" id="271" fillcolor="FF84FF" type="integer" length="4"/>
+                    <string name="raceString" id="272" fillcolor="FF84FF" type="fixed-length" length="raceLength" encoding="UTF-8"/>
+                    <number name="nameLength" id="273" fillcolor="FF84FF" type="integer" length="4"/>
+                    <string name="nameString" id="274" fillcolor="FF84FF" type="fixed-length" length="nameLength" encoding="UTF-8"/>
+                </structure>
+            </structure>
+            <structure name="Ship resources" id="277">
+                <number name="Hull" id="278" fillcolor="FEFB00" type="integer" length="4"/>
+                <number name="Fuel" id="279" fillcolor="FEFB00" type="integer" length="4"/>
+                <number name="Drones" id="280" fillcolor="FEFB00" type="integer" length="4"/>
+                <number name="Missiles" id="281" fillcolor="FEFB00" type="integer" length="4"/>
+                <number name="Scrap" id="282" fillcolor="FEFB00" type="integer" length="4"/>
+            </structure>
+            <structure name="CrewDetails" id="284">
+                <number name="crewCount" id="285" fillcolor="FF89D8" type="integer" length="4"/>
+                <structure name="CrewMember" id="286" repeat="id:285" repeatmin="0" repeatmax="-1">
+                    <number name="nameLength" id="287" fillcolor="FF7D78" type="integer" length="4"/>
+                    <string name="name" id="288" fillcolor="FF7D78" type="fixed-length" length="nameLength" encoding="UTF-8"/>
+                    <number name="raceLength" id="289" fillcolor="FF7D78" type="integer" length="4"/>
+                    <string name="race" id="290" fillcolor="FF7D78" type="fixed-length" length="raceLength" encoding="UTF-8"/>
+                    <number name="isDrone" id="291" fillcolor="FF7D78" type="integer" length="4"/>
+                    <number name="HP" id="292" fillcolor="FF7D78" type="integer" length="4"/>
+                    <number name="Xcoord" id="293" fillcolor="FF2600" type="integer" length="4"/>
+                    <number name="Ycoord" id="294" fillcolor="FF2600" type="integer" length="4"/>
+                    <number name="room" id="295" fillcolor="FF2600" type="integer" length="4"/>
+                    <number name="roomTile" id="296" fillcolor="FF2600" type="integer" length="4"/>
+                    <number name="pilotingSkill" id="297" fillcolor="929000" type="integer" length="4"/>
+                    <number name="engineSkill" id="298" fillcolor="929000" type="integer" length="4"/>
+                    <number name="shieldSkill" id="299" fillcolor="929000" type="integer" length="4"/>
+                    <number name="weaponSkill" id="300" fillcolor="929000" type="integer" length="4"/>
+                    <number name="repairSkill" id="301" fillcolor="929000" type="integer" length="4"/>
+                    <number name="combatSkill" id="302" fillcolor="929000" type="integer" length="4"/>
+                    <number name="gender" id="303" fillcolor="FF84FF" type="integer" length="4"/>
+                    <number name="repairStat" id="304" fillcolor="929000" type="integer" length="4"/>
+                    <number name="killStat" id="305" fillcolor="929000" type="integer" length="4"/>
+                    <number name="evadeStat" id="306" fillcolor="929000" type="integer" length="4"/>
+                    <number name="jumpStat" id="307" fillcolor="929000" type="integer" length="4"/>
+                    <number name="skillMasteries" id="308" fillcolor="929000" type="integer" length="4"/>
+                    <binary name="spacing" id="309" fillcolor="942092" length="4"/>
+                </structure>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

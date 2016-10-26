@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.13">
+    <grammar name="AAC ADTS" start="id:1371" author="Anton Obukhov" email="anton.obukhov@gmail.com" fileextension="aac" uti="public.aac-audio">
+        <description>Grammar for AAC ADTS packets http://wiki.multimedia.cx/index.php?title=ADTS</description>
+        <structure name="Generic AAC ADTS Header" id="1372" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="SyncWord" mustmatch="yes" id="1373" fillcolor="FF2600" length="12" lengthunit="bit">
+                <fixedvalues>
+                    <fixedvalue name="SyncWord" value="0FFF"/>
+                </fixedvalues>
+            </binary>
+            <binary name="MPEG_Version" id="1374" length="1" lengthunit="bit">
+                <fixedvalues>
+                    <fixedvalue name="MPEG-4" value="00"/>
+                    <fixedvalue name="MPEG-2" value="01"/>
+                </fixedvalues>
+            </binary>
+            <binary name="Layer" mustmatch="yes" id="1375" length="2" lengthunit="bit">
+                <fixedvalues>
+                    <fixedvalue name="Always" value="00"/>
+                </fixedvalues>
+            </binary>
+            <binary name="Protection_absent" mustmatch="yes" id="1376" length="1" lengthunit="bit"/>
+            <binary name="Profile" id="1377" length="2" lengthunit="bit">
+                <fixedvalues>
+                    <fixedvalue name="AAC Main" value="00"/>
+                    <fixedvalue name="AAC LC (Low Complexity)" value="01"/>
+                    <fixedvalue name="AAC SSR (Scalable Sample Rate)" value="02"/>
+                    <fixedvalue name="AAC LTP (Long Term Prediction)" value="03"/>
+                </fixedvalues>
+            </binary>
+            <binary name="Sampling_frequency" id="1378" length="4" lengthunit="bit">
+                <fixedvalues>
+                    <fixedvalue name="96000 Hz" value="00"/>
+                    <fixedvalue name="88200 Hz" value="01"/>
+                    <fixedvalue name="64000 Hz" value="02"/>
+                    <fixedvalue name="48000 Hz" value="03"/>
+                    <fixedvalue name="44100 Hz" value="04"/>
+                    <fixedvalue name="32000 Hz" value="05"/>
+                    <fixedvalue name="24000 Hz" value="06"/>
+                    <fixedvalue name="22050 Hz" value="07"/>
+                    <fixedvalue name="16000 Hz" value="08"/>
+                    <fixedvalue name="12000 Hz" value="09"/>
+                    <fixedvalue name="11025 Hz" value="0A"/>
+                    <fixedvalue name="8000 Hz" value="0B"/>
+                    <fixedvalue name="7350 Hz" value="0C"/>
+                    <fixedvalue name="Reserved" value="0D"/>
+                    <fixedvalue name="Reserved" value="0E"/>
+                    <fixedvalue name="FORBIDDEN (malformed)" value="0F"/>
+                </fixedvalues>
+            </binary>
+            <binary name="Private_bit" id="1379" length="1" lengthunit="bit"/>
+            <binary name="Channel_configuration" id="1380" length="3" lengthunit="bit">
+                <fixedvalues>
+                    <fixedvalue name="Defined in AOT Specifc Config" value="00"/>
+                    <fixedvalue name="1 channel: front-center" value="01"/>
+                    <fixedvalue name="2 channels: front-left, front-right" value="02"/>
+                    <fixedvalue name="3 channels: front-center, front-left, front-right" value="03"/>
+                    <fixedvalue name="4 channels: front-center, front-left, front-right, back-center" value="04"/>
+                    <fixedvalue name="5 channels: front-center, front-left, front-right, back-left, back-right" value="05"/>
+                    <fixedvalue name="6 channels: front-center, front-left, front-right, back-left, back-right, LFE-channel" value="06"/>
+                    <fixedvalue name="8 channels: front-center, front-left, front-right, side-left, side-right, back-left, back-right, LFE-channel" value="07"/>
+                </fixedvalues>
+            </binary>
+            <binary name="Originality" id="1381" length="1" lengthunit="bit"/>
+            <binary name="Home" id="1382" length="1" lengthunit="bit"/>
+            <binary name="Copyrighted_id_bit" id="1383" length="1" lengthunit="bit"/>
+            <binary name="Copyright_id_start" id="1384" length="1" lengthunit="bit"/>
+            <number name="Frame_length_with_hdr" id="1385" type="integer" length="13" lengthunit="bit"/>
+            <binary name="Buffer_fullness" id="1386" length="11" lengthunit="bit"/>
+            <binary name="Number_of_AAC_frames_minus_1" id="1387" length="2" lengthunit="bit"/>
+        </structure>
+        <structure name="AAC ADTS file" id="1371" repeatmin="0" repeatmax="-1" consists-of="id:1372" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <structref name="AAC ADTS no CRC" id="1390" repeatmin="0" structure="id:1389"/>
+            <structref name="AAC ADTS with CRC" id="1392" repeatmin="0" structure="id:1391"/>
+        </structure>
+        <structure name="AAC ADTS no CRC" id="1389" extends="id:1372">
+            <binary name="SyncWord" id="1394"/>
+            <binary name="Protection_absent" id="1397">
+                <fixedvalues>
+                    <fixedvalue name="absent" value="01"/>
+                </fixedvalues>
+            </binary>
+            <binary name="Frame" id="1409" length="Frame_length_with_hdr-7"/>
+        </structure>
+        <structure name="AAC ADTS with CRC" id="1391" extends="id:1372">
+            <binary name="SyncWord" id="1411"/>
+            <binary name="Protection_absent" id="1414">
+                <fixedvalues>
+                    <fixedvalue name="absent" value="00"/>
+                </fixedvalues>
+            </binary>
+            <number name="CRC" id="1426" type="integer" length="2"/>
+            <binary name="Frame" id="1427" length="Frame_length_with_hdr-9"/>
+        </structure>
+    </grammar>
+</ufwb>

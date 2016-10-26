@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="ver">
+    <grammar name="IMG grammar" start="id:38" author="Andreas Pehnack" email="andreas@synalysis.com" fileextension="IMG">
+        <description>Grammar for Xerox IMG files</description>
+        <structure name="IMG file" id="38" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="Identifier" id="39" fillcolor="6666FF" type="fixed-length" length="40" encoding="ISO_8859-1:1987"/>
+            <structure name="Commands" id="40" repeatmax="100" order="variable">
+                <structref name="BEGIN" id="42" repeatmin="0" structure="id:41"/>
+                <structref name="&lt;END&gt;" id="44" repeatmin="0" structure="id:43"/>
+                <structref name="COMMENT" id="46" repeatmin="0" structure="id:45"/>
+                <structref name="UNKNOWN-1" id="48" repeatmin="0" structure="id:47"/>
+                <structref name="UNKNOWN-2" id="50" repeatmin="0" structure="id:49"/>
+                <structref name="UNKNOWN-A0" id="52" repeatmin="0" structure="id:51"/>
+                <structref name="UNKNOWN-A1" id="54" repeatmin="0" structure="id:53"/>
+                <structref name="PALETTE" id="56" repeatmin="0" structure="id:55"/>
+                <structref name="STRING" id="58" repeatmin="0" structure="id:57"/>
+                <structref name="UNKNOWN-0F" id="60" repeatmin="0" structure="id:59"/>
+                <structref name="SHORTINT-2" id="62" repeatmin="0" structure="id:61"/>
+                <structref name="SHORTINT-3" id="64" repeatmin="0" structure="id:63"/>
+                <structref name="SHORTRATIONAL-4" id="66" repeatmin="0" structure="id:65"/>
+                <structref name="Root node" id="68" repeatmin="0" structure="id:67"/>
+                <structref name="COMPPIXELVECTOR" id="70" repeatmin="0" structure="id:69"/>
+                <structref name="Command" id="72" repeatmin="0" structure="id:71"/>
+            </structure>
+        </structure>
+        <structure name="Command" id="71" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="ID" mustmatch="yes" id="75" type="integer" length="1" display="hex"/>
+        </structure>
+        <structure name="BEGIN" id="41" length="2" extends="id:71">
+            <number name="ID" id="77" fillcolor="CCFF66" type="integer" length="2" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="BEGIN" value="0xA066"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="COMMENT" id="45" extends="id:71">
+            <number name="ID" id="79" type="integer" length="1" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="COMMENT" value="0xC6"/>
+                </fixedvalues>
+            </number>
+            <string name="value" id="80" fillcolor="CCFF66" type="pascal"/>
+        </structure>
+        <structure name="UNKNOWN-3E" id="47" extends="id:71">
+            <number name="ID" id="82" type="integer" length="1" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="command" value="0x3E"/>
+                </fixedvalues>
+            </number>
+            <string name="unknown" id="83" type="pascal"/>
+        </structure>
+        <structure name="UNKNOWN-E6" id="49" extends="id:71">
+            <number name="ID" id="85" type="integer" length="1" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="UNKNOWN-2" value="0xE6"/>
+                </fixedvalues>
+            </number>
+            <number name="unknown" id="86" type="integer" length="2"/>
+            <string name="string" id="87" fillcolor="FF6666" type="pascal"/>
+        </structure>
+        <structure name="PALETTE" id="55" extends="id:71">
+            <number name="ID" id="89" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="PALETTE" value="0x74"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="STRING" id="57" extends="id:71">
+            <number name="ID" id="91" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="STRING" value="0xC5"/>
+                </fixedvalues>
+            </number>
+            <string name="String" id="92" fillcolor="66FFCC" type="pascal"/>
+        </structure>
+        <structure name="UNKNOWN-0F" id="59" extends="id:71">
+            <number name="ID" id="94" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="UNKNOWN" value="0xF"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="SHORTINT-3" id="63" length="" extends="id:71">
+            <number name="ID" id="96" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="SHORTINT" value="0xC203"/>
+                </fixedvalues>
+            </number>
+            <number name="number" id="97" type="integer" length="3"/>
+        </structure>
+        <structure name="SHORTRATIONAL-4" id="65" extends="id:71">
+            <number name="ID" id="99" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="SHORTRATIONAL" value="0xC404"/>
+                </fixedvalues>
+            </number>
+            <number name="numerator" id="100" fillcolor="FF6FCF" type="integer" length="1"/>
+            <number name="denominator" id="101" fillcolor="FF66FF" type="integer" length="1"/>
+        </structure>
+        <structure name="COMPPIXELVECTOR" id="69" extends="id:71">
+            <number name="ID" id="103" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="CPV" value="0xEA"/>
+                </fixedvalues>
+            </number>
+            <number name="length" id="104" type="integer" length="3"/>
+            <binary name="data" id="105" fillcolor="0000FF" length="length"/>
+            <structref name="compressedPixelVectorLength" id="106" disabled="yes" structure="id:63"/>
+            <structref name="signature" id="107" disabled="yes" structure="id:61"/>
+        </structure>
+        <structure name="SHORTINT-2" id="61" extends="id:71">
+            <number name="ID" id="109" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="SHORTINT" value="0xC202"/>
+                </fixedvalues>
+            </number>
+            <number name="number" id="110" fillcolor="66CCFF" type="integer" length="2"/>
+        </structure>
+        <structure name="END" id="43" extends="id:71">
+            <number name="ID" id="112" fillcolor="FF8000" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="END" value="0xA067"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="SHORTRATIONAL-8" id="67" extends="id:71">
+            <number name="ID" id="114" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="RAT-8" value="0xC408"/>
+                </fixedvalues>
+            </number>
+            <number name="numerator" id="115" fillcolor="FF66FF" type="integer" length="4"/>
+            <number name="denominator" id="116" fillcolor="FF6FCF" type="integer" length="4"/>
+        </structure>
+        <structure name="UNKNOWN-A0" id="51" extends="id:71">
+            <number name="ID" id="118" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="A0" value="0xA0"/>
+                </fixedvalues>
+            </number>
+            <number name="unknown" id="119" type="integer" length="1"/>
+        </structure>
+        <structure name="UNKNOWN-A1" id="53" extends="id:71">
+            <number name="ID" id="121" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="A1" value="0xA1"/>
+                </fixedvalues>
+            </number>
+            <number name="unknown" id="122" type="integer" length="1"/>
+        </structure>
+    </grammar>
+</ufwb>

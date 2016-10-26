@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.4.0.1">
+    <grammar name="TypeLib grammar" start="id:152" author="Andreas Pehnack" fileextension="tlb">
+        <description>Grammar for TypeLib Data files</description>
+        <structure name="TLB file" id="152" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="Magic1" mustmatch="yes" id="154" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Magic1" value="4D534654"/>
+                </fixedvalues>
+            </binary>
+            <binary name="Magic2" id="155" length="4"/>
+            <binary name="GUID" id="156" length="4"/>
+            <number name="LocaleID" id="157" type="integer" length="4" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="Arabic Saudi Arabia" value="0x401"/>
+                    <fixedvalue name="Arabic Iraq" value="0x801"/>
+                    <fixedvalue name="Arabic Egypt" value="0xC01"/>
+                    <fixedvalue name="Arabic Libya" value="0x1001"/>
+                    <fixedvalue name="Arabic Algeria" value="0x1401"/>
+                    <fixedvalue name="Arabic Morocco" value="0x1801"/>
+                    <fixedvalue name="Arabic Tunisia" value="0x1C01"/>
+                    <fixedvalue name="Arabic Oman" value="0x2001"/>
+                    <fixedvalue name="Arabic Yemen" value="0x2401"/>
+                    <fixedvalue name="Arabic Syria" value="0x2801"/>
+                    <fixedvalue name="Arabic Jordan" value="0x2C01"/>
+                    <fixedvalue name="Arabic Lebanon" value="0x3001"/>
+                    <fixedvalue name="Arabic Kuwait" value="0x3401"/>
+                    <fixedvalue name="Arabic U.A.E." value="0x3801"/>
+                    <fixedvalue name="Arabic Bahrain" value="0x3C01"/>
+                    <fixedvalue name="Arabic Qatar" value="0x4001"/>
+                    <fixedvalue name="Bulgarian Bulgaria" value="0x402"/>
+                    <fixedvalue name="Catalan Spain" value="0x403"/>
+                    <fixedvalue name="Chinese Taiwan" value="0x404"/>
+                    <fixedvalue name="Chinese PRC" value="0x804"/>
+                    <fixedvalue name="Chinese Hong Kong" value="0xC04"/>
+                    <fixedvalue name="Chinese Singapore" value="0x1004"/>
+                    <fixedvalue name="Chinese Macau" value="0x1404"/>
+                    <fixedvalue name="Czech Czech Republic" value="0x405"/>
+                    <fixedvalue name="Danish Denmark" value="0x406"/>
+                    <fixedvalue name="German Germany" value="0x407"/>
+                    <fixedvalue name="German Switzerland" value="0x807"/>
+                    <fixedvalue name="German Austria" value="0xC07"/>
+                    <fixedvalue name="German Luxembourg" value="0x1007"/>
+                    <fixedvalue name="German Liechtenstein" value="0x1407"/>
+                    <fixedvalue name="Greek Greece" value="0x408"/>
+                    <fixedvalue name="English United States" value="0x409"/>
+                    <fixedvalue name="English United Kingdom" value="0x809"/>
+                    <fixedvalue name="English Australia" value="0xC09"/>
+                    <fixedvalue name="English Canada" value="0x1009"/>
+                    <fixedvalue name="English New Zealand" value="0x1409"/>
+                    <fixedvalue name="English Ireland" value="0x1809"/>
+                    <fixedvalue name="English South Africa" value="0x1C09"/>
+                    <fixedvalue name="English Jamaica" value="0x2009"/>
+                    <fixedvalue name="English Caribbean" value="0x2409"/>
+                    <fixedvalue name="English Belize" value="0x2809"/>
+                    <fixedvalue name="English Trinidad" value="0x2C09"/>
+                    <fixedvalue name="English Zimbabwe" value="0x3009"/>
+                    <fixedvalue name="English Philippines" value="0x3409"/>
+                    <fixedvalue name="Spanish Spain" value="0x40A"/>
+                    <fixedvalue name="Spanish Mexico" value="0x80A"/>
+                    <fixedvalue name="Spanish Spain (International Sort)" value="0xC0A"/>
+                    <fixedvalue name="Spanish Guatemala" value="0x100A"/>
+                    <fixedvalue name="Spanish Costa Rica" value="0x140A"/>
+                    <fixedvalue name="Spanish Panama" value="0x180A"/>
+                    <fixedvalue name="Spanish Dominican Republic" value="0x1C0A"/>
+                    <fixedvalue name="Spanish Venezuela" value="0x200A"/>
+                    <fixedvalue name="Spanish Colombia" value="0x240A"/>
+                    <fixedvalue name="Spanish Peru" value="0x280A"/>
+                    <fixedvalue name="Spanish Argentina" value="0x2C0A"/>
+                    <fixedvalue name="Spanish Ecuador" value="0x300A"/>
+                    <fixedvalue name="Spanish Chile" value="0x340A"/>
+                    <fixedvalue name="Spanish Uruguay" value="0x380A"/>
+                    <fixedvalue name="Spanish Paraguay" value="0x3C0A"/>
+                    <fixedvalue name="Spanish Bolivia" value="0x400A"/>
+                    <fixedvalue name="Spanish El Salvador" value="0x440A"/>
+                    <fixedvalue name="Spanish Honduras" value="0x480A"/>
+                    <fixedvalue name="Spanish Nicaragua" value="0x4C0A"/>
+                    <fixedvalue name="Spanish Puerto Rico" value="0x500A"/>
+                    <fixedvalue name="Finnish Finland" value="0x40B"/>
+                    <fixedvalue name="French France" value="0x40C"/>
+                    <fixedvalue name="French Belgium" value="0x80C"/>
+                    <fixedvalue name="French Canada" value="0xC0C"/>
+                    <fixedvalue name="French Switzerland" value="0x100C"/>
+                    <fixedvalue name="French Luxembourg" value="0x140C"/>
+                    <fixedvalue name="French Monaco" value="0x180C"/>
+                    <fixedvalue name="Hebrew Israel" value="0x40D"/>
+                    <fixedvalue name="Hungarian Hungary" value="0x40E"/>
+                    <fixedvalue name="Icelandic Iceland" value="0x40F"/>
+                    <fixedvalue name="Italian Italy" value="0x410"/>
+                    <fixedvalue name="Italian Switzerland" value="0x810"/>
+                    <fixedvalue name="Japanese Japan" value="0x411"/>
+                    <fixedvalue name="Korean Korea" value="0x412"/>
+                    <fixedvalue name="Dutch Netherlands" value="0x413"/>
+                    <fixedvalue name="Dutch Belgium" value="0x813"/>
+                    <fixedvalue name="Norwegian Norway (BokmÂl)" value="0x414"/>
+                    <fixedvalue name="Norwegian Norway (Nynorsk)" value="0x814"/>
+                    <fixedvalue name="Polish Poland" value="0x415"/>
+                    <fixedvalue name="Portuguese Brazil" value="0x416"/>
+                    <fixedvalue name="Portuguese Portugal" value="0x816"/>
+                    <fixedvalue name="Romanian Romania" value="0x418"/>
+                    <fixedvalue name="Russian Russia" value="0x419"/>
+                    <fixedvalue name="Croatian Croatia" value="0x41A"/>
+                    <fixedvalue name="Serbian Serbia (Latin)" value="0x81A"/>
+                    <fixedvalue name="Serbian Serbia (Cyrillic)" value="0xC1A"/>
+                    <fixedvalue name="Slovak Slovakia" value="0x41B"/>
+                    <fixedvalue name="Albanian Albania" value="0x41C"/>
+                    <fixedvalue name="Swedish Sweden" value="0x41D"/>
+                    <fixedvalue name="Swedish Finland" value="0x81D"/>
+                    <fixedvalue name="Thai Thailand" value="0x41E"/>
+                    <fixedvalue name="Turkish Turkey" value="0x41F"/>
+                    <fixedvalue name="Urdu Pakistan" value="0x420"/>
+                    <fixedvalue name="Indonesian Indonesia" value="0x421"/>
+                    <fixedvalue name="Ukrainian Ukraine" value="0x422"/>
+                    <fixedvalue name="Belarusian Belarus" value="0x423"/>
+                    <fixedvalue name="Slovene Slovenia" value="0x424"/>
+                    <fixedvalue name="Estonian Estonia" value="0x425"/>
+                    <fixedvalue name="Latvian Latvia" value="0x426"/>
+                    <fixedvalue name="Lithuanian Lithuania" value="0x427"/>
+                    <fixedvalue name="Classic Lithuanian Lithuania" value="0x827"/>
+                    <fixedvalue name="Farsi Iran" value="0x429"/>
+                    <fixedvalue name="Vietnamese Viet Nam" value="0x42A"/>
+                    <fixedvalue name="Armenian Armenia" value="0x42B"/>
+                    <fixedvalue name="Azeri Azerbaijan (Latin)" value="0x42C"/>
+                    <fixedvalue name="Azeri Azerbaijan (Cyrillic)" value="0x82C"/>
+                    <fixedvalue name="Basque Spain" value="0x42D"/>
+                    <fixedvalue name="Macedonian Macedonia" value="0x42F"/>
+                    <fixedvalue name="Afrikaans South Africa" value="0x436"/>
+                    <fixedvalue name="Georgian Georgia" value="0x437"/>
+                    <fixedvalue name="Faeroese Faeroe Islands" value="0x438"/>
+                    <fixedvalue name="Hindi India" value="0x439"/>
+                    <fixedvalue name="Malay Malaysia" value="0x43E"/>
+                    <fixedvalue name="Malay Brunei Darussalam" value="0x83E"/>
+                    <fixedvalue name="Kazak Kazakstan" value="0x43F"/>
+                    <fixedvalue name="Swahili Kenya" value="0x441"/>
+                    <fixedvalue name="Uzbek Uzbekistan (Latin)" value="0x443"/>
+                    <fixedvalue name="Uzbek Uzbekistan (Cyrillic)" value="0x843"/>
+                    <fixedvalue name="Tatar Tatarstan" value="0x444"/>
+                    <fixedvalue name="Bengali India" value="0x445"/>
+                    <fixedvalue name="Punjabi India" value="0x446"/>
+                    <fixedvalue name="Gujarati India" value="0x447"/>
+                    <fixedvalue name="Oriya India" value="0x448"/>
+                    <fixedvalue name="Tamil India" value="0x449"/>
+                    <fixedvalue name="Telugu India" value="0x44A"/>
+                    <fixedvalue name="Kannada India" value="0x44B"/>
+                    <fixedvalue name="Malayalam India" value="0x44C"/>
+                    <fixedvalue name="Assamese India" value="0x44D"/>
+                    <fixedvalue name="Marathi India" value="0x44E"/>
+                    <fixedvalue name="Sanskrit India" value="0x44F"/>
+                    <fixedvalue name="Konkani India" value="0x457"/>
+                    <fixedvalue name="Language-Neutral" value="0x0"/>
+                    <fixedvalue name="Process Default Language" value="0x400"/>
+                </fixedvalues>
+            </number>
+            <number name="LocaleID2" id="158" type="integer" length="4"/>
+            <number name="Varflags" id="159" type="integer" length="4" display="hex">
+                <mask name="SysKind" value="0xF">
+                    <fixedvalue name="SYS_WIN16" value="0x0"/>
+                    <fixedvalue name="SYS_WIN32" value="0x1"/>
+                    <fixedvalue name="SYS_MAC" value="0x2"/>
+                </mask>
+                <mask name="HelpFile" value="0x20">
+                    <fixedvalue name="HelpFile" value="0x20"/>
+                </mask>
+                <mask name="FileName" value="0x100">
+                    <fixedvalue name="FileName" value="0x100"/>
+                </mask>
+            </number>
+            <number name="Version" id="160" type="integer" length="4"/>
+            <number name="Flags" id="161" type="integer" length="4"/>
+            <number name="TypeInfoCount" id="162" type="integer" length="4"/>
+            <number name="HelpStringOffset" id="163" type="integer" length="4"/>
+            <number name="HelpStringContext" id="164" type="integer" length="4"/>
+            <number name="HelpContext" id="165" type="integer" length="4"/>
+            <number name="NameTableCount" id="166" type="integer" length="4"/>
+            <number name="NameTableChars" id="167" type="integer" length="4"/>
+            <number name="TypeLibName" id="168" type="integer" length="4"/>
+            <number name="HelpFileName" id="169" type="integer" length="4"/>
+            <number name="CustomData" id="170" type="integer" length="4"/>
+            <number name="Reserved1" id="171" type="integer" length="4"/>
+            <number name="Reserved2" id="172" type="integer" length="4"/>
+            <number name="DispatchPosition" id="173" type="integer" length="4"/>
+            <number name="ImportInfoCount" id="174" type="integer" length="4"/>
+            <scriptelement name="MapFileNameCond" id="255">
+                <script name="unnamed">
+                    <source language="Python"># checks the payloadlength flags and calculate the length
+results = currentMapper.getCurrentResults()
+element = currentMapper.getCurrentStructureElement()
+
+fileNameRes = results.getResultByName(&quot;FileName&quot;)
+fileNameVal = fileNameRes.getValue()
+fileNameFlag = fileNameVal.getUnsigned()
+
+print fileNameFlag
+
+if fileNameFlag != 0:
+    fileNameValue = NumberValue()
+    fileNameValue.setUnsigned(calculatedLength)
+    
+    results.addElement(element, 4, 0, fileNameValue)
+</source>
+                </script>
+            </scriptelement>
+            <number name="TypeInfoOffsets" id="280" repeatmax="TypeInfoCount" type="integer" length="4" display="hex"/>
+            <structref name="SegmentDesc" id="287" repeatmax="15" structure="id:281"/>
+        </structure>
+        <structure name="GUIDTable" id="178" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="&lt;new binary&gt;" id="179" length="0"/>
+        </structure>
+        <structure name="TypeInfo" id="181" encoding="ISO_8859-1:1987" endian="little" signed="yes">
+            <number name="TypeKind" id="182" type="integer" length="4">
+                <fixedvalues>
+                    <fixedvalue name="TKIND_ENUM" value="0"/>
+                    <fixedvalue name="TKIND_RECORD" value="1"/>
+                    <fixedvalue name="TKIND_MODULE" value="2"/>
+                    <fixedvalue name="TKIND_INTERFACE" value="3"/>
+                    <fixedvalue name="TKIND_DISPATCH" value="4"/>
+                    <fixedvalue name="TKIND_COCLASS" value="5"/>
+                    <fixedvalue name="TKIND_ALIAS" value="6"/>
+                    <fixedvalue name="TKIND_UNION" value="7"/>
+                    <fixedvalue name="TKIND_MAX" value="8"/>
+                </fixedvalues>
+            </number>
+            <number name="FunctionRecords" id="183" type="integer" length="4">
+                <description> File offset to an array of Function Records and Property Records, if there are&#13;
+any functions or properties present (that is, if either Function Count or&#13;
+Property Count are greater than zero), otherwise it's FileLength + 1 (it points&#13;
+to just past the end of the file).</description>
+            </number>
+            <number name="MemoryAllocation" id="184" type="integer" length="4">
+                <description>Recommended (or required?) amount of memory to allocate for...?
+Equals 0 if there's no element.</description>
+            </number>
+            <number name="ReconstitutedSize" id="185" type="integer" length="4">
+                <description>Equals -1 if there's no element, otherwise, it's (probably) the size of the&#13;
+reconstituted TypeInfo data for the operating system's internal use (the data&#13;
+is stored more compactly in the file than when it's in RAM during use).</description>
+            </number>
+            <number name="Reserved1" id="186" type="integer" length="4">
+                <description>Always? 3</description>
+            </number>
+            <number name="Reserved2" id="187" type="integer" length="4">
+                <description>Always? zero</description>
+            </number>
+            <number name="FunctionCount" id="188" type="integer" length="4">
+                <description>Count of functions in array</description>
+            </number>
+            <number name="PropertyCount" id="189" type="integer" length="4">
+                <description>Count of properties in array</description>
+            </number>
+            <number name="Reserved3" id="190" type="integer" length="4">
+                <description>Always? zero</description>
+            </number>
+            <number name="Reserved4" id="191" type="integer" length="4">
+                <description>Always? zero</description>
+            </number>
+            <number name="Reserved5" id="192" type="integer" length="4">
+                <description>Always? zero</description>
+            </number>
+            <number name="Reserved6" id="193" type="integer" length="4">
+                <description>Always? zero</description>
+            </number>
+            <number name="GUID" id="194" type="integer" length="4">
+                <description>Offset into GUID Table of GUID</description>
+            </number>
+            <number name="TypeFlags" id="195" type="integer" length="4" display="hex">
+                <mask name="&lt;unnamed&gt;" value="0xFFFFFFFF">
+                    <fixedvalue name="TYPEFLAG_FAPPOBJECT" value="0x1"/>
+                    <fixedvalue name="TYPEFLAG_FCANCREATE" value="0x2"/>
+                    <fixedvalue name="TYPEFLAG_FLICENSED" value="0x4"/>
+                    <fixedvalue name="TYPEFLAG_FPREDECLID" value="0x8"/>
+                    <fixedvalue name="TYPEFLAG_FHIDDEN" value="0x10"/>
+                    <fixedvalue name="TYPEFLAG_FCONTROL" value="0x20"/>
+                    <fixedvalue name="TYPEFLAG_FDUAL" value="0x40"/>
+                    <fixedvalue name="TYPEFLAG_FNONEXTENSIBLE" value="0x80"/>
+                    <fixedvalue name="TYPEFLAG_FOLEAUTOMATION" value="0x100"/>
+                    <fixedvalue name="TYPEFLAG_FRESTRICTED" value="0x200"/>
+                    <fixedvalue name="TYPEFLAG_FAGGREGATABLE" value="0x400"/>
+                    <fixedvalue name="TYPEFLAG_FREPLACEABLE" value="0x800"/>
+                    <fixedvalue name="TYPEFLAG_FDISPATCHABLE" value="0x1000"/>
+                    <fixedvalue name="TYPEFLAG_FREVERSEBIND" value="0x2000"/>
+                </mask>
+            </number>
+            <number name="Name" id="196" type="integer" length="4">
+                <description>Offset into the Name Table of the name</description>
+            </number>
+            <number name="Version" id="197" type="integer" length="4">
+                <description>Element version</description>
+            </number>
+            <number name="DocString" id="198" type="integer" length="4">
+                <description>Offset into String Table of the DocString</description>
+            </number>
+            <number name="HelpStringContext" id="199" type="integer" length="4"/>
+            <number name="HelpContext" id="200" type="integer" length="4"/>
+            <number name="CustomDataOffset" id="201" type="integer" length="4">
+                <description>Offset into the Custom Data Table of custom data</description>
+            </number>
+            <number name="ImplementedInterfaces" id="202" type="integer" length="4">
+                <description>Number of implemented interfaces</description>
+            </number>
+            <number name="VirtualTableSize" id="203" type="integer" length="4">
+                <description>Virtual table size, not including inherits</description>
+            </number>
+            <number name="Unknown3" id="204" type="integer" length="4"/>
+            <number name="DataType1" id="205" type="integer" length="4">
+                <description>Offset into Type Descriptor Table, or in base interfaces.&#13;
+* If TypeKind is a coclass, then DataType1 is an offset into RefTable&#13;
+* If TypeKind is a interface, then DataType1 is a reference to inherited&#13;
+  interface&#13;
+* If TypeKind is a module, then DataType1 is an offset into the Name Table of&#13;
+  the DllName</description>
+            </number>
+            <number name="Datatype2" id="206" type="integer" length="4">
+                <description>If 0x8000, entry above is valid, else it is zero?</description>
+            </number>
+            <number name="Reserved7" id="207" type="integer" length="4">
+                <description>Always? 0</description>
+            </number>
+            <number name="Reserved8" id="208" type="integer" length="4">
+                <description>Always? -1</description>
+                <mask name="TypeKind Code" value="0xF">
+                    <fixedvalue name="TypeKind Code" value="0xF"/>
+                </mask>
+                <mask name="Alignment" value="0xF800">
+                    <fixedvalue name="Alignment" value="0xF800"/>
+                </mask>
+            </number>
+        </structure>
+        <structure name="ImportInfoTable" id="210" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <description>This segment contains information about imported types</description>
+            <number name="Count" id="211" type="integer" length="2"/>
+            <number name="Flags" id="212" type="integer" length="1">
+                <description>Bit 0 = 1 if &quot;GUID Offset&quot; is an offset to a GUID, or zero if it's a TypeInfo&#13;
+index in the specified typelib</description>
+            </number>
+            <number name="TypeKind" id="213" type="integer" length="1">
+                <description>TypeKind of the reference</description>
+            </number>
+            <number name="ImportFile" id="214" type="integer" length="1">
+                <description>Offset into the Import File table</description>
+            </number>
+            <number name="GUID" id="215" type="integer" length="1">
+                <description>Offset into GUID table or TypeInfo index (see bit 0 of Flags)</description>
+            </number>
+        </structure>
+        <structure name="ImportedTypeLibTable" id="217" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <description>This segment contains information on imported files</description>
+            <number name="GUID" id="218" type="integer" length="4">
+                <description>Offset into the GUID table of the GUID</description>
+            </number>
+            <number name="LCID" id="219" type="integer" length="4">
+                <description>Locale ID</description>
+            </number>
+            <number name="MajVer" id="220" type="integer" length="4"/>
+            <number name="MinVer" id="221" type="integer" length="4"/>
+            <number name="Size" id="222" type="integer" length="4">
+                <description>Divide this value by 4 to get the actual length of the file name</description>
+            </number>
+        </structure>
+        <structure name="ReferencesTable" id="224" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <description>This segment consists of an array of RefRecord structures</description>
+            <number name="RefType" id="225" type="integer" length="4">
+                <description>If it's a multiple of 4, then it's an offset into the TypeInfo Table, other-&#13;
+wise it's an offset into the external reference table with an offset of 1</description>
+            </number>
+            <number name="Flags" id="226" type="integer" length="4">
+                <description>Divide this value by 4 to get the actual length of the file name</description>
+            </number>
+            <number name="CustData" id="227" type="integer" length="4">
+                <description>Offset into the Custom Data Table of the custom data, if any</description>
+            </number>
+            <number name="Next" id="228" type="integer" length="4">
+                <description>Next offset, or -1 if it's the last one</description>
+            </number>
+        </structure>
+        <structure name="LibTable" id="230" length="128" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+        <structure name="GUIDEntry" id="232" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="GUID" id="233" repeatmax="16" type="integer" length="1"/>
+            <number name="hRefType" id="234" type="integer" length="4">
+                <description>= -2 for a TypeLib GUID TypeInfo offset for TypeInfo GUID.&#13;
+  Otherwise, the low two bits:&#13;
+    * = 01 for an imported TypeInfo&#13;
+    * = 10 for an imported TypeLib (used by imported TypeInfos)</description>
+            </number>
+            <number name="NextHash" id="235" type="integer" length="4">
+                <description>Offset to next GUID in the hash bucket</description>
+            </number>
+        </structure>
+        <structure name="NameTable" id="237" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="hRefType" id="238" type="integer" length="4">
+                <description>Is -1 if name is for neither a TypeInfo, a variable, or a function (that is,&#13;
+the name is for a typelib or a function parameter). Otherwise it's the offset&#13;
+of the first TypeInfo that this name refers to (either to the TypeInfo itself&#13;
+or to a member of the TypeInfo</description>
+            </number>
+            <number name="NextHash" id="239" type="integer" length="4">
+                <description>Offset to next name in the hash bucket</description>
+            </number>
+            <number name="NameLength" id="240" type="integer" length="1">
+                <description>A one-byte field containing the length of the name in bytes, not counting any&#13;
+padding</description>
+            </number>
+            <number name="Flags" id="241" type="integer" length="1"/>
+            <number name="HashCode" id="242" type="integer" length="2"/>
+            <string name="NameString" id="243" type="fixed-length" length="NameLength">
+                <description>The ASCII text of the name. They are not NULL-terminated</description>
+            </string>
+            <structure name="PaddingStruct" id="244" alignment="4"/>
+        </structure>
+        <structure name="StringTable" id="247" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Length" id="248" type="integer" length="2">
+                <description>The length of the text of the string only</description>
+            </number>
+            <string name="StringText" id="249" type="fixed-length" length="Length">
+                <description>The ASCII text of the string. They are not NULL-terminated</description>
+            </string>
+            <structure name="PaddingStruct" id="250" length="0" alignment="8">
+                <description>From zero to five W's, as needed, to make the structure at least eight bytes&#13;
+and also a multiple of four bytes</description>
+            </structure>
+        </structure>
+        <structure name="SegmentDesc" id="281" encoding="ISO_8859-1:1987" endian="little" signed="yes">
+            <offset name="Segment" id="291" length="4" references="id:288" follownullreference="yes"/>
+            <number name="Length" id="284" type="integer" length="4"/>
+            <number name="Reserved1" id="285" type="integer" length="4">
+                <description>Unknown, always -1</description>
+            </number>
+            <number name="Reserved2" id="286" type="integer" length="4" display="hex">
+                <description>Unknown, always 0x0F, though someone reported seeing a value of 0x03</description>
+            </number>
+        </structure>
+        <structure name="Segment" id="288" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="TypeInfo" id="290" structure="id:181"/>
+        </structure>
+    </grammar>
+</ufwb>

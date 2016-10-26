@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.13">
+    <grammar name="H264" start="id:9" author="Gavriloaie Eugen-Andrei" fileextension="h264">
+        <description>Grammar for H264 files</description>
+        <structure name="H264 file" id="9" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="NALULength" id="10" fillcolor="FF793D" type="integer" length="4"/>
+            <binary name="NALUPayload" id="11" fillcolor="4BF953" length="NALULength"/>
+        </structure>
+    </grammar>
+</ufwb>

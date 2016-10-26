@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.8">
+    <grammar name="SimCity 2000 Saved City" start="id:21" author="Kelvin Chung" email="kelv@kelvSYC.com" fileextension=".sc2">
+        <description>Saved Cities for SimCity 2000</description>
+        <structure name="Saved City" id="21" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="SimCity FORM Chunk" id="999" structure="id:992"/>
+        </structure>
+        <structure name="IFF Chunk" id="23" alignment="1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="Type ID" id="25" fillcolor="0432FF" type="fixed-length" length="4"/>
+            <number name="Size" id="26" strokecolor="72FA78" fillcolor="FF9300" type="integer" length="4"/>
+            <structure name="Chunk Data" id="983" length="Size"/>
+        </structure>
+        <structure name="FORM Chunk" id="985" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="987" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="FORM"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="988" type="integer"/>
+            <structure name="Chunk Data" id="989">
+                <string name="Record Type" id="991" fillcolor="0096FF" type="fixed-length" length="4"/>
+            </structure>
+        </structure>
+        <structure name="SimCity FORM Chunk" id="992" extends="id:985">
+            <structure name="Chunk Data" id="996">
+                <string name="Record Type" mustmatch="yes" id="997" type="fixed-length">
+                    <fixedvalues>
+                        <fixedvalue name="Type ID" value="SCDH"/>
+                    </fixedvalues>
+                </string>
+                <structref name="CNAM Chunk" id="1059" repeatmin="0" structure="id:1000"/>
+                <structref name="MISC Chunk" id="1060" structure="id:1015"/>
+                <structref name="ALTM Chunk" id="1073" structure="id:1017"/>
+                <structref name="XTER Chunk" id="1074" structure="id:1019"/>
+                <structref name="XBLD Chunk" id="1075" structure="id:1021"/>
+                <structref name="XZON Chunk" id="1088" structure="id:1023"/>
+                <structref name="XUND Chunk" id="1089" structure="id:1025"/>
+                <structref name="XTXT Chunk" id="1090" structure="id:1027"/>
+                <structref name="XLAB Chunk" id="1143" structure="id:1029"/>
+                <structref name="XMIC Chunk" id="1144" structure="id:1031"/>
+                <structref name="XTHG Chunk" id="1145" structure="id:1033"/>
+                <structref name="XBIT Chunk" id="1146" structure="id:1035"/>
+                <structref name="XTRF Chunk" id="1147" structure="id:1037"/>
+                <structref name="XPLT Chunk" id="1148" structure="id:1039"/>
+                <structref name="XVAL Chunk" id="1149" structure="id:1043"/>
+                <structref name="XCRM Chunk" id="1150" structure="id:1041"/>
+                <structref name="XPLC Chunk" id="1151" structure="id:1045"/>
+                <structref name="XFIR Chunk" id="1152" structure="id:1047"/>
+                <structref name="XPOP Chunk" id="1153" structure="id:1049"/>
+                <structref name="XROG Chunk" id="1154" structure="id:1051"/>
+                <structref name="XGRP Chunk" id="1155" structure="id:1053"/>
+            </structure>
+        </structure>
+        <structure name="CNAM Chunk" id="1000" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1002" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="CNAM"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1003" type="integer"/>
+            <structure name="Chunk Data" id="1004">
+                <string name="City Name" id="1178" fillcolor="FEFC78" type="pascal"/>
+            </structure>
+        </structure>
+        <structure name="MISC Chunk" id="1015" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1055" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="MISC"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1056" type="integer"/>
+        </structure>
+        <structure name="ALTM Chunk" id="1017" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1061" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="ALTM"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1062" type="integer"/>
+            <structure name="Chunk Data" id="1063">
+                <structure name="Altitude Map Row" id="1156" repeatmin="128" repeatmax="128">
+                    <structure name="Altitude Map Cell" id="1158" repeatmin="128" repeatmax="128">
+                        <binary name="&lt;unknown&gt;" id="1162" length="8" lengthunit="bit"/>
+                        <number name="&lt;water covered?&gt;" id="1163" type="integer" length="1" lengthunit="bit"/>
+                        <binary name="&lt;unknown-2&gt;" id="1164" length="2" lengthunit="bit"/>
+                        <number name="Altitude Data" id="1160" type="integer" length="5" lengthunit="bit"/>
+                    </structure>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="XTER Chunk" id="1019" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1065" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XTER"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1066" type="integer"/>
+        </structure>
+        <structure name="XBLD Chunk" id="1021" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1069" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XBLD"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1070" type="integer"/>
+        </structure>
+        <structure name="XZON Chunk" id="1023" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1076" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XZON"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1077" type="integer"/>
+        </structure>
+        <structure name="XUND Chunk" id="1025" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1080" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XUND"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1081" type="integer"/>
+        </structure>
+        <structure name="XTXT Chunk" id="1027" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1084" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XTXT"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1085" type="integer"/>
+        </structure>
+        <structure name="XLAB Chunk" id="1029" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1091" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XLAB"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1092" type="integer"/>
+        </structure>
+        <structure name="XMIC Chunk" id="1031" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1095" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XMIC"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1096" type="integer"/>
+        </structure>
+        <structure name="XTHG Chunk" id="1033" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1099" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XTHG"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1100" type="integer"/>
+        </structure>
+        <structure name="XBIT Chunk" id="1035" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1103" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XBIT"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1104" type="integer"/>
+        </structure>
+        <structure name="XTRF Chunk" id="1037" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1107" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XTRF"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1108" type="integer"/>
+        </structure>
+        <structure name="XPLT Chunk" id="1039" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1111" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XPLT"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1112" type="integer"/>
+        </structure>
+        <structure name="XVAL Chunk" id="1043" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1115" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XVAL"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1116" type="integer"/>
+        </structure>
+        <structure name="XCRM Chunk" id="1041" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1119" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XCRM"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1120" type="integer"/>
+        </structure>
+        <structure name="XPLC Chunk" id="1045" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1123" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XPLC"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1124" type="integer"/>
+        </structure>
+        <structure name="XFIR Chunk" id="1047" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1127" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XFIR"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1128" type="integer"/>
+        </structure>
+        <structure name="XPOP Chunk" id="1049" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1131" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XPOP"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1132" type="integer"/>
+        </structure>
+        <structure name="XROG Chunk" id="1051" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1135" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XROG"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1136" type="integer"/>
+        </structure>
+        <structure name="XGRP Chunk" id="1053" extends="id:23">
+            <string name="Type ID" mustmatch="yes" id="1139" type="fixed-length">
+                <fixedvalues>
+                    <fixedvalue name="Type ID" value="XGRP"/>
+                </fixedvalues>
+            </string>
+            <number name="Size" id="1140" type="integer"/>
+        </structure>
+        <structure name="Run-Length Encoding Chunk" id="1165" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Is Compressed" id="1167" type="integer" length="1" lengthunit="bit"/>
+        </structure>
+        <structure name="Run-Length Encoding Uncompressed Chunk" id="1168" extends="id:1165">
+            <number name="Is Compressed" mustmatch="yes" id="1170" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Compressed" value="0"/>
+                </fixedvalues>
+            </number>
+            <number name="Size" id="1176" type="integer" length="1" minval="1"/>
+            <binary name="&lt;new binary&gt;" id="1177" length="Size"/>
+        </structure>
+        <structure name="Run-Length Encoding Compressed Chunk" id="1171" extends="id:1165">
+            <number name="Is Compressed" mustmatch="yes" id="1173" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Compressed" value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="1174" type="integer" length="7" lengthunit="bit" minval="1"/>
+            <binary name="Data" id="1175" length="1"/>
+        </structure>
+    </grammar>
+</ufwb>

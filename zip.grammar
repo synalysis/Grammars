@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9">
+    <grammar name="ZIP" start="id:124" author="Devon Stewart" fileextension="zip" uti="public.zip-archive">
+        <description>Grammar for ZIP files</description>
+        <structure name="ZIP file" id="124" encoding="ISO_8859-1:1987" endian="little" signed="no" debug="yes">
+            <scriptelement name="JumpToEnd" id="125">
+                <script name="unnamed" type="Generic">
+                    <source language="Lua">byteView = currentMapper:getCurrentByteView()
+ 
+fileLength = byteView:getLength()
+
+currentGrammar = currentMapper:getCurrentGrammar()
+
+-- get the structure we want to apply
+structure = currentGrammar:getStructureByName(&quot;ZIP end of central directory record&quot;)
+
+bytesProcessed = currentMapper:mapStructureAtPosition(structure, fileLength-22, 22)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="ZIP local file header" id="127" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="Local file header signature" mustmatch="yes" id="128" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Signature" value="504B0304"/>
+                </fixedvalues>
+            </binary>
+            <number name="Version needed to extract (minimum)" id="129" strokecolor="FF1E17" type="integer" length="2" minval="0" maxval="255"/>
+            <number name="General purpose bit flag" id="130" type="integer" length="2">
+                <mask name="Encrypted" value="0x1">
+                    <fixedvalue name="Encrypted" value="0x1"/>
+                    <fixedvalue name="Not encrypted" value="0x0"/>
+                </mask>
+                <mask name="Sliding dict" value="0x2">
+                    <fixedvalue name="4K sliding dict" value="0x0"/>
+                    <fixedvalue name="8K sliding dict" value="0x2"/>
+                </mask>
+                <mask name="Shannon-Fano trees" value="0x4">
+                    <fixedvalue name="2 trees" value="0x0"/>
+                    <fixedvalue name="3 trees" value="0x4"/>
+                </mask>
+                <mask name="Data descriptor" value="0x8">
+                    <fixedvalue name="No descriptor" value="0x0"/>
+                    <fixedvalue name="Descriptor present" value="0x8"/>
+                </mask>
+            </number>
+            <number name="Compression method" id="131" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="Stored" value="0"/>
+                    <fixedvalue name="Shrunk" value="1"/>
+                    <fixedvalue name="Reduced with factor 1" value="2"/>
+                    <fixedvalue name="Reduced with factor 2" value="3"/>
+                    <fixedvalue name="Reduced with factor 3" value="4"/>
+                    <fixedvalue name="Reduced with factor 4" value="5"/>
+                    <fixedvalue name="Imploded" value="6"/>
+                    <fixedvalue name="Reserved for Tokenizing" value="7"/>
+                    <fixedvalue name="Deflated" value="8"/>
+                    <fixedvalue name="Deflate64" value="9"/>
+                    <fixedvalue name="PKWARE Data Compression Lib" value="10"/>
+                    <fixedvalue name="Reserved by PKWARE" value="11"/>
+                    <fixedvalue name="BZIP2" value="12"/>
+                    <fixedvalue name="Reserved by PKWARE" value="13"/>
+                    <fixedvalue name="LZMA (EFS)" value="14"/>
+                    <fixedvalue name="Reserved by PKWARE" value="15"/>
+                    <fixedvalue name="Reserved by PKWARE" value="16"/>
+                    <fixedvalue name="Reserved by PKWARE" value="17"/>
+                    <fixedvalue name="IBM TERSE (new)" value="18"/>
+                    <fixedvalue name="IBM LZ77 z Architecture (PFS)" value="19"/>
+                    <fixedvalue name="WavPack compressed data" value="20"/>
+                    <fixedvalue name="PPMd version I, Rev 1" value="98"/>
+                </fixedvalues>
+            </number>
+            <number name="File last modification time" id="132" type="integer" length="2"/>
+            <number name="File last modification date" id="133" type="integer" length="2"/>
+            <number name="CRC-32" id="134" type="integer" length="4" display="hex"/>
+            <number name="Compressed_size" id="135" type="integer" length="4"/>
+            <number name="Uncompressed size" id="136" type="integer" length="4"/>
+            <number name="File_name_length" id="137" type="integer" length="2"/>
+            <number name="Extra_field_length" id="138" type="integer" length="2"/>
+            <string name="File Name" id="139" type="fixed-length" length="File_name_length"/>
+            <structref name="ExtraFields" id="141" structure="id:140"/>
+            <structure name="Compressed Data" id="142" length="Compressed_size"/>
+        </structure>
+        <structure name="ZIP central directory file header" id="145" repeatmax="-1" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Signature" mustmatch="yes" id="146" fillcolor="75D5FF" type="integer" length="4" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="Signature" value="0x2014B50"/>
+                </fixedvalues>
+            </number>
+            <number name="Version made by" id="147" strokecolor="FF1E17" fillcolor="FFD478" type="integer" length="2" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="MS-DOS and OS/2" value="0x0"/>
+                    <fixedvalue name="Amiga" value="0x1"/>
+                    <fixedvalue name="OpenVMS" value="0x2"/>
+                    <fixedvalue name="UNIX" value="0x3"/>
+                    <fixedvalue name="VM/CMS" value="0x4"/>
+                    <fixedvalue name="Atari ST" value="0x5"/>
+                    <fixedvalue name="OS/2 H.P.F.S." value="0x6"/>
+                    <fixedvalue name="Macintosh" value="0x7"/>
+                    <fixedvalue name="Z-System" value="0x8"/>
+                    <fixedvalue name="CP/M" value="0x9"/>
+                    <fixedvalue name="Windows NTFS" value="0xA"/>
+                    <fixedvalue name="MVS (OS/390 - Z/OS)" value="0xB"/>
+                    <fixedvalue name="VSE" value="0xC"/>
+                    <fixedvalue name="Acorn Risc" value="0xD"/>
+                    <fixedvalue name="VFAT" value="0xE"/>
+                    <fixedvalue name="alternate MVS" value="0xF"/>
+                    <fixedvalue name="BeOS" value="0x10"/>
+                    <fixedvalue name="Tandem" value="0x11"/>
+                    <fixedvalue name="OS/400" value="0x12"/>
+                    <fixedvalue name="OS/X (Darwin)" value="0x13"/>
+                    <fixedvalue name="thru 255 - unused" value="0x14"/>
+                </fixedvalues>
+            </number>
+            <number name="Version needed to extract (minimum)" id="148" fillcolor="FEFC78" type="integer" length="2"/>
+            <number name="General purpose bit flag" id="149" fillcolor="FF89D8" type="integer" length="2">
+                <mask name="Encrypted" value="0x1">
+                    <fixedvalue name="Encrypted" value="0x1"/>
+                    <fixedvalue name="Not encrypted" value="0x0"/>
+                </mask>
+                <mask name="Sliding dict" value="0x2">
+                    <fixedvalue name="4K sliding dict" value="0x0"/>
+                    <fixedvalue name="8K sliding dict" value="0x2"/>
+                </mask>
+                <mask name="Shannon-Fano trees" value="0x4">
+                    <fixedvalue name="2 trees" value="0x0"/>
+                    <fixedvalue name="3 trees" value="0x4"/>
+                </mask>
+                <mask name="Data descriptor" value="0x8">
+                    <fixedvalue name="No descriptor" value="0x0"/>
+                    <fixedvalue name="Descriptor present" value="0x8"/>
+                </mask>
+            </number>
+            <number name="Compression method" id="150" fillcolor="FF84FF" type="integer" length="2"/>
+            <number name="File last modification time" id="151" fillcolor="72FA78" type="integer" length="2"/>
+            <number name="File last modification date" id="152" fillcolor="8DF900" type="integer" length="2"/>
+            <number name="CRC-32" id="153" fillcolor="7980FF" type="integer" length="4" display="hex"/>
+            <number name="Compressed size" id="154" fillcolor="FF7D78" type="integer" length="4"/>
+            <number name="Uncompressed size" id="155" fillcolor="FFD478" type="integer" length="4"/>
+            <number name="File_name_length" id="156" fillcolor="00FCFF" type="integer" length="2"/>
+            <number name="Extra_field_length" id="157" fillcolor="FF7D78" type="integer" length="2"/>
+            <number name="File_comment_length" id="158" fillcolor="00F900" type="integer" length="2"/>
+            <number name="Disk_number_where_file_starts" id="159" fillcolor="FF89D8" type="integer" length="2"/>
+            <number name="Internal file attributes" id="160" fillcolor="9437FF" type="integer" length="2" display="hex"/>
+            <number name="External file attributes" id="161" fillcolor="0096FF" type="integer" length="4"/>
+            <offset name="ZIP local file header" id="162" fillcolor="72FCD5" length="4" references="id:127" follownullreference="yes"/>
+            <string name="FIle name" id="163" fillcolor="8DF900" type="fixed-length" length="File_name_length"/>
+            <structref name="ExtraFields" id="164" structure="id:140"/>
+            <structure name="File comment" id="165" length="File_comment_length"/>
+        </structure>
+        <structure name="ZIP end of central directory record" id="168" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Signature" id="169" type="integer" length="4" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="Signature" value="0x6054B50"/>
+                </fixedvalues>
+            </number>
+            <number name="Number of this disk" id="170" type="integer" length="2"/>
+            <number name="Disk where central directory starts" id="171" type="integer" length="2"/>
+            <number name="Number of central directory records on this disk" id="172" type="integer" length="2"/>
+            <number name="Total number of central directory records" id="173" type="integer" length="2"/>
+            <number name="Size of central directory (bytes)" id="174" type="integer" length="4"/>
+            <offset name="ZIP central directory file header" id="175" length="4" references="id:145" follownullreference="no"/>
+            <number name="CommentLength" id="176" type="integer" length="2"/>
+            <string name="FileComment" id="177" type="fixed-length" length="CommentLength"/>
+        </structure>
+        <structure name="Data descriptor" id="179" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="Optional Header" id="180" repeatmin="0" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Header" value="504B0708"/>
+                </fixedvalues>
+            </binary>
+            <binary name="CRC-32" id="181" length="4"/>
+            <number name="Compressed_size" id="182" type="integer" length="4"/>
+            <number name="Uncompressed size" id="183" type="integer" length="4"/>
+        </structure>
+        <structure name="ExtraFields" id="140" length="Extra_field_length" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="ExtraFieldCollection" id="185" length="0" repeatmax="-1" encoding="ISO_8859-1:1987" endian="little" signed="no" order="variable" debug="yes">
+                <structref name="ExtraField Zip64" id="187" repeatmin="0" structure="id:186"/>
+                <structref name="ExtraField Extended Timestamp" id="189" repeatmin="0" structure="id:188"/>
+                <structref name="ExtraField Info-ZIP" id="191" repeatmin="0" structure="id:190"/>
+                <structref name="ExtraField WinNT Security Descriptor" id="193" repeatmin="0" structure="id:192"/>
+                <structref name="ExtraField" id="195" repeatmin="0" structure="id:194"/>
+            </structure>
+        </structure>
+        <structure name="ExtraField" id="194" length="DataSize+4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Header ID" mustmatch="yes" id="198" fillcolor="FEFC78" type="integer" length="2" display="hex"/>
+            <number name="DataSize" id="199" fillcolor="FF9300" type="integer" length="2"/>
+        </structure>
+        <structure name="ExtraField Zip64" id="186" extends="id:194">
+            <number name="Header ID" id="201" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="ZIP64" value="0x1"/>
+                </fixedvalues>
+            </number>
+            <number name="DataSize" id="202" type="integer"/>
+            <binary name="Data" id="203" length="remaining"/>
+            <number name="Original size" id="204" type="integer" length="8"/>
+            <number name="Compressed size" id="205" type="integer" length="8"/>
+            <number name="Relative Header Offset" id="206" type="integer" length="8"/>
+            <number name="Disk Start Number" id="207" type="integer" length="4"/>
+        </structure>
+        <structure name="ExtraField Extended Timestamp" id="188" extends="id:194">
+            <number name="Header ID" id="209" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="UT" value="0x5455"/>
+                </fixedvalues>
+            </number>
+            <number name="DataSize" id="210" type="integer"/>
+            <number name="Flags" id="211" fillcolor="00FA92" type="integer" length="1">
+                <description>info bits</description>
+                <mask name="ModTimePresent" value="0x1">
+                    <fixedvalue name="ModTimePresent" value="0x1"/>
+                </mask>
+                <mask name="AccessTimePresent" value="0x2">
+                    <fixedvalue name="AccessTimePresent" value="0x2"/>
+                </mask>
+                <mask name="CreationTimePresent" value="0x4">
+                    <fixedvalue name="CreationTimePresent" value="0x4"/>
+                </mask>
+                <mask name="Reserved" value="0xF8">
+                    <fixedvalue name="Reserved" value="0xF8"/>
+                </mask>
+            </number>
+            <number name="ModTime" id="212" fillcolor="7980FF" repeatmin="0" type="integer" length="4">
+                <description>time of last modification (UTC/GMT)</description>
+            </number>
+            <number name="AcTime" id="213" fillcolor="FF7D78" repeatmin="0" type="integer" length="4">
+                <description>time of last access (UTC/GMT)</description>
+            </number>
+            <number name="CrTime" id="214" fillcolor="7980FF" repeatmin="0" type="integer" length="4">
+                <description>time of original creation (UTC/GMT)</description>
+            </number>
+        </structure>
+        <structure name="ExtraField Info-ZIP" id="190" alignment="0" extends="id:194" encoding="ISO_8859-1:1987" endian="big" signed="no" debug="yes">
+            <number name="Header ID" id="216" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Info-ZIP" value="0x5855"/>
+                </fixedvalues>
+            </number>
+            <number name="DataSize" id="217" type="integer"/>
+            <binary name="Data" id="218" length="remaining"/>
+        </structure>
+        <structure name="ExtraField WinNT Security Descriptor" id="192" extends="id:194">
+            <number name="Header ID" id="220" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="SD" value="0x4453"/>
+                </fixedvalues>
+            </number>
+            <number name="DataSize" id="221" type="integer"/>
+            <number name="BSize" id="222" fillcolor="FF89D8" type="integer" length="4"/>
+            <number name="Version" id="223" fillcolor="FF84FF" repeatmin="0" type="integer" length="1"/>
+            <number name="CType" id="224" fillcolor="75D5FF" repeatmin="0" type="integer" length="2"/>
+            <number name="EACRC" id="225" fillcolor="72FCD5" repeatmin="0" type="integer" length="4" display="hex"/>
+            <binary name="SD_Data" id="226" fillcolor="D4FB78" repeatmin="0" length="remaining"/>
+        </structure>
+        <structure name="Data descriptor test" id="228" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <scriptelement name="Data Descriptor" id="229">
+                <script name="unnamed" type="Generic">
+                    <source language="Lua">-- get collection with results so far
+results = currentMapper:getCurrentResults()
+logSrc = currentMapper:getCurrentLogSrc()
+
+result = results:getResultByName(&quot;General purpose bit flag&quot;)
+
+local function check_int(n)&#13;
+ -- checking not float&#13;
+ if(n - math.floor(n) &gt; 0) then&#13;
+  error(&quot;trying to use bitwise operation on non-integer!&quot;)&#13;
+ end&#13;
+end&#13;
+&#13;
+local function to_bits(n)&#13;
+ check_int(n)&#13;
+ if(n &lt; 0) then&#13;
+  -- negative&#13;
+  return to_bits(bit.bnot(math.abs(n)) + 1)&#13;
+ end&#13;
+ -- to bits table&#13;
+ local tbl = {}&#13;
+ local cnt = 1&#13;
+ while (n &gt; 0) do&#13;
+  local last = math.mod(n,2)&#13;
+  if(last == 1) then&#13;
+   tbl[cnt] = 1&#13;
+  else&#13;
+   tbl[cnt] = 0&#13;
+  end&#13;
+  n = (n-last)/2&#13;
+  cnt = cnt + 1&#13;
+ end&#13;
+&#13;
+ return tbl&#13;
+end&#13;
+
+local function tbl_to_number(tbl)&#13;
+ local n = table.getn(tbl)&#13;
+&#13;
+ local rslt = 0&#13;
+ local power = 1&#13;
+ for i = 1, n do&#13;
+  rslt = rslt + tbl[i]*power&#13;
+  power = power*2&#13;
+ end&#13;
+ &#13;
+ return rslt&#13;
+end&#13;
+&#13;
+&#13;
+local function expand(tbl_m, tbl_n)&#13;
+ local big = {}&#13;
+ local small = {}&#13;
+ if(table.getn(tbl_m) &gt; table.getn(tbl_n)) then&#13;
+  big = tbl_m&#13;
+  small = tbl_n&#13;
+ else&#13;
+  big = tbl_n&#13;
+  small = tbl_m&#13;
+ end&#13;
+ -- expand small&#13;
+ for i = table.getn(small) + 1, table.getn(big) do&#13;
+  small[i] = 0&#13;
+ end&#13;
+&#13;
+end&#13;
+&#13;
+
+local function bit_and(m, n)&#13;
+ local tbl_m = to_bits(m)&#13;
+ local tbl_n = to_bits(n)&#13;
+ expand(tbl_m, tbl_n) &#13;
+&#13;
+ local tbl = {}&#13;
+ local rslt = math.max(table.getn(tbl_m), table.getn(tbl_n))&#13;
+ for i = 1, rslt do&#13;
+  if(tbl_m[i]== 0 or tbl_n[i] == 0) then&#13;
+   tbl[i] = 0&#13;
+  else&#13;
+   tbl[i] = 1&#13;
+  end&#13;
+ end&#13;
+&#13;
+ return tbl_to_number(tbl)&#13;
+end&#13;
+&#13;
+
+if (result ~= null) then
+	value = result:getValue()
+	number = value:getUnsignedNumber()
+	if (bit_and(number, 8) ~= 0) then
+		logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, &quot;my message&quot; .. tostring(number))
+-- get currently processed grammar. This may change if another grammar is referenced
+currentGrammar = currentMapper:getCurrentGrammar()
+
+-- get the structure we want to apply
+structure = currentGrammar:getStructureByName(&quot;Data descriptor&quot;)
+
+-- map structure at current parsing position and add number of parsed bytes to enclosing structure
+bytesProcessed = currentMapper:mapStructure(structure)
+	end
+end
+
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+    </grammar>
+</ufwb>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9">
+    <grammar name="Postgres COPY BINARY Format" start="id:9" author="Daniel Schwarz" email="dan@butter.sh" complete="yes">
+        <description>Grammar for binary file format postgres uses to for the COPY operation. 
+Based on: http://www.postgresql.org/docs/9.4/static/sql-copy.html</description>
+        <structure name="File" id="9" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Header" id="3">
+                <structure name="Signature" id="12">
+                    <string name="PGCOPY" id="7" fillcolor="FEFC78" type="fixed-length" length="6">
+                        <fixedvalues>
+                            <fixedvalue name="PGCOPY" value="PGCOPY"/>
+                        </fixedvalues>
+                    </string>
+                    <binary name="\n" mustmatch="yes" id="5" fillcolor="FEFC78" length="1">
+                        <fixedvalues>
+                            <fixedvalue name="\n" value="0A"/>
+                        </fixedvalues>
+                    </binary>
+                    <binary name="FF" id="6" fillcolor="FEFC78" length="1">
+                        <fixedvalues>
+                            <fixedvalue name="0xFF" value="FF"/>
+                        </fixedvalues>
+                    </binary>
+                    <binary name="\r\n" mustmatch="yes" id="8" fillcolor="FEFC78" length="2">
+                        <fixedvalues>
+                            <fixedvalue name="\r\n" value="0D0A"/>
+                        </fixedvalues>
+                    </binary>
+                    <binary name="00" id="30" fillcolor="FEFC78" length="1">
+                        <fixedvalues>
+                            <fixedvalue name="\0" value="00"/>
+                        </fixedvalues>
+                    </binary>
+                </structure>
+                <binary name="Flags" id="14" fillcolor="D783FF" length="32" lengthunit="bit"/>
+                <number name="HeaderExtentionLength" id="15" fillcolor="72FA78" type="integer" length="32" lengthunit="bit" display="hex"/>
+                <binary name="HeaderExtention" id="16" fillcolor="75D5FF" length="HeaderExtentionLength"/>
+            </structure>
+            <structure name="Tuple" id="17" repeatmax="-1">
+                <number name="FieldCount" mustmatch="yes" id="25" fillcolor="FFD478" type="integer" length="16" lengthunit="bit" signed="yes" display="hex" minval="0x0" maxval="0xFFFE"/>
+                <structure name="Fields" id="35" repeat="id:25" repeatmin="FieldCount" repeatmax="FieldCount" order="variable">
+                    <structure name="NULL" id="31" repeatmin="0">
+                        <binary name="0xFFFF" mustmatch="yes" id="34" fillcolor="EAEAEA" length="4">
+                            <fixedvalues>
+                                <fixedvalue name="0xFFFFFFFF" value="FFFFFFFF"/>
+                            </fixedvalues>
+                        </binary>
+                    </structure>
+                    <structure name="FieldData" id="23" repeatmin="0">
+                        <number name="FieldLength" id="26" fillcolor="72FCD5" type="integer" length="32" lengthunit="bit" display="hex" minval="0x0" maxval="0xFFFE"/>
+                        <binary name="FieldData" id="27" fillcolor="D4FB78" length="FieldLength"/>
+                    </structure>
+                </structure>
+            </structure>
+            <structure name="Trailer" id="20">
+                <binary name="0xFFFF" mustmatch="yes" id="192" fillcolor="FF2600" length="remaining">
+                    <fixedvalues>
+                        <fixedvalue name="0xFFFF" value="FFFF"/>
+                    </fixedvalues>
+                </binary>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

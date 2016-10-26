@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.6">
+    <grammar name="Named Binary Tag" start="id:2008" author="Michael Maier" email="michael.maier@xplo-re.org" fileextension="dat" complete="yes">
+        <description>Decodes uncompressed NBT files that are used by Minecraft to store arbitrary information, including level data.
+
+Specification:
+http://web.archive.org/web/20110723210920/http://www.minecraft.net/docs/NBT.txt
+
+Released under the GNU LGPL v3.0:
+http://www.gnu.org/licenses/lgpl.html
+
+Please mail errors or improvements to the given email address. Thanks.</description>
+        <structure name="Name" id="2009" length="0" encoding="UTF-8" endian="big" signed="yes" order="variable">
+            <number name="ZeroLength" mustmatch="yes" id="2010" fillcolor="72FCD5" repeatmin="0" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="Zero" value="0"/>
+                </fixedvalues>
+            </number>
+            <structure name="Contents" id="2011" repeatmin="0">
+                <number name="Length" mustmatch="yes" id="2012" fillcolor="72FCD5" type="integer" length="2" minval="1"/>
+                <string name="Value" id="2013" fillcolor="D4FB78" repeatmin="0" type="fixed-length" length="Length"/>
+            </structure>
+        </structure>
+        <structure name="End" id="2016" length="1" encoding="UTF-8" endian="big" signed="yes" fillcolor="000000">
+            <binary name="ID" mustmatch="yes" id="2017" fillcolor="000000" repeatmin="0" length="1">
+                <fixedvalues>
+                    <fixedvalue name="TAG_End" value="00"/>
+                </fixedvalues>
+            </binary>
+        </structure>
+        <structure name="Byte" id="2019" length="0" encoding="UTF-8" endian="big" signed="yes">
+            <binary name="ID" mustmatch="yes" id="2020" fillcolor="FF89D8" length="1">
+                <fixedvalues>
+                    <fixedvalue name="TAG_Byte" value="01"/>
+                </fixedvalues>
+            </binary>
+            <structref name="Name" id="2021" structure="id:2009"/>
+            <structref name="Payload" id="2023" structure="id:2022"/>
+        </structure>
+        <structure name="Byte Payload" id="2022" encoding="UTF-8" endian="big" signed="yes">
+            <number name="Value" id="2025" fillcolor="75D5FF" type="integer" length="1" display="hex"/>
+        </structure>
+        <structure name="Short" id="2027" encoding="UTF-8" endian="big" signed="yes">
+            <binary name="ID" mustmatch="yes" id="2028" fillcolor="FF89D8" length="1">
+                <fixedvalues>
+                    <fixedvalue name="TAG_Short" value="02"/>
+                </fixedvalues>
+            </binary>
+            <structref name="Name" id="2029" structure="id:2009"/>
+            <structref name="Short Payload" id="2031" structure="id:2030"/>
+        </structure>
+        <structure name="Short Payload" id="2030" encoding="UTF-8" endian="big" signed="yes">
+            <number name="Value" id="2033" fillcolor="7980FF" type="integer" length="2"/>
+        </structure>
+        <structure name="Integer" id="2035" encoding="UTF-8" endian="big" signed="yes">
+            <binary name="ID" mustmatch="yes" id="2036" fillcolor="FF89D8" length="1">
+                <fixedvalues>
+                    <fixedvalue name="TAG_Int" value="03"/>
+                </fixedvalues>
+            </binary>
+            <structref name="Name" id="2037" structure="id:2009"/>
+            <structref name="Payload" id="2039" structure="id:2038"/>
+        </structure>
+        <structure name="Integer Payload" id="2038" encoding="UTF-8" endian="big" signed="yes">
+            <number name="Value" id="2041" fillcolor="0096FF" type="integer" length="4"/>
+        </structure>
+        <structure name="Long" id="2043" encoding="UTF-8" endian="big" signed="yes">
+            <binary name="ID" mustmatch="yes" id="2044" fillcolor="FF89D8" length="1">
+                <fixedvalues>
+                    <fixedvalue name="TAG_Long" value="04"/>
+                </fixedvalues>
+            </binary>
+            <structref name="Name" id="2045" structure="id:2009"/>
+            <structref name="Long Payload" id="2047" structure="id:2046"/>
+        </structure>
+        <structure name="Long Payload" id="2046" encoding="UTF-8" endian="big" signed="yes">
+            <number name="Value" id="2049" fillcolor="0096FF" type="integer" length="8"/>
+        </structure>
+        <structure name="Float" id="2051" encoding="UTF-8" endian="big" signed="yes">
+            <binary name="ID" mustmatch="yes" id="2052" fillcolor="FF89D8" length="1">
+                <fixedvalues>
+                    <fixedvalue name="TAG_Float" value="05"/>
+                </fixedvalues>
+            </binary>
+            <structref name="Name" id="2053" structure="id:2009"/>
+            <structref name="Payload" id="2055" structure="id:2054"/>
+        </structure>
+        <structure name="Float Payload" id="2054" encoding="UTF-8" endian="big" signed="yes">
+            <number name="Value" id="2057" fillcolor="AB4CA9" type="float" length="32" lengthunit="bit"/>
+        </structure>
+        <structure name="Double" id="2059" encoding="UTF-8" endian="big" signed="yes">
+            <binary name="ID" mustmatch="yes" id="2060" fillcolor="FF89D8" length="1">
+                <fixedvalues>
+                    <fixedvalue name="TAG_Double" value="06"/>
+                </fixedvalues>
+            </binary>
+            <structref name="Name" id="2061" structure="id:2009"/>
+            <structref name="Payload" id="2063" structure="id:2062"/>
+        </structure>
+        <structure name="Double Payload" id="2062" encoding="UTF-8" endian="big" signed="yes">
+            <number name="Value" id="2065" fillcolor="FFA900" type="float" length="64" lengthunit="bit"/>
+        </structure>
+        <structure name="Byte Array" id="2067" length="0" encoding="UTF-8" endian="big" signed="yes">
+            <binary name="ID" mustmatch="yes" id="2068" fillcolor="FF89D8" length="1">
+                <fixedvalues>
+                    <fixedvalue name="TAG_Byte_Array" value="07"/>
+                </fixedvalues>
+            </binary>
+            <structref name="Name" id="2069" structure="id:2009"/>
+            <structref name="Payload" id="2071" structure="id:2070"/>
+        </structure>
+        <structure name="Byte Array Payload" id="2070" encoding="UTF-8" endian="big" signed="yes">
+            <number name="Size" id="2073" fillcolor="72FCD5" type="integer" length="4"/>
+            <binary name="Values" id="2074" fillcolor="941100" repeatmin="Size" repeatmax="Size" length="1"/>
+        </structure>
+        <structure name="String" id="2076" encoding="UTF-8" endian="big" signed="yes">
+            <binary name="ID" mustmatch="yes" id="2077" fillcolor="FF89D8" length="1">
+                <fixedvalues>
+                    <fixedvalue name="TAG_String" value="08"/>
+                </fixedvalues>
+            </binary>
+            <structref name="Name" id="2078" structure="id:2009"/>
+            <structref name="Payload" id="2080" fillcolor="FF89D8" structure="id:2079"/>
+        </structure>
+        <structure name="String Payload" id="2079" encoding="UTF-8" endian="big" signed="yes" order="variable">
+            <number name="ZeroLength" mustmatch="yes" id="2082" fillcolor="72FCD5" repeatmin="0" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="Zero" value="0"/>
+                </fixedvalues>
+            </number>
+            <structure name="Contents" id="2083" repeatmin="0">
+                <number name="Length" id="2084" fillcolor="72FCD5" type="integer" length="2"/>
+                <string name="Value" id="2085" fillcolor="AA7800" type="fixed-length" length="Length"/>
+            </structure>
+        </structure>
+        <structure name="List" id="2088" encoding="UTF-8" endian="big" signed="yes" strokecolor="942092">
+            <binary name="ID" mustmatch="yes" id="2089" fillcolor="FF89D8" length="1">
+                <fixedvalues>
+                    <fixedvalue name="TAG_List" value="09"/>
+                </fixedvalues>
+            </binary>
+            <structref name="Name" id="2090" structure="id:2009"/>
+            <structref name="Payload" id="2092" structure="id:2091"/>
+        </structure>
+        <structure name="List Payload" id="2091" encoding="UTF-8" endian="big" signed="yes" order="variable">
+            <structure name="Byte" id="2094" repeatmin="0">
+                <binary name="ID" mustmatch="yes" id="2095" fillcolor="FF84FF" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="TAG_Byte" value="01"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Size" id="2096" fillcolor="72FCD5" type="integer" length="4"/>
+                <structref name="Entry" id="2097" repeatmin="Size" repeatmax="Size" structure="id:2022"/>
+            </structure>
+            <structure name="Short" id="2099" repeatmin="0">
+                <binary name="ID" mustmatch="yes" id="2100" fillcolor="FF84FF" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="TAG_Short" value="02"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Size" id="2101" fillcolor="72FCD5" type="integer" length="4"/>
+                <structref name="Entry" id="2102" repeatmin="Size" repeatmax="Size" structure="id:2030"/>
+            </structure>
+            <structure name="Integer" id="2104" repeatmin="0">
+                <binary name="ID" mustmatch="yes" id="2105" fillcolor="FF84FF" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="TAG_Int" value="03"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Size" id="2106" fillcolor="72FCD5" type="integer" length="4"/>
+                <structref name="Entry" id="2107" repeatmin="Size" repeatmax="Size" structure="id:2038"/>
+            </structure>
+            <structure name="Long" id="2109" repeatmin="0">
+                <binary name="ID" mustmatch="yes" id="2110" fillcolor="FF84FF" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="TAG_Long" value="04"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Size" id="2111" fillcolor="72FCD5" type="integer" length="4"/>
+                <structref name="Entry" id="2112" repeatmin="Size" repeatmax="Size" structure="id:2046"/>
+            </structure>
+            <structure name="Float" id="2114" repeatmin="0">
+                <binary name="ID" mustmatch="yes" id="2115" fillcolor="FF84FF" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="TAG_Float" value="05"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Size" id="2116" fillcolor="72FCD5" type="integer" length="4"/>
+                <structref name="Entry" id="2117" repeatmin="Size" repeatmax="Size" structure="id:2054"/>
+            </structure>
+            <structure name="Double" id="2119" repeatmin="0">
+                <binary name="ID" mustmatch="yes" id="2120" fillcolor="FF84FF" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="TAG_Double" value="06"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Size" id="2121" fillcolor="72FCD5" type="integer" length="4"/>
+                <structref name="Entry" id="2122" repeatmin="Size" repeatmax="Size" structure="id:2062"/>
+            </structure>
+            <structure name="ByteArray" id="2124" repeatmin="0">
+                <binary name="ID" mustmatch="yes" id="2125" fillcolor="FF84FF" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="TAG_Byte_Array" value="07"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Size" id="2126" fillcolor="72FCD5" type="integer" length="4"/>
+                <structref name="Entry" id="2127" repeatmin="Size" repeatmax="Size" structure="id:2070"/>
+            </structure>
+            <structure name="String" id="2129" repeatmin="0">
+                <binary name="ID" mustmatch="yes" id="2130" fillcolor="FF84FF" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="TAG_String" value="08"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Size" id="2131" fillcolor="72FCD5" type="integer" length="4"/>
+                <structref name="Entry" id="2132" repeatmin="Size" repeatmax="Size" structure="id:2079"/>
+            </structure>
+            <structure name="List" id="2134" repeatmin="0">
+                <binary name="ID" mustmatch="yes" id="2135" fillcolor="FF84FF" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="TAG_List" value="09"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Size" id="2136" fillcolor="72FCD5" type="integer" length="4"/>
+                <structref name="Entry" id="2137" repeatmin="Size" repeatmax="Size" structure="id:2091"/>
+            </structure>
+            <structure name="Compound" id="2139" repeatmin="0">
+                <binary name="ID" mustmatch="yes" id="2140" fillcolor="FF84FF" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="TAG_Compound" value="0A"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Size" id="2141" fillcolor="72FCD5" type="integer" length="4"/>
+                <structref name="Entry" id="2143" repeatmin="Size" repeatmax="Size" structure="id:2142"/>
+            </structure>
+            <structure name="IntArray" id="2145" repeatmin="0">
+                <binary name="ID" mustmatch="yes" id="2146" fillcolor="FF84FF" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="TAG_Int_Array" value="0B"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Size" id="2147" fillcolor="72FCD5" type="integer" length="4"/>
+                <structref name="Entry" id="2149" repeatmin="Size" repeatmax="Size" structure="id:2148"/>
+            </structure>
+        </structure>
+        <structure name="Compound" id="2008" encoding="UTF-8" endian="big" signed="yes" strokecolor="FF9300">
+            <binary name="ID" mustmatch="yes" id="2152" fillcolor="FF89D8" length="1">
+                <fixedvalues>
+                    <fixedvalue name="TAG_Compound" value="0A"/>
+                </fixedvalues>
+            </binary>
+            <structref name="Name" id="2153" structure="id:2009"/>
+            <structref name="Payload" id="2154" structure="id:2142"/>
+        </structure>
+        <structure name="Compound Payload" id="2142" encoding="UTF-8" endian="big" signed="yes">
+            <structure name="Compund Set" id="2156" repeatmin="0" repeatmax="-1" order="variable">
+                <structref name="Byte" id="2157" repeatmin="0" repeatmax="-1" structure="id:2019"/>
+                <structref name="Short" id="2158" repeatmin="0" repeatmax="-1" structure="id:2027"/>
+                <structref name="Integer" id="2159" repeatmin="0" repeatmax="-1" structure="id:2035"/>
+                <structref name="Long" id="2160" repeatmin="0" repeatmax="-1" structure="id:2043"/>
+                <structref name="Float" id="2161" repeatmin="0" repeatmax="-1" structure="id:2051"/>
+                <structref name="Double" id="2162" repeatmin="0" repeatmax="-1" structure="id:2059"/>
+                <structref name="ByteArray" id="2163" repeatmin="0" repeatmax="-1" structure="id:2067"/>
+                <structref name="String" id="2164" repeatmin="0" repeatmax="-1" structure="id:2076"/>
+                <structref name="List" id="2165" repeatmin="0" repeatmax="-1" structure="id:2088"/>
+                <structref name="Compound" id="2166" repeatmin="0" repeatmax="-1" structure="id:2008"/>
+                <structref name="IntArray" id="2168" repeatmin="0" repeatmax="-1" structure="id:2167"/>
+            </structure>
+            <structref name="End" id="2170" structure="id:2016"/>
+        </structure>
+        <structure name="Integer Array" id="2167" encoding="UTF-8" endian="big" signed="yes">
+            <binary name="ID" mustmatch="yes" id="2172" strokecolor="941100" fillcolor="FF89D8" length="1">
+                <fixedvalues>
+                    <fixedvalue name="TAG_Int_Array" value="0B"/>
+                </fixedvalues>
+            </binary>
+            <structref name="Name" id="2173" structure="id:2009"/>
+            <structref name="Payload" id="2174" structure="id:2148"/>
+        </structure>
+        <structure name="Integer Array Payload" id="2148" encoding="UTF-8" endian="big" signed="yes">
+            <number name="Size" id="2176" fillcolor="72FCD5" type="integer" length="4"/>
+            <number name="Values" id="2177" fillcolor="FFD478" repeatmin="Size" repeatmax="Size" type="integer" length="4"/>
+        </structure>
+    </grammar>
+</ufwb>

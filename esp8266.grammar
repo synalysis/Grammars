@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9">
+    <grammar name="ESP8266 Firmware" start="id:22" author="Fabian Off" email="fabian+esp8266@simpletechs.net" complete="yes">
+        <description>Grammar for firmware files of the popular ESP8266 Wifi module.</description>
+        <structure name="ESP8266 Firmware" id="22" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="FWMagic" mustmatch="yes" id="23" type="integer" length="1" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="Magic" value="0xE9"/>
+                </fixedvalues>
+            </number>
+            <number name="Segments" id="24" type="integer" length="1"/>
+            <number name="unknown_0" id="25" type="integer" length="2" display="hex"/>
+            <number name="Entrypoint" id="26" type="integer" length="4" endian="little" display="hex"/>
+            <structure name="Segment" id="27" repeat="id:24" repeatmin="0" repeatmax="16">
+                <number name="Offset" id="28" type="integer" length="4" endian="little" display="hex"/>
+                <number name="Size" id="29" type="integer" length="4" endian="little"/>
+                <binary name="Content" id="30" length="Size"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

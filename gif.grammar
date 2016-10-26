@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.1.4.3">
+    <grammar name="GIF" start="id:47" author="Andreas Pehnack" uti="com.compuserve.gif">
+        <description>Grammar for GIF files</description>
+        <structure name="GIF file" id="47" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Header" id="49">
+                <string name="EyeCatcher" mustmatch="yes" id="51" fillcolor="FF7B7A" type="fixed-length" length="3" encoding="ISO_8859-1:1987">
+                    <fixedvalue name="Eye catcher" value="GIF"/>
+                </string>
+                <string name="Version" id="54" fillcolor="FF7B7A" type="fixed-length" length="3" encoding="ISO_8859-1:1987"/>
+            </structure>
+            <structure name="LogicalScreenDescriptor" id="55">
+                <number name="Width" id="52" fillcolor="54FA8A" type="integer" length="2"/>
+                <number name="Height" id="53" fillcolor="54FA8A" type="integer" length="2"/>
+                <number name="PackedFields" id="59" fillcolor="DE83F7" type="integer" length="1" display="hex">
+                    <mask name="GlobalColorTableFlag" value="0x80">
+                        <fixedvalue name="No Global Color Table follows" value="0x0"/>
+                        <fixedvalue name="A Global Color Table will immediately follow" value="0x80"/>
+                    </mask>
+                    <mask name="ColorResolution" value="0x70">
+                        <fixedvalue name="ColorResolution" value="0x70"/>
+                    </mask>
+                    <mask name="SortFlag" value="0x8">
+                        <fixedvalue name="Not ordered" value="0x0"/>
+                        <fixedvalue name="Ordered by decreasing importance" value="0x8"/>
+                    </mask>
+                    <mask name="SizeOfGlobalColorTable" value="0x7">
+                        <fixedvalue name="SizeOfGlobalColorTable" value="0x7"/>
+                    </mask>
+                </number>
+                <number name="BackgroundColorIndex" id="57" type="integer" length="1"/>
+                <number name="PixelAspectRatio" id="58" type="integer" length="1"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

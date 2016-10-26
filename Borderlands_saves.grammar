@@ -1,0 +1,1167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.0.3">
+    <grammar name="Borderlands save" start=".sav" author="xvi" fileextension="sav" complete="yes">
+        <description>Version 1.0.2
+Grammar for Borderlands save (located in &quot;~/Library/Preferences/Feral Interactive/Borderlands/SaveData/&quot;). File format mostly infered from WillowTree# source code (https://sourceforge.net/projects/willowtree/).</description>
+        <structure name="defaults" id="8719" encoding="ISO_8859-1:1987" endian="little" signed="no"/>
+        <structure name="BE" id="8721" extends="defaults" endian="big"/>
+        <structure name="LE" id="8723" extends="defaults" endian="little"/>
+        <structure name="String32 BE" id="8725" extends="BE">
+            <number name="size" id="8726" type="integer" length="4"/>
+            <structure name="string container" id="8727" length="prev.size">
+                <string name="string" id="8728" type="zero-terminated"/>
+            </structure>
+        </structure>
+        <structure name="String32 LE" id="8731" extends="LE">
+            <number name="size" id="8732" type="integer" length="4"/>
+            <structure name="string container" id="8733" length="prev.size">
+                <string name="string" id="8734" type="zero-terminated"/>
+            </structure>
+        </structure>
+        <structure name="BankString32 BE" id="8737" extends="BE">
+            <number name="ComposeMask" id="8738" type="integer" length="1" display="hex">
+                <mask name="Part1SubObject" value="0x1">
+                    <fixedvalue name="Part1SubObject" value="0x1"/>
+                </mask>
+                <mask name="Part2SubObject" value="0x2">
+                    <fixedvalue name="Part2SubObject" value="0x2"/>
+                </mask>
+                <mask name="Part3SubObject" value="0x4">
+                    <fixedvalue name="Part3SubObject" value="0x4"/>
+                </mask>
+                <mask name="Part4SubObject" value="0x8">
+                    <fixedvalue name="Part4SubObject" value="0x8"/>
+                </mask>
+                <mask name="Part5SubObject" value="0x10">
+                    <fixedvalue name="Part5SubObject" value="0x10"/>
+                </mask>
+                <mask name="Part6SubObject" value="0x20">
+                    <fixedvalue name="Part6SubObject" value="0x20"/>
+                </mask>
+            </number>
+            <structref name="Part1" id="8739" structure="String32 BE"/>
+            <structref name="Part2" id="8740" structure="String32 BE"/>
+            <structref name="Part3" id="8741" structure="String32 BE"/>
+            <structref name="Part4" id="8742" structure="String32 BE"/>
+            <structref name="Part5" id="8743" structure="String32 BE"/>
+            <structref name="Part6" id="8744" structure="String32 BE"/>
+        </structure>
+        <structure name="BankString32 LE" id="8746" extends="LE">
+            <number name="ComposeMask" id="8747" type="integer" length="1" display="hex">
+                <mask name="Part1SubObject" value="0x1">
+                    <fixedvalue name="Part1SubObject" value="0x1"/>
+                </mask>
+                <mask name="Part2SubObject" value="0x2">
+                    <fixedvalue name="Part2SubObject" value="0x2"/>
+                </mask>
+                <mask name="Part3SubObject" value="0x4">
+                    <fixedvalue name="Part3SubObject" value="0x4"/>
+                </mask>
+                <mask name="Part4SubObject" value="0x8">
+                    <fixedvalue name="Part4SubObject" value="0x8"/>
+                </mask>
+                <mask name="Part5SubObject" value="0x10">
+                    <fixedvalue name="Part5SubObject" value="0x10"/>
+                </mask>
+                <mask name="Part6SubObject" value="0x20">
+                    <fixedvalue name="Part6SubObject" value="0x20"/>
+                </mask>
+            </number>
+            <structref name="Part1" id="8748" structure="String32 LE"/>
+            <structref name="Part2" id="8749" structure="String32 LE"/>
+            <structref name="Part3" id="8750" structure="String32 LE"/>
+            <structref name="Part4" id="8751" structure="String32 LE"/>
+            <structref name="Part5" id="8752" structure="String32 LE"/>
+            <structref name="Part6" id="8753" structure="String32 LE"/>
+        </structure>
+        <structure name=".sav BE" id="8755" extends="BE">
+            <string name="WSG" mustmatch="yes" id="8756" type="fixed-length" length="3">
+                <fixedvalue name="WSG" value="WSG"/>
+            </string>
+            <number name="WSG version" mustmatch="yes" id="8757" type="integer" length="4">
+                <fixedvalue name="Version2" value="2"/>
+            </number>
+            <string name="PLYR" mustmatch="yes" id="8758" type="fixed-length" length="4">
+                <fixedvalue name="PLYR" value="PLYR"/>
+            </string>
+            <number name="RevisionNumber" id="8759" type="integer" length="4"/>
+            <structref name="Class" id="8760" structure="String32 BE"/>
+            <number name="Level" id="8761" type="integer" length="4"/>
+            <number name="Experience" id="8762" type="integer" length="4"/>
+            <number name="SkillPoints" id="8763" type="integer" length="4"/>
+            <number name="Unknown1" id="8764" type="integer" length="4"/>
+            <number name="Cash" id="8765" type="integer" length="4"/>
+            <number name="FinishedPlaythrough1" id="8766" type="integer" length="4"/>
+            <structure name="Skills" id="8767">
+                <number name="Skills" id="8768" type="integer" length="4"/>
+                <structure name="Skill" id="8769" repeat="id:8768" repeatmin="0" repeatmax="2147483647">
+                    <structref name="SkillName" id="8770" structure="String32 BE"/>
+                    <number name="LevelOfSkill" id="8771" type="integer" length="4"/>
+                    <number name="ExperienceOfSkill" id="8772" type="integer" length="4"/>
+                    <number name="InUse" id="8773" type="integer" length="4" signed="yes"/>
+                </structure>
+            </structure>
+            <number name="Car1Color" id="8776" type="integer" length="4">
+                <fixedvalue name="RANGE RACER" value="0"/>
+                <fixedvalue name="VEHICLE X" value="1"/>
+                <fixedvalue name="BLUE SKY" value="2"/>
+                <fixedvalue name="MEAN GREEN" value="3"/>
+                <fixedvalue name="BLASTER MASTER" value="4"/>
+                <fixedvalue name="GENERAL FLEE" value="5"/>
+                <fixedvalue name="FUEGO" value="6"/>
+                <fixedvalue name="FLAMINGO" value="7"/>
+            </number>
+            <number name="Car2Color" id="8777" type="integer" length="4">
+                <fixedvalue name="RANGE RACER" value="0"/>
+                <fixedvalue name="VEHICLE X" value="1"/>
+                <fixedvalue name="BLUE SKY" value="2"/>
+                <fixedvalue name="MEAN GREEN" value="3"/>
+                <fixedvalue name="BLASTER MASTER" value="4"/>
+                <fixedvalue name="GENERAL FLEE" value="5"/>
+                <fixedvalue name="FUEGO" value="6"/>
+                <fixedvalue name="FLAMINGO" value="7"/>
+            </number>
+            <number name="Car1Type" id="8778" type="integer" length="4">
+                <fixedvalue name="Rocket Launcher" value="0"/>
+                <fixedvalue name="Machine Gun" value="1"/>
+            </number>
+            <number name="Car2Type" id="8779" type="integer" length="4">
+                <fixedvalue name="Rocket Launcher" value="0"/>
+                <fixedvalue name="Machine Gun" value="1"/>
+            </number>
+            <structure name="AmmoPools" id="8780">
+                <number name="AmmoPools" id="8781" type="integer" length="4"/>
+                <structure name="AmmoPool" id="8782" repeat="id:8781" repeatmin="0" repeatmax="2147483647">
+                    <structref name="ResourcePoolName" id="8783" structure="String32 BE"/>
+                    <structref name="AmmoPoolName" id="8784" structure="String32 BE"/>
+                    <number name="Ammo" id="8785" type="float" length="4"/>
+                    <number name="AmmoPoolLevel" id="8786" type="integer" length="4"/>
+                </structure>
+            </structure>
+            <structure name="Items" id="8789">
+                <number name="Items" id="8790" type="integer" length="4"/>
+                <structure name="Item" id="8791" repeat="id:8790" repeatmin="0" repeatmax="2147483647">
+                    <structref name="Grade" id="8792" structure="String32 BE"/>
+                    <structref name="Type" id="8793" structure="String32 BE"/>
+                    <structref name="Body" id="8794" structure="String32 BE"/>
+                    <structref name="LeftSide" id="8795" structure="String32 BE"/>
+                    <structref name="RightSide" id="8796" structure="String32 BE"/>
+                    <structref name="Material" id="8797" structure="String32 BE"/>
+                    <structref name="Manufacturer" id="8798" structure="String32 BE"/>
+                    <structref name="Prefix" id="8799" structure="String32 BE"/>
+                    <structref name="Title" id="8800" structure="String32 BE"/>
+                    <number name="Unknown1" id="8801" type="integer" length="4"/>
+                    <structure name="QualityLevel BE" id="8802" endian="big">
+                        <number name="Level" id="8803" type="integer" length="2"/>
+                        <number name="Quality" id="8804" type="integer" length="2" signed="yes"/>
+                    </structure>
+                    <number name="Equipped" id="8806" type="integer" length="4"/>
+                </structure>
+            </structure>
+            <number name="BackpackSize" id="8809" type="integer" length="4"/>
+            <number name="EquipSlots" id="8810" type="integer" length="4"/>
+            <structure name="Weapons" id="8811">
+                <number name="Weapons" id="8812" type="integer" length="4"/>
+                <structure name="Weapon" id="8813" repeat="id:8812" repeatmin="0" repeatmax="2147483647">
+                    <structref name="Grade" id="8814" structure="String32 BE"/>
+                    <structref name="Manufacturer" id="8815" structure="String32 BE"/>
+                    <structref name="Type" id="8816" structure="String32 BE"/>
+                    <structref name="Body" id="8817" structure="String32 BE"/>
+                    <structref name="Grip" id="8818" structure="String32 BE"/>
+                    <structref name="Magazine" id="8819" structure="String32 BE"/>
+                    <structref name="Barrel" id="8820" structure="String32 BE"/>
+                    <structref name="Sight" id="8821" structure="String32 BE"/>
+                    <structref name="Stock" id="8822" structure="String32 BE"/>
+                    <structref name="Action" id="8823" structure="String32 BE"/>
+                    <structref name="Accessory" id="8824" structure="String32 BE"/>
+                    <structref name="Material" id="8825" structure="String32 BE"/>
+                    <structref name="Prefix" id="8826" structure="String32 BE"/>
+                    <structref name="Title" id="8827" structure="String32 BE"/>
+                    <number name="Unknown1" id="8828" type="integer" length="4"/>
+                    <structure name="QualityLevel BE" id="8829" endian="big">
+                        <number name="Level" id="8830" type="integer" length="2"/>
+                        <number name="Quality" id="8831" type="integer" length="2" signed="yes"/>
+                    </structure>
+                    <number name="EquippedSlot" id="8833" type="integer" length="4"/>
+                </structure>
+            </structure>
+            <number name="ChallengeDataLength" id="8836" type="integer" length="4"/>
+            <structure name="ChallengeData" id="8837" length="ChallengeDataLength" encoding="ISO_8859-1:1987" endian="little" signed="no">
+                <number name="BlockId" id="8838" type="integer" length="4"/>
+                <number name="DataLength" id="8839" type="integer" length="4"/>
+                <structure name="DataEntry array" id="8840" length="prev.DataLength" encoding="ISO_8859-1:1987" endian="little" signed="no">
+                    <number name="DataEntries" id="8841" type="integer" length="2"/>
+                    <structure name="DataEntry" id="8842" encoding="ISO_8859-1:1987" endian="little" signed="no" order="variable">
+                        <structure name="DataEntry int" id="8843" repeatmin="0" encoding="ISO_8859-1:1987" endian="little" signed="no">
+                            <number name="Id" mustmatch="yes" id="8844" type="integer" length="2" display="hex">
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED" value="0x655"/>
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED_PISTOL" value="0x656"/>
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED_SHOTGUN" value="0x657"/>
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED_SMG" value="0x658"/>
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED_SNIPERRIFLE" value="0x659"/>
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED_ROCKETLAUNCHER" value="0x65A"/>
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED_GRENADELAUNCHER" value="0x65B"/>
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED_ASSAULTRIFLE" value="0x65D"/>
+                                <fixedvalue name="STAT_PLAYER_WEAPONS_PICKED_UP" value="0x65E"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS" value="0x65F"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SKAG" value="0x660"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_PISTOL" value="0x661"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_SHOTGUN" value="0x662"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_SMG" value="0x663"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_SNIPER_RIFLE" value="0x664"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_ASSAULT_RIFLE" value="0x665"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_FRAG_GRENADE" value="0x666"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_PROTEAN_GRENADE" value="0x667"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_VEHICLE" value="0x668"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_VEHICLE_WEAPON" value="0x669"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_CORROSIVE_ATTACK" value="0x66A"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_INCINDIARY_ATTACK" value="0x66B"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_SHOCK_ATTACK" value="0x66C"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_EXPLOSIVE_ATTACK" value="0x66D"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_CRITICAL_HIT" value="0x66E"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_ALPHA_SKAG" value="0x66F"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SPITTER_SKAG" value="0x670"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_YOUNG_SKAG" value="0x671"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_MELEE_ATTACK" value="0x672"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_BARNACLE" value="0x673"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SCYTHID_CRAWLER" value="0x674"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SCYTHID_DRONE" value="0x675"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SCYTHID_SPRINTER" value="0x676"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SCYTHID_WARRIOR" value="0x677"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_BANDIT" value="0x678"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_RAKK" value="0x679"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_AUTOMATED_TURRET" value="0x67A"/>
+                                <fixedvalue name="STAT_PLAYER_DUELS_WINS" value="0x67B"/>
+                                <fixedvalue name="STAT_PLAYER_DUELS_LOSSES" value="0x67C"/>
+                                <fixedvalue name="STAT_PLAYER_DUELS_DRAWS" value="0x67D"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_KILLS" value="0x67E"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_DEATHS" value="0x67F"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_ROUNDSWON" value="0x680"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_ROUNDSLOST" value="0x681"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_ROUNDSDRAW" value="0x682"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_MATCHESWON" value="0x683"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_MATCHESLOST" value="0x684"/>
+                                <fixedvalue name="STAT_PLAYER_CHESTS_OPENED" value="0x685"/>
+                                <fixedvalue name="STAT_PLAYER_LOOTABLES_OPENED" value="0x686"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_CONSECUTIVEROUNDSWON" value="0x687"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_CONSECUTIVEMATCHESWON" value="0x688"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_MAXCONSECUTIVEROUNDSWON" value="0x689"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_MAXCONSECUTIVEMATCHESWON" value="0x68A"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SLEDGE_BANDIT" value="0x68B"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_INSANE_BANDIT" value="0x68C"/>
+                                <fixedvalue name="STAT_PLAYER_INVENTORY_PURCHASED" value="0x68D"/>
+                                <fixedvalue name="STAT_PLAYER_INVENTORY_SOLD" value="0x68E"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_TEDIORE" value="0x68F"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_JAKOBS" value="0x690"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_TORGUE" value="0x691"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_HYPERION" value="0x692"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_MALIWAN" value="0x693"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_S_AND_S" value="0x694"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_ATLAS" value="0x695"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_DAHL" value="0x696"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_VLADOF" value="0x697"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_PANGOLIN" value="0x698"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_CORRAZA" value="0x699"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_ANSHIN" value="0x69A"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_ERIDAN" value="0x69B"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_GEARBOX" value="0x69C"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_PRINCIPLE_GUARDIAN" value="0x69D"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SERA_GUARDIAN" value="0x69E"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_ARCH_GUARDIAN" value="0x69F"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_CHERUB_GUARDIAN" value="0x6A0"/>
+                                <fixedvalue name="STAT_PLAYER_CURRENCY_EARNED" value="0x6A1"/>
+                                <fixedvalue name="STAT_VEHICLE_HANG_TIME" value="0x6A2"/>
+                                <fixedvalue name="STAT_QUESTS_COMPLETED_ZONE_ZERO" value="0x6A3"/>
+                                <fixedvalue name="STAT_QUESTS_COMPLETED_ZONE_ONE" value="0x6A4"/>
+                                <fixedvalue name="STAT_QUESTS_COMPLETED_ZONE_TWO" value="0x6A5"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_ACTION_SKILL" value="0x6A6"/>
+                                <fixedvalue name="STAT_QUESTS_COMPLETED_COOP" value="0x6A7"/>
+                                <fixedvalue name="STAT_SPENT_SKILL_POINT" value="0x6A8"/>
+                                <fixedvalue name="STAT_PLAYER_TIMES_INJURED" value="0x6A9"/>
+                                <fixedvalue name="STAT_PLAYER_TECH_WEAPONS_PICKED_UP" value="0x6AA"/>
+                                <fixedvalue name="STAT_PLAYER_SHOCK_WEAPONS_PICKED_UP" value="0x6AB"/>
+                                <fixedvalue name="STAT_PLAYER_GRENADES_PICKED_UP" value="0x6AC"/>
+                                <fixedvalue name="STAT_PLAYER_PICKUP_FAILS_FULL" value="0x6AD"/>
+                                <fixedvalue name="STAT_PLAYER_HOVERED_OVER_INSTINCT" value="0x6AE"/>
+                                <fixedvalue name="STAT_PLAYER_CORROSIVE_WEAPONS_PICKED_UP" value="0x6AF"/>
+                                <fixedvalue name="STAT_PLAYER_INCENDIARY_WEAPONS_PICKED_UP" value="0x6B0"/>
+                                <fixedvalue name="STAT_PLAYER_SLOW_WEAPONS_PICKED_UP" value="0x6B1"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_HIGHEST_SPREE" value="0x6B2"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_LEVEL_UP" value="0x6B3"/>
+                                <fixedvalue name="STAT_PLAYER_UNLOCKED_ADRENALINE_SKILL" value="0x6B4"/>
+                                <fixedvalue name="STAT_PLAYER_UNLOCKED_ACTION_SKILL" value="0x6B5"/>
+                                <fixedvalue name="STAT_PLAYER_EXPLOSIVE_WEAPONS_PICKED_UP" value="0x6B7"/>
+                                <fixedvalue name="STAT_PLAYER_STORAGE_UPGRADE_PICKED_UP" value="0x6B8"/>
+                                <fixedvalue name="STAT_PLAYER_ELEMENTAL_ARTIFACT_PICKED_UP" value="0x6B9"/>
+                                <fixedvalue name="STAT_PLAYER_AMMO_CAPACITY_UPGRADE_PICKED_UP" value="0x6BA"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_AID_KIT_PICKED_UP" value="0x6BB"/>
+                                <fixedvalue name="STAT_PLAYER_ENTERED_VEHICLE" value="0x6BC"/>
+                                <fixedvalue name="STAT_PLAYER_GRENADE_PURCHASED" value="0x6BD"/>
+                                <fixedvalue name="STAT_PLAYER_SHIELD_PURCHASED" value="0x6BE"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_AID_KIT_PURCHASED" value="0x6BF"/>
+                                <fixedvalue name="STAT_PLAYER_AMMO_PURCHASED" value="0x6C0"/>
+                                <fixedvalue name="STAT_PLAYER_STORAGE_UPGRADE_PURCHASED" value="0x6C1"/>
+                                <fixedvalue name="STAT_PLAYER_COMMAND_DECK_PURCHASED" value="0x6C2"/>
+                                <fixedvalue name="STAT_PLAYER_ACTION_SKILL_USES" value="0x6C3"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_SKILL_POINT_ROLAND" value="0x6C4"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_SKILL_POINT_MORDECAI" value="0x6C5"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_SKILL_POINT_LILITH" value="0x6C6"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_SKILL_POINT_BRICK" value="0x6C7"/>
+                                <fixedvalue name="STAT_PLAYER_SHIELD_EQUIPPED" value="0x6C8"/>
+                                <fixedvalue name="STAT_PLAYER_GRENADE_MOD_EQUIPPED" value="0x6C9"/>
+                                <fixedvalue name="STAT_PLAYER_COMMAND_DECK_EQUIPPED" value="0x6CA"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_SKILL_POINT" value="0x6CB"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SKAG_WITH_VEHICLE" value="0x6CC"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_CRIMSONLANCE" value="0x6CD"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_LANCEBADASS" value="0x6CE"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_LANCEPYRO" value="0x6CF"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_LANCECHEMICAL" value="0x6D0"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_LANCESHOCK" value="0x6D1"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_JETPACK" value="0x6D2"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_DRIFTER" value="0x6D3"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_PRISONER" value="0x6D4"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_PROBE" value="0x6D5"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_MECH" value="0x6D6"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_ASSASSIN" value="0x6D7"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_MIDGET" value="0x6D8"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_LANCER" value="0x6D9"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_MONSTER" value="0x6DA"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_CRIMSONSHORTY" value="0x6DB"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_MEATPOPSICLE" value="0x6DC"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_DUMPSTERDIVER" value="0x6DD"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_MINISTEVE" value="0x6DE"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_TRUXICANWRESTLER" value="0x6DF"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_CRAWMERAX" value="0x6E0"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_CLAPTRAPS" value="0x6E1"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_BANDIT_TRAPS" value="0x6E2"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_RAKK_TRAPS" value="0x6E3"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_RAKK_TRAP_HIVE" value="0x6E4"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SKAG_TRAPS" value="0x6E5"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_HYPERION_SOLDIERS" value="0x6E6"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_HYPERION_SOLDER_TRAPS" value="0x6E7"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_CRAB_TRAPS" value="0x6E8"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SPIDERANT_TRAPS" value="0x6E9"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_HYPERION_SUPERBAD" value="0x6EA"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_DFAULT" value="0x6EB"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_KNOXX_TRAP" value="0x6EC"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_STEELE_TRAP" value="0x6ED"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_NED_TRAP" value="0x6EE"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_ZOMBIENED_TRAP" value="0x6EF"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_DFAULT_BANDITS" value="0x6F0"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_INAC" value="0x6F1"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_MINAC" value="0x6F2"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_MINAC_TURRETS" value="0x6F3"/>
+                                <fixedvalue name="STAT_PLAYER_CLAP_COMPONENT_1" value="0x6F4"/>
+                                <fixedvalue name="STAT_PLAYER_OILCANS_COLLECTED" value="0x6F5"/>
+                                <fixedvalue name="STAT_PLAYER_BOBBLEHEADS_COLLECTED" value="0x6F6"/>
+                                <fixedvalue name="STAT_PLAYER_3DGLASSES_COLLECTED" value="0x6F7"/>
+                                <fixedvalue name="STAT_PLAYER_PANTIES_COLLECTED" value="0x6F8"/>
+                                <fixedvalue name="STAT_PLAYER_FISHINABAG_COLLECTED" value="0x6F9"/>
+                                <fixedvalue name="STAT_PLAYER_PIZZAS_COLLECTED" value="0x6FA"/>
+                                <fixedvalue name="STAT_PLAYER_CLAP_COMPONENT_2" value="0x6FB"/>
+                                <fixedvalue name="STAT_PLAYER_CLAP_COMPONENT_3" value="0x6FC"/>
+                                <fixedvalue name="STAT_PLAYER_CLAP_COMPONENT_4" value="0x6FD"/>
+                                <fixedvalue name="STAT_PLAYER_CLAP_COMPONENT_5" value="0x6FE"/>
+                                <fixedvalue name="STAT_PLAYER_STATUE1_COLLECTED" value="0x6FF"/>
+                                <fixedvalue name="STAT_PLAYER_STATUE2_COLLECTED" value="0x700"/>
+                                <fixedvalue name="STAT_PLAYER_STATUE3_COLLECTED" value="0x701"/>
+                                <fixedvalue name="STAT_PLAYER_STATUE4_COLLECTED" value="0x702"/>
+                                <fixedvalue name="STAT_PLAYER_STATUE5_COLLECTED" value="0x703"/>
+                                <fixedvalue name="STAT_PLAYER_STATUE6_COLLECTED" value="0x704"/>
+                            </number>
+                            <number name="TypeId" mustmatch="yes" id="8845" type="integer" length="1">
+                                <fixedvalue name="int" value="1"/>
+                            </number>
+                            <number name="int" id="8846" type="integer" length="4"/>
+                        </structure>
+                        <structure name="DataEntry float" id="8848" repeatmin="0" encoding="ISO_8859-1:1987" endian="little" signed="no">
+                            <number name="Id" mustmatch="yes" id="8849" type="integer" length="2" display="hex">
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FG" value="0x705"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FH" value="0x706"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FI" value="0x707"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FJ" value="0x708"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FK" value="0x709"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FL" value="0x70A"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FM" value="0x70B"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FN" value="0x70C"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FO" value="0x70D"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FP" value="0x70E"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FQ" value="0x70F"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FR" value="0x710"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FS" value="0x711"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FT" value="0x712"/>
+                            </number>
+                            <number name="TypeId" mustmatch="yes" id="8850" type="integer" length="1">
+                                <fixedvalue name="float" value="5"/>
+                            </number>
+                            <number name="float" id="8851" type="float" length="4"/>
+                        </structure>
+                    </structure>
+                </structure>
+            </structure>
+            <structure name="DiscoveredLocations" id="8856">
+                <number name="DiscoveredLocations" id="8857" type="integer" length="4"/>
+                <structure name="DiscoveredLocation" id="8858" repeat="id:8857" repeatmin="0" repeatmax="2147483647">
+                    <structref name="LocationName" id="8859" structure="String32 BE"/>
+                </structure>
+            </structure>
+            <structref name="CurrentLocation" id="8862" structure="String32 BE"/>
+            <number name="SaveInfo 0" id="8863" type="integer" length="4"/>
+            <number name="SaveInfo 1" id="8864" type="integer" length="4"/>
+            <number name="SaveInfo 2" id="8865" type="integer" length="4"/>
+            <number name="SaveInfo 3" id="8866" type="integer" length="4"/>
+            <number name="SaveInfo 4" id="8867" type="integer" length="4"/>
+            <number name="SaveSlot" id="8868" type="integer" length="4"/>
+            <number name="SaveInfo 6" id="8869" type="integer" length="4"/>
+            <number name="SaveInfo 7" id="8870" type="integer" length="4"/>
+            <number name="SaveInfo 8" id="8871" type="integer" length="4"/>
+            <number name="SaveInfo 9" id="8872" type="integer" length="4"/>
+            <structref name="Playthrough1CurrentQuest" id="8873" structure="String32 BE"/>
+            <structure name="Playthrough1Quests" id="8874">
+                <number name="Playthrough1Quests" id="8875" type="integer" length="4"/>
+                <structure name="Playthrough1Quest" id="8876" repeat="id:8875" repeatmin="0" repeatmax="2147483647">
+                    <structref name="QuestName" id="8877" structure="String32 BE"/>
+                    <number name="State" id="8878" type="integer" length="4">
+                        <fixedvalue name="InProgress" value="1"/>
+                        <fixedvalue name="TurnIn" value="2"/>
+                        <fixedvalue name="Completed" value="4"/>
+                    </number>
+                    <number name="Unknown1" id="8879" type="integer" length="4"/>
+                    <number name="Unknown2" id="8880" type="integer" length="4"/>
+                    <number name="SubQuests" id="8881" type="integer" length="4"/>
+                    <structure name="SubQuest" id="8882" repeat="id:8881" repeatmin="0" repeatmax="2147483647">
+                        <structref name="SubQuestName" id="8883" structure="String32 BE"/>
+                        <number name="SubQuestState" id="8884" type="integer" length="4"/>
+                    </structure>
+                </structure>
+            </structure>
+            <number name="UnknownPlaythrough1QuestValue" id="8888" type="integer" length="4"/>
+            <structref name="Playthrough2CurrentQuest" id="8889" structure="String32 BE"/>
+            <structure name="Playthrough2Quests" id="8890">
+                <number name="Playthrough2Quests" id="8891" type="integer" length="4"/>
+                <structure name="Playthrough2Quest" id="8892" repeat="id:8891" repeatmin="0" repeatmax="2147483647">
+                    <structref name="QuestName" id="8893" structure="String32 BE"/>
+                    <number name="State" id="8894" type="integer" length="4">
+                        <fixedvalue name="InProgress" value="1"/>
+                        <fixedvalue name="TurnIn" value="2"/>
+                        <fixedvalue name="Completed" value="4"/>
+                    </number>
+                    <number name="Unknown1" id="8895" type="integer" length="4"/>
+                    <number name="Unknown2" id="8896" type="integer" length="4"/>
+                    <number name="SubQuests" id="8897" type="integer" length="4"/>
+                    <structure name="SubQuest" id="8898" repeat="id:8897" repeatmin="0" repeatmax="2147483647">
+                        <structref name="SubQuestName" id="8899" structure="String32 BE"/>
+                        <number name="SubQuestState" id="8900" type="integer" length="4"/>
+                    </structure>
+                </structure>
+            </structure>
+            <number name="UnknownPlaythrough2QuestValue" id="8904" type="integer" length="4"/>
+            <structref name="UnknownQuest1" id="8905" structure="String32 BE"/>
+            <number name="UnknownQuestValue1" id="8906" type="integer" length="4"/>
+            <structref name="UnknownQuest2" id="8907" structure="String32 BE"/>
+            <number name="UnknownQuestValue2" id="8908" type="integer" length="4"/>
+            <number name="UnknownQuestValue3" id="8909" type="integer" length="4"/>
+            <number name="UnknownQuestValue4" id="8910" type="integer" length="4"/>
+            <number name="UnknownQuestValue5" id="8911" type="integer" length="4"/>
+            <number name="TotalPlayTime" id="8912" type="integer" length="4"/>
+            <structref name="SaveDateAndTime" id="8913" structure="String32 BE"/>
+            <structref name="CharacterName" id="8914" structure="String32 BE"/>
+            <number name="Color1" id="8915" type="integer" length="4" display="hex"/>
+            <number name="Color2" id="8916" type="integer" length="4" display="hex"/>
+            <number name="Color3" id="8917" type="integer" length="4" display="hex"/>
+            <number name="Unknown2" id="8918" type="integer" length="4"/>
+            <structure name="UsedPromoCodes" id="8919">
+                <number name="UsedPromoCodes" id="8920" type="integer" length="4"/>
+                <structure name="UsedPromoCode" id="8921" repeat="id:8920" repeatmin="0" repeatmax="2147483647">
+                    <number name="UsedPromoCodes" id="8922" type="integer" length="4"/>
+                </structure>
+            </structure>
+            <structure name="PromoCodesRequiringNotification" id="8925">
+                <number name="PromoCodesRequiringNotification" id="8926" type="integer" length="4"/>
+                <structure name="PromoCodeRequiringNotification" id="8927" repeat="id:8926" repeatmin="0" repeatmax="2147483647">
+                    <number name="UsedPromoCodes" id="8928" type="integer" length="4"/>
+                </structure>
+            </structure>
+            <structure name="EchosLists" id="8931">
+                <number name="EchosLists" id="8932" type="integer" length="4"/>
+                <structure name="EchosList" id="8933" repeat="id:8932" repeatmin="0" repeatmax="2147483647">
+                    <number name="Index" id="8934" type="integer" length="4"/>
+                    <number name="Echos" id="8935" type="integer" length="4"/>
+                    <structure name="Echo" id="8936" repeat="id:8935" repeatmin="0" repeatmax="2147483647">
+                        <structref name="Name" id="8937" structure="String32 BE"/>
+                        <number name="Value1" id="8938" type="integer" length="4"/>
+                        <number name="Value2" id="8939" type="integer" length="4"/>
+                    </structure>
+                </structure>
+            </structure>
+            <number name="DLCDataLength" id="8943" type="integer" length="4"/>
+            <structure name="DLCData" id="8944" length="DLCDataLength" repeatmin="0" repeatmax="2147483647" order="variable">
+                <structure name="Section1" id="8945" repeatmin="0" encoding="ISO_8859-1:1987" endian="little" signed="no">
+                    <number name="Tag" mustmatch="yes" id="8946" type="integer" length="4" display="hex">
+                        <fixedvalue name="DLC1" value="0x43211234"/>
+                    </number>
+                    <number name="SectionLength" id="8947" type="integer" length="4"/>
+                    <structure name="Section" id="8948" length="SectionLength" encoding="ISO_8859-1:1987" endian="little" signed="no">
+                        <number name="Unknown1" id="8949" type="integer" length="1"/>
+                        <number name="BankSize" id="8950" type="integer" length="4"/>
+                        <number name="BankEntries" id="8951" type="integer" length="4"/>
+                        <structure name="BankEntry" id="8952" repeatmin="0" repeatmax="2147483647" encoding="ISO_8859-1:1987" endian="little" signed="no" order="variable">
+                            <structure name="Weapon" id="8953" repeatmin="0" encoding="ISO_8859-1:1987" endian="little" signed="no">
+                                <number name="TypeId" mustmatch="yes" id="8954" type="integer" length="1">
+                                    <fixedvalue name="Weapon" value="1"/>
+                                </number>
+                                <structref name="Type" id="8955" structure="BankString32 LE"/>
+                                <structref name="Grade" id="8956" structure="BankString32 LE"/>
+                                <structref name="Manufacturer" id="8957" structure="BankString32 LE"/>
+                            </structure>
+                            <structure name="Item" id="8976" repeatmin="0" encoding="ISO_8859-1:1987" endian="little" signed="no">
+                                <number name="TypeId" mustmatch="yes" id="8977" type="integer" length="1">
+                                    <fixedvalue name="Item" value="2"/>
+                                </number>
+                                <structref name="BankString 0" id="8978" structure="BankString32 LE"/>
+                                <structref name="BankString 1" id="8979" structure="BankString32 LE"/>
+                                <structref name="BankString 2" id="8980" structure="BankString32 LE"/>
+                            </structure>
+                        </structure>
+                    </structure>
+                </structure>
+                <structure name="Section2" id="8997" repeatmin="0">
+                    <number name="Tag" mustmatch="yes" id="8998" type="integer" length="4" display="hex">
+                        <fixedvalue name="Section2Id" value="0x2151984"/>
+                    </number>
+                    <number name="SectionLength" id="8999" type="integer" length="4"/>
+                    <structure name="Section" id="9000" length="SectionLength">
+                        <number name="Unknown1" id="9001" type="integer" length="4"/>
+                        <number name="Unknown2" id="9002" type="integer" length="4"/>
+                        <number name="Unknown3" id="9003" type="integer" length="4"/>
+                        <number name="SkipDLC2Intro" id="9004" type="integer" length="4"/>
+                    </structure>
+                </structure>
+                <structure name="Section3" id="9007" repeatmin="0">
+                    <number name="Tag" mustmatch="yes" id="9008" type="integer" length="4" display="hex">
+                        <fixedvalue name="Section3Id" value="0x32235947"/>
+                    </number>
+                    <number name="SectionLength" id="9009" type="integer" length="4"/>
+                    <structure name="Section" id="9010" length="SectionLength">
+                        <number name="Unknown1" id="9011" type="integer" length="1"/>
+                    </structure>
+                </structure>
+                <structure name="Section4" id="9014" repeatmin="0">
+                    <number name="Tag" mustmatch="yes" id="9015" type="integer" length="4" display="hex">
+                        <fixedvalue name="Section4Id" value="0x234BA901"/>
+                    </number>
+                    <number name="SectionLength" id="9016" type="integer" length="4"/>
+                    <structure name="Section" id="9017" length="SectionLength">
+                        <number name="SecondaryPackEnabled" id="9018" type="integer" length="1"/>
+                        <structure name="Items" id="9019">
+                            <number name="Items" id="9020" type="integer" length="4"/>
+                            <structure name="Item" id="9021" repeat="id:9020" repeatmin="0" repeatmax="2147483647">
+                                <structref name="Grade" id="9022" structure="String32 BE"/>
+                                <structref name="Type" id="9023" structure="String32 BE"/>
+                                <structref name="Body" id="9024" structure="String32 BE"/>
+                                <structref name="LeftSide" id="9025" structure="String32 BE"/>
+                                <structref name="RightSide" id="9026" structure="String32 BE"/>
+                                <structref name="Material" id="9027" structure="String32 BE"/>
+                                <structref name="Manufacturer" id="9028" structure="String32 BE"/>
+                                <structref name="Prefix" id="9029" structure="String32 BE"/>
+                                <structref name="Title" id="9030" structure="String32 BE"/>
+                                <number name="Unknown1" id="9031" type="integer" length="4"/>
+                                <structure name="QualityLevel BE" id="9032" endian="big">
+                                    <number name="Level" id="9033" type="integer" length="2"/>
+                                    <number name="Quality" id="9034" type="integer" length="2" signed="yes"/>
+                                </structure>
+                                <number name="Equipped" id="9036" type="integer" length="4"/>
+                            </structure>
+                        </structure>
+                        <structure name="Weapons" id="9039">
+                            <number name="Weapons" id="9040" type="integer" length="4"/>
+                            <structure name="Weapon" id="9041" repeat="id:9040" repeatmin="0" repeatmax="2147483647">
+                                <structref name="Grade" id="9042" structure="String32 BE"/>
+                                <structref name="Manufacturer" id="9043" structure="String32 BE"/>
+                                <structref name="Type" id="9044" structure="String32 BE"/>
+                                <structref name="Body" id="9045" structure="String32 BE"/>
+                                <structref name="Grip" id="9046" structure="String32 BE"/>
+                                <structref name="Magazine" id="9047" structure="String32 BE"/>
+                                <structref name="Barrel" id="9048" structure="String32 BE"/>
+                                <structref name="Sight" id="9049" structure="String32 BE"/>
+                                <structref name="Stock" id="9050" structure="String32 BE"/>
+                                <structref name="Action" id="9051" structure="String32 BE"/>
+                                <structref name="Accessory" id="9052" structure="String32 BE"/>
+                                <structref name="Material" id="9053" structure="String32 BE"/>
+                                <structref name="Prefix" id="9054" structure="String32 BE"/>
+                                <structref name="Title" id="9055" structure="String32 BE"/>
+                                <number name="Unknown1" id="9056" type="integer" length="4"/>
+                                <structure name="QualityLevel BE" id="9057" endian="big">
+                                    <number name="Level" id="9058" type="integer" length="2"/>
+                                    <number name="Quality" id="9059" type="integer" length="2" signed="yes"/>
+                                </structure>
+                                <number name="EquippedSlot" id="9061" type="integer" length="4"/>
+                            </structure>
+                        </structure>
+                    </structure>
+                </structure>
+            </structure>
+        </structure>
+        <structure name=".sav LE" id="9068" extends="LE">
+            <string name="WSG" mustmatch="yes" id="9069" type="fixed-length" length="3">
+                <fixedvalue name="WSG" value="WSG"/>
+            </string>
+            <number name="WSG version" mustmatch="yes" id="9070" type="integer" length="4">
+                <fixedvalue name="Version2" value="2"/>
+            </number>
+            <string name="PLYR" mustmatch="yes" id="9071" type="fixed-length" length="4">
+                <fixedvalue name="PLYR" value="PLYR"/>
+            </string>
+            <number name="RevisionNumber" id="9072" type="integer" length="4"/>
+            <structref name="Class" id="9073" structure="String32 LE"/>
+            <number name="Level" id="9074" type="integer" length="4"/>
+            <number name="Experience" id="9075" type="integer" length="4"/>
+            <number name="SkillPoints" id="9076" type="integer" length="4"/>
+            <number name="Unknown1" id="9077" type="integer" length="4"/>
+            <number name="Cash" id="9078" type="integer" length="4"/>
+            <number name="FinishedPlaythrough1" id="9079" type="integer" length="4"/>
+            <structure name="Skills" id="9080">
+                <number name="Skills" id="9081" type="integer" length="4"/>
+                <structure name="Skill" id="9082" repeat="id:9081" repeatmin="0" repeatmax="2147483647">
+                    <structref name="SkillName" id="9083" structure="String32 LE"/>
+                    <number name="LevelOfSkill" id="9084" type="integer" length="4"/>
+                    <number name="ExperienceOfSkill" id="9085" type="integer" length="4"/>
+                    <number name="InUse" id="9086" type="integer" length="4" signed="yes"/>
+                </structure>
+            </structure>
+            <number name="Car1Color" id="9089" type="integer" length="4">
+                <fixedvalue name="RANGE RACER" value="0"/>
+                <fixedvalue name="VEHICLE X" value="1"/>
+                <fixedvalue name="BLUE SKY" value="2"/>
+                <fixedvalue name="MEAN GREEN" value="3"/>
+                <fixedvalue name="BLASTER MASTER" value="4"/>
+                <fixedvalue name="GENERAL FLEE" value="5"/>
+                <fixedvalue name="FUEGO" value="6"/>
+                <fixedvalue name="FLAMINGO" value="7"/>
+            </number>
+            <number name="Car2Color" id="9090" type="integer" length="4">
+                <fixedvalue name="RANGE RACER" value="0"/>
+                <fixedvalue name="VEHICLE X" value="1"/>
+                <fixedvalue name="BLUE SKY" value="2"/>
+                <fixedvalue name="MEAN GREEN" value="3"/>
+                <fixedvalue name="BLASTER MASTER" value="4"/>
+                <fixedvalue name="GENERAL FLEE" value="5"/>
+                <fixedvalue name="FUEGO" value="6"/>
+                <fixedvalue name="FLAMINGO" value="7"/>
+            </number>
+            <number name="Car1Type" id="9091" type="integer" length="4">
+                <fixedvalue name="Rocket Launcher" value="0"/>
+                <fixedvalue name="Machine Gun" value="1"/>
+            </number>
+            <number name="Car2Type" id="9092" type="integer" length="4">
+                <fixedvalue name="Rocket Launcher" value="0"/>
+                <fixedvalue name="Machine Gun" value="1"/>
+            </number>
+            <structure name="AmmoPools" id="9093">
+                <number name="AmmoPools" id="9094" type="integer" length="4"/>
+                <structure name="AmmoPool" id="9095" repeat="id:9094" repeatmin="0" repeatmax="2147483647">
+                    <structref name="ResourcePoolName" id="9096" structure="String32 LE"/>
+                    <structref name="AmmoPoolName" id="9097" structure="String32 LE"/>
+                    <number name="Ammo" id="9098" type="float" length="4"/>
+                    <number name="AmmoPoolLevel" id="9099" type="integer" length="4"/>
+                </structure>
+            </structure>
+            <structure name="Items" id="9102">
+                <number name="Items" id="9103" type="integer" length="4"/>
+                <structure name="Item" id="9104" repeat="id:9103" repeatmin="0" repeatmax="2147483647">
+                    <structref name="Grade" id="9105" structure="String32 LE"/>
+                    <structref name="Type" id="9106" structure="String32 LE"/>
+                    <structref name="Body" id="9107" structure="String32 LE"/>
+                    <structref name="LeftSide" id="9108" structure="String32 LE"/>
+                    <structref name="RightSide" id="9109" structure="String32 LE"/>
+                    <structref name="Material" id="9110" structure="String32 LE"/>
+                    <structref name="Manufacturer" id="9111" structure="String32 LE"/>
+                    <structref name="Prefix" id="9112" structure="String32 LE"/>
+                    <structref name="Title" id="9113" structure="String32 LE"/>
+                    <number name="Unknown1" id="9114" type="integer" length="4"/>
+                    <structure name="QualityLevel LE" id="9115" endian="little">
+                        <number name="Quality" id="9116" type="integer" length="2" signed="yes"/>
+                        <number name="Level" id="9117" type="integer" length="2"/>
+                    </structure>
+                    <number name="Equipped" id="9119" type="integer" length="4"/>
+                </structure>
+            </structure>
+            <number name="BackpackSize" id="9122" type="integer" length="4"/>
+            <number name="EquipSlots" id="9123" type="integer" length="4"/>
+            <structure name="Weapons" id="9124">
+                <number name="Weapons" id="9125" type="integer" length="4"/>
+                <structure name="Weapon" id="9126" repeat="id:9125" repeatmin="0" repeatmax="2147483647">
+                    <structref name="Grade" id="9127" structure="String32 LE"/>
+                    <structref name="Manufacturer" id="9128" structure="String32 LE"/>
+                    <structref name="Type" id="9129" structure="String32 LE"/>
+                    <structref name="Body" id="9130" structure="String32 LE"/>
+                    <structref name="Grip" id="9131" structure="String32 LE"/>
+                    <structref name="Magazine" id="9132" structure="String32 LE"/>
+                    <structref name="Barrel" id="9133" structure="String32 LE"/>
+                    <structref name="Sight" id="9134" structure="String32 LE"/>
+                    <structref name="Stock" id="9135" structure="String32 LE"/>
+                    <structref name="Action" id="9136" structure="String32 LE"/>
+                    <structref name="Accessory" id="9137" structure="String32 LE"/>
+                    <structref name="Material" id="9138" structure="String32 LE"/>
+                    <structref name="Prefix" id="9139" structure="String32 LE"/>
+                    <structref name="Title" id="9140" structure="String32 LE"/>
+                    <number name="Unknown1" id="9141" type="integer" length="4"/>
+                    <structure name="QualityLevel LE" id="9142" endian="little">
+                        <number name="Quality" id="9143" type="integer" length="2" signed="yes"/>
+                        <number name="Level" id="9144" type="integer" length="2"/>
+                    </structure>
+                    <number name="EquippedSlot" id="9146" type="integer" length="4"/>
+                </structure>
+            </structure>
+            <number name="ChallengeDataLength" id="9149" type="integer" length="4"/>
+            <structure name="ChallengeData" id="9150" length="ChallengeDataLength">
+                <number name="BlockId" id="9151" type="integer" length="4"/>
+                <number name="DataLength" id="9152" type="integer" length="4"/>
+                <structure name="DataEntry array" id="9153" length="prev.DataLength">
+                    <number name="DataEntries" id="9154" type="integer" length="2"/>
+                    <structure name="DataEntry" id="9155" repeat="id:9154" order="variable">
+                        <structure name="DataEntry int" id="9156" repeatmin="0">
+                            <number name="Id" mustmatch="yes" id="9157" type="integer" length="2" display="hex">
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED" value="0x655"/>
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED_PISTOL" value="0x656"/>
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED_SHOTGUN" value="0x657"/>
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED_SMG" value="0x658"/>
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED_SNIPERRIFLE" value="0x659"/>
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED_ROCKETLAUNCHER" value="0x65A"/>
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED_GRENADELAUNCHER" value="0x65B"/>
+                                <fixedvalue name="STAT_PLAYER_SHOTS_FIRED_ASSAULTRIFLE" value="0x65D"/>
+                                <fixedvalue name="STAT_PLAYER_WEAPONS_PICKED_UP" value="0x65E"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS" value="0x65F"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SKAG" value="0x660"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_PISTOL" value="0x661"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_SHOTGUN" value="0x662"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_SMG" value="0x663"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_SNIPER_RIFLE" value="0x664"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_ASSAULT_RIFLE" value="0x665"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_FRAG_GRENADE" value="0x666"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_PROTEAN_GRENADE" value="0x667"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_VEHICLE" value="0x668"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_VEHICLE_WEAPON" value="0x669"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_CORROSIVE_ATTACK" value="0x66A"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_INCINDIARY_ATTACK" value="0x66B"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_SHOCK_ATTACK" value="0x66C"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_EXPLOSIVE_ATTACK" value="0x66D"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_CRITICAL_HIT" value="0x66E"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_ALPHA_SKAG" value="0x66F"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SPITTER_SKAG" value="0x670"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_YOUNG_SKAG" value="0x671"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_WITH_MELEE_ATTACK" value="0x672"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_BARNACLE" value="0x673"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SCYTHID_CRAWLER" value="0x674"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SCYTHID_DRONE" value="0x675"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SCYTHID_SPRINTER" value="0x676"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SCYTHID_WARRIOR" value="0x677"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_BANDIT" value="0x678"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_RAKK" value="0x679"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_AUTOMATED_TURRET" value="0x67A"/>
+                                <fixedvalue name="STAT_PLAYER_DUELS_WINS" value="0x67B"/>
+                                <fixedvalue name="STAT_PLAYER_DUELS_LOSSES" value="0x67C"/>
+                                <fixedvalue name="STAT_PLAYER_DUELS_DRAWS" value="0x67D"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_KILLS" value="0x67E"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_DEATHS" value="0x67F"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_ROUNDSWON" value="0x680"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_ROUNDSLOST" value="0x681"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_ROUNDSDRAW" value="0x682"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_MATCHESWON" value="0x683"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_MATCHESLOST" value="0x684"/>
+                                <fixedvalue name="STAT_PLAYER_CHESTS_OPENED" value="0x685"/>
+                                <fixedvalue name="STAT_PLAYER_LOOTABLES_OPENED" value="0x686"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_CONSECUTIVEROUNDSWON" value="0x687"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_CONSECUTIVEMATCHESWON" value="0x688"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_MAXCONSECUTIVEROUNDSWON" value="0x689"/>
+                                <fixedvalue name="STAT_PLAYER_ARENA_MAXCONSECUTIVEMATCHESWON" value="0x68A"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SLEDGE_BANDIT" value="0x68B"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_INSANE_BANDIT" value="0x68C"/>
+                                <fixedvalue name="STAT_PLAYER_INVENTORY_PURCHASED" value="0x68D"/>
+                                <fixedvalue name="STAT_PLAYER_INVENTORY_SOLD" value="0x68E"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_TEDIORE" value="0x68F"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_JAKOBS" value="0x690"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_TORGUE" value="0x691"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_HYPERION" value="0x692"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_MALIWAN" value="0x693"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_S_AND_S" value="0x694"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_ATLAS" value="0x695"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_DAHL" value="0x696"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_VLADOF" value="0x697"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_PANGOLIN" value="0x698"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_CORRAZA" value="0x699"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_ANSHIN" value="0x69A"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_ERIDAN" value="0x69B"/>
+                                <fixedvalue name="STAT_PLAYER_MANUFACTURER_PREF_GEARBOX" value="0x69C"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_PRINCIPLE_GUARDIAN" value="0x69D"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SERA_GUARDIAN" value="0x69E"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_ARCH_GUARDIAN" value="0x69F"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_CHERUB_GUARDIAN" value="0x6A0"/>
+                                <fixedvalue name="STAT_PLAYER_CURRENCY_EARNED" value="0x6A1"/>
+                                <fixedvalue name="STAT_VEHICLE_HANG_TIME" value="0x6A2"/>
+                                <fixedvalue name="STAT_QUESTS_COMPLETED_ZONE_ZERO" value="0x6A3"/>
+                                <fixedvalue name="STAT_QUESTS_COMPLETED_ZONE_ONE" value="0x6A4"/>
+                                <fixedvalue name="STAT_QUESTS_COMPLETED_ZONE_TWO" value="0x6A5"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_ACTION_SKILL" value="0x6A6"/>
+                                <fixedvalue name="STAT_QUESTS_COMPLETED_COOP" value="0x6A7"/>
+                                <fixedvalue name="STAT_SPENT_SKILL_POINT" value="0x6A8"/>
+                                <fixedvalue name="STAT_PLAYER_TIMES_INJURED" value="0x6A9"/>
+                                <fixedvalue name="STAT_PLAYER_TECH_WEAPONS_PICKED_UP" value="0x6AA"/>
+                                <fixedvalue name="STAT_PLAYER_SHOCK_WEAPONS_PICKED_UP" value="0x6AB"/>
+                                <fixedvalue name="STAT_PLAYER_GRENADES_PICKED_UP" value="0x6AC"/>
+                                <fixedvalue name="STAT_PLAYER_PICKUP_FAILS_FULL" value="0x6AD"/>
+                                <fixedvalue name="STAT_PLAYER_HOVERED_OVER_INSTINCT" value="0x6AE"/>
+                                <fixedvalue name="STAT_PLAYER_CORROSIVE_WEAPONS_PICKED_UP" value="0x6AF"/>
+                                <fixedvalue name="STAT_PLAYER_INCENDIARY_WEAPONS_PICKED_UP" value="0x6B0"/>
+                                <fixedvalue name="STAT_PLAYER_SLOW_WEAPONS_PICKED_UP" value="0x6B1"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_HIGHEST_SPREE" value="0x6B2"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_LEVEL_UP" value="0x6B3"/>
+                                <fixedvalue name="STAT_PLAYER_UNLOCKED_ADRENALINE_SKILL" value="0x6B4"/>
+                                <fixedvalue name="STAT_PLAYER_UNLOCKED_ACTION_SKILL" value="0x6B5"/>
+                                <fixedvalue name="STAT_PLAYER_EXPLOSIVE_WEAPONS_PICKED_UP" value="0x6B7"/>
+                                <fixedvalue name="STAT_PLAYER_STORAGE_UPGRADE_PICKED_UP" value="0x6B8"/>
+                                <fixedvalue name="STAT_PLAYER_ELEMENTAL_ARTIFACT_PICKED_UP" value="0x6B9"/>
+                                <fixedvalue name="STAT_PLAYER_AMMO_CAPACITY_UPGRADE_PICKED_UP" value="0x6BA"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_AID_KIT_PICKED_UP" value="0x6BB"/>
+                                <fixedvalue name="STAT_PLAYER_ENTERED_VEHICLE" value="0x6BC"/>
+                                <fixedvalue name="STAT_PLAYER_GRENADE_PURCHASED" value="0x6BD"/>
+                                <fixedvalue name="STAT_PLAYER_SHIELD_PURCHASED" value="0x6BE"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_AID_KIT_PURCHASED" value="0x6BF"/>
+                                <fixedvalue name="STAT_PLAYER_AMMO_PURCHASED" value="0x6C0"/>
+                                <fixedvalue name="STAT_PLAYER_STORAGE_UPGRADE_PURCHASED" value="0x6C1"/>
+                                <fixedvalue name="STAT_PLAYER_COMMAND_DECK_PURCHASED" value="0x6C2"/>
+                                <fixedvalue name="STAT_PLAYER_ACTION_SKILL_USES" value="0x6C3"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_SKILL_POINT_ROLAND" value="0x6C4"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_SKILL_POINT_MORDECAI" value="0x6C5"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_SKILL_POINT_LILITH" value="0x6C6"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_SKILL_POINT_BRICK" value="0x6C7"/>
+                                <fixedvalue name="STAT_PLAYER_SHIELD_EQUIPPED" value="0x6C8"/>
+                                <fixedvalue name="STAT_PLAYER_GRENADE_MOD_EQUIPPED" value="0x6C9"/>
+                                <fixedvalue name="STAT_PLAYER_COMMAND_DECK_EQUIPPED" value="0x6CA"/>
+                                <fixedvalue name="STAT_PLAYER_FIRST_SKILL_POINT" value="0x6CB"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SKAG_WITH_VEHICLE" value="0x6CC"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_CRIMSONLANCE" value="0x6CD"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_LANCEBADASS" value="0x6CE"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_LANCEPYRO" value="0x6CF"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_LANCECHEMICAL" value="0x6D0"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_LANCESHOCK" value="0x6D1"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_JETPACK" value="0x6D2"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_DRIFTER" value="0x6D3"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_PRISONER" value="0x6D4"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_PROBE" value="0x6D5"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_MECH" value="0x6D6"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_ASSASSIN" value="0x6D7"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_MIDGET" value="0x6D8"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_LANCER" value="0x6D9"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_MONSTER" value="0x6DA"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_CRIMSONSHORTY" value="0x6DB"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_MEATPOPSICLE" value="0x6DC"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_DUMPSTERDIVER" value="0x6DD"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_MINISTEVE" value="0x6DE"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_TRUXICANWRESTLER" value="0x6DF"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_CRAWMERAX" value="0x6E0"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_CLAPTRAPS" value="0x6E1"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_BANDIT_TRAPS" value="0x6E2"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_RAKK_TRAPS" value="0x6E3"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_RAKK_TRAP_HIVE" value="0x6E4"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SKAG_TRAPS" value="0x6E5"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_HYPERION_SOLDIERS" value="0x6E6"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_HYPERION_SOLDER_TRAPS" value="0x6E7"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_CRAB_TRAPS" value="0x6E8"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_SPIDERANT_TRAPS" value="0x6E9"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_HYPERION_SUPERBAD" value="0x6EA"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_DFAULT" value="0x6EB"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_KNOXX_TRAP" value="0x6EC"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_STEELE_TRAP" value="0x6ED"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_NED_TRAP" value="0x6EE"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_ZOMBIENED_TRAP" value="0x6EF"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_DFAULT_BANDITS" value="0x6F0"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_INAC" value="0x6F1"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_MINAC" value="0x6F2"/>
+                                <fixedvalue name="STAT_PLAYER_KILLS_MINAC_TURRETS" value="0x6F3"/>
+                                <fixedvalue name="STAT_PLAYER_CLAP_COMPONENT_1" value="0x6F4"/>
+                                <fixedvalue name="STAT_PLAYER_OILCANS_COLLECTED" value="0x6F5"/>
+                                <fixedvalue name="STAT_PLAYER_BOBBLEHEADS_COLLECTED" value="0x6F6"/>
+                                <fixedvalue name="STAT_PLAYER_3DGLASSES_COLLECTED" value="0x6F7"/>
+                                <fixedvalue name="STAT_PLAYER_PANTIES_COLLECTED" value="0x6F8"/>
+                                <fixedvalue name="STAT_PLAYER_FISHINABAG_COLLECTED" value="0x6F9"/>
+                                <fixedvalue name="STAT_PLAYER_PIZZAS_COLLECTED" value="0x6FA"/>
+                                <fixedvalue name="STAT_PLAYER_CLAP_COMPONENT_2" value="0x6FB"/>
+                                <fixedvalue name="STAT_PLAYER_CLAP_COMPONENT_3" value="0x6FC"/>
+                                <fixedvalue name="STAT_PLAYER_CLAP_COMPONENT_4" value="0x6FD"/>
+                                <fixedvalue name="STAT_PLAYER_CLAP_COMPONENT_5" value="0x6FE"/>
+                                <fixedvalue name="STAT_PLAYER_STATUE1_COLLECTED" value="0x6FF"/>
+                                <fixedvalue name="STAT_PLAYER_STATUE2_COLLECTED" value="0x700"/>
+                                <fixedvalue name="STAT_PLAYER_STATUE3_COLLECTED" value="0x701"/>
+                                <fixedvalue name="STAT_PLAYER_STATUE4_COLLECTED" value="0x702"/>
+                                <fixedvalue name="STAT_PLAYER_STATUE5_COLLECTED" value="0x703"/>
+                                <fixedvalue name="STAT_PLAYER_STATUE6_COLLECTED" value="0x704"/>
+                            </number>
+                            <number name="TypeId" mustmatch="yes" id="9158" type="integer" length="1">
+                                <fixedvalue name="int" value="1"/>
+                            </number>
+                            <number name="int" id="9159" type="integer" length="4"/>
+                        </structure>
+                        <structure name="DataEntry float" id="9161" repeatmin="0">
+                            <number name="Id" mustmatch="yes" id="9162" type="integer" length="2" display="hex">
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FG" value="0x705"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FH" value="0x706"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FI" value="0x707"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FJ" value="0x708"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FK" value="0x709"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FL" value="0x70A"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FM" value="0x70B"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FN" value="0x70C"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FO" value="0x70D"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FP" value="0x70E"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FQ" value="0x70F"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FR" value="0x710"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FS" value="0x711"/>
+                                <fixedvalue name="STAT_PLAYER_ZRESERVED_DLC_FLOAT_FT" value="0x712"/>
+                            </number>
+                            <number name="TypeId" mustmatch="yes" id="9163" type="integer" length="1">
+                                <fixedvalue name="float" value="5"/>
+                            </number>
+                            <number name="float" id="9164" type="float" length="4"/>
+                        </structure>
+                    </structure>
+                </structure>
+            </structure>
+            <structure name="DiscoveredLocations" id="9169">
+                <number name="DiscoveredLocations" id="9170" type="integer" length="4"/>
+                <structure name="DiscoveredLocation" id="9171" repeat="id:9170" repeatmin="0" repeatmax="2147483647">
+                    <structref name="LocationName" id="9172" structure="String32 LE"/>
+                </structure>
+            </structure>
+            <structref name="CurrentLocation" id="9175" structure="String32 LE"/>
+            <number name="SaveInfo 0" id="9176" type="integer" length="4"/>
+            <number name="SaveInfo 1" id="9177" type="integer" length="4"/>
+            <number name="SaveInfo 2" id="9178" type="integer" length="4"/>
+            <number name="SaveInfo 3" id="9179" type="integer" length="4"/>
+            <number name="SaveInfo 4" id="9180" type="integer" length="4"/>
+            <number name="SaveSlot" id="9181" type="integer" length="4"/>
+            <number name="SaveInfo 6" id="9182" type="integer" length="4"/>
+            <number name="SaveInfo 7" id="9183" type="integer" length="4"/>
+            <number name="SaveInfo 8" id="9184" type="integer" length="4"/>
+            <number name="SaveInfo 9" id="9185" type="integer" length="4"/>
+            <structref name="Playthrough1CurrentQuest" id="9186" structure="String32 LE"/>
+            <structure name="Playthrough1Quests" id="9187">
+                <number name="Playthrough1Quests" id="9188" type="integer" length="4"/>
+                <structure name="Playthrough1Quest" id="9189" repeat="id:9188" repeatmin="0" repeatmax="2147483647">
+                    <structref name="QuestName" id="9190" structure="String32 LE"/>
+                    <number name="State" id="9191" type="integer" length="4">
+                        <fixedvalue name="InProgress" value="1"/>
+                        <fixedvalue name="TurnIn" value="2"/>
+                        <fixedvalue name="Completed" value="4"/>
+                    </number>
+                    <number name="Unknown1" id="9192" type="integer" length="4"/>
+                    <number name="Unknown2" id="9193" type="integer" length="4"/>
+                    <number name="SubQuests" id="9194" type="integer" length="4"/>
+                    <structure name="SubQuest" id="9195" repeat="id:9194" repeatmin="0" repeatmax="2147483647">
+                        <structref name="SubQuestName" id="9196" structure="String32 LE"/>
+                        <number name="SubQuestState" id="9197" type="integer" length="4"/>
+                    </structure>
+                </structure>
+            </structure>
+            <number name="UnknownPlaythrough1QuestValue" id="9201" type="integer" length="4"/>
+            <structref name="Playthrough2CurrentQuest" id="9202" structure="String32 LE"/>
+            <structure name="Playthrough2Quests" id="9203">
+                <number name="Playthrough2Quests" id="9204" type="integer" length="4"/>
+                <structure name="Playthrough2Quest" id="9205" repeat="id:9204" repeatmin="0" repeatmax="2147483647">
+                    <structref name="QuestName" id="9206" structure="String32 LE"/>
+                    <number name="State" id="9207" type="integer" length="4">
+                        <fixedvalue name="InProgress" value="1"/>
+                        <fixedvalue name="TurnIn" value="2"/>
+                        <fixedvalue name="Completed" value="4"/>
+                    </number>
+                    <number name="Unknown1" id="9208" type="integer" length="4"/>
+                    <number name="Unknown2" id="9209" type="integer" length="4"/>
+                    <number name="SubQuests" id="9210" type="integer" length="4"/>
+                    <structure name="SubQuest" id="9211" repeat="id:9210" repeatmin="0" repeatmax="2147483647">
+                        <structref name="SubQuestName" id="9212" structure="String32 LE"/>
+                        <number name="SubQuestState" id="9213" type="integer" length="4"/>
+                    </structure>
+                </structure>
+            </structure>
+            <number name="UnknownPlaythrough2QuestValue" id="9217" type="integer" length="4"/>
+            <structref name="UnknownQuest1" id="9218" structure="String32 LE"/>
+            <number name="UnknownQuestValue1" id="9219" type="integer" length="4"/>
+            <structref name="UnknownQuest2" id="9220" structure="String32 LE"/>
+            <number name="UnknownQuestValue2" id="9221" type="integer" length="4"/>
+            <number name="UnknownQuestValue3" id="9222" type="integer" length="4"/>
+            <number name="UnknownQuestValue4" id="9223" type="integer" length="4"/>
+            <number name="UnknownQuestValue5" id="9224" type="integer" length="4"/>
+            <number name="TotalPlayTime" id="9225" type="integer" length="4"/>
+            <structref name="SaveDateAndTime" id="9226" structure="String32 LE"/>
+            <structref name="CharacterName" id="9227" structure="String32 LE"/>
+            <number name="Color1" id="9228" type="integer" length="4" display="hex"/>
+            <number name="Color2" id="9229" type="integer" length="4" display="hex"/>
+            <number name="Color3" id="9230" type="integer" length="4" display="hex"/>
+            <number name="Unknown2" id="9231" type="integer" length="4"/>
+            <structure name="UsedPromoCodes" id="9232">
+                <number name="UsedPromoCodes" id="9233" type="integer" length="4"/>
+                <structure name="UsedPromoCode" id="9234" repeat="id:9233" repeatmin="0" repeatmax="2147483647">
+                    <number name="UsedPromoCodes" id="9235" type="integer" length="4"/>
+                </structure>
+            </structure>
+            <structure name="PromoCodesRequiringNotification" id="9238">
+                <number name="PromoCodesRequiringNotification" id="9239" type="integer" length="4"/>
+                <structure name="PromoCodeRequiringNotification" id="9240" repeat="id:9239" repeatmin="0" repeatmax="2147483647">
+                    <number name="UsedPromoCodes" id="9241" type="integer" length="4"/>
+                </structure>
+            </structure>
+            <structure name="EchosLists" id="9244">
+                <number name="EchosLists" id="9245" type="integer" length="4"/>
+                <structure name="EchosList" id="9246" repeat="id:9245" repeatmin="0" repeatmax="2147483647">
+                    <number name="Index" id="9247" type="integer" length="4"/>
+                    <number name="Echos" id="9248" type="integer" length="4"/>
+                    <structure name="Echo" id="9249" repeat="id:9248" repeatmin="0" repeatmax="2147483647">
+                        <structref name="Name" id="9250" structure="String32 LE"/>
+                        <number name="Value1" id="9251" type="integer" length="4"/>
+                        <number name="Value2" id="9252" type="integer" length="4"/>
+                    </structure>
+                </structure>
+            </structure>
+            <number name="DLCDataLength" id="9256" type="integer" length="4"/>
+            <structure name="DLCData" id="9257" length="DLCDataLength" order="variable">
+                <structure name="Section1" id="9258" repeatmin="0">
+                    <number name="Tag" mustmatch="yes" id="9259" type="integer" length="4" display="hex">
+                        <fixedvalue name="DLC1" value="0x43211234"/>
+                    </number>
+                    <number name="SectionLength" id="9260" type="integer" length="4"/>
+                    <structure name="Section" id="9261" length="SectionLength">
+                        <number name="Unknown1" id="9262" type="integer" length="1"/>
+                        <number name="BankSize" id="9263" type="integer" length="4"/>
+                        <number name="BankEntries" id="9264" type="integer" length="4"/>
+                        <structure name="BankEntry" id="9265" repeat="id:9264" repeatmin="0" repeatmax="2147483647" order="variable">
+                            <structure name="Weapon" id="9266" repeatmin="0">
+                                <number name="TypeId" mustmatch="yes" id="9267" type="integer" length="1">
+                                    <fixedvalue name="Weapon" value="1"/>
+                                </number>
+                                <structref name="Type" id="9268" structure="BankString32 LE"/>
+                                <structref name="Grade" id="9269" structure="BankString32 LE"/>
+                                <structref name="Manufacturer" id="9270" structure="BankString32 LE"/>
+                                <structure name="QualityLevel LE" id="9271" endian="little">
+                                    <number name="Quality" id="9272" type="integer" length="2" signed="yes"/>
+                                    <number name="Level" id="9273" type="integer" length="2"/>
+                                </structure>
+                                <structref name="Body" id="9275" structure="BankString32 LE"/>
+                                <structref name="Grip" id="9276" structure="BankString32 LE"/>
+                                <structref name="Magazine" id="9277" structure="BankString32 LE"/>
+                                <structref name="Barrel" id="9278" structure="BankString32 LE"/>
+                                <structref name="Sight" id="9279" structure="BankString32 LE"/>
+                                <structref name="Stock" id="9280" structure="BankString32 LE"/>
+                                <structref name="Action" id="9281" structure="BankString32 LE"/>
+                                <structref name="Accessory" id="9282" structure="BankString32 LE"/>
+                                <structref name="Material" id="9283" structure="BankString32 LE"/>
+                                <structref name="Prefix" id="9284" structure="BankString32 LE"/>
+                                <structref name="Title" id="9285" structure="BankString32 LE"/>
+                                <binary name="Unknown" id="9286" length="10"/>
+                                <number name="Ammo" id="9287" type="float" length="4"/>
+                            </structure>
+                            <structure name="Item" id="9289" repeatmin="0">
+                                <number name="TypeId" mustmatch="yes" id="9290" type="integer" length="1">
+                                    <fixedvalue name="Item" value="2"/>
+                                </number>
+                                <structref name="BankString 0" id="9291" structure="BankString32 LE"/>
+                                <structref name="BankString 1" id="9292" structure="BankString32 LE"/>
+                                <structref name="BankString 2" id="9293" structure="BankString32 LE"/>
+                                <structure name="QualityLevel LE" id="9294" endian="little">
+                                    <number name="Quality" id="9295" type="integer" length="2" signed="yes"/>
+                                    <number name="Level" id="9296" type="integer" length="2"/>
+                                </structure>
+                                <structref name="BankString 3" id="9298" structure="BankString32 LE"/>
+                                <structref name="BankString 4" id="9299" structure="BankString32 LE"/>
+                                <structref name="BankString 5" id="9300" structure="BankString32 LE"/>
+                                <structref name="BankString 6" id="9301" structure="BankString32 LE"/>
+                                <structref name="BankString 7" id="9302" structure="BankString32 LE"/>
+                                <structref name="BankString 8" id="9303" structure="BankString32 LE"/>
+                                <binary name="Unknown" id="9304" length="10"/>
+                                <number name="Quantity" id="9305" type="integer" length="1"/>
+                            </structure>
+                        </structure>
+                    </structure>
+                </structure>
+                <structure name="Section2" id="9310" repeatmin="0">
+                    <number name="Tag" mustmatch="yes" id="9311" type="integer" length="4" display="hex">
+                        <fixedvalue name="DLC2" value="0x2151984"/>
+                    </number>
+                    <number name="SectionLength" id="9312" type="integer" length="4"/>
+                    <structure name="Section" id="9313" length="SectionLength">
+                        <number name="Unknown1" id="9314" type="integer" length="4"/>
+                        <number name="Unknown2" id="9315" type="integer" length="4"/>
+                        <number name="Unknown3" id="9316" type="integer" length="4"/>
+                        <number name="SkipDLC2Intro" id="9317" type="integer" length="4"/>
+                    </structure>
+                </structure>
+                <structure name="Section3" id="9320" repeatmin="0">
+                    <number name="Tag" mustmatch="yes" id="9321" type="integer" length="4" display="hex">
+                        <fixedvalue name="DLC3" value="0x32235947"/>
+                    </number>
+                    <number name="SectionLength" id="9322" type="integer" length="4"/>
+                    <structure name="Section" id="9323" length="SectionLength">
+                        <number name="Unknown1" id="9324" type="integer" length="1"/>
+                    </structure>
+                </structure>
+                <structure name="Section4" id="9327" repeatmin="0">
+                    <number name="Tag" mustmatch="yes" id="9328" type="integer" length="4" display="hex">
+                        <fixedvalue name="DLC4" value="0x234BA901"/>
+                    </number>
+                    <number name="SectionLength" id="9329" type="integer" length="4"/>
+                    <structure name="Section" id="9330" length="SectionLength">
+                        <number name="SecondaryPackEnabled" id="9331" type="integer" length="1"/>
+                        <structure name="Items" id="9332">
+                            <number name="Items" id="9333" type="integer" length="4"/>
+                            <structure name="Item" id="9334" repeat="id:9333" repeatmin="0" repeatmax="2147483647">
+                                <structref name="Grade" id="9335" structure="String32 LE"/>
+                                <structref name="Type" id="9336" structure="String32 LE"/>
+                                <structref name="Body" id="9337" structure="String32 LE"/>
+                                <structref name="LeftSide" id="9338" structure="String32 LE"/>
+                                <structref name="RightSide" id="9339" structure="String32 LE"/>
+                                <structref name="Material" id="9340" structure="String32 LE"/>
+                                <structref name="Manufacturer" id="9341" structure="String32 LE"/>
+                                <structref name="Prefix" id="9342" structure="String32 LE"/>
+                                <structref name="Title" id="9343" structure="String32 LE"/>
+                                <number name="Unknown1" id="9344" type="integer" length="4"/>
+                                <structure name="QualityLevel LE" id="9345" endian="little">
+                                    <number name="Quality" id="9346" type="integer" length="2" signed="yes"/>
+                                    <number name="Level" id="9347" type="integer" length="2"/>
+                                </structure>
+                                <number name="Equipped" id="9349" type="integer" length="4"/>
+                            </structure>
+                        </structure>
+                        <structure name="Weapons" id="9352">
+                            <number name="Weapons" id="9353" type="integer" length="4"/>
+                            <structure name="Weapon" id="9354" repeat="id:9353" repeatmin="0" repeatmax="2147483647">
+                                <structref name="Grade" id="9355" structure="String32 LE"/>
+                                <structref name="Manufacturer" id="9356" structure="String32 LE"/>
+                                <structref name="Type" id="9357" structure="String32 LE"/>
+                                <structref name="Body" id="9358" structure="String32 LE"/>
+                                <structref name="Grip" id="9359" structure="String32 LE"/>
+                                <structref name="Magazine" id="9360" structure="String32 LE"/>
+                                <structref name="Barrel" id="9361" structure="String32 LE"/>
+                                <structref name="Sight" id="9362" structure="String32 LE"/>
+                                <structref name="Stock" id="9363" structure="String32 LE"/>
+                                <structref name="Action" id="9364" structure="String32 LE"/>
+                                <structref name="Accessory" id="9365" structure="String32 LE"/>
+                                <structref name="Material" id="9366" structure="String32 LE"/>
+                                <structref name="Prefix" id="9367" structure="String32 LE"/>
+                                <structref name="Title" id="9368" structure="String32 LE"/>
+                                <number name="Unknown1" id="9369" type="integer" length="4"/>
+                                <structure name="QualityLevel LE" id="9370" endian="little">
+                                    <number name="Quality" id="9371" type="integer" length="2" signed="yes"/>
+                                    <number name="Level" id="9372" type="integer" length="2"/>
+                                </structure>
+                                <number name="EquippedSlot" id="9374" type="integer" length="4"/>
+                            </structure>
+                        </structure>
+                    </structure>
+                </structure>
+            </structure>
+        </structure>
+        <structure name=".sav" id="8718" extends="defaults" order="variable">
+            <structref name=".sav BE" id="9381" repeatmin="0"/>
+            <structref name=".sav LE" id="9382" repeatmin="0"/>
+        </structure>
+    </grammar>
+</ufwb>

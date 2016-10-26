@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.0.3.1">
+    <grammar name="PCX Images" start="PCX file" author="Andreas Pehnack" fileextension="pcx">
+        <description>Grammar for PCX files</description>
+        <structure name="PCX file" id="828" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Header" id="830" length="128">
+                <number name="Identifier" mustmatch="yes" id="832" type="integer" length="1" fixedval="10"/>
+                <number name="Version" id="833" type="integer" length="1">
+                    <fixedvalue name="Version 2.5" value="0"/>
+                    <fixedvalue name="Version 2.8 with Palette" value="2"/>
+                    <fixedvalue name="Version 2.8 without Palette" value="3"/>
+                    <fixedvalue name="Windows without Palette" value="4"/>
+                    <fixedvalue name="Version 3.0" value="5"/>
+                </number>
+                <number name="Compression" id="834" type="integer" length="1">
+                    <fixedvalue name="No compression" value="0"/>
+                    <fixedvalue name="RLE" value="1"/>
+                </number>
+                <number name="Bits per Pixel" id="835" type="integer" length="1"/>
+                <number name="XMIN" id="836" type="integer" length="2"/>
+                <number name="YMIN" id="837" type="integer" length="2"/>
+                <number name="XMAX" id="838" type="integer" length="2"/>
+                <number name="YMAX" id="839" type="integer" length="2"/>
+                <number name="Res horz DPI" id="840" type="integer" length="2"/>
+                <number name="Res vert DPI" id="841" type="integer" length="2"/>
+                <structure name="Color Map" id="842" length="48">
+                    <structure name="Color" id="855" repeatmin="16" repeatmax="16">
+                        <number name="Red" id="852" type="integer" length="1" display="hex"/>
+                        <number name="Green" id="853" type="integer" length="1" display="hex"/>
+                        <number name="Blue" id="854" type="integer" length="1" display="hex"/>
+                    </structure>
+                </structure>
+                <number name="Reserved" id="844" type="integer" length="1"/>
+                <number name="Color Planes" id="845" type="integer" length="1"/>
+                <number name="Bytes per Line" id="846" type="integer" length="2"/>
+                <number name="Palette Info" id="847" type="integer" length="2">
+                    <fixedvalue name="Color" value="1"/>
+                    <fixedvalue name="Grayscale" value="2"/>
+                </number>
+                <number name="Width" id="848" type="integer" length="2"/>
+                <number name="Height" id="849" type="integer" length="2"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.7">
+    <grammar name="CV Certificate" start="id:212" author="nick" email="me@daedalus.ru" fileextension="cvcert,cv">
+        <description>Grammar for CVCERT files</description>
+        <scripts>
+            <script name="get_length" type="DataType" id="393">
+                <source language="Python"># custom data type script
+def parseByteRange(element, byteView, bitPos, bitLength, results):
+	offset = bitPos / 8
+	processedBytes = 1
+	first_octet = byteView.readUnsignedInt(
+		offset + processedBytes - 1, 1, ENDIAN_LITTLE)
+	length = 0
+	print 'length in start', length
+	print 'first octet', first_octet
+	if first_octet &amp; 0x80:
+		for i in range(first_octet &amp; 0x7F):
+			processedBytes += 1
+			octet = byteView.readUnsignedInt(
+				offset + processedBytes - 1, 1, ENDIAN_LITTLE)
+			length = (length &lt;&lt; 8) | octet
+	else:
+		length = first_octet
+	value = NumberValue()
+	value.setUnsigned(length)
+	iteration = 1
+	results.addElement(element, processedBytes, iteration, value)
+	return processedBytes
+
+def fillByteRange(value, byteArray, bitPos, bitLength):
+	length = value.getUnsigned()
+	if value &lt; 0x80:
+		result = chr(length)
+	else:
+		result = ''
+		while length:
+			result = chr(length &amp; 0xFF) + result
+			length &gt;&gt;= 8
+		result = chr(0x80 | len(result)) + result
+	print 'fill'
+	print 'length', length
+	print 'result', result
+	print 'value', value
+	print 'bitPos', bitPos
+	print 'bitLength', bitLength
+
+	byteArray.fillRange(bitPos / 8,
+					    len(result), result)
+
+</source>
+            </script>
+        </scripts>
+        <structure name="CVC" id="212" extends="id:213" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Tag" mustmatch="yes" id="214" fillcolor="7980FF" type="integer" length="2" display="hex">
+                <fixedvalues>
+                    <fixedvalue value="0x7F21"/>
+                </fixedvalues>
+            </number>
+            <custom name="Length" id="215" fillcolor="75D5FF" length="1" script="id:393"/>
+            <structure name="Value" id="216" length="Length">
+                <structref name="Body" id="218" structure="id:217"/>
+                <structref name="Signature" id="220" structure="id:219"/>
+            </structure>
+        </structure>
+        <structure name="TLV" id="213" encoding="ISO_8859-1:1987" endian="big" signed="no" debug="yes">
+            <number name="Tag" mustmatch="yes" id="223" fillcolor="FF7D78" type="integer" length="2" display="hex"/>
+            <custom name="Length" id="224" fillcolor="00FA92" length="1" script="id:393"/>
+            <structure name="Value" id="225" length="prev.Length" fillcolor="FFD478"/>
+        </structure>
+        <structure name="Body" id="217" extends="id:213">
+            <number name="Tag" id="228" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="0x7F4E"/>
+                </fixedvalues>
+            </number>
+            <custom name="Length" id="230" script="id:393"/>
+            <structure name="Value" id="229" length="Length">
+                <structref name="Profile Identitifier" id="232" structure="id:231"/>
+                <structref name="Authority Reference" id="234" structure="id:233"/>
+                <structref name="PublicKey" id="236" structure="id:235"/>
+                <structref name="Holder Reference" id="238" structure="id:237"/>
+                <structref name="Holder Authorization Template" id="240" structure="id:239"/>
+                <structref name="Effective Date" id="242" structure="id:241"/>
+                <structref name="Expiration Date" id="244" structure="id:243"/>
+                <structref name="Extensions" id="246" structure="id:245"/>
+            </structure>
+        </structure>
+        <structure name="Signature" id="219" extends="id:213">
+            <number name="Tag" id="249" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="0x5F37"/>
+                </fixedvalues>
+            </number>
+            <custom name="Length" id="250" script="id:393"/>
+            <binary name="Value" id="251" fillcolor="D783FF" length="Length"/>
+        </structure>
+        <structure name="body -&gt; Profile Identififier" id="231" extends="id:213">
+            <number name="Tag" id="253" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="0x5F29"/>
+                </fixedvalues>
+            </number>
+            <custom name="Length" id="254" script="id:393"/>
+        </structure>
+        <structure name="body -&gt; CAR" id="233" extends="id:213">
+            <number name="Tag" id="258" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue value="0x42"/>
+                </fixedvalues>
+            </number>
+            <custom name="Length" id="259" script="id:393"/>
+        </structure>
+        <structure name="body -&gt; CHR" id="237" extends="id:213">
+            <number name="Tag" id="263" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="0x5F20"/>
+                </fixedvalues>
+            </number>
+            <custom name="Length" id="264" script="id:393"/>
+        </structure>
+        <structure name="body -&gt; PK" id="235" extends="id:213">
+            <number name="Tag" id="268" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="0x7F49"/>
+                </fixedvalues>
+            </number>
+            <custom name="Length" id="270" script="id:393"/>
+            <structure name="Value" id="269">
+                <structref name="algorithm" id="272" structure="id:271"/>
+                <structref name="primemodules" id="274" structure="id:273"/>
+                <structref name="a" id="276" structure="id:275"/>
+                <structref name="b" id="278" structure="id:277"/>
+                <structref name="base" id="280" structure="id:279"/>
+                <structref name="order" id="282" structure="id:281"/>
+                <structref name="public_point" id="284" structure="id:283"/>
+                <structref name="cofactor" id="286" structure="id:285"/>
+            </structure>
+        </structure>
+        <structure name="body -&gt; CHAT" id="239" extends="id:213">
+            <number name="Tag" id="289" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="0x7F4C"/>
+                </fixedvalues>
+            </number>
+            <custom name="Length" id="291" script="id:393"/>
+            <structure name="Value" id="290">
+                <structref name="roles" id="293" structure="id:292"/>
+                <structref name="ddo" id="295" structure="id:294"/>
+            </structure>
+        </structure>
+        <structure name="body -&gt; Effective Date" id="241" extends="id:213">
+            <number name="Tag" id="298" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="0x5F25"/>
+                </fixedvalues>
+            </number>
+            <custom name="Length" id="299" script="id:393"/>
+        </structure>
+        <structure name="body -&gt; Expiration Date" id="243" extends="id:213">
+            <number name="Tag" id="303" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="0x5F24"/>
+                </fixedvalues>
+            </number>
+            <custom name="Length" id="304" script="id:393"/>
+        </structure>
+        <structure name="body -&gt; Extensions" id="245" extends="id:213">
+            <number name="Tag" id="308" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue value="0x65"/>
+                </fixedvalues>
+            </number>
+            <custom name="Length" id="309" script="id:393"/>
+        </structure>
+        <structure name="pk -&gt; algorithm" id="271" repeatmin="0" extends="id:213">
+            <number name="Tag" id="313" type="integer" length="1"/>
+            <custom name="Length" id="314" script="id:393"/>
+        </structure>
+        <structure name="pk -&gt; primemodules" id="273" repeatmin="0" extends="id:213">
+            <number name="Tag" id="318" type="integer" length="1"/>
+            <custom name="Length" id="319" script="id:393"/>
+        </structure>
+        <structure name="pk -&gt; a" id="275" repeatmin="0" extends="id:213">
+            <number name="Tag" id="323" type="integer" length="1"/>
+            <custom name="Length" id="324" script="id:393"/>
+        </structure>
+        <structure name="pk -&gt; b" id="277" repeatmin="0" extends="id:213">
+            <number name="Tag" id="328" type="integer" length="1"/>
+            <custom name="Length" id="329" script="id:393"/>
+        </structure>
+        <structure name="pk -&gt; base" id="279" repeatmin="0" extends="id:213">
+            <number name="Tag" id="333" type="integer" length="1"/>
+            <custom name="Length" id="334" script="id:393"/>
+        </structure>
+        <structure name="pk -&gt; order" id="281" repeatmin="0" extends="id:213">
+            <number name="Tag" id="338" type="integer" length="1"/>
+            <custom name="Length" id="339" script="id:393"/>
+        </structure>
+        <structure name="pk -&gt; public_point" id="283" repeatmin="0" extends="id:213">
+            <number name="Tag" id="343" type="integer" length="1"/>
+            <custom name="Length" id="344" script="id:393"/>
+        </structure>
+        <structure name="pk -&gt; cofactor" id="285" repeatmin="0" extends="id:213">
+            <number name="Tag" id="348" type="integer" length="1"/>
+            <custom name="Length" id="349" script="id:393"/>
+        </structure>
+        <structure name="chat -&gt; roles" id="292" extends="id:213">
+            <number name="Tag" id="353" type="integer" length="1"/>
+            <custom name="Length" id="354" script="id:393"/>
+        </structure>
+        <structure name="chat -&gt; ddo" id="294" extends="id:213">
+            <number name="Tag" id="358" type="integer" length="1"/>
+            <custom name="Length" id="360" script="id:393"/>
+            <structure name="Value" id="359">
+                <binary name="role" id="361" length="2" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="CVCA" value="03"/>
+                        <fixedvalue name="DVCA" value="02"/>
+                        <fixedvalue name="DVCA FOREIGN" value="01"/>
+                        <fixedvalue name="IS" value="00"/>
+                    </fixedvalues>
+                </binary>
+                <binary name="eid" id="362" length="1" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="TRUE" value="01"/>
+                        <fixedvalue name="FALSE" value="00"/>
+                    </fixedvalues>
+                </binary>
+                <binary name="reserved" id="363" length="3" lengthunit="bit"/>
+                <binary name="dg4" id="364" length="1" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="TRUE" value="01"/>
+                        <fixedvalue name="FALSE" value="00"/>
+                    </fixedvalues>
+                </binary>
+                <binary name="dg3" id="365" length="1" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="TRUE" value="01"/>
+                        <fixedvalue name="FALSE" value="00"/>
+                    </fixedvalues>
+                </binary>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

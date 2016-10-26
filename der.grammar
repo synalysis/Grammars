@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.17">
+    <grammar name="Receipt" start="id:26" author="Andreas Pehnack" email="andreas@synalysis.com">
+        <structure name="Receipt" id="26" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="Sequence" id="32" structure="id:28"/>
+        </structure>
+        <structure name="Sequence" id="28" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Identifier" id="30" type="integer" length="1" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="SEQUENCE" value="0x30"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="31" type="integer" length="2"/>
+        </structure>
+    </grammar>
+</ufwb>

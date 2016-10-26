@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.3.1">
+    <grammar name="Master Boot Record Grammar" start="id:99" author="E18529" fileextension="dd, img, raw" uti="com.symantec.dd-archive">
+        <description>Highlighting for MBR's</description>
+        <scripts>
+            <script name="CHS" type="DataType" id="268">
+                <description>Data type for heads, sectors and cylinders</description>
+                <source language="Python"># custom data type script
+# see http://upload.wikimedia.org/wikipedia/commons/1/1e/Chs.svg
+
+def parseByteRange(element, byteView, bitPos, bitLength, results):
+    # this method parses data starting at bitPos, bitLength bits are remaining
+    &quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
+
+    # need at least three bytes
+    if (bitLength / 8 &lt; 3):
+        return 0
+
+    heads = byteView.readByte(bitPos/8 + 0)
+    byte2 = byteView.readByte(bitPos/8 + 1)
+    byte3 = byteView.readByte(bitPos/8 + 2)
+
+    sectors = byte2 &amp; 0x3F
+    cylinders = ((byte2 &amp; 0xC0) &lt;&lt; 2) + byte3
+
+    iteration = 0
+
+    # Add result for heads
+    headsValue = NumberValue()
+    headsValue.setUnsigned(heads)
+    headsElement = Element(ELEMENT_NUMBER, &quot;Heads&quot;, True)
+    results.addElement(headsElement, 1, iteration, headsValue)
+
+    # Add result for sectors
+    sectorsValue = NumberValue()
+    sectorsValue.setUnsigned(sectors)
+    sectorsElement = Element(ELEMENT_NUMBER, &quot;Sectors&quot;, True)
+    results.addElement(sectorsElement, 1, iteration, sectorsValue)
+
+    # Add result for cylinders
+    cylindersValue = NumberValue()
+    cylindersValue.setUnsigned(cylinders)
+    cylindersElement = Element(ELEMENT_NUMBER, &quot;Cylinders&quot;, True)
+    results.addElement(cylindersElement, 1, iteration, cylindersValue)
+
+    # return number of processed bytes
+    processedBytes = 3
+    return processedBytes
+
+def fillByteRange(value, byteArray, bitPos, bitLength):
+    # this method translates edited values back to the file
+	&quot;&quot;&quot;fillByteRange method&quot;&quot;&quot;
+</source>
+            </script>
+        </scripts>
+        <structure name="MBR File" id="99" length="0" alignment="0" encoding="ISO_8859-1:1987" endian="little" signed="no" fillcolor="FFFEFF">
+            <structref name="MBR" id="101" structure="id:100"/>
+        </structure>
+        <structure name="PartitionTableEntry" id="103" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Boot Indicator" id="104" type="integer" length="1" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="Bootable" value="0x80"/>
+                    <fixedvalue name="Not bootable" value="0x0"/>
+                </fixedvalues>
+            </number>
+            <structure name="First Sector" id="105">
+                <custom name="First Sector" id="106" length="3" script="id:268"/>
+            </structure>
+            <number name="Partition Type (Sys ID)" id="108" type="integer" length="1" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="unused" value="0x0"/>
+                    <fixedvalue name="FAT12 (Floppy Disks)" value="0x1"/>
+                    <fixedvalue name="FAT16 ≤ 32 MiB" value="0x4"/>
+                    <fixedvalue name="extended partition" value="0x5"/>
+                    <fixedvalue name="FAT16 &gt; 32 MiB" value="0x6"/>
+                    <fixedvalue name="NTFS (Windows NT/2000/XP/Vista/7) oder HPFS (OS/2)" value="0x7"/>
+                    <fixedvalue name="FAT32" value="0xB"/>
+                    <fixedvalue name="FAT32 with BIOS extensions" value="0xC"/>
+                    <fixedvalue name="FAT16 &gt; 32 MiB with BIOS extensions" value="0xE"/>
+                    <fixedvalue name="extended partition with BIOS extensions (LBA)" value="0xF"/>
+                    <fixedvalue name="OEM partition for configuration" value="0x12"/>
+                    <fixedvalue name="Dynamic device" value="0x42"/>
+                    <fixedvalue name="Linux Swap / Solaris 2.6 X86 - Solaris 9 X86" value="0x82"/>
+                    <fixedvalue name="Linux native" value="0x83"/>
+                    <fixedvalue name="Linux LVM" value="0x8E"/>
+                    <fixedvalue name="FreeBSD" value="0xA5"/>
+                    <fixedvalue name="OpenBSD" value="0xA6"/>
+                    <fixedvalue name="NetBSD" value="0xA9"/>
+                    <fixedvalue name="Legacy MBR with EFI header following" value="0xEE"/>
+                    <fixedvalue name="EFI file system" value="0xEF"/>
+                    <fixedvalue name="XENIX root" value="0x2"/>
+                    <fixedvalue name="XENIX /usr" value="0x3"/>
+                    <fixedvalue name="OS/2 1.0-1.3, AIX boot, SplitDrive, Commodore DOS, DELL partition spanning multiple drives, QNX 1.x and 2.x" value="0x0"/>
+                    <fixedvalue name="AIX data partition, Coherent file system" value="0x9"/>
+                </fixedvalues>
+            </number>
+            <structure name="Last Sector" id="109">
+                <custom name="new custom element" id="110" length="3" script="id:268"/>
+            </structure>
+            <number name="RelativeSectors" id="112" fillcolor="00FB38" type="integer" length="4" endian="little"/>
+            <number name="Total Sectors" id="113" fillcolor="00FB38" type="integer" length="4" endian="little"/>
+            <scriptelement name="VBR" id="114">
+                <script name="unnamed" type="Generic">
+                    <source language="Lua">-- get results collection
+results = currentMapper:getCurrentResults()
+
+offsetResult = results:getResultByName(&quot;RelativeSectors&quot;)
+
+offsetValue = offsetResult:getValue()
+
+offset = offsetValue:getUnsigned()
+
+if offset &gt; 0 then
+    currentGrammar = currentMapper:getCurrentGrammar()
+
+    -- get the structure we want to apply
+    structure = currentGrammar:getStructureByName(&quot;VBR&quot;)
+
+    bytesProcessed = currentMapper:mapStructureAtPosition(structure, offset * 512, 4 * 512)
+
+end
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="MBR" id="100" length="512" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Master Boot Code" id="116" fillcolor="FE1B18" length="440"/>
+            <binary name="Signature" id="117" length="4"/>
+            <binary name="Null" id="118" length="2"/>
+            <structure name="PartitionTable" id="119">
+                <structref name="PartitionTableEntry" id="120" repeatmax="4" structure="id:103"/>
+                <binary name="Boot Signature" id="121" fillcolor="00FB38" length="2"/>
+            </structure>
+        </structure>
+        <structure name="VBR" id="124" length="0" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Sector 1" id="125" length="512">
+                <binary name="Jump" id="126" length="3"/>
+                <string name="OEM Name" id="127" type="fixed-length" length="8"/>
+                <number name="Bytes per Sector" id="128" type="integer" length="2"/>
+                <number name="Sectors per Cluster" id="129" type="integer" length="1"/>
+                <number name="Sectors of first FAT" id="130" type="integer" length="2"/>
+                <number name="FAT count" id="131" type="integer" length="1"/>
+                <number name="Max entry count" id="132" type="integer" length="2"/>
+                <number name="Sectors of partition" id="133" type="integer" length="2"/>
+                <number name="Media type" id="134" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="Hard disk" value="0xF8"/>
+                    </fixedvalues>
+                </number>
+                <number name="Sectors per FAT" id="135" type="integer" length="2"/>
+                <number name="Sectors per track" id="136" type="integer" length="2"/>
+                <number name="Head count" id="137" type="integer" length="2"/>
+                <number name="Hidden sector count" id="138" type="integer" length="4"/>
+                <number name="Total sector count" id="139" type="integer" length="4"/>
+                <number name="Sectors per FAT-1" id="140" type="integer" length="4"/>
+                <number name="FAT bits" id="141" type="integer" length="2"/>
+                <number name="FAT32 version" id="142" type="integer" length="2"/>
+                <number name="Start cluster of main directory" id="143" type="integer" length="4"/>
+                <number name="File system info sector" id="144" type="integer" length="2"/>
+                <number name="Boot loader copy sector" id="145" type="integer" length="2"/>
+                <binary name="Reserved" id="146" length="12"/>
+                <number name="Physical drive number" id="147" type="integer" length="1"/>
+                <binary name="Reserved-1" id="148" length="1"/>
+                <number name="Extended boot signature" id="149" type="integer" length="1"/>
+                <number name="File system ID" id="150" type="integer" length="4" display="hex"/>
+                <string name="File system name" id="151" type="fixed-length" length="11" encoding="UTF-8"/>
+                <string name="FAT version" id="152" type="fixed-length" length="8" encoding="UTF-8"/>
+                <binary name="Boot loader code" id="153" length="420"/>
+                <binary name="Magic number" id="154" length="2"/>
+            </structure>
+            <structure name="Sector 2" id="156" length="512">
+                <binary name="RRaA" id="157" length="4"/>
+            </structure>
+            <structure name="Sector 3" id="159" length="512"/>
+            <structure name="Copy" id="161" length="512" alignment="0"/>
+        </structure>
+    </grammar>
+</ufwb>

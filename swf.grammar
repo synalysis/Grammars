@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.5.1">
+    <grammar name="SWF grammar" start="id:32" author="boydb" fileextension="swf">
+        <description>Grammar for SWF files</description>
+        <structure name="Defaults" id="33" encoding="ISO_8859-1:1987" endian="little" signed="no"/>
+        <structure name="Tag" id="35" extends="id:33"/>
+        <structure name="FileAttributes tag" id="37" length="0" extends="id:35">
+            <structure name="RECORDHEADER" id="38">
+                <scriptelement name="CondLongLength" id="39">
+                    <script name="unnamed" type="Generic">
+                        <source language="Lua">-- get collection with results so far
+results = currentMapper:getCurrentResults()
+
+-- get latest added result
+lengthResult = results:getResultByName(&quot;length&quot;)
+
+lengthValue = lengthResult:getValue()
+
+-- get the value parsed
+lengthNum = lengthValue:getUnsignedNumber()
+
+if (lengthNum &gt; 63) then
+
+    print &quot;long header&quot;
+    -- get currently processed grammar
+    currentGrammar = currentMapper:getCurrentGrammar()
+
+    -- get the structure we want to apply
+    structure = currentGrammar:getStructureByName(&quot;Types&quot;)
+
+    SI32element = structure:getElementByName(&quot;SI32&quot;)	
+
+    currentMapper:mapElementWithSize(SI32element, 4)
+end
+
+return 0
+</source>
+                    </script>
+                </scriptelement>
+            </structure>
+            <structure name="TagData" id="41">
+                <number name="Reserved" id="43" type="integer" length="1"/>
+            </structure>
+        </structure>
+        <structure name="UI16" id="47" alignment="1" extends="id:33">
+            <number name="Int" id="48" type="integer" length="2"/>
+        </structure>
+        <structure name="RECT" id="50" alignment="1" extends="id:33" strokecolor="0E0093" fillcolor="D478FF">
+            <number name="Nbits" id="51" strokecolor="520093" fillcolor="80FDD4" type="integer" length="5" lengthunit="bit"/>
+            <number name="Xmin" id="52" fillcolor="FFC4C4" type="integer" length="Nbits" lengthunit="bit" signed="yes"/>
+            <number name="Xmax" id="53" fillcolor="FFC4C4" type="integer" length="Nbits" lengthunit="bit" signed="yes"/>
+            <number name="Ymin" id="54" fillcolor="9BFF95" type="integer" length="Nbits" lengthunit="bit" signed="yes"/>
+            <number name="Ymax" id="55" fillcolor="A9FFA4" type="integer" length="Nbits" lengthunit="bit" signed="yes"/>
+            <binary name="Pad" id="56" length="8-mod(5+Nbits*4,8)" lengthunit="bit"/>
+        </structure>
+        <structure name="Uncompressed SWF file" id="32" length="0" extends="id:33">
+            <structure name="Header" id="58">
+                <string name="Signature" mustmatch="yes" id="59" fillcolor="FF4B4B" type="fixed-length" length="3">
+                    <fixedvalues>
+                        <fixedvalue name="Uncompressed" value="FWS"/>
+                        <fixedvalue name="Compressed" value="CWS"/>
+                    </fixedvalues>
+                </string>
+                <number name="Version" id="60" fillcolor="BCBCBC" type="integer" length="1"/>
+                <number name="FileLength" id="62" type="integer" length="4"/>
+                <structref name="FrameSize" id="63" structure="id:50"/>
+                <number name="FrameRate" id="65" type="integer" length="2"/>
+                <number name="FrameCount" id="66" type="integer" length="2"/>
+            </structure>
+            <structure name="Tags" id="68" repeatmax="-1" consists-of="id:35">
+                <number name="TypeAndLength" id="69" type="integer" length="2" display="hex">
+                    <mask name="type" value="0xFFC0">
+                        <fixedvalue name="type" value="0x3"/>
+                    </mask>
+                    <mask name="length" value="0x3F">
+                        <fixedvalue name="length" value="0x3"/>
+                    </mask>
+                </number>
+                <scriptelement name="CondLongLength" id="70">
+                    <script name="unnamed" type="Generic">
+                        <source language="Python"># get collection with results so far
+results = currentMapper.getCurrentResults()
+
+# get length result
+lengthResult = results.getResultByName(&quot;length&quot;)
+
+lengthValue = lengthResult.getValue()
+
+# get the value parsed
+lengthNum = lengthValue.getUnsignedNumber()
+
+if (lengthNum &gt; 63):
+
+    print &quot;long header&quot;
+    # get currently processed grammar
+    currentGrammar = currentMapper.getCurrentGrammar()
+
+    # get the structure we want to apply
+    structure = currentGrammar.getStructureByName(&quot;Types&quot;)
+
+    SI32element = structure.getElementByName(&quot;SI32&quot;)	
+
+    currentMapper.mapElementWithSize(SI32element, 4)
+
+print lengthNum
+</source>
+                    </script>
+                </scriptelement>
+                <scriptelement name="MapTag" id="71">
+                    <script name="unnamed" type="Generic">
+                        <source language="Python"># get collection with results so far
+results = currentMapper.getCurrentResults()
+
+# get type result
+typeResult = results.getResultByName(&quot;type&quot;)
+
+typeValue = typeResult.getValue()
+
+# get the value parsed
+typeNum = typeValue.getUnsignedNumber()
+
+type = (typeNum &gt;&gt; 6)
+
+if type == 0:
+    structureName = &quot;End&quot;
+elif type == 1:
+    structureName = &quot;ShowFrame&quot;
+elif type == 2:
+    structureName = &quot;DefineShape&quot;
+elif type == 4:
+    structureName = &quot;PlaceObject&quot;
+elif type == 5:
+    structureName = &quot;RemoveObject&quot;
+elif type == 6:
+    structureName = &quot;DefineBits&quot;
+elif type == 7:
+    structureName = &quot;DefineButton&quot;
+elif type == 8:
+    structureName = &quot;JPEGTables&quot;
+elif type == 9:
+    structureName = &quot;SetBackgroundColor&quot;
+elif type == 10:
+    structureName = &quot;DefineFont&quot;
+elif type == 11:
+    structureName = &quot;DefineText&quot;
+elif type == 12:
+    structureName = &quot;DoAction&quot;
+elif type == 13:
+    structureName = &quot;DefineFontInfo&quot;
+elif type == 14:
+    structureName = &quot;DefineSound&quot;
+elif type == 15:
+    structureName = &quot;StartSound&quot;
+elif type == 17:
+    structureName = &quot;DefineButtonSound&quot;
+elif type == 18:
+    structureName = &quot;SoundStreamHead&quot;
+elif type == 19:
+    structureName = &quot;SoundStreamBlock&quot;
+elif type == 20:
+    structureName = &quot;DefineBitsLossless&quot;
+elif type == 21:
+    structureName = &quot;DefineBitsJPEG2&quot;
+elif type == 22:
+    structureName = &quot;DefineShape2&quot;
+elif type == 23:
+    structureName = &quot;DefineButtonCxform&quot;
+elif type == 24:
+    structureName = &quot;Protect&quot;
+elif type == 26:
+    structureName = &quot;PlaceObject2&quot;
+elif type == 28:
+    structureName = &quot;RemoveObject2&quot;
+elif type == 32:
+    structureName = &quot;DefineShape3&quot;
+elif type == 33:
+    structureName = &quot;DefineText2&quot;
+elif type == 34:
+    structureName = &quot;DefineButton2&quot;
+elif type == 35:
+    structureName = &quot;DefineBitsJPEG3&quot;
+elif type == 36:
+    structureName = &quot;DefineBitsLossless2&quot;
+elif type == 37:
+    structureName = &quot;DefineEditText&quot;
+elif type == 39:
+    structureName = &quot;DefineSprite&quot;
+elif type == 43:
+    structureName = &quot;FrameLabel&quot;
+elif type == 45:
+    structureName = &quot;SoundStreamHead2&quot;
+elif type == 46:
+    structureName = &quot;DefineMorphShape&quot;
+elif type == 48:
+    structureName = &quot;DefineFont2&quot;
+elif type == 56:
+    structureName = &quot;ExportAssets&quot;
+elif type == 57:
+    structureName = &quot;ImportAssets&quot;
+elif type == 58:
+    structureName = &quot;EnableDebugger&quot;
+elif type == 59:
+    structureName = &quot;DoInitAction&quot;
+elif type == 60:
+    structureName = &quot;DefineVideoStream&quot;
+elif type == 61:
+    structureName = &quot;VideoFrame&quot;
+elif type == 62:
+    structureName = &quot;DefineFontInfo2&quot;
+elif type == 64:
+    structureName = &quot;EnableDebugger2&quot;
+elif type == 65:
+    structureName = &quot;ScriptLimits&quot;
+elif type == 66:
+    structureName = &quot;SetTabIndex&quot;
+elif type == 69:
+    structureName = &quot;FileAttributes&quot;
+elif type == 70:
+    structureName = &quot;PlaceObject3&quot;
+elif type == 71:
+    structureName = &quot;ImportAssets2&quot;
+elif type == 73:
+    structureName = &quot;DefineFontAlignZones&quot;
+elif type == 74:
+    structureName = &quot;CSMTextSettings&quot;
+elif type == 75:
+    structureName = &quot;DefineFont3&quot;
+elif type == 76:
+    structureName = &quot;SymbolClass&quot;
+elif type == 77:
+    structureName = &quot;Metadata&quot;
+elif type == 78:
+    structureName = &quot;DefineScalingGrid&quot;
+elif type == 82:
+    structureName = &quot;DoABC&quot;
+elif type == 83:
+    structureName = &quot;DefineShape4&quot;
+elif type == 84:
+    structureName = &quot;DefineMorphShape2&quot;
+elif type == 86:
+    structureName = &quot;DefineSceneAndFrameLabelData&quot;
+elif type == 87:
+    structureName = &quot;DefineBinaryData&quot;
+elif type == 88:
+    structureName = &quot;DefineFontName&quot;
+elif type == 89:
+    structureName = &quot;StartSound2&quot;
+elif type == 90:
+    structureName = &quot;DefineBitsJPEG4&quot;
+elif type == 91:
+    structureName = &quot;DefineFont4&quot;
+else:
+    structureName = &quot;Unknown&quot;
+
+# get currently processed grammar
+currentGrammar = currentMapper.getCurrentGrammar()
+
+# get tags structure
+tagsStructure = currentGrammar.getStructureByName(&quot;Tags&quot;)
+
+structureElement = tagsStructure.getElementByName(structureName)
+
+if structureElement is None:
+    structureElement = tagsStructure.getElementByName(&quot;NonImplemented&quot;)
+
+structure = structureElement.getStructure()
+
+print &quot;Map &quot; + structureName
+currentMapper.mapStructure(structure) 
+
+</source>
+                    </script>
+                </scriptelement>
+            </structure>
+        </structure>
+        <structure name="Types" id="74" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="SI32" id="75" type="integer" length="4"/>
+        </structure>
+        <structure name="Tags" id="77" length="0" alignment="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="DefineShape" id="78" length="length" alignment="0">
+                <number name="ShapeId" id="79" type="integer" length="2"/>
+                <structref name="ShapeBounds" id="80" structure="id:50"/>
+                <structref name="SHAPE" id="82" repeatmax="-1" structure="id:81"/>
+            </structure>
+            <structure name="FileAttributes" id="84" length="length">
+                <number name="Reserved" id="85" type="integer" length="1" lengthunit="bit"/>
+                <number name="UseDirectBlit" mustmatch="yes" id="86" type="integer" length="1" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="No hardware accelleration" value="0"/>
+                        <fixedvalue name="Hardware accelleration" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="UseGPU" mustmatch="yes" id="87" type="integer" length="1" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="No hardware accelleration" value="0"/>
+                        <fixedvalue name="GPU Compositing" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="HasMetadata" mustmatch="yes" id="88" type="integer" length="1" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="No metadata" value="0"/>
+                        <fixedvalue name="Has metadata" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="ActionScript3" mustmatch="yes" id="89" type="integer" length="1" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="Actionscript 1/2" value="0"/>
+                        <fixedvalue name="Actionscript 3" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="Reserved2" mustmatch="yes" id="90" fillcolor="797979" type="integer" length="2" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="Reserved" value="0"/>
+                    </fixedvalues>
+                </number>
+                <number name="UseNetwork" mustmatch="yes" id="91" type="integer" length="1" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="Local file access" value="0"/>
+                        <fixedvalue name="Network file access" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="Reserved3" mustmatch="yes" id="92" fillcolor="797979" type="integer" length="24" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="Reserved" value="0"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+            <structure name="NonImplemented" id="94" length="length">
+                <number name="Reserved" mustmatch="yes" id="95" fillcolor="797979" type="integer" length="1" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="Reserved" value="0"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+            <structure name="SetBackgroundColor" id="97">
+                <number name="Red" id="98" type="integer" length="1"/>
+                <number name="Green" id="99" type="integer" length="1"/>
+                <number name="Blue" id="100" type="integer" length="1"/>
+            </structure>
+            <structure name="End" id="102"/>
+        </structure>
+        <structure name="SHAPE" id="81" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="NumFillBits" id="105" type="integer" length="4" lengthunit="bit"/>
+            <number name="NumLineBits" id="106" type="integer" length="4" lengthunit="bit"/>
+            <structure name="ShapeRecords" id="107" order="variable">
+                <structref name="ENDSHAPERECORD" id="109" repeatmin="0" structure="id:108"/>
+                <structref name="STYLECHANGERECORD" id="111" repeatmin="0" structure="id:110"/>
+                <structref name="STRAIGHTEDGERECORD" id="113" repeatmin="0" structure="id:112"/>
+                <structref name="CURVEDEDGERECORD" id="115" repeatmin="0" structure="id:114"/>
+            </structure>
+        </structure>
+        <structure name="SHAPERECORD" id="118" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="TypeFlag" mustmatch="yes" id="119" type="integer" length="1" lengthunit="bit"/>
+        </structure>
+        <structure name="ENDSHAPERECORD" id="108" extends="id:118">
+            <number name="TypeFlag" id="121" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Non-edge" value="0"/>
+                </fixedvalues>
+            </number>
+            <number name="EndOfShape" mustmatch="yes" id="122" type="integer" length="5" lengthunit="bit">
+                <fixedvalues>
+                    <fixedvalue name="End of shape" value="0"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="STYLECHANGERECORD" id="110" extends="id:118">
+            <number name="TypeFlag" id="124" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Non-edge" value="0"/>
+                </fixedvalues>
+            </number>
+            <number name="StateNewStyles" id="125" type="integer" length="1" lengthunit="bit"/>
+            <number name="StateLineStyle" id="126" type="integer" length="1" lengthunit="bit"/>
+            <number name="StateFillStyle1" id="127" type="integer" length="1" lengthunit="bit"/>
+            <number name="StateFillStyle0" id="128" type="integer" length="1" lengthunit="bit"/>
+            <number name="StateMoveTo" id="129" type="integer" length="1" lengthunit="bit"/>
+        </structure>
+        <structure name="STRAIGHTEDGERECORD" id="112" extends="id:118">
+            <number name="TypeFlag" id="131" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Edge" value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="StraightFlag" mustmatch="yes" id="132" type="integer" length="1" lengthunit="bit">
+                <fixedvalues>
+                    <fixedvalue name="Straight edge" value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="NumBits" id="133" type="integer" length="4" lengthunit="bit"/>
+            <number name="GeneralLineFlag" id="134" type="integer" length="1" lengthunit="bit"/>
+        </structure>
+        <structure name="CURVEDEDGERECORD" id="114" extends="id:118">
+            <number name="TypeFlag" id="136" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Edge" value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="StraightFlag" mustmatch="yes" id="137" type="integer" length="1" lengthunit="bit">
+                <fixedvalues>
+                    <fixedvalue name="Curved edge" value="0"/>
+                </fixedvalues>
+            </number>
+            <number name="NumBits" id="138" type="integer" length="4" lengthunit="bit"/>
+        </structure>
+    </grammar>
+</ufwb>

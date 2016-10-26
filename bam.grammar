@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.6">
+    <grammar name="IESDP - BAM" start="id:100" author="Brad" email="bradallred@me.com" fileextension="bam">
+        <description>Grammar for BAM animation format for Infinity Engine</description>
+        <structure name="defaults" id="101" encoding="ISO_8859-1:1987" endian="little" signed="no"/>
+        <structure name="BAM" id="100" length="24" extends="id:101">
+            <string name="Signature" mustmatch="yes" id="103" type="fixed-length" length="4">
+                <description>Signature ('BAM ')</description>
+                <fixedvalues>
+                    <fixedvalue name="Signature" value="BAM "/>
+                </fixedvalues>
+            </string>
+            <string name="Version" id="104" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Version" value="V1  "/>
+                </fixedvalues>
+            </string>
+            <number name="FrameCount" id="105" type="integer" length="2"/>
+            <number name="CycleCount" id="106" type="integer" length="1"/>
+            <number name="RLE Index (Color Key)" id="107" type="integer" length="1"/>
+            <offset name="Frame Entries" id="109" length="4" references="id:108" follownullreference="yes"/>
+            <offset name="Palette" id="111" length="4" references="id:110" follownullreference="yes"/>
+            <offset name="Frame Lookup Table" id="113" length="4" references="id:112" follownullreference="yes"/>
+        </structure>
+        <structure name="FrameEntries" id="108" length="0" extends="id:101" encoding="ISO_8859-1:1987" signed="no">
+            <structure name="FrameEntry" id="115" repeatmax="FrameCount">
+                <number name="Width" id="116" type="integer" length="2"/>
+                <number name="Height" id="117" type="integer" length="2"/>
+                <number name="Center X" id="118" type="integer" length="2" signed="yes"/>
+                <number name="Center Y" id="119" type="integer" length="2" signed="yes"/>
+                <number name="FrameOffset" id="121" type="integer" length="32" lengthunit="bit" endian="little" display="hex"/>
+                <scriptelement name="FrameRef" id="122">
+                    <script name="unnamed" type="Generic">
+                        <source language="Python">results = currentMapper.getCurrentResults()
+
+widthResult = results.getResultByName(&quot;Width&quot;)
+heightResult = results.getResultByName(&quot;Height&quot;)
+frameOffsetResult = results.getResultByName(&quot;FrameOffset&quot;)
+
+widthValue = widthResult.getValue()
+heightValue = heightResult.getValue()
+frameOffsetValue = frameOffsetResult.getValue()
+
+width = widthValue.getUnsignedNumber()
+height = heightValue.getUnsignedNumber()
+frameOffset = frameOffsetValue.getUnsignedNumber()
+
+actualOffset = frameOffset &amp; 0x7FFFFFFF
+compressed = (frameOffset &amp; 0x80000000)
+
+print width
+print height
+print compressed
+print actualOffset
+
+currentGrammar = currentMapper.getCurrentGrammar()
+
+if (compressed != 0):
+	structure = currentGrammar.getStructureByName(&quot;UncompressedFrame&quot;)
+	dataSize = width * height
+else:
+	structure = currentGrammar.getStructureByName(&quot;CompressedFrame&quot;)
+	dataSize = 1
+
+bytesProcessed = currentMapper.mapStructureAtPosition(structure, actualOffset, dataSize)
+</source>
+                    </script>
+                </scriptelement>
+            </structure>
+            <structure name="Cycle Entries" id="124" repeat="id:106" repeatmax="CycleCount" encoding="ISO_8859-1:1987" signed="no">
+                <number name="Count" id="125" type="integer" length="2"/>
+                <number name="Frame Index" id="126" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="CompressedFrame" id="129" length="0" extends="id:101" strokecolor="AA7941" fillcolor="AA7941">
+            <binary name="Frame Data" id="130" strokecolor="AA7941" fillcolor="AA7941" length="1"/>
+        </structure>
+        <structure name="UncompressedFrame" id="132" extends="id:101" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Frame Data" id="133" strokecolor="AA7941" fillcolor="AA7941" length="remaining"/>
+        </structure>
+        <structure name="Palette" id="110" length="1024" extends="id:101" consists-of="id:135">
+            <structref name="RGBQUAD" id="136" structure="id:135"/>
+        </structure>
+        <structure name="RGBQUAD" id="135" length="0" repeatmin="255" repeatmax="256" extends="id:101">
+            <number name="Blue" id="138" fillcolor="0432FF" type="integer" length="1"/>
+            <number name="Green" id="139" fillcolor="00F900" type="integer" length="1"/>
+            <number name="Red" id="140" fillcolor="FF2600" type="integer" length="1"/>
+            <number name="Alpha (Unused)" id="141" fillcolor="FEFFFF" type="integer" length="1"/>
+        </structure>
+        <structure name="Frame Lookup Table" id="112" extends="id:101">
+            <number name="FrameIndex" id="143" fillcolor="FFD478" repeatmax="FrameCount" type="integer" length="2"/>
+        </structure>
+    </grammar>
+</ufwb>

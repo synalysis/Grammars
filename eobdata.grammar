@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9">
+    <grammar name="EOB SAV" start="id:135" author="fedo" fileextension="SAV" complete="yes">
+        <description>Grammar for EOBDATA.SAV files</description>
+        <structure name="SAV file" id="135" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Character" id="136" length="243" repeatmax="6">
+                <binary name="&lt;Binary Fill Bytes&gt;" id="137" unused="yes" length="2"/>
+                <string name="NAme" id="138" fillcolor="FFC2B8" type="fixed-length" length="10" encoding="ISO_8859-1:1987"/>
+                <binary name="&lt;Binary Fill Bytes-1&gt;" id="139" unused="yes" length="1"/>
+                <number name="curr_STR" id="140" fillcolor="9DFB9F" type="integer" length="1"/>
+                <number name="max_STR" id="141" fillcolor="00F900" type="integer" length="1"/>
+                <number name="curr_adv_STR" id="142" fillcolor="9DFB9F" type="integer" length="1"/>
+                <number name="max_adv_STR" id="143" fillcolor="00F900" type="integer" length="1"/>
+                <number name="curr_INT" id="144" fillcolor="9DFB9F" type="integer" length="1"/>
+                <number name="max_INT" id="145" fillcolor="00F900" type="integer" length="1"/>
+                <number name="curr_WIS" id="146" fillcolor="9DFB9F" type="integer" length="1"/>
+                <number name="max_WIS" id="147" fillcolor="00F900" type="integer" length="1"/>
+                <number name="curr_DEX" id="148" fillcolor="9DFB9F" type="integer" length="1"/>
+                <number name="max_DEX" id="149" fillcolor="00F900" type="integer" length="1"/>
+                <number name="curr_CON" id="150" fillcolor="9DFB9F" type="integer" length="1"/>
+                <number name="max_CON" id="151" fillcolor="00F900" type="integer" length="1"/>
+                <number name="curr_CHA" id="152" fillcolor="9DFB9F" type="integer" length="1"/>
+                <number name="max_CHA" id="153" fillcolor="00F900" type="integer" length="1"/>
+                <number name="curr_HP" id="154" fillcolor="BEE9FF" type="integer" length="1"/>
+                <number name="max_HP" id="155" fillcolor="BAD1FF" type="integer" length="1"/>
+                <binary name="&lt;Binary Fill Bytes-2&gt;" id="156" unused="yes" length="2"/>
+                <binary name="race+sex" id="157" fillcolor="FFF8BE" length="1"/>
+                <binary name="class" id="158" fillcolor="FEFA22" length="1"/>
+                <number name="alignment" id="159" fillcolor="FFD487" type="integer" length="1" display="hex"/>
+                <number name="portrait" id="160" fillcolor="FFC1D7" type="integer" length="1" display="hex"/>
+                <number name="food in % (0..100)" id="161" fillcolor="00FCF7" type="integer" length="1"/>
+                <number name="Level 1st class" id="162" fillcolor="FF333C" type="integer" length="1"/>
+                <number name="Level 2nd class" id="163" fillcolor="FF3A3D" type="integer" length="1"/>
+                <number name="Level 3rd class" id="164" fillcolor="FF3A3D" type="integer" length="1"/>
+                <number name="XP 1st class" id="165" fillcolor="FFB8FD" type="integer" length="4" endian="little"/>
+                <number name="XP 2nd class" id="166" fillcolor="FFB8FD" type="integer" length="4" endian="little"/>
+                <number name="XP 3rd class" id="167" fillcolor="FFB8FD" type="integer" length="4"/>
+                <binary name="&lt;Binary Fill Bytes-3&gt;" id="168" unused="yes" length="68"/>
+                <number name="lefthand slot" id="169" fillcolor="AFFA3B" type="integer" length="2" display="hex"/>
+                <number name="righthand slot" id="170" fillcolor="AFFA3B" type="integer" length="2" display="hex"/>
+                <binary name="Items general slot" id="171" fillcolor="B4DFFF" length="28"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

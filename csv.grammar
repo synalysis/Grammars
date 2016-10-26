@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.11.2">
+    <grammar name="CSV grammar" start="id:4" author="Andreas Pehnack" email="andreas@synalysis.com" fileextension="csv" uti="public.comma-separated-values-text">
+        <description>Grammar for CSV files</description>
+        <structure name="CSV file" id="4" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Line" id="8" repeatmax="-1">
+                <string name="Record" id="7" repeatmax="2" type="delimiter-terminated" delimiter="2C"/>
+                <string name="LastRecord" id="5" type="delimiter-terminated" delimiter="0A"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

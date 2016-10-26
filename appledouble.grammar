@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.0.3.1">
+    <grammar name="AppleDouble" start="Header" author="Terry Long">
+        <description>Grammer for AppleDouble files (which are named starting with '._').</description>
+        <structure name="Header" id="1722" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Magic" mustmatch="yes" id="1744" type="integer" length="4" display="hex">
+                <fixedvalue name="Magic" value="0x51607"/>
+            </number>
+            <number name="Version" id="1727" type="integer" length="4" display="hex">
+                <fixedvalue name="Version 2" value="0x20000"/>
+            </number>
+            <string name="Home File System" id="1728" type="fixed-length" length="16"/>
+            <number name="Entry Count" id="1730" type="integer" length="2"/>
+            <structure name="Entry Descriptor" id="1731" repeat="id:1730" repeatmin="0" repeatmax="unlimited">
+                <number name="Entry ID" id="1733" type="integer" length="4">
+                    <fixedvalue name="Resource Fork" value="2"/>
+                    <fixedvalue name="Finder Info" value="9"/>
+                </number>
+                <offset name="Offset" id="1738" length="4" references="Finder Info" referenced-size="id:1739"/>
+                <number name="Length" id="1739" type="integer" length="4" display="hex"/>
+            </structure>
+        </structure>
+        <structure name="XAttr Data" id="1771" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="&lt;new binary&gt;" id="1773"/>
+        </structure>
+        <structure name="XAttr Value" id="1768" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="&lt;new binary&gt;" id="1770"/>
+        </structure>
+        <structure name="Finder Info" id="1741">
+            <binary name="Header" id="1745" length="32"/>
+            <binary name="Padding" id="1746" length="2"/>
+            <structure name="XAttr Header" id="1747">
+                <string name="Magic" mustmatch="yes" id="1752" type="fixed-length" length="4">
+                    <fixedvalue name="Magic" value="ATTR"/>
+                </string>
+                <binary name="Debug Tag" id="1750" length="4"/>
+                <number name="Size" id="1751" type="integer" length="4"/>
+                <offset name="XAttr Data" id="1774" length="4" references="XAttr Data" referenced-size="id:1751"/>
+                <number name="Length" id="1754" type="integer" length="4"/>
+                <binary name="Reserved" id="1755" length="12"/>
+                <binary name="Flags" id="1757" length="2"/>
+                <number name="Attr Count" id="1758" type="integer" length="2"/>
+                <structure name="XAttr" id="1759" repeat="id:1758" repeatmin="0" repeatmax="unlimited">
+                    <offset name="Value Offset" id="1767" length="4" references="XAttr Value" referenced-size="id:1762"/>
+                    <number name="Value Length" id="1762" type="integer" length="4"/>
+                    <binary name="Flags" id="1763" length="2"/>
+                    <number name="Name Length" id="1764" type="integer" length="1"/>
+                    <string name="Name" id="1765" type="zero-terminated"/>
+                </structure>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

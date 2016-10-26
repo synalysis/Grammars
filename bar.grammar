@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.2">
+    <grammar name="Age of Mythology BAR" start="id:3627" author="Kelvin Chung" fileextension="bar">
+        <description>Grammar for BAR files used in Age of Mythology</description>
+        <structure name="Age of Mythology BAR file" id="3627" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="BAR Header" id="3629" structure="id:3628"/>
+        </structure>
+        <structure name="BAR Header" id="3628" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="Unknown" id="3631" length="12"/>
+            <number name="Number of files" id="3632" fillcolor="FCFC3E" type="integer" length="4"/>
+            <number name="Directory Entry length" id="3633" fillcolor="FE9227" type="integer" length="4"/>
+            <number name="Directory" id="3634" fillcolor="FF30FA" type="integer" length="4" display="hex"/>
+            <scriptelement name="Render Directory" id="3635">
+                <script language="Lua">offsetField = &quot;Directory&quot;
+sizeField = &quot;Number of files&quot;
+entryType = &quot;Directory Offset Entry&quot;
+
+results = currentMapper:getCurrentResults()
+currentGrammar = currentMapper:getCurrentGrammar()
+logSrc = currentMapper:getCurrentLogSrc()
+
+sizeResult = results:getResultByName(sizeField)
+offsetResult = results:getResultByName(offsetField)
+
+size = sizeResult:getValue():getUnsignedNumber()
+firstOffset = offsetResult:getValue():getUnsignedNumber()
+
+directoryStart = firstOffset + (4 * size)
+
+structure = currentGrammar:getStructureByName(entryType)
+entryStructure = currentGrammar:getStructureByName(&quot;Directory Entry&quot;)
+
+-- TODO: add a virtual structure wrapper?
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, &quot;Begin Rendering Entries&quot;)
+offset = firstOffset
+for i = 1,size do
+	currentMapper:mapStructureAtPosition(structure, offset, 4)
+	offset = offset + 4
+	
+	-- get offset of actual entry
+	local lastResult = results:getLastResult()
+	local localOffset = lastResult:getValue():getUnsignedNumber()
+	logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, string.format(&quot;localOffset: 0x%X&quot;, localOffset))
+	local directoryEntryStart = directoryStart + localOffset
+	logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, string.format(&quot;Entry located at 0x%X&quot;, directoryEntryStart))
+	
+	-- structure is of indeterminate size, so we shoehorn an arbitrary large size
+	currentMapper:mapStructureAtPosition(entryStructure, directoryEntryStart, currentMapper:getCurrentOffset() + currentMapper:getCurrentRemainingSize() - directoryEntryStart)
+end
+logSrc:logMessage(_VERSION, 111, synalysis.SEVERITY_INFO, &quot;Finish Rendering Entries&quot;)
+
+return 0</script>
+            </scriptelement>
+        </structure>
+        <structure name="File" id="3637" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="File Data" id="3638" length="0"/>
+        </structure>
+        <structure name="Directory Entry" id="3640" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <offset name="File" id="3641" fillcolor="FF30FA" length="4" references="id:3637" referenced-size="id:3642" follownullreference="yes"/>
+            <number name="File Length" id="3642" fillcolor="FE9227" type="integer" length="4"/>
+            <binary name="Unknown" id="3643" length="12"/>
+            <string name="Filename" id="3644" fillcolor="02FDFD" type="zero-terminated"/>
+        </structure>
+        <structure name="Directory Offset Entry" id="3646" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Directory Entry Offset" id="3647" fillcolor="FF30FA" type="integer" length="4" display="hex"/>
+        </structure>
+    </grammar>
+</ufwb>

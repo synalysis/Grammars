@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9">
+    <grammar name="libpcap" start="id:6" author="Bret Jordan" email="jordan2175@gmail.com" fileextension="pcap">
+        <description>Grammar for the libpcap format</description>
+        <structure name="LibPCAP File" id="6" encoding="UTF-8" endian="little" signed="no">
+            <structure name="Global Header" id="7" length="24" endian="dynamic">
+                <number name="magic_number" id="8" type="integer" length="4" endian="big" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="Big Endian" value="0xA1B2C3D4"/>
+                        <fixedvalue name="Little Endian" value="0xD4C3B2A1"/>
+                    </fixedvalues>
+                </number>
+                <scriptelement name="set_byte_order" id="9">
+                    <script name="unnamed" type="Generic">
+                        <source language="Lua">results = currentMapper:getCurrentResults()
+lastResult = results:getLastResult()
+value = lastResult:getValue()
+num = value:getUnsignedNumber()
+
+if (num == 0xA1B2C3D4) then
+    currentMapper:setDynamicEndianness(synalysis.ENDIAN_BIG)
+else
+    currentMapper:setDynamicEndianness(synalysis.ENDIAN_LITTLE)
+end</source>
+                    </script>
+                </scriptelement>
+                <number name="version_major" id="10" type="integer" length="2"/>
+                <number name="version_minor" id="11" type="integer" length="2"/>
+                <number name="thiszone" id="12" type="integer" length="4" signed="yes">
+                    <description>GMT to local correction</description>
+                </number>
+                <number name="sigfigs" id="13" type="integer" length="4">
+                    <description>Accuracy of timestamps</description>
+                </number>
+                <number name="snaplen" id="14" type="integer" length="4">
+                    <description>Max length of captured packets, in octets</description>
+                </number>
+                <number name="network" id="15" type="integer" length="4">
+                    <description>Data link type</description>
+                </number>
+            </structure>
+            <structure name="Packet Header" id="17" length="0" repeatmax="10000" endian="dynamic">
+                <number name="frame.time" id="18" type="integer" length="4">
+                    <description>Timestamp in seconds from epoch</description>
+                </number>
+                <number name="frame.time_usec" id="19" type="integer" length="4">
+                    <description>Timestamp in microseconds from epoch</description>
+                </number>
+                <number name="frame.len" id="20" type="integer" length="4">
+                    <description>Frame length on the wire (bytes)</description>
+                </number>
+                <number name="frame.cap_len" id="21" type="integer" length="4">
+                    <description>Frame length stored into the capture file (bytes)</description>
+                </number>
+                <structure name="Packet Data" id="22" length="prev.frame.cap_len">
+                    <structure name="Ethernet II Header" id="39" strokecolor="ED2521">
+                        <binary name="eth_dst" id="23" fillcolor="89F990" length="6"/>
+                        <binary name="eth_src" id="24" fillcolor="FCFB72" length="6"/>
+                        <number name="eth.type" id="41" type="integer" length="2" display="hex">
+                            <fixedvalues>
+                                <fixedvalue name="IPv4 Datagram" value="0x800"/>
+                                <fixedvalue name="ARP Frame" value="0x806"/>
+                                <fixedvalue name="802.1Q" value="0x8100"/>
+                                <fixedvalue name="IPv6 Frame" value="0x86DD"/>
+                            </fixedvalues>
+                        </number>
+                    </structure>
+                    <structure name="IPv4 Datagram" id="42">
+                        <number name="ip.version" id="28" type="integer" length="4" lengthunit="bit" endian="big"/>
+                        <number name="ip_hdr_len" id="31" type="integer" length="4" lengthunit="bit" endian="big"/>
+                        <number name="ip.dsfield" id="33" type="integer" length="6" lengthunit="bit"/>
+                        <binary name="ip.esn" id="36" length="2" lengthunit="bit"/>
+                        <number name="ip.len" id="37" type="integer" length="2" endian="big">
+                            <description>Number of 32 bit words in header thus ip.len x 32 = number of bits </description>
+                        </number>
+                        <number name="ip.id" id="38" type="integer" length="2" endian="big"/>
+                        <number name="ip.flags" id="46" type="integer" length="3" lengthunit="bit" display="binary"/>
+                        <number name="ip.frag_offset" id="47" type="integer" length="13" lengthunit="bit"/>
+                        <number name="ip.ttl" id="48" type="integer" length="1"/>
+                        <number name="ip.proto" id="49" type="integer" length="1"/>
+                        <number name="ip.checksum" id="50" type="integer" length="2" display="hex"/>
+                        <structure name="ip.src" id="54" length="4">
+                            <number name="ip.src_octet_1" id="56" fillcolor="C7E4FF" type="integer" length="1"/>
+                            <number name="ip.src_octet_2" id="57" fillcolor="C7E4FF" type="integer" length="1"/>
+                            <number name="ip.src_octet_3" id="58" fillcolor="C7E4FF" type="integer" length="1"/>
+                            <number name="ip.src_octet_4" id="59" fillcolor="C7E4FF" type="integer" length="1"/>
+                        </structure>
+                        <structure name="ip.dst" id="60" length="4">
+                            <number name="ip.dst_octet_1" id="62" fillcolor="F4888A" type="integer" length="1"/>
+                            <number name="ip.dst_octet_2" id="63" fillcolor="F4888A" type="integer" length="1"/>
+                            <number name="ip.dst_octet_3" id="64" fillcolor="F4888A" type="integer" length="1"/>
+                            <number name="ip.dst_octet_4" id="65" fillcolor="F4888A" type="integer" length="1"/>
+                        </structure>
+                        <binary name="ip.data" id="66" fillcolor="BE83FF" length="remaining"/>
+                    </structure>
+                </structure>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

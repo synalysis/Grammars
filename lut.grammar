@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.2">
+    <grammar name="LUT grammar" start="id:234" author="Dave E Wilson" fileextension="LUT">
+        <description>Grammar for LUT files</description>
+        <structure name="LUT file" id="234" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Transducer Type" id="235" type="integer" length="2"/>
+            <structure name="Serial NumberType" id="236">
+                <string name="Type" id="237" type="fixed-length" length="1"/>
+                <number name="Year" id="238" type="integer" length="1"/>
+                <string name="Manufacturer" id="239" type="fixed-length" length="1"/>
+                <number name="Month" id="240" type="integer" length="1"/>
+                <number name="Day" id="241" type="integer" length="1"/>
+                <number name="Production number" id="242" type="integer" length="3"/>
+            </structure>
+            <number name="Frequency" id="244" type="integer" length="3"/>
+            <number name="RF Filter" id="245" type="integer" length="1"/>
+            <number name="LUT length" id="246" fillcolor="FFFEFF" type="integer" length="1"/>
+            <number name="Gain Trim" id="247" type="integer" length="1"/>
+            <number name="Manufacture Date" id="248" type="integer" length="4"/>
+            <number name="Fill Date" id="249" type="integer" length="4"/>
+            <number name="Expiration Date" id="250" type="integer" length="4"/>
+            <structure name="Unused Section 1" id="251">
+                <string name="Padding 1" id="252" type="fixed-length" length="32"/>
+            </structure>
+            <structure name="Version" id="254">
+                <number name="Version Major" id="255" type="integer" length="1"/>
+                <number name="Version Minor" id="256" type="integer" length="1"/>
+            </structure>
+            <number name="CRC" id="258" type="integer" length="2"/>
+            <structure name="Power Supply LUT" id="259">
+                <number name="PS Entry 1" id="260" type="integer" length="1"/>
+                <number name="PS Entry 2" id="261" type="integer" length="1"/>
+                <number name="PS Entry 3" id="262" type="integer" length="1"/>
+                <number name="PS Entry 4" id="263" type="integer" length="1"/>
+                <number name="PS Entry 5" id="264" type="integer" length="1"/>
+                <number name="PS Entry 6" id="265" type="integer" length="1"/>
+                <number name="PS Entry 7" id="266" type="integer" length="1"/>
+                <number name="PS Entry 8" id="267" type="integer" length="1"/>
+                <number name="PS Entry 9" id="268" type="integer" length="1"/>
+                <number name="PS Entry 10" id="269" type="integer" length="1"/>
+                <number name="PS Entry 11" id="270" type="integer" length="1"/>
+                <number name="PS Entry 12" id="271" type="integer" length="1"/>
+                <number name="PS Entry 13" id="272" type="integer" length="1"/>
+                <number name="PS Entry 14" id="273" type="integer" length="1"/>
+                <number name="PS Entry 15" id="274" type="integer" length="1"/>
+                <number name="PS Entry 16" id="275" type="integer" length="1"/>
+            </structure>
+            <structure name="Acoustic Power LUT" id="277">
+                <number name="AP Entry 1" id="278" type="integer" length="1"/>
+                <number name="AP Entry 2" id="279" type="integer" length="1"/>
+                <number name="AP Entry 3" id="280" type="integer" length="1"/>
+                <number name="AP Entry 4" id="281" type="integer" length="1"/>
+                <number name="AP Entry 5" id="282" type="integer" length="1"/>
+                <number name="AP Entry 6" id="283" type="integer" length="1"/>
+                <number name="AP Entry 7" id="284" type="integer" length="1"/>
+                <number name="AP Entry 8" id="285" type="integer" length="1"/>
+                <number name="AP Entry 9" id="286" type="integer" length="1"/>
+                <number name="AP Entry 10" id="287" type="integer" length="1"/>
+                <number name="AP Entry 11" id="288" type="integer" length="1"/>
+                <number name="AP Entry 12" id="289" type="integer" length="1"/>
+                <number name="AP Entry 13" id="290" type="integer" length="1"/>
+                <number name="AP Entry 14" id="291" type="integer" length="1"/>
+                <number name="AP Entry 15" id="292" type="integer" length="1"/>
+                <number name="AP Entry 16" id="293" type="integer" length="1"/>
+            </structure>
+            <structure name="FWD Voltage LUT" id="295">
+                <number name="FV Entry 1" id="296" type="integer" length="1"/>
+                <number name="FV Entry 2" id="297" type="integer" length="1"/>
+                <number name="FV Entry 3" id="298" type="integer" length="1"/>
+                <number name="FV Entry 4" id="299" type="integer" length="1"/>
+                <number name="FV Entry 5" id="300" type="integer" length="1"/>
+                <number name="FV Entry 6" id="301" type="integer" length="1"/>
+                <number name="FV Entry 7" id="302" type="integer" length="1"/>
+                <number name="FV Entry 8" id="303" type="integer" length="1"/>
+                <number name="FV Entry 9" id="304" type="integer" length="1"/>
+                <number name="FV Entry 10" id="305" type="integer" length="1"/>
+                <number name="FV Entry 11" id="306" type="integer" length="1"/>
+                <number name="FV Entry 12" id="307" type="integer" length="1"/>
+                <number name="FV Entry 13" id="308" type="integer" length="1"/>
+                <number name="FV Entry 14" id="309" type="integer" length="1"/>
+                <number name="FV Entry 15" id="310" type="integer" length="1"/>
+                <number name="FV Entry 16" id="311" type="integer" length="1"/>
+            </structure>
+            <structure name="REV Voltage LUT" id="313">
+                <number name="RV Entry 1" id="314" type="integer" length="1"/>
+                <number name="RV Entry 2" id="315" type="integer" length="1"/>
+                <number name="RV Entry 3" id="316" type="integer" length="1"/>
+                <number name="RV Entry 4" id="317" type="integer" length="1"/>
+                <number name="RV Entry 5" id="318" type="integer" length="1"/>
+                <number name="RV Entry 6" id="319" type="integer" length="1"/>
+                <number name="RV Entry 7" id="320" type="integer" length="1"/>
+                <number name="RV Entry 8" id="321" type="integer" length="1"/>
+                <number name="RV Entry 9" id="322" type="integer" length="1"/>
+                <number name="RV Entry 10" id="323" type="integer" length="1"/>
+                <number name="RV Entry 11" id="324" type="integer" length="1"/>
+                <number name="RV Entry 12" id="325" type="integer" length="1"/>
+                <number name="RV Entry 13" id="326" type="integer" length="1"/>
+                <number name="RV Entry 14" id="327" type="integer" length="1"/>
+                <number name="RV Entry 15" id="328" type="integer" length="1"/>
+                <number name="RV Entry 16" id="329" type="integer" length="1"/>
+            </structure>
+            <structure name="Unused Section 2" id="331">
+                <string name="Padding 2" id="332" type="fixed-length" length="64"/>
+            </structure>
+            <number name="Lines Left" id="334" type="integer" length="3"/>
+            <number name="Line Capacity" id="335" type="integer" length="3"/>
+            <number name="Date of First Usage" id="336" type="integer" length="4"/>
+            <number name="Scan Usage" id="337" type="integer" length="3"/>
+            <number name="Scan Limit" id="338" type="integer" length="1"/>
+            <number name="Country Code" id="339" type="integer" length="1"/>
+            <structure name="Unused Section 3" id="340">
+                <string name="Padding 3" id="341" type="fixed-length" length="49"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

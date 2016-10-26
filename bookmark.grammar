@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.16">
+    <grammar name="Apple Bookmark" start="id:140" author="Andreas Pehnack" email="andreas@synalysis.com">
+        <description>Grammar for bookmark data as found in .sfl binary property list files</description>
+        <scripts>
+            <script name="DynamicCount" type="DataType" id="201">
+                <description>Reads a 4-bit count and if it's 0x0F, read an integer</description>
+                <source language="Python"># Parses 4-byte namber and if it's 0x0F, an integer object
+# see https://opensource.apple.com/source/CF/CF-550/CFBinaryPList.c
+
+def parseBitRange(element, byteView, bitPos, bitLength, results):
+	# this method parses data starting at bitPos, bitLength bits are remaining
+	&quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
+
+	processedBits = 0
+
+	count = byteView.readUnsignedIntBits(bitPos, 4, ENDIAN_BIG)
+	processedBits += 4
+
+	# create and set new value
+	value = Value()
+
+	if (count &gt;= 0x0F):
+		intMarker = byteView.readUnsignedIntBits(bitPos + processedBits, 4, ENDIAN_BIG)
+		processedBits += 4
+		if (intMarker != 1):
+			intPos = (bitPos + processedBits) / 8;
+			print(&quot;Expected integer object at position &quot; + str(intPos))
+		else:
+			intBits = byteView.readUnsignedIntBits(bitPos + processedBits, 4, ENDIAN_BIG)
+			processedBits += 4
+			intBytes = 2 ** intBits
+			count = byteView.readUnsignedInt((bitPos + processedBits) / 8, intBytes, ENDIAN_BIG)
+			processedBits += intBytes * 8
+
+	value.setUnsigned(count)
+
+	# how many bytes were processed?
+	iteration = 0
+
+	results.addElementBits(element, processedBits, iteration, value)
+
+	# return number of processed bytes
+	return processedBits
+</source>
+            </script>
+        </scripts>
+        <structure name="Bookmark file" id="140" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="Identifier" mustmatch="yes" id="249" fillcolor="FFD478" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Bookmark" value="book"/>
+                    <fixedvalue name="Alias" value="alis"/>
+                </fixedvalues>
+            </string>
+            <number name="Length" id="250" fillcolor="72FA78" type="integer" length="4" endian="little"/>
+            <number name="Version" id="251" fillcolor="72FCD5" type="integer" length="4"/>
+            <offset name="Bookmark Data" id="253" fillcolor="75D5FF" length="4" endian="little" references="id:252" relative-to="id:217" follownullreference="yes"/>
+        </structure>
+        <structure name="Bookmark Data" id="252" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <offset name="Bookmark TOC" id="256" fillcolor="D783FF" length="4" endian="little" references="id:255" relative-to="id:252" follownullreference="yes"/>
+            <structref name="Record" id="301" repeatmax="8" structure="id:289"/>
+        </structure>
+        <structure name="Bookmark TOC" id="255" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Header" id="258">
+                <number name="DataLength" id="259" fillcolor="D783FF" type="integer" length="4"/>
+                <number name="RecordType" id="260" fillcolor="FF84FF" type="integer" length="2" display="hex"/>
+                <number name="Flags" id="261" fillcolor="FEFC78" type="integer" length="2" display="hex"/>
+            </structure>
+            <structure name="Data" id="263" length="DataLength">
+                <number name="Level" id="264" fillcolor="75D5FF" type="integer" length="4"/>
+                <offset name="Next TOC" id="265" fillcolor="D4FB78" length="4" references="id:140" relative-to="id:263" follownullreference="no"/>
+                <number name="NumberOfRecords" id="266" fillcolor="FF89D8" type="integer" length="4"/>
+                <structure name="Record" id="267" length="0" repeatmin="0" repeatmax="NumberOfRecords">
+                    <number name="RecordType" id="268" fillcolor="0096FF" type="integer" length="2">
+                        <fixedvalues>
+                            <fixedvalue name="volMountURL" value="8272"/>
+                            <fixedvalue name="volName" value="8208"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="Flags" id="269" fillcolor="FFD478" type="integer" length="2"/>
+                    <offset name="Record Data" id="275" fillcolor="D783FF" length="8" references="id:289" additional="48" follownullreference="yes"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="Record" id="289" alignment="4" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <structref name="String Record" id="291" repeatmin="0" structure="id:279"/>
+            <structref name="CFURL Record" id="292" repeatmin="0" structure="id:284"/>
+            <structref name="Data Record" id="300" repeatmin="0" structure="id:295"/>
+            <structref name="Record Data" id="293" repeatmin="0" structure="id:273"/>
+        </structure>
+        <structure name="Record Data" id="273" length="0" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Length" id="276" fillcolor="FF9300" type="integer" length="4"/>
+            <number name="DataType" mustmatch="yes" id="277" fillcolor="FEFB00" type="integer" length="4"/>
+        </structure>
+        <structure name="String Record" id="279" extends="id:273" valueexpression="String">
+            <number name="Length" id="281" type="integer"/>
+            <number name="DataType" id="282" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="String" value="257"/>
+                </fixedvalues>
+            </number>
+            <string name="String" id="294" fillcolor="72FCD5" type="fixed-length" length="Length"/>
+        </structure>
+        <structure name="CFURL Record" id="284" extends="id:273">
+            <number name="Length" id="286" type="integer"/>
+            <number name="DataType" id="287" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="CFURL" value="2305"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="Data Record" id="295" extends="id:273">
+            <number name="Length" id="297" type="integer"/>
+            <number name="DataType" id="298" type="integer"/>
+            <binary name="Data" id="299" length="Length"/>
+        </structure>
+    </grammar>
+</ufwb>

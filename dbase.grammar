@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.17">
+    <grammar name="dBASE" start="id:24" author="Andreas Pehnack" email="andreas@synalysis.net" fileextension="dbf" uti="application/dbase" complete="yes">
+        <description>Grammar for dBASE files</description>
+        <structure name="Defaults" id="25" length="Remaining" alignment="4" consists-of="id:24" encoding="ISO_8859-1:1987" endian="little" signed="no"/>
+        <structure name="dBASE file" id="24" length="Remaining" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Header" id="27" length="PositionOfFirstDataRecord" alignment="4" consists-of="id:45">
+                <number name="FileType" id="28" fillcolor="FFA8BB" type="float" length="32" lengthunit="bit" endian="little" display="hex" minval="" maxval="">
+                    <fixedvalues>
+                        <fixedvalue name="FoxBASE" value="0x2"/>
+                        <fixedvalue name="FoxBASE+/Dbase III plus, no memo" value="0x3"/>
+                        <fixedvalue name="Visual FoxPro" value="0x30"/>
+                        <fixedvalue name="Visual FoxPro, autoincrement enabled" value="0x31"/>
+                        <fixedvalue name="Visual FoxPro with field type Varchar or Varbinary" value="0x32"/>
+                        <fixedvalue name="dBASE IV SQL table file, no memo" value="0x43"/>
+                        <fixedvalue name="dBASE IV SQL system file, no memo" value="0x63"/>
+                        <fixedvalue name="FoxBASE+/dBASE III PLUS, with memo" value="0x83"/>
+                        <fixedvalue name="dBASE IV with memo" value="0x8B"/>
+                        <fixedvalue name="dBASE IV SQL table file, with memo" value="0xCB"/>
+                        <fixedvalue name="FoxPro 2.x (or earlier) with memo" value="0xF5"/>
+                        <fixedvalue name="HiPer-Six format with SMT memo file" value="0xE5"/>
+                        <fixedvalue name="FoxBASE" value="0xFB"/>
+                    </fixedvalues>
+                </number>
+                <number name="LastUpdate" id="29" repeatmax="-1" type="integer" length="4" display="hex">
+                    <description>Last update (YYMMDD)</description>
+                </number>
+                <number name="NumberOfRecords" id="30" strokecolor="0432FF" fillcolor="FCFB60" type="integer" length="8" display="hex">
+                    <description>Number of records in file</description>
+                </number>
+                <number name="PositionOfFirstDataRecord" id="31" strokecolor="7980FF" fillcolor="FF7EAB" repeatmax="-1" type="integer" length="4" display="hex">
+                    <description>Position of first data record</description>
+                </number>
+                <number name="RecordLength" id="32" strokecolor="797979" fillcolor="009192" type="integer" length="4" display="hex">
+                    <description>Length of one data record, including delete flag</description>
+                </number>
+                <binary name="Reserved" id="33" length="16"/>
+                <number name="TableFlags" id="34" fillcolor="9437FF" type="integer" length="1" display="hex">
+                    <description>This byte can contain the sum of any of the above values. For example, the value 0x03 indicates the table has a structural .cdx and a Memo field.</description>
+                    <mask name="Structural .cdx" value="0x1">
+                        <fixedvalue name="Structural .cdx" value="0x1"/>
+                    </mask>
+                    <mask name="Memo field" value="0x2">
+                        <fixedvalue name="Memo field" value="0x2"/>
+                    </mask>
+                    <mask name="File is a database (.dbc)" value="0x4">
+                        <fixedvalue name="File is a database (.dbc)" value="0x4"/>
+                    </mask>
+                </number>
+                <number name="CodePageMark" id="35" fillcolor="FF9300" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="DOS USA" value="0x1"/>
+                        <fixedvalue name="DOS Multilingual" value="0x2"/>
+                        <fixedvalue name="Windows ANSI" value="0x3"/>
+                        <fixedvalue name="Standard Macintosh" value="0x4"/>
+                        <fixedvalue name="EE MS-DOS" value="0x64"/>
+                        <fixedvalue name="Nordic MS-DOS" value="0x65"/>
+                        <fixedvalue name="Russian MS-DOS" value="0x66"/>
+                        <fixedvalue name="Icelandic MS-DOS" value="0x67"/>
+                        <fixedvalue name="Kamenicky (Czech) MS-DOS" value="0x68"/>
+                        <fixedvalue name="Mazovia (Polish) MS-DOS" value="0x69"/>
+                        <fixedvalue name="Greek MS-DOS" value="0x6A"/>
+                        <fixedvalue name="Turkish MS-DOS" value="0x6B"/>
+                        <fixedvalue name="Russian Macintosh" value="0x96"/>
+                        <fixedvalue name="Eastern European Macintosh" value="0x97"/>
+                        <fixedvalue name="Greek Macintosh" value="0x98"/>
+                        <fixedvalue name="Windows EE" value="0xC8"/>
+                        <fixedvalue name="Russian Windows" value="0xC9"/>
+                        <fixedvalue name="Turkish Windows" value="0xCA"/>
+                        <fixedvalue name="Greek Windows" value="0xCB"/>
+                    </fixedvalues>
+                </number>
+                <binary name="Reserved2" id="36" length="2"/>
+                <structure name="SubRecords" id="37" repeatmax="-1" consists-of="id:39" strokecolor="919191" fillcolor="BD6582" order="variable">
+                    <number name="HeaderEnd" mustmatch="yes" id="38" fillcolor="FF2600" repeatmin="0" type="integer" length="1" display="hex">
+                        <fixedvalues>
+                            <fixedvalue name="CR" value="0xD"/>
+                        </fixedvalues>
+                    </number>
+                    <structref name="SubRecord" id="40" fillcolor="8DF900" repeatmin="0" structure="id:39"/>
+                </structure>
+            </structure>
+            <structure name="Records" id="43" length="0" repeatmax="-1" order="variable">
+                <number name="EndOfFile" mustmatch="yes" id="44" fillcolor="FF2600" repeatmin="0" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="EOF" value="0x1A"/>
+                    </fixedvalues>
+                </number>
+                <structref name="Record" id="46" repeatmin="0" structure="id:45"/>
+            </structure>
+        </structure>
+        <structure name="SubRecord" id="39" length="32" extends="id:25">
+            <string name="FieldName" id="49" fillcolor="FFD478" type="fixed-length" length="11">
+                <description>Field name with a maximum of 10 characters. If less than 10, it is padded with null characters (0x00)</description>
+            </string>
+            <string name="FieldType" mustmatch="yes" id="50" fillcolor="FF534E" type="fixed-length" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Character" value="C"/>
+                    <fixedvalue name="Currency" value="Y"/>
+                    <fixedvalue name="Numeric" value="N"/>
+                    <fixedvalue name="Float" value="F"/>
+                    <fixedvalue name="Date" value="D"/>
+                    <fixedvalue name="DateTime" value="T"/>
+                    <fixedvalue name="Double" value="B"/>
+                    <fixedvalue name="Integer" value="I"/>
+                    <fixedvalue name="Logical" value="L"/>
+                    <fixedvalue name="Memo" value="M"/>
+                    <fixedvalue name="General" value="G"/>
+                    <fixedvalue name="Picture" value="P"/>
+                    <fixedvalue name="Autoincrement" value="+"/>
+                    <fixedvalue name="Double" value="O"/>
+                    <fixedvalue name="Timestamp" value="@"/>
+                </fixedvalues>
+            </string>
+            <number name="Displacement" id="51" strokecolor="919191" fillcolor="FFE17B" type="integer" length="4" display="hex">
+                <description>Displacement of field in record</description>
+            </number>
+            <number name="LengthOfField" id="52" fillcolor="72FA78" type="integer" length="1">
+                <description>Length of field (in bytes)</description>
+            </number>
+            <number name="DecimalPlaces" id="53" strokecolor="C0C0C0" fillcolor="72FCD5" type="integer" length="1" display="hex">
+                <description>Number of decimal places</description>
+            </number>
+            <number name="FieldFlags" id="54" fillcolor="FF7D78" type="integer" length="8" display="hex">
+                <mask name="System Column (not visible to user)" value="0x1">
+                    <fixedvalue name="System Column (not visible to user)" value="0x1"/>
+                </mask>
+                <mask name="Column can store null values" value="0x2">
+                    <fixedvalue name="Column can store null values" value="0x2"/>
+                </mask>
+                <mask name="Binary column (for CHAR and MEMO only)" value="0x4">
+                    <fixedvalue name="Binary column (for CHAR and MEMO only)" value="0x4"/>
+                </mask>
+                <mask name="Column is autoincrementing" value="0xC">
+                    <fixedvalue name="Column is autoincrementing" value="0xC"/>
+                </mask>
+            </number>
+            <number name="Autoincrement Next value" id="55" type="integer" length="4">
+                <description>Value of autoincrement Next value</description>
+            </number>
+            <number name="Autoincrement Step value" id="56" type="integer" length="1">
+                <description>Value of autoincrement Step value</description>
+            </number>
+            <binary name="Reserved" id="57" length="8"/>
+        </structure>
+        <structure name="Record" id="45" length="RecordLength" extends="id:25">
+            <string name="DeletedMarker" id="59" fillcolor="FF2F92" type="zero-terminated">
+                <fixedvalues>
+                    <fixedvalue name="Not deleted" value=" "/>
+                    <fixedvalue name="Deleted" value="*"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="FieldProperties" id="61" extends="id:25">
+            <number name="NumberOfStandardProperties" id="62" type="integer" length="2"/>
+            <number name="StartOfStandardPropertyDescriptorArray" id="63" type="integer" length="2"/>
+            <number name="NumberOfCustomProperties-1" id="64" type="integer" length="2"/>
+            <number name="StartOfCustomPropertyDescriptorArray" id="65" type="integer" length="2"/>
+            <number name="NumberOfReferentialIntegrityProperties" id="66" type="integer" length="2"/>
+            <number name="StartOfReferentialIntegrityProperties" id="67" type="integer" length="2"/>
+            <number name="StartOfData" id="68" strokecolor="942092" fillcolor="FF40FF" type="integer" length="4" display="hex"/>
+            <number name="StructureSize" id="69" strokecolor="011892" fillcolor="FF89D8" type="integer" length="2"/>
+        </structure>
+        <structure name="StandardProperty" id="71" extends="id:25">
+            <number name="GenerationalNumber" id="72" type="integer" length="2"/>
+            <number name="TableFieldOffset" id="73" type="integer" length="2"/>
+            <number name="PropertyType" id="74" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Required" value="1"/>
+                    <fixedvalue name="Min" value="2"/>
+                    <fixedvalue name="Max" value="3"/>
+                    <fixedvalue name="Default" value="4"/>
+                    <fixedvalue name="Database constraint" value="6"/>
+                </fixedvalues>
+            </number>
+            <number name="FieldType" id="75" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="No type - constraint" value="0"/>
+                    <fixedvalue name="Char" value="1"/>
+                    <fixedvalue name="Numeric" value="2"/>
+                    <fixedvalue name="Memo" value="3"/>
+                    <fixedvalue name="Logical" value="4"/>
+                    <fixedvalue name="Date" value="5"/>
+                    <fixedvalue name="Float" value="6"/>
+                    <fixedvalue name="OLE" value="8"/>
+                    <fixedvalue name="Binary" value="9"/>
+                    <fixedvalue name="Long" value="11"/>
+                    <fixedvalue name="Timestamp" value="12"/>
+                    <fixedvalue name="Double" value="13"/>
+                    <fixedvalue name="Autoincrement" value="14"/>
+                </fixedvalues>
+            </number>
+            <number name="IsConstraint" id="76" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Is constraint" value="0"/>
+                    <fixedvalue name="Not constraint" value="2"/>
+                </fixedvalues>
+            </number>
+            <binary name="Reserved" id="77" length="4"/>
+            <number name="PropertyDataOffset" id="78" type="integer" length="2">
+                <description>Offset from the start of this structure to the data for the property. The Required property has no data associated with it, so it is always 0</description>
+            </number>
+            <number name="FieldWidth" id="79" type="integer" length="2">
+                <description>Width of database field associated with the property, and hence size of the data (includes 0 terminator in the case of a constraint)</description>
+            </number>
+        </structure>
+    </grammar>
+</ufwb>

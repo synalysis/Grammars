@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.17">
+    <grammar name="GZIP" start="id:13" author="Andreas Pehnack" email="andreas.pehnack@me.com" fileextension="gz" uti="org.gnu.gnu-zip-archive">
+        <description>Grammar for GZIP compressed files</description>
+        <scripts>
+            <script name="UnixTime" type="DataType" id="19">
+                <source language="Python"># Unix time
+
+from datetime import datetime, timedelta
+
+def parseByteRange(element, byteView, bitPos, bitLength, results):
+	&quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
+
+	timeStamp = byteView.readUnsignedInt(bitPos/8, 4, ENDIAN_LITTLE)
+
+	dt = datetime.fromtimestamp(timeStamp)
+
+	dtAdjusted = dt - timedelta(hours=1)
+
+	dateString = dtAdjusted.strftime(&quot;%Y-%m-%d %H:%M:%S&quot;)
+
+
+	value = Value()
+	value.setString(dateString)
+
+	results.addElement(element, 4, 0, value)
+
+	return 4
+</source>
+            </script>
+        </scripts>
+        <structure name="GZ file" id="13" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Magic Number" id="15" fillcolor="FF84FF" type="integer" length="2" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="Magic GZIP" value="0x1F8B"/>
+                </fixedvalues>
+            </number>
+            <number name="Compression Method" id="16" fillcolor="7980FF" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="store" value="0"/>
+                    <fixedvalue name="compress" value="1"/>
+                    <fixedvalue name="pack" value="2"/>
+                    <fixedvalue name="lzh" value="3"/>
+                    <fixedvalue name="deflate" value="8"/>
+                </fixedvalues>
+            </number>
+            <number name="Flags" id="17" fillcolor="75D5FF" type="integer" length="1">
+                <mask name="Flags" value="0xFF">
+                    <fixedvalue name="file probably ASCII test" value="0x1"/>
+                    <fixedvalue name="continuation of multi-part gzip file" value="0x2"/>
+                    <fixedvalue name="extra field presetn" value="0x4"/>
+                    <fixedvalue name="original file name present" value="0x8"/>
+                    <fixedvalue name="file comment present" value="0xA"/>
+                    <fixedvalue name="file is encypted, encryption header present" value="0x14"/>
+                </mask>
+            </number>
+            <custom name="file modification time" id="18" fillcolor="FF40FF" length="4" script="id:19"/>
+            <number name="Extra flags" id="20" fillcolor="FF9300" type="integer" length="1">
+                <mask name="Extra Flags" value="0xFF">
+                    <fixedvalue name="maximum compression" value="0x2"/>
+                    <fixedvalue name="fastest algorithm" value="0x4"/>
+                </mask>
+            </number>
+            <number name="OS Type" id="21" fillcolor="00FCFF" type="integer" length="1" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="FAT file system" value="0x0"/>
+                    <fixedvalue name="Amiga" value="0x1"/>
+                    <fixedvalue name="VMS (or OpenVMS)" value="0x2"/>
+                    <fixedvalue name="Unix" value="0x3"/>
+                    <fixedvalue name="VM/CMS" value="0x4"/>
+                    <fixedvalue name="Atari TOS" value="0x5"/>
+                    <fixedvalue name="HPFS file system (OS/2, NT)" value="0x6"/>
+                    <fixedvalue name="Macintosh" value="0x7"/>
+                    <fixedvalue name="Z-System" value="0x8"/>
+                    <fixedvalue name="CP/M" value="0x9"/>
+                    <fixedvalue name="TOPS-20" value="0xA"/>
+                    <fixedvalue name="NTFS file system (NT)" value="0xB"/>
+                    <fixedvalue name="QDOS" value="0xC"/>
+                    <fixedvalue name="Acorn RISCOS" value="0xD"/>
+                    <fixedvalue name="Unknown" value="0xFF"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="MapOptionalParts" id="22">
+                <script name="unnamed">
+                    <source language="Python"># get collection with results so far
+results = currentMapper.getCurrentResults()
+grammar = currentMapper.getCurrentGrammar()
+
+optionalFieldsStructure = grammar.getStructureByName(&quot;OptionalFields&quot;)
+
+flagsResult = results.getResultByName(&quot;Flags&quot;)
+flagsValue = flagsResult.getValue()
+flags = flagsValue.getUnsigned()
+
+# print &quot;Flags: &quot; + str(flags)
+
+partNumberPresent = flags &amp; 0x02
+extraFieldPresent = flags &amp; 0x04
+originalFileNamePresent = flags &amp; 0x08
+fileCommentPresent = flags &amp; 0x10
+encryptionHeaderPresent = flags &amp; 0x20
+
+if partNumberPresent:
+	partNumberElement = optionalFieldsStructure.getElementByName(&quot;Part number&quot;)
+	currentMapper.mapElementWithSize(partNumberElement, 2)
+
+if extraFieldPresent:
+	extraFieldElement = optionalFieldsStructure.getElementByName(&quot;Extra fields&quot;)
+	currentMapper.mapElementWithSize(extraFieldElement, 1000)
+
+if originalFileNamePresent:
+	fileNameElement = optionalFieldsStructure.getElementByName(&quot;File name&quot;)
+	currentMapper.mapElementWithSize(fileNameElement, 1000)
+
+if fileCommentPresent:
+	fileCommentElement = optionalFieldsStructure.getElementByName(&quot;File comment&quot;)
+	currentMapper.mapElementWithSize(fileCommentElement, 1000)
+
+remainingSize = currentMapper.getCurrentRemainingSize()
+
+# print &quot;Remaining: &quot; + str(remainingSize)
+
+dataElement = optionalFieldsStructure.getElementByName(&quot;Data&quot;)
+currentMapper.mapElementWithSize(dataElement, remainingSize - 8)
+
+checksumElement = optionalFieldsStructure.getElementByName(&quot;CRC32&quot;)
+currentMapper.mapElementWithSize(checksumElement, 4)
+
+dataSizeElement = optionalFieldsStructure.getElementByName(&quot;Uncompressed size&quot;)
+currentMapper.mapElementWithSize(dataSizeElement, 4)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="OptionalFields" id="703" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Part number" id="705" fillcolor="FFD478" type="integer" length="2"/>
+            <structure name="Extra fields" id="706">
+                <number name="Length" id="708" type="integer" length="1"/>
+                <structure name="Extra Field" id="715">
+                    <number name="SubFieldID" id="717" type="integer" length="2" endian="big" display="hex">
+                        <fixedvalues>
+                            <fixedvalue name="Apollo file type information" value="0xAF"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="Length" id="719" type="integer" length="2"/>
+                    <binary name="Data" id="720" length="Length"/>
+                </structure>
+            </structure>
+            <string name="File name" id="709" fillcolor="8DF900" type="zero-terminated"/>
+            <string name="File comment" id="710" fillcolor="7980FF" type="zero-terminated"/>
+            <binary name="Encryption" id="711" length="12"/>
+            <binary name="Data" id="712" fillcolor="FEFC78" length="remaining"/>
+            <number name="CRC32" id="713" fillcolor="FF84FF" type="integer" length="4" display="hex"/>
+            <number name="Uncompressed size" id="714" fillcolor="75D5FF" type="integer" length="4"/>
+        </structure>
+    </grammar>
+</ufwb>

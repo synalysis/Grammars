@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.13">
+    <grammar name="SGI" start="id:29" author="Iain Waugh" fileextension="sgi">
+        <description>Grammar for SGI files
+More info here:
+  http://paulbourke.net/dataformats/sgirgb/</description>
+        <structure name="SGI file" id="29" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Header" id="30" length="512">
+                <number name="Magic" mustmatch="yes" id="31" fillcolor="FFAA00" type="integer" length="2">
+                    <description>IRIS image file magic number</description>
+                    <fixedvalues>
+                        <fixedvalue name="IRIS Number" value="474"/>
+                    </fixedvalues>
+                </number>
+                <number name="Storage" mustmatch="yes" id="32" type="integer" length="1">
+                    <description>Storage format</description>
+                    <fixedvalues>
+                        <fixedvalue name="Uncompressed" value="0"/>
+                        <fixedvalue name="RLE Compression" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="BPC" mustmatch="yes" id="33" type="integer" length="1">
+                    <description>Number of bytes per pixel channel</description>
+                    <fixedvalues>
+                        <fixedvalue name="8bpp" value="1"/>
+                        <fixedvalue name="16bpp" value="2"/>
+                    </fixedvalues>
+                </number>
+                <number name="Dimension" mustmatch="yes" id="34" type="integer" length="2">
+                    <description>Number of dimensions</description>
+                    <fixedvalues>
+                        <fixedvalue name="Single row" value="1"/>
+                        <fixedvalue name="2D Image" value="2"/>
+                        <fixedvalue name="Multiple Images" value="3"/>
+                    </fixedvalues>
+                </number>
+                <number name="XSize" id="35" fillcolor="00AA00" type="integer" length="2">
+                    <description>X size in pixels</description>
+                </number>
+                <number name="YSize" id="36" fillcolor="00AA7F" type="integer" length="2">
+                    <description>Y size in pixels</description>
+                </number>
+                <number name="ZSize" mustmatch="yes" id="37" type="integer" length="2">
+                    <description>Number of channels</description>
+                    <fixedvalues>
+                        <fixedvalue name="Grayscale" value="1"/>
+                        <fixedvalue name="RGB" value="3"/>
+                        <fixedvalue name="RGB+Alpha" value="4"/>
+                    </fixedvalues>
+                </number>
+                <number name="PixMin" id="38" type="integer" length="4">
+                    <description>Minimum pixel value</description>
+                </number>
+                <number name="PixMax" id="39" type="integer" length="4">
+                    <description>Maximum pixel value</description>
+                </number>
+                <number name="Dummy" id="40" type="integer" length="4">
+                    <description>Ignored</description>
+                </number>
+                <string name="ImageName" id="41" fillcolor="FFFFC8" type="fixed-length" length="80" encoding="UTF-7">
+                    <description>Image Name</description>
+                </string>
+                <number name="ColorMap" mustmatch="yes" id="42" type="integer" length="4">
+                    <description>Colormap ID</description>
+                    <fixedvalues>
+                        <fixedvalue name="Normal Mode" value="0"/>
+                        <fixedvalue name="Dithered" value="1"/>
+                        <fixedvalue name="Index Colour" value="2"/>
+                        <fixedvalue name="Colourmap" value="3"/>
+                    </fixedvalues>
+                </number>
+                <binary name="Ignored" id="43" length="404"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

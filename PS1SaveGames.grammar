@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.3">
+    <grammar name="PS1 Save Games" start="id:7" author="Diskutant" email="diskutant@googlemail.com" fileextension="" uti="public.unix-executable">
+        <description>Grammar for PlayStation 1 Save Games (individual files)</description>
+        <structure name="Header" id="7" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Header" mustmatch="yes" id="9" length="2">
+                <fixedvalues>
+                    <fixedvalue name="SC" value="5343"/>
+                </fixedvalues>
+            </binary>
+            <structure name="IconFlag" id="258" length="1">
+                <number name="HasIcon" id="257" type="integer" length="4" lengthunit="bit" display="hex" minval="0x0" maxval="0x1"/>
+                <number name="Frames" id="260" type="integer" length="4" lengthunit="bit" minval="0" maxval="3"/>
+            </structure>
+            <binary name="Size in Blocks" id="17" fillcolor="FB9D15" length="1"/>
+            <string name="Title" id="18" fillcolor="FB6575" type="fixed-length" length="64" encoding="Shift_JIS"/>
+            <structref name="PocketStation Data" id="267" structure="id:252"/>
+            <binary name="Icon Colors" id="23" fillcolor="9EFAFE" length="32"/>
+            <binary name="Icon Bitmap" id="261" fillcolor="D891FE" repeatmin="0" repeatmax="prev.Frames" length="128"/>
+            <structref name="Save Data" id="265" structure="id:263"/>
+        </structure>
+        <structure name="PocketStation Data" id="252" length="28" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Unknown" id="262" fillcolor="A6BAFE" length="0"/>
+        </structure>
+        <structure name="Save Data" id="263" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Save Data" id="266" length="0"/>
+        </structure>
+    </grammar>
+</ufwb>

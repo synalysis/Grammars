@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.5.1">
+    <grammar name="HyperCard Stack" start="id:221" author="Uli Kusterer" email="tiezilanystamrofelifch@ulik.at" fileextension="stak" uti="com.apple.hypercard.stack">
+        <description>Grammar for HyperCard stack format</description>
+        <structure name="HyperCard Stack" id="221" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Blocks" id="222" length="0" repeatmax="-1" order="variable">
+                <structref name="StackBlock" id="224" repeatmin="0" structure="id:223"/>
+                <structref name="StyleTable" id="226" repeatmin="0" structure="id:225"/>
+                <structref name="FontTable" id="228" repeatmin="0" structure="id:227"/>
+                <structref name="PageTable" id="230" repeatmin="0" structure="id:229"/>
+                <structref name="CardOrBackground" id="232" repeatmin="0" structure="id:231"/>
+                <structref name="FreeBlock" id="234" repeatmin="0" structure="id:233"/>
+                <structref name="MastBlock" id="236" repeatmin="0" structure="id:235"/>
+                <structref name="BmapBlock" id="238" repeatmin="0" structure="id:237"/>
+                <structref name="PrntBlock" id="240" repeatmin="0" structure="id:239"/>
+                <structref name="PrstBlock" id="242" repeatmin="0" structure="id:241"/>
+                <structref name="ListBlock" id="244" repeatmin="0" structure="id:243"/>
+                <structref name="TailBlock" id="246" repeatmin="0" structure="id:245"/>
+                <structref name="Block" id="248" repeatmin="0" structure="id:247"/>
+            </structure>
+        </structure>
+        <structure name="Block" id="247" length="BlockSize" encoding="macintosh" endian="big" signed="no">
+            <number name="BlockSize" id="251" fillcolor="75D5FF" type="integer" length="4" endian="big"/>
+            <string name="Block Type" mustmatch="yes" id="252" fillcolor="FF2600" type="fixed-length" length="4" encoding="macintosh"/>
+            <number name="BlockID" id="253" fillcolor="FF84FF" type="integer" length="4" signed="yes"/>
+        </structure>
+        <structure name="StackBlock" id="223" extends="id:247">
+            <number name="BlockSize" id="255" type="integer"/>
+            <string name="Block Type" id="256" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="STAK" value="STAK"/>
+                </fixedvalues>
+            </string>
+            <number name="BlockID" id="257" type="integer"/>
+            <binary name="There be Tygers" id="258" length="32"/>
+            <number name="CardCount" id="259" type="integer" length="4"/>
+            <number name="SomeCardID" id="260" type="integer" length="4"/>
+            <number name="ListBlockID" id="261" type="integer" length="4"/>
+            <binary name="There be Tygers 2" id="262" length="16"/>
+            <number name="UserLevel" id="263" type="integer" length="2"/>
+            <binary name="There be Tygers 3" id="264" length="2"/>
+            <number name="Flags" id="265" type="integer" length="2" display="hex">
+                <mask name="cantPeek" value="0x200">
+                    <fixedvalue name="cantPeek" value="0x200"/>
+                </mask>
+                <mask name="cantAbort" value="0x400">
+                    <fixedvalue name="cantAbort" value="0x400"/>
+                </mask>
+                <mask name="privateAccess" value="0x1000">
+                    <fixedvalue name="privateAccess" value="0x1000"/>
+                </mask>
+                <mask name="cantDelete" value="0x2000">
+                    <fixedvalue name="cantDelete" value="0x2000"/>
+                </mask>
+                <mask name="cantModify" value="0x4000">
+                    <fixedvalue name="cantModify" value="0x4000"/>
+                </mask>
+            </number>
+            <binary name="There be Tygers 4" id="266" length="22"/>
+            <number name="CreatedNumVersion" id="267" type="integer" length="4"/>
+            <number name="EditedNumVersion" id="268" type="integer" length="4"/>
+            <number name="CompactedNumVersion" id="269" type="integer" length="4"/>
+            <binary name="There be Tygers 5" id="270" length="316"/>
+            <number name="Height" id="271" type="integer" length="2"/>
+            <number name="Width" id="272" type="integer" length="2"/>
+            <binary name="There be Tygers 6" id="273" length="272"/>
+            <binary name="Pattern" id="274" repeatmax="40" length="8"/>
+            <binary name="There be Tygers 7" id="275" length="512"/>
+            <string name="StackScript" id="276" type="zero-terminated"/>
+        </structure>
+        <structure name="StyleTable" id="225" extends="id:247">
+            <number name="BlockSize" id="278" type="integer"/>
+            <string name="Block Type" id="279" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="STBL" value="STBL"/>
+                </fixedvalues>
+            </string>
+            <number name="BlockID" id="280" type="integer"/>
+            <binary name="There be Tygers" id="281" length="4"/>
+            <number name="StyleCount" id="282" type="integer" length="4"/>
+            <structure name="Style" id="283" repeatmax="StyleCount">
+                <binary name="There be Tygers" id="284" length="16"/>
+                <number name="FontID" id="285" type="integer" length="2"/>
+                <number name="StyleFlags" id="286" type="integer" length="2"/>
+                <number name="FontSize" id="287" type="integer" length="2"/>
+                <binary name="There be Tygers 2" id="288" length="2"/>
+            </structure>
+        </structure>
+        <structure name="FontTable" id="227" extends="id:247">
+            <number name="BlockSize" id="291" type="integer"/>
+            <string name="Block Type" id="292" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="FTBL" value="FTBL"/>
+                </fixedvalues>
+            </string>
+            <number name="BlockID" id="293" type="integer"/>
+            <binary name="There be Tygers" id="294" length="6"/>
+            <number name="FontCount" id="295" type="integer" length="2"/>
+            <binary name="There be Tygers 2" id="296" length="4"/>
+            <structure name="Font" id="297" alignment="2" repeat="id:295" repeatmax="-1">
+                <number name="FontID" id="298" type="integer" length="2"/>
+                <string name="FontName" id="299" type="zero-terminated"/>
+            </structure>
+        </structure>
+        <structure name="PageTable" id="229" extends="id:247">
+            <number name="BlockSize" id="302" type="integer"/>
+            <string name="Block Type" id="303" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="PAGE" value="PAGE"/>
+                </fixedvalues>
+            </string>
+            <number name="BlockID" id="304" type="integer"/>
+            <binary name="There be Tygers" id="305" length="12"/>
+            <structure name="Page" id="306" repeatmax="-1">
+                <number name="CardID" id="307" type="integer" length="1"/>
+                <binary name="There be Tygers" id="308" length="16"/>
+            </structure>
+        </structure>
+        <structure name="CardOrBackground" id="231" extends="id:247">
+            <number name="BlockSize" id="311" type="integer"/>
+            <string name="Block Type" id="312" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="CARD" value="CARD"/>
+                    <fixedvalue name="BKGD" value="BKGD"/>
+                </fixedvalues>
+            </string>
+            <number name="BlockID" id="313" type="integer"/>
+            <binary name="There be Tygers" id="314" length="4"/>
+            <number name="BmapBlockID" id="315" type="integer" length="4"/>
+            <number name="Flags" id="316" type="integer" length="2" display="hex">
+                <mask name="cantDelete" value="0x4000">
+                    <fixedvalue name="cantDelete" value="0x4000"/>
+                </mask>
+                <mask name="hideCardPicture" value="0x2000">
+                    <fixedvalue name="hideCardPicture" value="0x2000"/>
+                </mask>
+                <mask name="dontSearch" value="0x800">
+                    <fixedvalue name="dontSearch" value="0x800"/>
+                </mask>
+            </number>
+            <binary name="There be Tygers 2" id="317" length="12"/>
+            <number name="Background ID" id="318" type="integer" length="2">
+                <description>ID of background for this card</description>
+            </number>
+            <number name="Owner" id="319" type="integer" length="4">
+                <description>ID of background for this card</description>
+            </number>
+            <number name="PartsCount" id="320" type="integer" length="2">
+                <description>ID of background for this card</description>
+            </number>
+            <binary name="There be Tygers 4" id="321" length="6"/>
+            <number name="PartContentsCount" id="322" type="integer" length="2">
+                <description>ID of background for this card</description>
+            </number>
+            <string name="ScriptType" id="323" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="HyperTalk" value=""/>
+                    <fixedvalue name="Compiled OSA String" value="WOSA"/>
+                </fixedvalues>
+            </string>
+            <structure name="Part" id="324" length="PartLength" alignment="1" repeat="id:320" repeatmin="0" repeatmax="-1">
+                <number name="PartLength" id="325" type="integer" length="2">
+                    <description>ID of background for this card</description>
+                </number>
+                <number name="PartID" id="326" type="integer" length="2">
+                    <description>ID of background for this card</description>
+                </number>
+                <number name="Type" id="327" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="Button" value="1"/>
+                        <fixedvalue name="Field" value="2"/>
+                    </fixedvalues>
+                </number>
+                <number name="Flags" id="328" type="integer" length="1">
+                    <mask name="hidden" value="0x80">
+                        <fixedvalue name="hidden" value="0x80"/>
+                    </mask>
+                    <mask name="dontWrap" value="0x20">
+                        <fixedvalue name="dontWrap" value="0x20"/>
+                    </mask>
+                    <mask name="dontSearch" value="0x10">
+                        <fixedvalue name="dontSearch" value="0x10"/>
+                    </mask>
+                    <mask name="sharedText" value="0x8">
+                        <fixedvalue name="sharedText" value="0x8"/>
+                    </mask>
+                    <mask name="fixedLineHeight" value="0x4">
+                        <fixedvalue name="fixedLineHeight" value="0x4"/>
+                    </mask>
+                    <mask name="autoTab" value="0x2">
+                        <fixedvalue name="autoTab" value="0x2"/>
+                    </mask>
+                    <mask name="lockText" value="0x1">
+                        <fixedvalue name="lockText" value="0x1"/>
+                    </mask>
+                </number>
+                <number name="TopCoordinate" id="329" type="integer" length="2"/>
+                <number name="LeftCoordinate" id="330" type="integer" length="2"/>
+                <number name="BottomCoordinate" id="331" type="integer" length="2"/>
+                <number name="RightCoordinate" id="332" type="integer" length="2"/>
+                <number name="MoreFlags" id="333" type="integer" length="2" display="hex">
+                    <mask name="showName" value="0x8000">
+                        <fixedvalue name="showName" value="0x8000"/>
+                    </mask>
+                    <mask name="showLines" value="0x4000">
+                        <fixedvalue name="showLines" value="0x4000"/>
+                    </mask>
+                    <mask name="wideMargins" value="0x2000">
+                        <fixedvalue name="wideMargins" value="0x2000"/>
+                    </mask>
+                    <mask name="sharedHighlight" value="0x1000">
+                        <fixedvalue name="sharedHighlight" value="0x1000"/>
+                    </mask>
+                    <mask name="buttonFamilyNumber" value="0xF00">
+                        <fixedvalue name="transparent" value="0x0"/>
+                        <fixedvalue name="opaque" value="0x100"/>
+                        <fixedvalue name="rectangle" value="0x200"/>
+                        <fixedvalue name="roundrect" value="0x300"/>
+                        <fixedvalue name="shadow" value="0x400"/>
+                        <fixedvalue name="checkbox" value="0x500"/>
+                        <fixedvalue name="radiobutton" value="0x600"/>
+                        <fixedvalue name="standard" value="0x800"/>
+                        <fixedvalue name="default" value="0x900"/>
+                        <fixedvalue name="oval" value="0xA00"/>
+                        <fixedvalue name="popup" value="0xB00"/>
+                    </mask>
+                    <mask name="Field" value="0xFF">
+                        <fixedvalue name="transparent" value="0x0"/>
+                        <fixedvalue name="opaque" value="0x1"/>
+                        <fixedvalue name="rectangle" value="0x2"/>
+                        <fixedvalue name="shadow" value="0x4"/>
+                        <fixedvalue name="scrolling" value="0x7"/>
+                    </mask>
+                </number>
+                <number name="TitleWidth" id="334" type="integer" length="2"/>
+                <number name="IconID" id="335" type="integer" length="2"/>
+                <number name="TextAlignment" id="336" type="integer" length="2" signed="yes">
+                    <fixedvalues>
+                        <fixedvalue name="left" value="0"/>
+                        <fixedvalue name="center" value="1"/>
+                        <fixedvalue name="force left" value="-2"/>
+                        <fixedvalue name="right" value="-1"/>
+                    </fixedvalues>
+                </number>
+                <number name="TextFontID" id="337" type="integer" length="2"/>
+                <number name="TextFontSize" id="338" type="integer" length="2"/>
+                <number name="TextStyleFlags" id="339" type="integer" length="2" display="hex">
+                    <mask name="group" value="0x8000">
+                        <fixedvalue name="group" value="0x8000"/>
+                    </mask>
+                    <mask name="extend" value="0x4000">
+                        <fixedvalue name="extend" value="0x4000"/>
+                    </mask>
+                    <mask name="condense" value="0x2000">
+                        <fixedvalue name="condense" value="0x2000"/>
+                    </mask>
+                    <mask name="shadow" value="0x1000">
+                        <fixedvalue name="shadow" value="0x1000"/>
+                    </mask>
+                    <mask name="outline" value="0x800">
+                        <fixedvalue name="outline" value="0x800"/>
+                    </mask>
+                    <mask name="underline" value="0x400">
+                        <fixedvalue name="underline" value="0x400"/>
+                    </mask>
+                    <mask name="italic" value="0x200">
+                        <fixedvalue name="italic" value="0x200"/>
+                    </mask>
+                    <mask name="bold" value="0x100">
+                        <fixedvalue name="bold" value="0x100"/>
+                    </mask>
+                </number>
+                <number name="LineHeight" id="340" type="integer" length="2"/>
+                <string name="PartName" id="341" type="zero-terminated"/>
+                <binary name="Reserved" id="342" length="1"/>
+                <string name="PartScript" id="343" type="zero-terminated"/>
+            </structure>
+            <structure name="PartContent" id="345" length="PartContentLength+4" alignment="2" repeat="id:322" repeatmin="0" repeatmax="-1">
+                <number name="PartID" id="346" type="integer" length="2"/>
+                <number name="PartContentLength" id="347" type="integer" length="2"/>
+                <number name="StylesLength" id="348" type="integer" length="1"/>
+                <structure name="StyleData" id="349" length="StylesLength">
+                    <structure name="Style" id="350" repeatmax="-1">
+                        <number name="StartOffset" id="351" type="integer" length="2"/>
+                        <number name="BlockIndex" id="352" type="integer" length="2">
+                            <description>index into 'STBL' block</description>
+                        </number>
+                    </structure>
+                </structure>
+                <string name="TextData" id="355" type="zero-terminated"/>
+            </structure>
+            <string name="CardName" id="357" type="zero-terminated"/>
+            <string name="CardScript" id="358" type="zero-terminated"/>
+            <structure name="OSAScriptData" id="359" repeatmin="0">
+                <offset name="OSAScript" id="361" length="2" references="id:360" referenced-size="id:362" relative-to="id:359" follownullreference="yes"/>
+                <number name="ScriptLength" id="362" type="integer" length="1"/>
+                <binary name="HeaderRemainder" id="363" length="1"/>
+            </structure>
+        </structure>
+        <structure name="OSAScript" id="360" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="Script" id="366" type="fixed-length" length="Remaining"/>
+        </structure>
+        <structure name="FreeBlock" id="233" extends="id:247">
+            <number name="BlockSize" id="368" type="integer"/>
+            <string name="Block Type" id="369" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="FREE" value="FREE"/>
+                </fixedvalues>
+            </string>
+            <number name="BlockID" id="370" type="integer"/>
+            <binary name="Data" id="371" length="remaining"/>
+        </structure>
+        <structure name="MastBlock" id="235" extends="id:247">
+            <number name="BlockSize" id="373" type="integer"/>
+            <string name="Block Type" id="374" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="MAST" value="MAST"/>
+                </fixedvalues>
+            </string>
+            <number name="BlockID" id="375" type="integer"/>
+        </structure>
+        <structure name="BmapBlock" id="237" extends="id:247">
+            <number name="BlockSize" id="377" type="integer"/>
+            <string name="Block Type" id="378" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="BMAP" value="BMAP"/>
+                </fixedvalues>
+            </string>
+            <number name="BlockID" id="379" type="integer"/>
+            <binary name="Bitmap" id="380" length="remaining"/>
+        </structure>
+        <structure name="PrntBlock" id="239" extends="id:247">
+            <number name="BlockSize" id="382" type="integer"/>
+            <string name="Block Type" id="383" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="PRNT" value="PRNT"/>
+                </fixedvalues>
+            </string>
+            <number name="BlockID" id="384" type="integer"/>
+        </structure>
+        <structure name="PrstBlock" id="241" extends="id:247">
+            <number name="BlockSize" id="386" type="integer"/>
+            <string name="Block Type" id="387" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="PRST" value="PRST"/>
+                </fixedvalues>
+            </string>
+            <number name="BlockID" id="388" type="integer"/>
+        </structure>
+        <structure name="ListBlock" id="243" extends="id:247">
+            <number name="BlockSize" id="390" type="integer"/>
+            <string name="Block Type" id="391" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="LIST" value="LIST"/>
+                </fixedvalues>
+            </string>
+            <number name="BlockID" id="392" type="integer"/>
+        </structure>
+        <structure name="TailBlock" id="245" extends="id:247">
+            <number name="BlockSize" id="394" type="integer"/>
+            <string name="Block Type" id="395" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="TAIL" value="TAIL"/>
+                </fixedvalues>
+            </string>
+            <number name="BlockID" id="396" type="integer"/>
+        </structure>
+    </grammar>
+</ufwb>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.6.1">
+    <grammar name="BSON" start="id:41" author="Kelvin Chung" fileextension="bson">
+        <description>Grammar for BSON, a binary form similar to JSON</description>
+        <structure name="BSON Document" id="41" length="Document_Size" encoding="UTF-8" endian="little" signed="no">
+            <number name="Document_Size" id="42" type="integer" length="4"/>
+        </structure>
+        <structure name="Element" id="44" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <structref name="Element - Terminator" id="46" repeatmin="0" structure="id:45"/>
+            <structref name="Element - Floating Point" id="48" repeatmin="0" structure="id:47"/>
+            <structref name="Element - String" id="50" repeatmin="0" structure="id:49"/>
+            <structref name="Element - Embedded Document" id="52" repeatmin="0" structure="id:51"/>
+            <structref name="Element - Array" id="54" repeatmin="0" structure="id:53"/>
+            <structref name="Element - Binary Data" id="56" repeatmin="0" structure="id:55"/>
+            <structref name="Element - Undefined (Deprecated)" id="58" repeatmin="0" structure="id:57"/>
+            <structref name="Element - Object ID" id="60" repeatmin="0" structure="id:59"/>
+            <structref name="Element - Boolean" id="62" repeatmin="0" structure="id:61"/>
+            <structref name="Element - UTC datetime" id="66" repeatmin="0" structure="id:65"/>
+            <structref name="Element - Null" id="68" repeatmin="0" structure="id:67"/>
+            <structref name="Element - Regular Expression" id="70" repeatmin="0" structure="id:69"/>
+            <structref name="Element - DBPointer (Deprecated)" id="72" repeatmin="0" structure="id:71"/>
+            <structref name="Element - JavaScript Code" id="74" repeatmin="0" structure="id:73"/>
+            <structref name="Element - Symbol (Deprecated)" id="76" repeatmin="0" structure="id:75"/>
+            <structref name="Element - JavaScript Code with Scope" id="78" repeatmin="0" structure="id:77"/>
+            <structref name="Element - 32-bit Integer" id="80" repeatmin="0" structure="id:79"/>
+            <structref name="Element - Timestamp" id="82" repeatmin="0" structure="id:81"/>
+            <structref name="Element - 64-bit Integer" id="84" repeatmin="0" structure="id:83"/>
+            <structref name="Element - Min Key" id="86" repeatmin="0" structure="id:85"/>
+            <structref name="Element - Max Key" id="88" repeatmin="0" structure="id:87"/>
+        </structure>
+        <structure name="Element Root" id="90" encoding="UTF-8" endian="little" signed="no">
+            <number name="Type" id="91" type="integer" length="1" display="hex"/>
+        </structure>
+        <structure name="Element Non-Terminator" id="93" extends="id:90">
+            <structref name="Name" id="96" structure="id:95"/>
+        </structure>
+        <structure name="Element - Terminator" id="45" extends="id:90">
+            <number name="Type" mustmatch="yes" id="98" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Terminator" value="0x0"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="Element - Floating Point" id="47" extends="id:93">
+            <number name="Type" mustmatch="yes" id="100" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Floating Point" value="0x1"/>
+                </fixedvalues>
+            </number>
+            <number name="Value" id="102" type="float" length="8"/>
+        </structure>
+        <structure name="Element - String" id="49" extends="id:93">
+            <number name="Type" mustmatch="yes" id="104" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="String" value="0x2"/>
+                </fixedvalues>
+            </number>
+            <structref name="Value" id="107" structure="id:106"/>
+        </structure>
+        <structure name="Element - Embedded Document" id="51" extends="id:93">
+            <number name="Type" mustmatch="yes" id="109" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Embedded Document" value="0x3"/>
+                </fixedvalues>
+            </number>
+            <structref name="Document" id="111" structure="id:41"/>
+        </structure>
+        <structure name="Element - Array" id="53" extends="id:93">
+            <number name="Type" mustmatch="yes" id="113" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Array" value="0x4"/>
+                </fixedvalues>
+            </number>
+            <structref name="Array" id="115" structure="id:41"/>
+        </structure>
+        <structure name="Element - Binary Data" id="55" extends="id:93">
+            <number name="Type" mustmatch="yes" id="117" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Binary Data" value="0x5"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="119" type="integer" length="4"/>
+            <number name="Subtype" mustmatch="yes" id="120" type="integer" length="1" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="Generic" value="0x0"/>
+                    <fixedvalue name="Function" value="0x1"/>
+                    <fixedvalue name="Generic (Old)" value="0x2"/>
+                    <fixedvalue name="UUID (Old)" value="0x3"/>
+                    <fixedvalue name="UUID" value="0x4"/>
+                    <fixedvalue name="MD5" value="0x5"/>
+                    <fixedvalue name="User-Defined" value="0x80"/>
+                </fixedvalues>
+            </number>
+            <binary name="Data" id="121" length="Length"/>
+        </structure>
+        <structure name="Element - Undefined (Deprecated)" id="57" extends="id:93">
+            <number name="Type" mustmatch="yes" id="123" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Undefined" value="0x6"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="Element - Object ID" id="59" extends="id:93">
+            <number name="Type" mustmatch="yes" id="126" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Object ID" value="0x7"/>
+                </fixedvalues>
+            </number>
+            <binary name="Object ID" id="128" length="12"/>
+        </structure>
+        <structure name="Element - Boolean" id="61" extends="id:93">
+            <number name="Type" mustmatch="yes" id="130" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Boolean" value="0x8"/>
+                </fixedvalues>
+            </number>
+            <number name="Value" mustmatch="yes" id="132" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="False" value="0"/>
+                    <fixedvalue name="True" value="1"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="Element - UTC datetime" id="65" extends="id:93">
+            <number name="Type" mustmatch="yes" id="134" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="UTC datetime" value="0x9"/>
+                </fixedvalues>
+            </number>
+            <number name="Value" id="136" type="integer" length="8"/>
+        </structure>
+        <structure name="Element - Null" id="67" extends="id:93">
+            <number name="Type" mustmatch="yes" id="138" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Null" value="0xA"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="Element - Regular Expression" id="69" extends="id:93">
+            <number name="Type" mustmatch="yes" id="141" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Regular Expression" value="0xB"/>
+                </fixedvalues>
+            </number>
+            <structref name="Pattern" id="143" structure="id:95"/>
+            <structref name="Options" id="144" structure="id:95"/>
+        </structure>
+        <structure name="Element - DBPointer (Deprecated)" id="71" extends="id:93">
+            <number name="Type" mustmatch="yes" id="146" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="DBPointer" value="0xC"/>
+                </fixedvalues>
+            </number>
+            <binary name="Pointer" id="148" length="12"/>
+        </structure>
+        <structure name="Element - JavaScript Code" id="73" extends="id:93">
+            <number name="Type" mustmatch="yes" id="150" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JavaScript Code" value="0xD"/>
+                </fixedvalues>
+            </number>
+            <structref name="Code" id="152" structure="id:106"/>
+        </structure>
+        <structure name="Element - Symbol (Deprecated)" id="75" extends="id:93">
+            <number name="Type" mustmatch="yes" id="154" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Symbol" value="0xE"/>
+                </fixedvalues>
+            </number>
+            <structref name="Symbol" id="156" structure="id:106"/>
+        </structure>
+        <structure name="Element - JavaScript Code with Scope" id="77" extends="id:93">
+            <number name="Type" mustmatch="yes" id="158" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JavaScript Code with Scope" value="0xF"/>
+                </fixedvalues>
+            </number>
+            <structref name="Code With Scope" id="161" structure="id:160"/>
+        </structure>
+        <structure name="Element - 32-bit Integer" id="79" extends="id:93">
+            <number name="Type" mustmatch="yes" id="163" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="32-bit Integer" value="0x10"/>
+                </fixedvalues>
+            </number>
+            <number name="Value" id="165" type="integer" length="4"/>
+        </structure>
+        <structure name="Element - Timestamp" id="81" extends="id:93">
+            <number name="Type" mustmatch="yes" id="167" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Timestamp" value="0x11"/>
+                </fixedvalues>
+            </number>
+            <number name="Timestamp" id="169" type="integer" length="8"/>
+        </structure>
+        <structure name="Element - 64-bit Integer" id="83" extends="id:93">
+            <number name="Type" mustmatch="yes" id="171" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="64-bit Integer" value="0x12"/>
+                </fixedvalues>
+            </number>
+            <number name="&lt;new number&gt;" id="173" type="integer" length="8"/>
+        </structure>
+        <structure name="Element - Min Key" id="85" extends="id:93">
+            <number name="Type" mustmatch="yes" id="175" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Min Key" value="0xFF"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="Element - Max Key" id="87" extends="id:93">
+            <number name="Type" mustmatch="yes" id="178" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Max Key" value="0x7F"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="CString" id="95" encoding="UTF-8" endian="little" signed="no">
+            <string name="Value" id="181" type="zero-terminated"/>
+        </structure>
+        <structure name="String" id="106" encoding="UTF-8" endian="little" signed="no">
+            <number name="Length" id="183" type="integer" length="4"/>
+            <string name="Value" id="184" type="fixed-length" length="Length"/>
+        </structure>
+        <structure name="Code With Scope" id="160" length="Length" encoding="UTF-8" endian="little" signed="no">
+            <number name="Length" id="186" type="integer" length="1"/>
+            <structref name="Code" id="187" structure="id:106"/>
+            <structref name="Scope" id="188" structure="id:41"/>
+        </structure>
+    </grammar>
+</ufwb>

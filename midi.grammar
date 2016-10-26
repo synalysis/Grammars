@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.3.0.1">
+    <grammar name="MIDI" start="id:38" author="Andreas Pehnack" fileextension="mid, kipr" uti="public.midi-audio">
+        <description>Grammar for MIDI and .kipr files</description>
+        <structure name="MIDI file" id="38" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="Header Chunk" id="40" structure="id:39"/>
+            <structref name="Track Chunk" id="42" repeatmax="numberOfTracks" structure="id:41"/>
+        </structure>
+        <structure name="Chunk" id="44" length="chunkSize+8" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="chunkID" mustmatch="yes" id="45" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="MThd" value="MThd"/>
+                </fixedvalues>
+            </string>
+            <number name="chunkSize" id="46" type="integer" length="4"/>
+        </structure>
+        <structure name="Header Chunk" id="39" extends="id:44">
+            <number name="formatType" id="50" type="integer" length="2"/>
+            <number name="numberOfTracks" id="51" type="integer" length="2"/>
+            <number name="timeDivision" id="52" type="integer" length="2"/>
+        </structure>
+        <structure name="Track Chunk" id="41" extends="id:44">
+            <string name="chunkID" id="54" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="MTrk" value="MTrk"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="Event" id="57" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+    </grammar>
+</ufwb>

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.1.6.1">
+    <grammar name="Total War ESF" start="id:4" author="Andreas Pehnack" fileextension="esf">
+        <description>Grammar for ESF files</description>
+        <structure name="ESF file" id="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Header" id="6" structure="id:5"/>
+            <offset name="NameTable" id="8" fillcolor="FAFF29" length="4" references="id:7" follownullreference="yes"/>
+            <scriptelement name="InitSizeTable" id="119">
+                <script language="Lua">sizeTable = {}
+</script>
+            </scriptelement>
+            <structref name="RootRecord" id="10" structure="id:9"/>
+        </structure>
+        <structure name="Header" id="5" length="12" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Magic" id="12" fillcolor="F70916" type="integer" length="4" display="hex" fixedval="0xABCE"/>
+            <number name="Reserved" id="13" fillcolor="8E510B" type="integer" length="4" display="hex"/>
+            <number name="TimeStamp" id="14" fillcolor="3500FC" type="integer" length="4" display="hex"/>
+        </structure>
+        <structure name="Records" id="16" repeatmin="0" repeatmax="-1" encoding="ISO_8859-1:1987" endian="little" signed="no" order="variable">
+            <structref name="BooleanType" id="18" repeatmin="0" structure="id:17"/>
+            <structref name="Int16Type" id="20" repeatmin="0" structure="id:19"/>
+            <structref name="Int32Type" id="22" repeatmin="0" structure="id:21"/>
+            <structref name="ByteType" id="24" repeatmin="0" structure="id:23"/>
+            <structref name="UInt16Type" id="26" repeatmin="0" structure="id:25"/>
+            <structref name="UInt32Type" id="28" repeatmin="0" structure="id:27"/>
+            <structref name="Float32Type" id="30" repeatmin="0" structure="id:29"/>
+            <structref name="XYCoordinateType" id="32" repeatmin="0" structure="id:31"/>
+            <structref name="XYZCoordinateType" id="34" repeatmin="0" structure="id:33"/>
+            <structref name="AsciiStringType" id="36" repeatmin="0" structure="id:35"/>
+            <structref name="UnicodeStringType" id="38" repeatmin="0" structure="id:37"/>
+            <structref name="AngleType" id="40" repeatmin="0" structure="id:39"/>
+            <structref name="Record" id="41" repeatmin="0" structure="id:9"/>
+            <structref name="RecordArray" id="43" repeatmin="0" structure="id:42"/>
+            <structref name="BinaryType" id="45" repeatmin="0" structure="id:44"/>
+        </structure>
+        <structure name="Type" id="47" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Marker" mustmatch="yes" id="48" fillcolor="D4FF7D" type="integer" length="1" display="hex"/>
+        </structure>
+        <structure name="BooleanType" id="17" extends="id:47">
+            <number name="Marker" id="50" type="integer" display="hex">
+                <fixedvalue name="0x01" value="0x1"/>
+            </number>
+            <number name="Boolean" id="51" type="integer" length="1">
+                <fixedvalue name="FALSE" value="0"/>
+                <fixedvalue name="TRUE" value="1"/>
+            </number>
+        </structure>
+        <structure name="Int16Type" id="19" extends="id:47">
+            <number name="Marker" id="53" type="integer">
+                <fixedvalue name="0x03" value="0x3"/>
+            </number>
+            <number name="Int16" id="54" type="integer" length="2" signed="yes"/>
+        </structure>
+        <structure name="Int32Type" id="21" extends="id:47">
+            <number name="Marker" id="56" type="integer">
+                <fixedvalue name="0x04" value="0x4"/>
+            </number>
+            <number name="Int32" id="57" type="integer" length="4" signed="yes"/>
+        </structure>
+        <structure name="ByteType" id="23" extends="id:47">
+            <number name="Marker" id="59" type="integer">
+                <fixedvalue name="0x06" value="0x6"/>
+            </number>
+            <number name="Byte" id="60" type="integer" length="1"/>
+        </structure>
+        <structure name="UInt16Type" id="25" extends="id:47">
+            <number name="Marker" id="62" type="integer">
+                <fixedvalue name="0x07" value="0x7"/>
+            </number>
+            <number name="UInt16" id="63" type="integer" length="2"/>
+        </structure>
+        <structure name="UInt32Type" id="27" extends="id:47">
+            <number name="Marker" id="65" type="integer">
+                <fixedvalue name="0x08" value="0x8"/>
+            </number>
+            <number name="UInt32" id="66" type="integer" length="4"/>
+        </structure>
+        <structure name="Float32Type" id="29" extends="id:47">
+            <number name="Marker" id="68" type="integer">
+                <fixedvalue name="0x0a" value="0xA"/>
+            </number>
+            <number name="Float32" id="69" type="float" length="4"/>
+        </structure>
+        <structure name="XYCoordinateType" id="31" extends="id:47">
+            <number name="Marker" id="71" type="integer">
+                <fixedvalue name="0x0c" value="0xC"/>
+            </number>
+            <number name="X" id="72" fillcolor="FAFF29" type="float" length="4"/>
+            <number name="Y" id="73" fillcolor="F8931D" type="float" length="4"/>
+        </structure>
+        <structure name="XYZCoordinateType" id="33" extends="id:47">
+            <number name="Marker" id="75" type="integer">
+                <fixedvalue name="0x0d" value="0xD"/>
+            </number>
+            <number name="X" id="76" fillcolor="FAFF29" type="float" length="4"/>
+            <number name="Y" id="77" fillcolor="F8931D" type="float" length="4"/>
+            <number name="Z" id="78" fillcolor="F80492" type="float" length="4"/>
+        </structure>
+        <structure name="AsciiStringType" id="35" extends="id:47">
+            <number name="Marker" id="80" type="integer">
+                <fixedvalue name="0x0F" value="0xF"/>
+            </number>
+            <structref name="CA_ascii_string" id="82" structure="id:81"/>
+        </structure>
+        <structure name="UnicodeStringType" id="37" extends="id:47">
+            <number name="Marker" id="84" type="integer">
+                <fixedvalue name="0x0e" value="0xE"/>
+            </number>
+            <structref name="CA_unicode_string" id="86" structure="id:85"/>
+        </structure>
+        <structure name="AngleType" id="39" extends="id:47">
+            <number name="Marker" id="88" type="integer">
+                <fixedvalue name="0x10" value="0x10"/>
+            </number>
+            <number name="Angle" id="89" type="integer" length="2"/>
+        </structure>
+        <structure name="Record" id="9" extends="id:47" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Marker" id="91" type="integer" display="hex">
+                <fixedvalue name="0x80" value="0x80"/>
+            </number>
+            <number name="ElementType" id="92" fillcolor="7FFF7C" type="integer" length="2"/>
+            <number name="Version" id="93" fillcolor="FAD67D" type="integer" length="1"/>
+            <number name="NextOffset" id="94" fillcolor="F9797B" type="integer" length="4" display="hex"/>
+            <scriptelement name="MapSubRecords" id="95">
+                <script language="Lua">-- get collection with results so far
+results = currentMapper:getCurrentResults()
+
+-- get latest added result
+lastResult = results:getLastResult()
+
+-- access the parsed value
+nextOffsetValue = lastResult:getValue()
+
+-- get the value parsed
+nextOffset = nextOffsetValue:getUnsignedNumber()
+
+-- get current offset
+currentOffset = currentMapper:getCurrentOffset()
+
+recordSize = nextOffset - currentOffset
+
+-- push size not to get disturbed by script in substructures
+table.insert(sizeTable, recordSize)
+
+logSrc = currentMapper:getCurrentLogSrc()
+
+-- get currently processed grammar. This may change if another grammar is referenced
+currentGrammar = currentMapper:getCurrentGrammar()
+
+-- get the structure we want to apply
+structure = currentGrammar:getStructureByName(&quot;Records&quot;)
+
+-- map structure at position  with maximum size
+currentMapper:mapStructureAtPosition(structure, currentOffset, recordSize)
+
+return table.remove(sizeTable)
+</script>
+            </scriptelement>
+        </structure>
+        <structure name="RecordArray" id="42" extends="id:47" endian="little">
+            <number name="Marker" id="97" type="integer" display="hex">
+                <fixedvalue name="0x81" value="0x81"/>
+            </number>
+            <number name="ElementType" id="98" fillcolor="7FFF7C" type="integer" length="2"/>
+            <number name="Version" id="99" fillcolor="FAD67D" type="integer" length="1"/>
+            <number name="EndOffset" id="100" fillcolor="F9797B" type="integer" length="4" display="hex"/>
+            <number name="ChildrenCount" id="101" type="integer" length="4"/>
+            <structure name="Children" id="102" repeat="id:101" repeatmin="0" repeatmax="-1" debug="yes">
+                <number name="NextOffset" id="103" type="integer" length="4" display="hex"/>
+                <scriptelement name="MapChildren" id="104">
+                    <script language="Lua">-- get collection with results so far
+results = currentMapper:getCurrentResults()
+
+-- get latest added result
+lastResult = results:getLastResult()
+
+-- access the parsed value
+nextOffsetValue = lastResult:getValue()
+
+-- get the value parsed
+nextOffset = nextOffsetValue:getUnsignedNumber()
+
+-- get current offset
+currentOffset = currentMapper:getCurrentOffset()
+
+recordSize = nextOffset - currentOffset
+
+-- push size not to get disturbed by script in substructures
+table.insert(sizeTable, recordSize)
+
+logSrc = currentMapper:getCurrentLogSrc()
+
+-- get currently processed grammar. This may change if another grammar is referenced
+currentGrammar = currentMapper:getCurrentGrammar()
+
+-- get the structure we want to apply
+structure = currentGrammar:getStructureByName(&quot;Records&quot;)
+
+-- map structure at position  with maximum size
+currentMapper:mapStructureAtPosition(structure, currentOffset, recordSize)
+
+return table.remove(sizeTable)
+</script>
+                </scriptelement>
+            </structure>
+        </structure>
+        <structure name="BinaryType" id="44" extends="id:47" debug="yes">
+            <number name="Marker" id="107" type="integer">
+                <fixedvalue name="0x41" value="0x41"/>
+                <fixedvalue name="0x42" value="0x42"/>
+                <fixedvalue name="0x43" value="0x43"/>
+                <fixedvalue name="0x44" value="0x44"/>
+                <fixedvalue name="0x45" value="0x45"/>
+                <fixedvalue name="0x46" value="0x46"/>
+                <fixedvalue name="0x47" value="0x47"/>
+                <fixedvalue name="0x48" value="0x48"/>
+                <fixedvalue name="0x49" value="0x49"/>
+                <fixedvalue name="0x4A" value="0x4A"/>
+                <fixedvalue name="0x4B" value="0x4B"/>
+                <fixedvalue name="0x4C" value="0x4C"/>
+            </number>
+            <number name="NextOffset" id="108" fillcolor="F9797B" type="integer" length="4" display="hex"/>
+            <scriptelement name="MapBinaryData" id="123">
+                <script language="Lua">-- get collection with results so far
+results = currentMapper:getCurrentResults()
+
+-- get latest added result
+lastResult = results:getLastResult()
+
+-- access the parsed value
+nextOffsetValue = lastResult:getValue()
+
+-- get the value parsed
+nextOffset = nextOffsetValue:getUnsignedNumber()
+
+-- get current offset
+currentOffset = currentMapper:getCurrentOffset()
+
+recordSize = nextOffset - currentOffset
+
+-- push size not to get disturbed by script in substructures
+table.insert(sizeTable, recordSize)
+
+logSrc = currentMapper:getCurrentLogSrc()
+
+-- get currently processed grammar. This may change if another grammar is referenced
+currentGrammar = currentMapper:getCurrentGrammar()
+
+-- get the structure we want to apply
+structure = currentGrammar:getStructureByName(&quot;BinaryData&quot;)
+
+-- map structure at position  with maximum size
+currentMapper:mapStructureAtPosition(structure, currentOffset, recordSize)
+
+return table.remove(sizeTable)
+</script>
+            </scriptelement>
+        </structure>
+        <structure name="NameTable" id="7" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Count" id="110" fillcolor="85D5FD" type="integer" length="2"/>
+            <structref name="CA_ascii_string" id="111" repeatmin="Count" repeatmax="Count" structure="id:81"/>
+        </structure>
+        <structure name="CA_ascii_string" id="81" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="CharCount" id="113" fillcolor="D578FD" type="integer" length="2"/>
+            <string name="String" id="114" fillcolor="FB82D7" type="fixed-length" length="CharCount"/>
+        </structure>
+        <structure name="CA_unicode_string" id="85" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="CharCount" id="116" fillcolor="D578FD" type="integer" length="2"/>
+            <string name="String" id="117" fillcolor="FB82D7" type="fixed-length" length="CharCount*2" encoding="UTF-16LE"/>
+        </structure>
+        <structure name="BinaryData" id="120" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="Data" id="122" fillcolor="85D5FD" length="0"/>
+        </structure>
+    </grammar>
+</ufwb>

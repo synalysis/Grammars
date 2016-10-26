@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- https://github.com/tibiamaps/tibia-map-grammar -->
+<ufwb>
+    <grammar name="Tibia *.map file" start="id:1" author="Mathias Bynens" fileextension="map" complete="yes">
+        <description>Grammar for Tibia map files</description>
+        <structure name="Tibia *.map file" id="1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="VisualMapData" id="2" length="65536" alignment="0" fillcolor="55AAFF">
+                <number name="pixel" mustmatch="yes" id="3" repeatmin="0" repeatmax="0" type="integer" length="1" maxval="215">
+                    <fixedvalues>
+                        <fixedvalue name="black (empty/unexplored)" value="0"/>
+                        <fixedvalue name="dark green (trees)" value="12"/>
+                        <fixedvalue name="green (grass)" value="24"/>
+                        <fixedvalue name="light green (old swamp)" value="30"/>
+                        <fixedvalue name="light blue (water)" value="51"/>
+                        <fixedvalue name="dark gray (stone/mountains)" value="86"/>
+                        <fixedvalue name="dark brown (earth/stalagmites)" value="114"/>
+                        <fixedvalue name="brown (earth)" value="121"/>
+                        <fixedvalue name="gray (floor)" value="129"/>
+                        <fixedvalue name="light green (light spots in grassy areas)" value="140"/>
+                        <fixedvalue name="light blue (ice)" value="179"/>
+                        <fixedvalue name="red (city/walls)" value="186"/>
+                        <fixedvalue name="orange (lava)" value="192"/>
+                        <fixedvalue name="beige (sand)" value="207"/>
+                        <fixedvalue name="yellow (ladders/holes)" value="210"/>
+                        <fixedvalue name="white (snow)" value="215"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+            <structure name="PathfindingData" id="4" length="65536" alignment="0" fillcolor="FFAA00">
+                <number name="pixel" id="5" repeatmin="0" repeatmax="0" type="integer" length="1" maxval="250">
+                    <fixedvalues>
+                        <fixedvalue name="unexplored" value="250"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+            <number name="MarkerCount" id="6" fillcolor="00FF7F" type="integer" length="4" endian="little" minval="0" maxval="0"/>
+            <structure name="Marker" id="7" length="14 + descriptionLength" alignment="0" repeat="id:6" repeatmin="MarkerCount" repeatmax="MarkerCount" fillcolor="FFAA00" debug="yes">
+                <number name="xPosition" id="8" fillcolor="AAAAFF" type="integer" length="1"/>
+                <number name="xTile" id="9" fillcolor="D7D7FF" type="integer" length="1"/>
+                <binary name="__padding1" mustmatch="yes" id="10" fillcolor="000000" length="2">
+                    <description></description>
+                    <fixedvalues>
+                        <fixedvalue name="two blank bytes" value="0000"/>
+                    </fixedvalues>
+                </binary>
+                <number name="yPosition" id="11" fillcolor="FFCAAF" type="integer" length="1"/>
+                <number name="yTile" id="12" fillcolor="FFE5D7" type="integer" length="1"/>
+                <binary name="__padding2" mustmatch="yes" id="13" fillcolor="000000" length="2">
+                    <fixedvalues>
+                        <fixedvalue name="two blank bytes" value="0000"/>
+                    </fixedvalues>
+                </binary>
+                <number name="icon" mustmatch="yes" id="14" fillcolor="AAFF00" type="integer" length="4" endian="little" maxval="19">
+                    <fixedvalues>
+                        <fixedvalue name="checkmark" value="0"/>
+                        <fixedvalue name="?" value="1"/>
+                        <fixedvalue name="!" value="2"/>
+                        <fixedvalue name="star" value="3"/>
+                        <fixedvalue name="crossmark" value="4"/>
+                        <fixedvalue name="cross" value="5"/>
+                        <fixedvalue name="mouth" value="6"/>
+                        <fixedvalue name="shovel" value="7"/>
+                        <fixedvalue name="sword" value="8"/>
+                        <fixedvalue name="flag" value="9"/>
+                        <fixedvalue name="lock" value="10"/>
+                        <fixedvalue name="bag" value="11"/>
+                        <fixedvalue name="skull" value="12"/>
+                        <fixedvalue name="$" value="13"/>
+                        <fixedvalue name="red up arrow" value="14"/>
+                        <fixedvalue name="red down arrow" value="15"/>
+                        <fixedvalue name="red right arrow" value="16"/>
+                        <fixedvalue name="red left arrow" value="17"/>
+                        <fixedvalue name="green up arrow" value="18"/>
+                        <fixedvalue name="green down arrow" value="19"/>
+                    </fixedvalues>
+                </number>
+                <number name="descriptionLength" id="15" fillcolor="AAFFFF" type="integer" length="2" endian="little"/>
+                <string name="description" id="16" fillcolor="FFFF7F" type="fixed-length" length="descriptionLength" encoding="ISO_8859-1:1987"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

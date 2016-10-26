@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.7">
+    <grammar name="FLIC" start="id:11" author="Fredrik Ahlström" fileextension="flc,fli" uti="public.flc-animation">
+        <description>Grammar for FLC files</description>
+        <structure name="FLC file" id="11" length="0" encoding="ISCII,version=0" endian="little" signed="no">
+            <structure name="FLC file header" id="12" length="128" consists-of="id:11">
+                <number name="size" id="13" type="integer" length="4"/>
+                <number name="type" mustmatch="yes" id="14" type="integer" length="2" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="FLC magic" value="0xAF12"/>
+                        <fixedvalue name="FLI magic" value="0xAF11"/>
+                    </fixedvalues>
+                </number>
+                <number name="Fli frame count" id="15" type="integer" length="2" minval="1" maxval="4000"/>
+                <number name="Width" id="16" type="integer" length="2"/>
+                <number name="Height" id="17" type="integer" length="2"/>
+                <number name="Depth" id="18" type="integer" length="2" minval="1"/>
+                <binary name="Flags" id="19" length="2"/>
+                <number name="Speed" id="20" type="integer" length="4"/>
+                <binary name="Reserved1" id="21" length="2"/>
+                <number name="Create date" id="22" type="integer" length="4"/>
+                <number name="Creator" id="23" type="integer" length="4"/>
+                <number name="Modified date" id="24" type="integer" length="4"/>
+                <number name="modifier" id="25" type="integer" length="4"/>
+                <number name="Aspect X" id="26" type="integer" length="2"/>
+                <number name="Aspect Y" id="27" type="integer" length="2"/>
+                <binary name="Reserved2" id="28" length="38"/>
+                <number name="Frame 0 offset" id="29" type="integer" length="4" display="hex"/>
+                <number name="Frame 1 offset" id="30" type="integer" length="4" display="hex"/>
+                <binary name="Reserved3" id="31" length="40"/>
+            </structure>
+            <structref name="FLC frame chunk" id="34" repeatmax="-1" structure="id:33"/>
+        </structure>
+        <structure name="FLC frame chunk" id="33" length="size" repeatmax="-1" extends="id:36" consists-of="id:36">
+            <number name="size" id="37" type="integer" length="4"/>
+            <number name="type" mustmatch="yes" id="38" type="integer" length="2" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="magic" value="0xF1FA"/>
+                </fixedvalues>
+            </number>
+            <number name="chunkCount" id="39" type="integer" length="2"/>
+            <binary name="reserved" id="40" length="8"/>
+            <structref name="FLC data chunk" id="42" repeatmax="-1" structure="id:41"/>
+        </structure>
+        <structure name="FLC prefix chunk" id="44" length="16" repeatmax="-1" extends="id:36" consists-of="id:36">
+            <number name="size" id="45" type="integer" length="4"/>
+            <number name="type" mustmatch="yes" id="46" type="integer" length="2" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="magic" value="0xF100"/>
+                </fixedvalues>
+            </number>
+            <number name="chunkCount" id="47" type="integer" length="2"/>
+            <binary name="Reserved1" id="48" length="8"/>
+        </structure>
+        <structure name="FLC data chunk" id="41" length="size" repeatmax="-1" extends="id:36">
+            <number name="size" id="50" type="integer" length="4"/>
+            <number name="type" id="51" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="FLI_COLOR256" value="4"/>
+                    <fixedvalue name="FLI_SS2" value="7"/>
+                    <fixedvalue name="FLI_COLOR" value="11"/>
+                    <fixedvalue name="FLI_LC" value="12"/>
+                    <fixedvalue name="FLI_BLACK" value="13"/>
+                    <fixedvalue name="FLI_BRUN" value="15"/>
+                    <fixedvalue name="FLI_COPY" value="16"/>
+                    <fixedvalue name="FLI_PSTAMP" value="18"/>
+                </fixedvalues>
+            </number>
+            <binary name="data" id="52" length="size - 6"/>
+        </structure>
+        <structure name="FLC default" id="36" length="size" repeatmax="-1" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="size" id="54" type="integer" length="4"/>
+            <number name="type" id="55" type="integer" length="2" display="hex"/>
+        </structure>
+    </grammar>
+</ufwb>

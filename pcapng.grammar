@@ -1,0 +1,706 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.14">
+    <grammar name="PCAPNG" start="id:8" author="Andreas Pehnack" email="andreas@synalysis.com" fileextension="pcapng">
+        <description>Grammar for PCAPNG files</description>
+        <structure name="Defaults" id="9" length="0" encoding="UTF-8" endian="dynamic" signed="no"/>
+        <structure name="PCAPNG file" id="8" extends="id:9" endian="big">
+            <description>The file must begin with a Section Header Block. However, more than one Section Header Block can be present on the dump, each one covering the data following it till the next one (or the end of file). A Section includes the data delimited by two Section Header Blocks (or by a Section Header Block and the end of the file), including the first Section Header Block.
+
+In case an application cannot read a Section because of different version number, it must skip everything until the next Section Header Block. Note that, in order to properly skip the blocks until the next section, all blocks must have the fields Type and Length at the beginning. This is a mandatory requirement that must be maintained in future versions of the block format</description>
+            <structure name="Blocks" id="11" repeatmax="-1" order="variable">
+                <structref name="Interface Description Block" id="13" repeatmin="0" structure="id:12"/>
+                <structref name="Packet Block" id="15" repeatmin="0" structure="id:14"/>
+                <structref name="Simple Packet Block" id="17" repeatmin="0" structure="id:16"/>
+                <structref name="Name Resolution Block" id="19" repeatmin="0" structure="id:18"/>
+                <structref name="Interface Statistics Block" id="21" repeatmin="0" structure="id:20"/>
+                <structref name="Enhanced Packet Block" id="23" repeatmin="0" structure="id:22"/>
+                <structref name="IRIG Timestamp Block" id="25" repeatmin="0" structure="id:24"/>
+                <structref name="Arinc 429 in AFDX Encapsulation Information Block" id="27" repeatmin="0" structure="id:26"/>
+                <structref name="Section Header Block" id="29" repeatmin="0" structure="id:28"/>
+                <structref name="Reserved1 Block" id="31" repeatmin="0" structure="id:30"/>
+                <structref name="Reserved2 Block" id="33" repeatmin="0" structure="id:32"/>
+                <structref name="Reserved3 Block" id="35" repeatmin="0" structure="id:34"/>
+                <structref name="Reserved4 Block" id="37" repeatmin="0" structure="id:36"/>
+                <structref name="Block" id="39" repeatmin="0" structure="id:38"/>
+            </structure>
+        </structure>
+        <structure name="Block" id="38" extends="id:9">
+            <number name="BlockType" mustmatch="yes" id="42" fillcolor="75D5FF" type="integer" length="4" display="hex"/>
+            <number name="TotalLength" id="43" fillcolor="D783FF" type="integer" length="4" display="hex">
+                <description>total size of this block</description>
+            </number>
+            <structure name="Body" id="44" length="TotalLength-12"/>
+            <number name="TotalLength2" id="46" fillcolor="FF84FF" type="integer" length="4" display="hex"/>
+        </structure>
+        <structure name="Interface Description Block" id="12" extends="id:38">
+            <description>The Interface Description Block is mandatory. This block is needed to specify the characteristics of the network interface on which the capture has been made. In order to properly associate the captured data to the corresponding interface, the Interface Description Block must be defined before any other block that uses it; therefore, this block is usually placed immediately after the Section Header Block</description>
+            <number name="BlockType" id="48" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0x00000001" value="0x1"/>
+                </fixedvalues>
+            </number>
+            <number name="TotalLength" id="50" type="integer">
+                <description>total size of this block</description>
+            </number>
+            <structure name="Body" id="49">
+                <number name="LinkType" id="51" type="integer" length="2">
+                    <description>a value that defines the link layer type of this interface</description>
+                    <fixedvalues>
+                        <fixedvalue name="LINKTYPE_NULL" value="0"/>
+                        <fixedvalue name="LINKTYPE_ETHERNET" value="1"/>
+                        <fixedvalue name="LINKTYPE_EXP_ETHERNET" value="2"/>
+                        <fixedvalue name="LINKTYPE_AX25" value="3"/>
+                        <fixedvalue name="LINKTYPE_PRONET" value="4"/>
+                        <fixedvalue name="LINKTYPE_CHAOS" value="5"/>
+                        <fixedvalue name="LINKTYPE_TOKEN_RING" value="6"/>
+                        <fixedvalue name="LINKTYPE_ARCNET" value="7"/>
+                        <fixedvalue name="LINKTYPE_SLIP" value="8"/>
+                        <fixedvalue name="LINKTYPE_PPP" value="9"/>
+                        <fixedvalue name="LINKTYPE_FDDI" value="10"/>
+                        <fixedvalue name="LINKTYPE_PPP_HDLC" value="50"/>
+                        <fixedvalue name="LINKTYPE_PPP_ETHER" value="51"/>
+                        <fixedvalue name="LINKTYPE_SYMANTEC_FIREWALL" value="99"/>
+                        <fixedvalue name="LINKTYPE_ATM_RFC1483" value="100"/>
+                        <fixedvalue name="LINKTYPE_RAW" value="101"/>
+                        <fixedvalue name="LINKTYPE_SLIP_BSDOS" value="102"/>
+                        <fixedvalue name="LINKTYPE_PPP_BSDOS" value="103"/>
+                        <fixedvalue name="LINKTYPE_C_HDLC" value="104"/>
+                        <fixedvalue name="LINKTYPE_IEEE802_11" value="105"/>
+                        <fixedvalue name="LINKTYPE_ATM_CLIP" value="106"/>
+                        <fixedvalue name="LINKTYPE_FRELAY" value="107"/>
+                        <fixedvalue name="LINKTYPE_LOOP" value="108"/>
+                        <fixedvalue name="LINKTYPE_ENC" value="109"/>
+                        <fixedvalue name="LINKTYPE_LANE8023" value="110"/>
+                        <fixedvalue name="LINKTYPE_HIPPI" value="111"/>
+                        <fixedvalue name="LINKTYPE_HDLC" value="112"/>
+                        <fixedvalue name="LINKTYPE_LINUX_SLL" value="113"/>
+                        <fixedvalue name="LINKTYPE_LTALK" value="114"/>
+                        <fixedvalue name="LINKTYPE_ECONET" value="115"/>
+                        <fixedvalue name="LINKTYPE_IPFILTER" value="116"/>
+                        <fixedvalue name="LINKTYPE_PFLOG" value="117"/>
+                        <fixedvalue name="LINKTYPE_CISCO_IOS" value="118"/>
+                        <fixedvalue name="LINKTYPE_PRISM_HEADER" value="119"/>
+                        <fixedvalue name="LINKTYPE_AIRONET_HEADER" value="120"/>
+                        <fixedvalue name="LINKTYPE_HHDLC" value="121"/>
+                        <fixedvalue name="LINKTYPE_IP_OVER_FC" value="122"/>
+                        <fixedvalue name="LINKTYPE_SUNATM" value="123"/>
+                        <fixedvalue name="LINKTYPE_RIO" value="124"/>
+                        <fixedvalue name="LINKTYPE_PCI_EXP" value="125"/>
+                        <fixedvalue name="LINKTYPE_AURORA" value="126"/>
+                        <fixedvalue name="LINKTYPE_IEEE802_11_RADIO" value="127"/>
+                        <fixedvalue name="LINKTYPE_TZSP" value="128"/>
+                        <fixedvalue name="LINKTYPE_ARCNET_LINUX" value="129"/>
+                        <fixedvalue name="LINKTYPE_JUNIPER_MLPPP" value="130"/>
+                        <fixedvalue name="LINKTYPE_JUNIPER_MLFR" value="131"/>
+                        <fixedvalue name="LINKTYPE_JUNIPER_ES" value="132"/>
+                        <fixedvalue name="LINKTYPE_JUNIPER_GGSN" value="133"/>
+                        <fixedvalue name="LINKTYPE_JUNIPER_MFR" value="134"/>
+                        <fixedvalue name="LINKTYPE_JUNIPER_ATM2" value="135"/>
+                        <fixedvalue name="LINKTYPE_JUNIPER_SERVICES" value="136"/>
+                        <fixedvalue name="LINKTYPE_JUNIPER_ATM1" value="137"/>
+                        <fixedvalue name="LINKTYPE_APPLE_IP_OVER_IEEE1394" value="138"/>
+                        <fixedvalue name="LINKTYPE_MTP2_WITH_PHDR" value="139"/>
+                        <fixedvalue name="LINKTYPE_MTP2" value="140"/>
+                        <fixedvalue name="LINKTYPE_MTP3" value="141"/>
+                        <fixedvalue name="LINKTYPE_SCCP" value="142"/>
+                        <fixedvalue name="LINKTYPE_DOCSIS" value="143"/>
+                        <fixedvalue name="LINKTYPE_LINUX_IRDA" value="144"/>
+                        <fixedvalue name="LINKTYPE_IBM_SP" value="145"/>
+                        <fixedvalue name="LINKTYPE_IBM_SN" value="146"/>
+                    </fixedvalues>
+                </number>
+                <number name="Reserved" id="52" type="integer" length="2"/>
+                <number name="SnapLen" id="53" type="integer" length="4">
+                    <description>maximum number of bytes dumped from each packet. The portion of each packet that exceeds this value will not be stored in the file</description>
+                </number>
+                <structure name="Options" id="54" alignment="4" repeatmin="0" repeatmax="-1" order="variable">
+                    <structref name="End of Options" id="56" repeatmin="0" structure="id:55"/>
+                    <structref name="Comment Option" id="58" repeatmin="0" structure="id:57"/>
+                    <structref name="Interface Name Option" id="60" repeatmin="0" structure="id:59"/>
+                    <structref name="Interface Description Option" id="62" repeatmin="0" structure="id:61"/>
+                    <structref name="Interface IPv4 Address Option" id="64" repeatmin="0" structure="id:63"/>
+                    <structref name="Interface IPv6 Address Option" id="66" repeatmin="0" structure="id:65"/>
+                    <structref name="Interface MAC Address Option" id="68" repeatmin="0" structure="id:67"/>
+                    <structref name="Interface EUI Address Option" id="70" repeatmin="0" structure="id:69"/>
+                    <structref name="Interface Speed Option" id="72" repeatmin="0" structure="id:71"/>
+                    <structref name="Interface Timestamp Resolution Option" id="74" repeatmin="0" structure="id:73"/>
+                    <structref name="Interface Time Zone Option" id="76" repeatmin="0" structure="id:75"/>
+                    <structref name="Interface Filter Option" id="78" repeatmin="0" structure="id:77"/>
+                    <structref name="Interface OS Option" id="80" repeatmin="0" structure="id:79"/>
+                    <structref name="Interface FCS Length Option" id="82" repeatmin="0" structure="id:81"/>
+                    <structref name="Interface Timestamp Offset Option" id="84" repeatmin="0" structure="id:83"/>
+                    <structref name="Option" id="86" repeatmin="0" structure="id:85"/>
+                </structure>
+            </structure>
+            <number name="TotalLength2" id="89" type="integer"/>
+        </structure>
+        <structure name="Packet Block" id="14" extends="id:38">
+            <description>The Packet Block is marked obsolete, better use the Enhanced Packet Block instead!
+
+A Packet Block is the standard container for storing the packets coming from the network. The Packet Block is optional because packets can be stored either by means of this block or the Simple Packet Block, which can be used to speed up dump generation</description>
+            <number name="BlockType" id="91" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0x00000002" value="0x2"/>
+                </fixedvalues>
+            </number>
+            <number name="TotalLength" id="92" type="integer">
+                <description>total size of this block</description>
+            </number>
+            <number name="TotalLength2" id="95" type="integer"/>
+        </structure>
+        <structure name="Simple Packet Block" id="16" extends="id:38">
+            <description>The Simple Packet Block is a lightweight container for storing the packets coming from the network. Its presence is optional.
+
+A Simple Packet Block is similar to a Packet Block (see Section 3.5), but it is smaller, simpler to process and contains only a minimal set of information. This block is preferred to the standard Packet Block when performance or space occupation are critical factors, such as in sustained traffic dump applications. A capture file can contain both Packet Blocks and Simple Packet Blocks: for example, a capture tool could switch from Packet Blocks to Simple Packet Blocks when the hardware resources become critical.
+
+The Simple Packet Block does not contain the Interface ID field. Therefore, it must be assumed that all the Simple Packet Blocks have been captured on the interface previously specified in the first Interface Description Block</description>
+            <number name="BlockType" id="97" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0x00000003" value="0x3"/>
+                </fixedvalues>
+            </number>
+            <number name="TotalLength" id="98" type="integer">
+                <description>total size of this block</description>
+            </number>
+            <number name="TotalLength2" id="101" type="integer"/>
+        </structure>
+        <structure name="Name Resolution Block" id="18" extends="id:38">
+            <description>The Name Resolution Block is used to support the correlation of numeric addresses (present in the captured packets) and their corresponding canonical names and it is optional. Having the literal names saved in the file, this prevents the need of a name resolution in a delayed time, when the association between names and addresses can be different from the one in use at capture time. Moreover, the Name Resolution Block avoids the need of issuing a lot of DNS requests every time the trace capture is opened, and allows to have name resolution also when reading the capture with a machine not connected to the network.
+
+A Name Resolution Block is normally placed at the beginning of the file, but no assumptions can be taken about its position. Name Resolution Blocks can be added in a second time by tools that process the file, like network analyzers</description>
+            <number name="BlockType" id="103" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0x00000004" value="0x4"/>
+                </fixedvalues>
+            </number>
+            <number name="TotalLength" id="104" type="integer">
+                <description>total size of this block</description>
+            </number>
+            <number name="TotalLength2" id="107" type="integer"/>
+        </structure>
+        <structure name="Interface Statistics Block" id="20" extends="id:38">
+            <description>The Interface Statistics Block contains the capture statistics for a given interface and it is optional. The statistics are referred to the interface defined in the current Section identified by the Interface ID field. An Interface Statistics Block is normally placed at the end of the file, but no assumptions can be taken about its position - it can even appear multiple times for the same interface</description>
+            <number name="BlockType" id="109" type="integer">
+                <description>The block type of the Interface Description Block is 1</description>
+                <fixedvalues>
+                    <fixedvalue name="0x00000005" value="0x5"/>
+                </fixedvalues>
+            </number>
+            <number name="TotalLength" id="110" type="integer">
+                <description>total size of this block</description>
+            </number>
+            <number name="TotalLength2" id="113" type="integer"/>
+        </structure>
+        <structure name="Enhanced Packet Block" id="22" extends="id:38" valueexpression="Body">
+            <description>An Enhanced Packet Block is the standard container for storing the packets coming from the network. The Enhanced Packet Block is optional because packets can be stored either by means of this block or the Simple Packet Block, which can be used to speed up dump generation</description>
+            <number name="BlockType" id="115" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0x00000006" value="0x6"/>
+                </fixedvalues>
+            </number>
+            <number name="TotalLength" id="117" type="integer">
+                <description>total size of this block</description>
+            </number>
+            <structure name="Body" id="116" valueexpression="PacketData">
+                <number name="InterfaceID" id="118" type="integer" length="4">
+                    <description>it specifies the interface this packet comes from; the correct interface will be the one whose Interface Description Block (within the current Section of the file) is identified by the same number of this field</description>
+                </number>
+                <number name="Timestamp (High)" id="119" fillcolor="72FA78" type="integer" length="4">
+                    <description>high 32-bits of a 64-bit quantity representing the timestamp. The timestamp is a single 64-bit unsigned integer representing the number of units since 1/1/1970. The way to interpret this field is specified by the 'if_tsresol' option (see Figure 9) of the Interface Description block referenced by this packet. Please note that differently from the libpcap file format, timestamps are not saved as two 32-bit values accounting for the seconds and microseconds since 1/1/1970. They are saved as a single 64-bit quantity saved as two 32-bit words</description>
+                </number>
+                <number name="Timestamp (Low)" id="120" fillcolor="72FA78" type="integer" length="4">
+                    <description>low 32-bits of a 64-bit quantity representing the timestamp. The timestamp is a single 64-bit unsigned integer representing the number of units since 1/1/1970. The way to interpret this field is specified by the 'if_tsresol' option (see Figure 9) of the Interface Description block referenced by this packet. Please note that differently from the libpcap file format, timestamps are not saved as two 32-bit values accounting for the seconds and microseconds since 1/1/1970. They are saved as a single 64-bit quantity saved as two 32-bit words</description>
+                </number>
+                <number name="CapturedLength" id="121" fillcolor="FF2F92" type="integer" length="4">
+                    <description>number of bytes captured from the packet (i.e. the length of the Packet Data field). It will be the minimum value among the actual Packet Length and the snapshot length. The value of this field does not include the padding bytes added at the end of the Packet Data field to align the Packet Data Field to a 32-bit boundary</description>
+                </number>
+                <number name="PacketLength" id="122" fillcolor="FF40FF" type="integer" length="4">
+                    <description>actual length of the packet when it was transmitted on the network. It can be different from Captured Len if the user wants only a snapshot of the packet</description>
+                </number>
+                <binary name="PacketData" id="123" fillcolor="FF7D78" length="PacketLength">
+                    <description>the data coming from the network, including link-layer headers. The actual length of this field is Captured Len. The format of the link-layer headers depends on the LinkType field specified in the Interface Description Block</description>
+                </binary>
+                <scriptelement name="AddPadding" id="124">
+                    <script name="unnamed" type="Generic">
+                        <source language="Lua">results = currentMapper:getCurrentResults()
+lengthResult = results:getResultByName(&quot;CapturedLength&quot;)
+value = lengthResult:getValue()
+num = value:getUnsignedNumber()
+
+modulo = num % 4
+paddingBytes = 0
+
+if (modulo &gt; 0) then
+    paddingBytes = 4 - modulo
+    print(&quot;Padding: &quot; .. tostring(paddingBytes))
+	element = synalysis.Element(synalysis.ELEMENT_BINARY, &quot;Padding&quot;, true)
+    currentMapper:mapElementWithSize(element, paddingBytes)
+end
+
+return paddingBytes
+</source>
+                    </script>
+                </scriptelement>
+                <structure name="Options" id="125" repeatmin="0" repeatmax="-1" order="variable">
+                    <description>optionally, a list of options can be present</description>
+                    <structref name="Comment Option" id="126" repeatmin="0" structure="id:57"/>
+                    <structref name="End of Options" id="127" repeatmin="0" structure="id:55"/>
+                    <structref name="Enhanced Packet Block Flags" id="129" repeatmin="0" structure="id:128"/>
+                    <structref name="Enhanced Packet Block Hash" id="131" repeatmin="0" structure="id:130"/>
+                    <structref name="Enhanced Packet Block Dropcount" id="133" repeatmin="0" structure="id:132"/>
+                    <structref name="Option" id="134" repeatmin="0" structure="id:85"/>
+                </structure>
+            </structure>
+            <number name="TotalLength2" id="137" type="integer"/>
+        </structure>
+        <structure name="IRIG Timestamp Block" id="24" extends="id:38">
+            <number name="BlockType" id="139" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0x00000007" value="0x7"/>
+                </fixedvalues>
+            </number>
+            <number name="TotalLength" id="140" type="integer">
+                <description>total size of this block</description>
+            </number>
+            <number name="TotalLength2" id="143" type="integer"/>
+        </structure>
+        <structure name="Arinc 429 in AFDX Encapsulation Information Block" id="26" extends="id:38">
+            <number name="BlockType" id="145" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0x00000008" value="0x8"/>
+                </fixedvalues>
+            </number>
+            <number name="TotalLength" id="146" type="integer">
+                <description>total size of this block</description>
+            </number>
+            <number name="TotalLength2" id="149" type="integer"/>
+        </structure>
+        <structure name="Section Header Block" id="28" extends="id:38">
+            <description>The Section Header Block is mandatory. It identifies the beginning of a section of the capture dump file. The Section Header Block does not contain data but it rather identifies a list of blocks (interfaces, packets) that are logically correlated</description>
+            <number name="BlockType" id="151" type="integer">
+                <description>The block type of the Section Header Block is the integer corresponding to the 4-char string &quot;\r\n\n\r&quot; (0x0A0D0D0A). This particular value is used for 2 reasons:
+1. This number is used to detect if a file has been transferred via FTP or HTTP from a machine to another with an inappropriate ASCII conversion. In this case, the value of this field will differ from the standard one (&quot;\r\n\n\r&quot;) and the reader can detect a possibly corrupted file.
+1. This value is palindromic, so that the reader is able to recognize the Section Header Block regardless of the endianess of the section. The endianess is recognized by reading the Byte Order Magic, that is located 8 bytes after the Block Type.</description>
+                <fixedvalues>
+                    <fixedvalue name="SectionHeader" value="0xA0D0D0A"/>
+                </fixedvalues>
+            </number>
+            <number name="TotalLength" id="152" type="integer" endian="little">
+                <description>total size of this block</description>
+            </number>
+            <structure name="Body" id="153">
+                <number name="Byte-OrderMagic" id="154" fillcolor="0096FF" type="integer" length="4" display="hex">
+                    <description>magic number, whose value is the hexadecimal number 0x1A2B3C4D. This number can be used to distinguish sections that have been saved on little-endian machines from the ones saved on big-endian machines</description>
+                </number>
+                <scriptelement name="SetEndianness" id="155">
+                    <script name="unnamed" type="Generic">
+                        <source language="Lua">results = currentMapper:getCurrentResults()
+lastResult = results:getLastResult()
+value = lastResult:getValue()
+num = value:getUnsignedNumber()
+
+if (num == 0x4D3C2B1A) then
+    currentMapper:setDynamicEndianness(synalysis.ENDIAN_BIG)
+else
+	currentMapper:setDynamicEndianness(synalysis.ENDIAN_LITTLE)
+end
+</source>
+                    </script>
+                </scriptelement>
+                <number name="MajorVersion" id="156" fillcolor="FF2600" type="integer" length="2" endian="dynamic">
+                    <description>number of the current mayor version of the format. Current value is 1. This value should change if the format changes in such a way that tools that can read the new format could not read the old format (i.e., the code would have to check the version number to be able to read both formats)</description>
+                </number>
+                <number name="MinorVersion" id="157" fillcolor="FF2600" type="integer" length="2" endian="dynamic">
+                    <description>number of the current minor version of the format. Current value is 0. This value should change if the format changes in such a way that tools that can read the new format can still automatically read the new format but code that can only read the old format cannot read the new format</description>
+                </number>
+                <number name="SectionLength" id="158" fillcolor="72FCD5" type="integer" length="8" signed="yes">
+                    <description>64-bit value specifying the length in bytes of the following section, excluding the Section Header Block itself. This field can be used to skip the section, for faster navigation inside large files. Section Length equal -1 (0xFFFFFFFFFFFFFFFF) means that the size of the section is not specified, and the only way to skip the section is to parse the blocks that it contains. Please note that if this field is valid (i.e. not -1), its value is always aligned to 32 bits, as all the blocks are aligned to 32-bit boundaries. Also, special care should be taken in accessing this field: since the alignment of all the blocks in the file is 32-bit, this field is not guaranteed to be aligned to a 64-bit boundary. This could be a problem on 64-bit workstations</description>
+                </number>
+                <structure name="Options" id="159" alignment="0" repeatmin="0" repeatmax="-1" order="variable">
+                    <structref name="End of Options" id="160" repeatmin="0" structure="id:55"/>
+                    <structref name="Comment Option" id="161" repeatmin="0" structure="id:57"/>
+                    <structref name="Hardware Option" id="163" repeatmin="0" structure="id:162"/>
+                    <structref name="OS Option" id="165" repeatmin="0" structure="id:164"/>
+                    <structref name="User Application Option" id="167" repeatmin="0" structure="id:166"/>
+                    <structref name="Option" id="168" repeatmin="0" structure="id:85"/>
+                </structure>
+            </structure>
+            <number name="TotalLength2" id="171" type="integer" endian="little"/>
+        </structure>
+        <structure name="Reserved1 Block" id="30" extends="id:38">
+            <number name="BlockType" id="173" type="integer" minval="0xA0D0A00" maxval="0xA0D0AFF"/>
+            <number name="TotalLength" id="174" type="integer">
+                <description>total size of this block</description>
+            </number>
+            <number name="TotalLength2" id="177" type="integer"/>
+        </structure>
+        <structure name="Reserved2 Block" id="32" extends="id:38">
+            <number name="BlockType" id="179" type="integer" minval="0xA0D0A" maxval="0xFF0A0D0A"/>
+            <number name="TotalLength" id="180" type="integer">
+                <description>total size of this block</description>
+            </number>
+            <number name="TotalLength2" id="183" type="integer"/>
+        </structure>
+        <structure name="Reserved3 Block" id="34" extends="id:38">
+            <number name="BlockType" id="185" type="integer" minval="0xA0D0D" maxval="0xFF0A0D0D"/>
+            <number name="TotalLength" id="186" type="integer">
+                <description>total size of this block</description>
+            </number>
+            <number name="TotalLength2" id="189" type="integer"/>
+        </structure>
+        <structure name="Reserved4 Block" id="36" extends="id:38">
+            <number name="BlockType" id="191" type="integer" minval="0xD0D0A00" maxval="0xD0D0AFF"/>
+            <number name="TotalLength" id="192" type="integer">
+                <description>total size of this block</description>
+            </number>
+            <number name="TotalLength2" id="195" type="integer"/>
+        </structure>
+        <structure name="Option" id="85" length="0" alignment="0" extends="id:9" valueexpression="Value">
+            <number name="Code" mustmatch="yes" id="197" fillcolor="FFD478" type="integer" length="2" display="hex"/>
+            <number name="Length" id="198" fillcolor="FEFC78" type="integer" length="2"/>
+            <structure name="Value" id="199" length="Length"/>
+            <scriptelement name="AddPadding" id="201">
+                <script name="unnamed" type="Generic">
+                    <source language="Lua">results = currentMapper:getCurrentResults()
+lengthResult = results:getResultByName(&quot;Length&quot;)
+value = lengthResult:getValue()
+num = value:getUnsignedNumber()
+
+modulo = num % 4
+paddingBytes = 0
+
+if (modulo &gt; 0) then
+    paddingBytes = 4 - modulo
+    print(&quot;Padding: &quot; .. tostring(paddingBytes))
+	element = synalysis.Element(synalysis.ELEMENT_BINARY, &quot;Padding&quot;, true)
+    currentMapper:mapElementWithSize(element, paddingBytes)
+end
+
+return paddingBytes
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="Comment Option" id="57" extends="id:85">
+            <number name="Code" id="203" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Comment" value="0x1"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="205" type="integer"/>
+            <structure name="Value" id="204" valueexpression="Comment">
+                <string name="Comment" id="206" fillcolor="75D5FF" type="fixed-length" length="remaining"/>
+            </structure>
+            <scriptelement name="AddPadding" id="208"/>
+        </structure>
+        <structure name="End of Options" id="55" extends="id:85">
+            <number name="Code" id="210" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="End of Options" value="0x0"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="211" type="integer"/>
+            <scriptelement name="AddPadding" id="214"/>
+        </structure>
+        <structure name="Hardware Option" id="162" extends="id:85">
+            <number name="Code" id="216" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Hardware" value="0x2"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="218" type="integer"/>
+            <structure name="Value" id="217" valueexpression="Hardware">
+                <string name="Hardware" id="219" fillcolor="75D5FF" type="fixed-length" length="Length"/>
+            </structure>
+            <scriptelement name="AddPadding" id="221"/>
+        </structure>
+        <structure name="OS Option" id="164" extends="id:85">
+            <number name="Code" id="223" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="OS" value="0x3"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="225" type="integer"/>
+            <structure name="Value" id="224" valueexpression="OS">
+                <string name="OS" id="226" fillcolor="75D5FF" type="fixed-length" length="Length"/>
+            </structure>
+            <scriptelement name="AddPadding" id="228"/>
+        </structure>
+        <structure name="User Application Option" id="166" extends="id:85">
+            <number name="Code" id="230" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="userappl" value="0x4"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="232" type="integer"/>
+            <structure name="Value" id="231" valueexpression="Application">
+                <string name="Application" id="233" fillcolor="75D5FF" type="fixed-length" length="Length"/>
+            </structure>
+            <scriptelement name="AddPadding" id="235"/>
+        </structure>
+        <structure name="Interface Name Option" id="59" extends="id:85">
+            <number name="Code" id="237" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="if_name" value="0x2"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="238" type="integer"/>
+            <structure name="Value" id="239" valueexpression="Name">
+                <string name="Name" id="347" fillcolor="75D5FF" type="fixed-length" length="remaining">
+                    <description>A UTF-8 string containing the name of the device used to capture data</description>
+                </string>
+            </structure>
+            <scriptelement name="AddPadding" id="241"/>
+        </structure>
+        <structure name="Interface Description Option" id="61" extends="id:85">
+            <number name="Code" id="243" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="if_description" value="0x3"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="244" type="integer"/>
+            <structure name="Value" id="245" valueexpression="Description">
+                <string name="Description" id="341" fillcolor="75D5FF" type="fixed-length" length="remaining">
+                    <description>A UTF-8 string containing the description of the device used to capture data</description>
+                </string>
+            </structure>
+            <scriptelement name="AddPadding" id="247"/>
+        </structure>
+        <structure name="Interface IPv4 Address Option" id="63" extends="id:85">
+            <description>Interface network address and netmask. This option can be repeated multiple times within the same Interface Description Block when multiple IPv4 addresses are assigned to the interface</description>
+            <number name="Code" id="249" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="if_IPv4addr" value="0x4"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="250" type="integer"/>
+            <structure name="Value" id="251" valueexpression="Address">
+                <binary name="Address" id="342" length="4">
+                    <description>Interface network address</description>
+                </binary>
+                <binary name="Netmask" id="343" length="4">
+                    <description>Interface network netmask</description>
+                </binary>
+            </structure>
+            <scriptelement name="AddPadding" id="253"/>
+        </structure>
+        <structure name="Interface IPv6 Address Option" id="65" extends="id:85">
+            <description>Interface network address and prefix length (stored in the last byte). This option can be repeated multiple times within the same Interface Description Block when multiple IPv6 addresses are assigned to the interface</description>
+            <number name="Code" id="255" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="if_IPv6addr" value="0x5"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="256" type="integer"/>
+            <structure name="Value" id="257" valueexpression="Address">
+                <binary name="Address" id="344" length="16">
+                    <description>Interface network address</description>
+                </binary>
+                <number name="PrefixLength" id="345" type="integer" length="1"/>
+            </structure>
+            <scriptelement name="AddPadding" id="259"/>
+        </structure>
+        <structure name="Interface MAC Address Option" id="67" extends="id:85">
+            <number name="Code" id="261" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="if_MACaddr" value="0x6"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="262" type="integer"/>
+            <structure name="Value" id="263" valueexpression="MAC Address">
+                <binary name="MAC Address" id="346" length="48" lengthunit="bit">
+                    <description>Interface Hardware MAC address</description>
+                </binary>
+            </structure>
+            <scriptelement name="AddPadding" id="265"/>
+        </structure>
+        <structure name="Interface EUI Address Option" id="69" extends="id:85">
+            <number name="Code" id="267" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="if_EUIaddr" value="0x7"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="268" type="integer"/>
+            <structure name="Value" id="269" valueexpression="EUI Address">
+                <binary name="EUI Address" id="348" length="64" lengthunit="bit">
+                    <description>Interface Hardware EUI address</description>
+                </binary>
+            </structure>
+            <scriptelement name="AddPadding" id="271"/>
+        </structure>
+        <structure name="Interface Speed Option" id="71" extends="id:85">
+            <number name="Code" id="273" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="if_speed" value="0x8"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="274" type="integer"/>
+            <structure name="Value" id="275" valueexpression="Speed">
+                <number name="Speed" id="349" type="integer" length="8">
+                    <description>Interface speed (in bps)</description>
+                </number>
+            </structure>
+            <scriptelement name="AddPadding" id="277"/>
+        </structure>
+        <structure name="Interface Timestamp Resolution Option" id="73" extends="id:85">
+            <description>Resolution of timestamps. If the Most Significant Bit is equal to zero, the remaining bits indicates the resolution of the timestamp as as a negative power of 10 (e.g. 6 means microsecond resolution, timestamps are the number of microseconds since 1/1/1970). If the Most Significant Bit is equal to one, the remaining bits indicates the resolution as as negative power of 2 (e.g. 10 means 1/1024 of second). If this option is not present, a resolution of 10^-6 is assumed (i.e. timestamps have the same resolution of the standard 'libpcap' timestamps)</description>
+            <number name="Code" id="279" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="if_tsresol" value="0x9"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="280" type="integer"/>
+            <structure name="Value" id="281">
+                <description>Resolution</description>
+                <number name="Resolution" id="350" type="integer" length="1" display="hex">
+                    <description>Resolution of timestamps. If the Most Significant Bit is equal to zero, the remaining bits indicates the resolution of the timestamp as as a negative power of 10 (e.g. 6 means microsecond resolution, timestamps are the number of microseconds since 1/1/1970). If the Most Significant Bit is equal to one, the remaining bits indicates the resolution as as negative power of 2 (e.g. 10 means 1/1024 of second). If this option is not present, a resolution of 10^-6 is assumed (i.e. timestamps have the same resolution of the standard 'libpcap' timestamps)</description>
+                </number>
+            </structure>
+            <scriptelement name="AddPadding" id="283"/>
+        </structure>
+        <structure name="Interface Time Zone Option" id="75" extends="id:85">
+            <number name="Code" id="285" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="if_tzone" value="0xA"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="286" type="integer"/>
+            <structure name="Value" id="287" valueexpression="TimeZone">
+                <number name="TimeZone" id="351" type="integer" length="4" display="hex"/>
+            </structure>
+            <scriptelement name="AddPadding" id="289"/>
+        </structure>
+        <structure name="Interface Filter Option" id="77" extends="id:85">
+            <description>The filter (e.g. &quot;capture only TCP traffic&quot;) used to capture traffic. The first byte of the Option Data keeps a code of the filter used (e.g. if this is a libpcap string, or BPF bytecode, and more). More details about this format will be presented in Appendix XXX (TODO). (TODO: better use different options for different fields? e.g. if_filter_pcap, if_filter_bpf, ...)	</description>
+            <number name="Code" id="291" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="if_filter" value="0xB"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="292" type="integer"/>
+            <structure name="Value" id="293" valueexpression="Filter">
+                <number name="FilterCode" id="352" type="integer" length="1"/>
+                <string name="Filter" id="353" type="fixed-length"/>
+            </structure>
+            <scriptelement name="AddPadding" id="295"/>
+        </structure>
+        <structure name="Interface OS Option" id="79" extends="id:85">
+            <number name="Code" id="297" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="if_os" value="0xC"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="298" type="integer"/>
+            <structure name="Value" id="299" valueexpression="OS">
+                <string name="OS" id="354" fillcolor="75D5FF" type="fixed-length" length="0">
+                    <description>A UTF-8 string containing the name of the operating system of the machine in which this interface is installed. This can be different from the same information that can be contained by the Section Header Block (Section 3.1) because the capture can have been done on a remote machine</description>
+                </string>
+            </structure>
+            <scriptelement name="AddPadding" id="301"/>
+        </structure>
+        <structure name="Interface FCS Length Option" id="81" extends="id:85">
+            <number name="Code" id="303" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="if_fcslen" value="0xD"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="304" type="integer"/>
+            <structure name="Value" id="305" valueexpression="FCSLength">
+                <number name="FCSLength" id="355" type="integer" length="1">
+                    <description>An integer value that specified the length of the Frame Check Sequence (in bits) for this interface. For link layers whose FCS length can change during time, the Packet Block Flags Word can be used</description>
+                </number>
+            </structure>
+            <scriptelement name="AddPadding" id="307"/>
+        </structure>
+        <structure name="Interface Timestamp Offset Option" id="83" extends="id:85">
+            <number name="Code" id="309" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="if_tsoffset" value="0xE"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="310" type="integer"/>
+            <structure name="Value" id="311" valueexpression="TSOffset">
+                <number name="TSOffset" id="356" type="integer" length="8">
+                    <description>A 64 bits integer value that specifies an offset (in seconds) that must be added to the timestamp of each packet to obtain the absolute timestamp of a packet. If the option is missing, the timestamps stored in the packet must be considered absolute timestamps. The time zone of the offset can be specified with the option if_tzone. TODO: won't a if_tsoffset_low for fractional second offsets be useful for highly syncronized capture systems?</description>
+                </number>
+            </structure>
+            <scriptelement name="AddPadding" id="313"/>
+        </structure>
+        <structure name="Enhanced Packet Block Flags" id="128" extends="id:85">
+            <number name="Code" id="315" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="epb_flags" value="0x2"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="317" type="integer"/>
+            <structure name="Value" id="316">
+                <number name="Flags" id="318" type="integer" length="4" display="hex">
+                    <mask name="errors" value="0xFFFF0000">
+                        <fixedvalue name="symbol error" value="0x80000000"/>
+                        <fixedvalue name="preamble error" value="0x40000000"/>
+                        <fixedvalue name="Start Frame Delimiter error" value="0x20000000"/>
+                        <fixedvalue name="unaligned frame error" value="0x10000000"/>
+                        <fixedvalue name="wrong Inter Frame Gap error" value="0x800000"/>
+                        <fixedvalue name="packet too short error" value="0x400000"/>
+                        <fixedvalue name="packet too long error" value="0x200000"/>
+                        <fixedvalue name="CRC error" value="0x100000"/>
+                    </mask>
+                    <mask name="Reserved" value="0xFE00">
+                        <fixedvalue name="Reserved" value="0xFE00"/>
+                    </mask>
+                    <mask name="FCS Length" value="0x1E0">
+                        <fixedvalue name="FCS Length" value="0x1E0"/>
+                    </mask>
+                    <mask name="Reception type" value="0x1C">
+                        <fixedvalue name="not specified" value="0x0"/>
+                        <fixedvalue name="unicast" value="0x4"/>
+                        <fixedvalue name="multicast" value="0x8"/>
+                        <fixedvalue name="broadcast" value="0xC"/>
+                        <fixedvalue name="promiscous" value="0x10"/>
+                    </mask>
+                    <mask name="Reception" value="0x3">
+                        <fixedvalue name="N/A" value="0x0"/>
+                        <fixedvalue name="Inbound" value="0x1"/>
+                        <fixedvalue name="Outbound" value="0x2"/>
+                    </mask>
+                </number>
+            </structure>
+            <scriptelement name="AddPadding" id="324"/>
+        </structure>
+        <structure name="Enhanced Packet Block Hash" id="130" extends="id:85">
+            <description>This option contains a hash of the packet. The first byte specifies the hashing algorithm, while the following bytes contain the actual hash, whose size depends on the hashing algorithm, and hence from the value in the first bit. The hashing algorithm can be: 2s complement (algorithm byte = 0, size=XXX), XOR (algorithm byte = 1, size=XXX), CRC32 (algorithm byte = 2, size = 4), MD-5 (algorithm byte = 3, size=XXX), SHA-1 (algorithm byte = 4, size=XXX). The hash covers only the packet, not the header added by the capture driver: this gives the possibility to calculate it inside the network card. The hash allows easier comparison/merging of different capture files, and reliable data transfer between the data acquisition system and the capture library. (TODO: the text above uses &quot;first bit&quot;, but shouldn't this be &quot;first byte&quot;?!?)</description>
+            <number name="Code" id="326" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="epb_hash" value="0x3"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="328" type="integer"/>
+            <structure name="Value" id="327" valueexpression="Hash">
+                <number name="Algorithm" id="329" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="2s complement" value="0"/>
+                        <fixedvalue name="XOR" value="1"/>
+                        <fixedvalue name="CRC32" value="2"/>
+                        <fixedvalue name="MD-5" value="3"/>
+                        <fixedvalue name="SHA-1" value="4"/>
+                    </fixedvalues>
+                </number>
+                <binary name="Hash" id="330" length="remaining"/>
+            </structure>
+            <scriptelement name="AddPadding" id="332"/>
+        </structure>
+        <structure name="Enhanced Packet Block Dropcount" id="132" extends="id:85">
+            <description>A 64bit integer value specifying the number of packets lost (by the interface and the operating system) between this packet and the preceding one</description>
+            <number name="Code" id="334" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="epb_dropcount" value="0x4"/>
+                </fixedvalues>
+            </number>
+            <number name="Length" id="336" type="integer"/>
+            <structure name="Value" id="335" valueexpression="Packets lost">
+                <number name="Packets lost" id="337" type="integer" length="8"/>
+            </structure>
+            <scriptelement name="AddPadding" id="339"/>
+        </structure>
+    </grammar>
+</ufwb>

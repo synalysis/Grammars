@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.2">
+    <grammar name="PVR file header V2" start="id:33" author="Andreas Loew" email="andreas@code-and-web.de" fileextension="pvr" uti="public.pvr">
+        <description>Header of PVR (PowerVR texture file)</description>
+        <structure name="PVR-Datei" id="33" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="dwHeaderSize" id="35" type="integer" length="4"/>
+            <number name="dwHeight" id="36" type="integer" length="4"/>
+            <number name="dwWidth" id="37" type="integer" length="4"/>
+            <number name="dwMipMapCount" id="38" type="integer" length="4"/>
+            <number name="dwpfFlags" id="39" type="integer" length="4"/>
+            <number name="dwTextureDataSize" id="40" type="integer" length="4" minval="0"/>
+            <number name="dwBitCount" id="41" type="integer" length="4"/>
+            <number name="dwRBitMask" id="42" type="integer" length="4" display="hex"/>
+            <number name="dwGBitMask" id="44" type="integer" length="4" display="hex"/>
+            <number name="dwBBitMask" id="45" type="integer" length="4" display="hex"/>
+            <number name="dwAlphaBitMask" id="46" type="integer" length="4" display="hex"/>
+            <string name="dwPVR" mustmatch="yes" id="53" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Magic" value="PVR!"/>
+                </fixedvalues>
+            </string>
+            <number name="dwNumSurfs" id="48" type="integer" length="4"/>
+        </structure>
+    </grammar>
+</ufwb>

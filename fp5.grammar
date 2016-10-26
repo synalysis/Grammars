@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9">
+    <grammar name="FileMaker fp5 and fp3" start="id:124" author="Daniel Schwarz" email="dan@butter.sh" fileextension="fp5,FP5,fp3,FP3" complete="yes">
+        <description>Grammar for fp3 and fp5 files used in project:
+https://github.com/qwesda/Fp5Dump</description>
+        <structure name="FileMaker" id="124" encoding="macintosh" endian="big" signed="no">
+            <structref name="Header fp3" id="126" repeatmin="0" structure="id:125"/>
+            <structref name="Header fp5" id="128" repeatmin="0" structure="id:127"/>
+            <structure name="Blocks" id="129" repeatmax="unlimited">
+                <structref name="Chunk" id="131" fillcolor="FEFFFF" repeatmin="0" structure="id:130"/>
+                <binary name="NULL" id="132" strokecolor="FEFFFF" fillcolor="FEFFFF" repeatmin="0" repeatmax="-1" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="0x00" value="00"/>
+                    </fixedvalues>
+                </binary>
+            </structure>
+        </structure>
+        <structure name="Header fp5" id="127" length="2048" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="MAGICK" mustmatch="yes" id="135" fillcolor="FF89D8" length="15">
+                <fixedvalues>
+                    <fixedvalue name="MAGICK" value="0001000000020001000500020002C0"/>
+                </fixedvalues>
+            </binary>
+            <binary name="Unknown 1" mustmatch="yes" id="136" length="459"/>
+            <binary name="Copyright String" id="137" fillcolor="75D5FF" length="37"/>
+            <binary name="00 00 00 00 00 00 00 00 01 00 1D 00 0E 00" mustmatch="yes" id="138" length="14">
+                <fixedvalues>
+                    <fixedvalue name="00 00 00 00 00 00 00 00 01 00 1D 00 0E 00" value="000000000000000001001D000E00"/>
+                </fixedvalues>
+            </binary>
+            <binary name="HBAM....AUG95" id="139" fillcolor="75D5FF" length="13"/>
+            <binary name="C1 02 48" mustmatch="yes" id="140" length="3">
+                <fixedvalues>
+                    <fixedvalue name="C1 02 48" value="C10248"/>
+                </fixedvalues>
+            </binary>
+            <number name="VersionStringLen" id="141" fillcolor="8DF900" type="integer" length="1"/>
+            <binary name="Version" mustmatch="yes" id="142" fillcolor="75D5FF" length="7">
+                <fixedvalues>
+                    <fixedvalue name="Pro 5.0" value="50726F20352E30"/>
+                </fixedvalues>
+            </binary>
+            <binary name="C0 C0" mustmatch="yes" id="143" length="2">
+                <fixedvalues>
+                    <fixedvalue name="C0 C0" value="C0C0"/>
+                </fixedvalues>
+            </binary>
+            <binary name="Unknown 2" id="144" length="473"/>
+            <number name="FilenameStringLength" id="145" fillcolor="72FA78" type="integer" length="1"/>
+            <binary name="Filename" id="146" fillcolor="75D5FF" length="FilenameStringLength"/>
+            <binary name="FilenameStringPadding" id="147" length="0xFF - FilenameStringLength"/>
+            <number name="ServerStringLength" id="148" fillcolor="72FA78" type="integer" length="1"/>
+            <binary name="Server" id="149" fillcolor="75D5FF" length="ServerStringLength"/>
+            <binary name="ServerStringPadding" id="150" length="0xBF - ServerStringLength"/>
+            <binary name="Unknown 3" id="151" length="12"/>
+            <binary name="Unknown 4" id="152" length="564"/>
+        </structure>
+        <structure name="Header fp3" id="125" length="2048" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="MAGICK" mustmatch="yes" id="154" fillcolor="FF84FF" length="15">
+                <fixedvalues>
+                    <fixedvalue name="MAGICK" value="0001000000020001000500020002C0"/>
+                </fixedvalues>
+            </binary>
+            <binary name="Unknown 1" mustmatch="yes" id="155" length="497"/>
+            <binary name="00 00 00 00 00 00 00 01 00 1D 00 0E 00" mustmatch="yes" id="156" length="13">
+                <fixedvalues>
+                    <fixedvalue name="00 00 00 00 00 00 00 01 00 1D 00 0E 00" value="0000000000000001001D000E00"/>
+                </fixedvalues>
+            </binary>
+            <binary name="HBAM....AUG95" id="157" fillcolor="75D5FF" length="13"/>
+            <binary name="C1 02 48" mustmatch="yes" id="158" length="3">
+                <fixedvalues>
+                    <fixedvalue name="C1 02 48" value="C10248"/>
+                </fixedvalues>
+            </binary>
+            <number name="Version String Length" id="159" fillcolor="8DF900" type="integer" length="1"/>
+            <binary name="Version" mustmatch="yes" id="160" fillcolor="75D5FF" length="7">
+                <fixedvalues>
+                    <fixedvalue name="Pro 3.0" value="50726F20332E30"/>
+                </fixedvalues>
+            </binary>
+            <binary name="C0 C0" mustmatch="yes" id="161" length="2">
+                <fixedvalues>
+                    <fixedvalue name="C0 C0" value="C0C0"/>
+                </fixedvalues>
+            </binary>
+            <binary name="Unknown 2" id="162" length="435"/>
+            <binary name="Copyright String" id="163" fillcolor="75D5FF" length="38"/>
+            <number name="FilenameStringLength" id="164" fillcolor="72FA78" type="integer" length="1"/>
+            <binary name="Filename" id="165" fillcolor="75D5FF" length="FilenameStringLength"/>
+            <binary name="FilenameStringPadding" id="166" length="0xFF - FilenameStringLength"/>
+            <number name="ServerStringLength" id="167" fillcolor="72FA78" type="integer" length="1"/>
+            <binary name="Server" id="168" fillcolor="75D5FF" length="ServerStringLength"/>
+            <binary name="ServerStringPadding" id="169" length="0xBF - ServerStringLength"/>
+            <binary name="Unknown 3" id="170" length="12"/>
+            <binary name="Unknown 4" id="171" length="564"/>
+        </structure>
+        <structure name="Blocks" id="130" length="1024" alignment="1024" repeatmax="unlimited" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Deleted Flag" id="173" fillcolor="C0C0C0" length="1"/>
+            <binary name="Index Level" id="174" fillcolor="FF84FF" length="1"/>
+            <number name="Prev Block ID" id="175" fillcolor="C0C0C0" type="integer" length="4"/>
+            <number name="Next Block ID" id="176" fillcolor="C0C0C0" type="integer" length="4"/>
+            <binary name="Redundant Payload Bytes" id="177" fillcolor="FF89D8" length="2"/>
+            <number name="PayloadLength" id="178" fillcolor="8DF900" type="integer" length="2"/>
+            <structure name="Payload" id="179" length="PayloadLength">
+                <structref name="Chunk Payload" id="181" repeatmax="-1" structure="id:180"/>
+            </structure>
+            <binary name="Padding" id="183" length="0x3F2 - PayloadLength"/>
+        </structure>
+        <structure name="Block Payload" id="180" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no" fillcolor="FEFFFF" order="variable">
+            <structref name="Field Ref + Data Long" id="186" repeatmin="0" structure="id:185"/>
+            <structref name="Field Ref + Data" id="188" repeatmin="0" structure="id:187"/>
+            <structref name="Data Simple" id="190" repeatmin="0" structure="id:189"/>
+            <structref name="Path" id="192" repeatmin="0" structure="id:191"/>
+        </structure>
+        <structure name="Data Simple" id="189" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Length" mustmatch="yes" id="194" fillcolor="FFD478" type="integer" length="1" minval="129" maxval="191"/>
+            <binary name="Data" id="195" fillcolor="929292" length="Length -128"/>
+        </structure>
+        <structure name="Field Ref Simple" id="197" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="ID" mustmatch="yes" id="198" fillcolor="FFD478" repeatmin="0" type="integer" length="1" minval="64" maxval="127"/>
+            <number name="00" mustmatch="yes" id="199" fillcolor="FFD478" repeatmin="0" type="integer" length="1" minval="0" maxval="0"/>
+        </structure>
+        <structure name="Field Ref Long" id="201" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Length" mustmatch="yes" id="202" fillcolor="FF89D8" type="integer" length="1" minval="1" maxval="63"/>
+            <binary name="ID" id="203" fillcolor="FFD478" length="Length"/>
+        </structure>
+        <structure name="Field Ref" id="205" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <structref name="Field Ref Simple" id="206" repeatmin="0" structure="id:197"/>
+            <structref name="Field Ref Long" id="207" repeatmin="0" structure="id:201"/>
+        </structure>
+        <structure name="Field Ref + Data" id="187" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="Field Ref" id="209" structure="id:205"/>
+            <number name="Length" id="210" fillcolor="FF89D8" type="integer" length="1"/>
+            <binary name="Data" id="211" fillcolor="929292" length="Length"/>
+        </structure>
+        <structure name="Field Ref + Data Long" id="185" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="0xFF" mustmatch="yes" id="213" fillcolor="FFD478" length="1">
+                <fixedvalues>
+                    <fixedvalue name="0xFF" value="FF"/>
+                </fixedvalues>
+            </binary>
+            <structref name="Field Ref" id="214" structure="id:205"/>
+            <number name="Length" id="215" fillcolor="FFD478" type="integer" length="2"/>
+            <binary name="Data" id="216" fillcolor="929292" length="Length"/>
+        </structure>
+        <structure name="Path" id="191" repeatmax="-1" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <structref name="Path Push" id="219" repeatmin="0" structure="id:218"/>
+            <structref name="Path Pop" id="221" repeatmin="0" structure="id:220"/>
+        </structure>
+        <structure name="Path Push" id="218" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Length" mustmatch="yes" id="223" fillcolor="D783FF" type="integer" length="1" display="hex" minval="0xC1" maxval="0xF8"/>
+            <binary name="Data" id="224" fillcolor="75D5FF" length="Length - 192"/>
+        </structure>
+        <structure name="Path Pop" id="220" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="0xC0" mustmatch="yes" id="226" fillcolor="D4FB78" length="1">
+                <fixedvalues>
+                    <fixedvalue name="0xC0" value="C0"/>
+                </fixedvalues>
+            </binary>
+        </structure>
+    </grammar>
+</ufwb>

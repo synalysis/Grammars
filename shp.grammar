@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.3">
+    <grammar name="Shape File" start="id:25" author="Andreas Pehnack" email="andreas@synalysis.net" fileextension="shp">
+        <description>Grammar for Shape files (.shp)</description>
+        <structure name="SHP file" id="25" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Header" id="26" length="100">
+                <description>The main file header is 100 bytes long</description>
+                <number name="FileCode" mustmatch="yes" id="27" type="integer" length="4">
+                    <fixedvalues>
+                        <fixedvalue name="FileCode" value="9994"/>
+                    </fixedvalues>
+                </number>
+                <number name="Unused1" id="28" type="integer" length="4"/>
+                <number name="Unused2" id="29" type="integer" length="4"/>
+                <number name="Unused3" id="30" type="integer" length="4"/>
+                <number name="Unused4" id="31" type="integer" length="4"/>
+                <number name="Unused5" id="32" type="integer" length="4"/>
+                <number name="FileLength" id="33" type="integer" length="4">
+                    <description>The value for file length is the total length of the file in 16-bit words (including the fifty 16-bit words that make up the header).</description>
+                </number>
+                <number name="Version" id="34" type="integer" length="4" endian="little"/>
+                <number name="ShapeType" id="35" type="integer" length="4" endian="little">
+                    <description>All the non-Null shapes in a shapefile are required to be of the same shape type.
+Currently, shapefiles are restricted to contain the same type of shape as specified above. In the future, shapefiles may be allowed to contain more than one shape type. If mixed shape types are implemented, the shape type field in the header will flag the file as such.</description>
+                    <fixedvalues>
+                        <fixedvalue name="Null Shape" value="0"/>
+                        <fixedvalue name="Point" value="1"/>
+                        <fixedvalue name="PolyLine" value="3"/>
+                        <fixedvalue name="Polygon" value="5"/>
+                        <fixedvalue name="MultiPoint" value="8"/>
+                        <fixedvalue name="PointZ" value="11"/>
+                        <fixedvalue name="PolyLineZ" value="13"/>
+                        <fixedvalue name="PolygonZ" value="15"/>
+                        <fixedvalue name="MultiPointZ" value="18"/>
+                        <fixedvalue name="PointM" value="21"/>
+                        <fixedvalue name="PolyLineM" value="23"/>
+                        <fixedvalue name="PolygonM" value="25"/>
+                        <fixedvalue name="MultiPointM" value="28"/>
+                        <fixedvalue name="MultiPatch" value="31"/>
+                    </fixedvalues>
+                </number>
+                <structure name="BoundingBox" id="36" length="64" endian="little">
+                    <description>The Bounding Box in the main file header stores the actual extent of the shapes in the file: the minimum bounding rectangle orthogonal to the X and Y (and potentially the M and Z) axes that contains all shapes. If the shapefile is empty (that is, has no records), the values for Xmin, Ymin, Xmax, and Ymax are unspecified. Mmin and Mmax can contain &quot;no data&quot; values for shapefiles of measured shape types that contain no measures.</description>
+                    <number name="Xmin" id="37" type="float" length="8"/>
+                    <number name="Ymin" id="38" type="float" length="8"/>
+                    <number name="Xmax" id="39" type="float" length="8"/>
+                    <number name="Ymax" id="40" type="float" length="8"/>
+                    <number name="Zmin" id="41" type="float" length="8"/>
+                    <number name="Zmax" id="42" type="float" length="8"/>
+                </structure>
+            </structure>
+            <structure name="MainRecord" id="45" length="(ContentLength+4)*2" repeatmax="-1">
+                <number name="RecordNumber" id="46" type="integer" length="4"/>
+                <number name="ContentLength" id="47" type="integer" length="4"/>
+                <structure name="Records" id="48" order="variable">
+                    <structref name="NullShapeRecord" id="50" repeatmin="0" structure="id:49"/>
+                    <structref name="PointRecord" id="52" repeatmin="0" structure="id:51"/>
+                    <structref name="MultiPointRecord" id="54" repeatmin="0" structure="id:53"/>
+                    <structref name="PolyLineRecord" id="56" repeatmin="0" structure="id:55"/>
+                    <structref name="PolygonRecord" id="58" repeatmin="0" structure="id:57"/>
+                    <structref name="PointMRecord" id="60" repeatmin="0" structure="id:59"/>
+                    <structref name="MultiPointMRecord" id="62" repeatmin="0" structure="id:61"/>
+                    <structref name="PolyLineM" id="64" repeatmin="0" structure="id:63"/>
+                    <structref name="PolygonMRecord" id="66" repeatmin="0" structure="id:65"/>
+                    <structref name="PointZRecord" id="68" repeatmin="0" structure="id:67"/>
+                    <structref name="MultiPointZRecord" id="70" repeatmin="0" structure="id:69"/>
+                    <structref name="PolyLineZRecord" id="72" repeatmin="0" structure="id:71"/>
+                    <structref name="PolygonZRecord" id="74" repeatmin="0" structure="id:73"/>
+                    <structref name="MultiPatchRecord" id="76" repeatmin="0" structure="id:75"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="Record" id="80" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="ShapeType" mustmatch="yes" id="81" fillcolor="FFD478" type="integer" length="4"/>
+        </structure>
+        <structure name="NullShapeRecord" id="49" extends="id:80">
+            <description>A shape type of 0 indicates a null shape, with no geometric data for the shape. Each feature type (point, line, polygon, etc.) supports nullsit is valid to have points and null points in the same shapefile. Often null shapes are place holders; they are used during shapefile creation and are populated with geometric data soon after they are created.</description>
+            <number name="ShapeType" id="83" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Null Shape" value="0"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="PointRecord" id="51" extends="id:80">
+            <description>A point consists of a pair of double-precision coordinates in the order X,Y</description>
+            <number name="ShapeType" id="85" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Point" value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="X" id="86" type="float" length="8"/>
+            <number name="Y" id="87" type="float" length="8"/>
+        </structure>
+        <structure name="MultiPointRecord" id="53" extends="id:80">
+            <description>A MultiPoint represents a set of points</description>
+            <number name="ShapeType" id="89" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="MultiPoint" value="8"/>
+                </fixedvalues>
+            </number>
+            <structref name="Box" id="91" structure="id:90"/>
+            <number name="NumPoints" id="92" type="integer" length="4"/>
+            <structref name="Points" id="94" repeatmax="NumPoints" structure="id:93"/>
+        </structure>
+        <structure name="PolyLineRecord" id="55" extends="id:80">
+            <description>A PolyLine is an ordered set of vertices that consists of one or more parts. A part is a connected sequence of two or more points. Parts may or may not be connected to one another. Parts may or may not intersect one another</description>
+            <number name="ShapeType" id="96" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="PolyLine" value="3"/>
+                </fixedvalues>
+            </number>
+            <structref name="Box" id="97" structure="id:90"/>
+            <number name="NumParts" id="98" type="integer" length="4"/>
+            <number name="NumPoints" id="99" type="integer" length="4"/>
+            <number name="Parts" id="100" repeatmax="NumParts" type="integer" length="4"/>
+            <structref name="Points" id="101" repeatmax="NumPoints" structure="id:93"/>
+        </structure>
+        <structure name="PolygonRecord" id="57" extends="id:80">
+            <description>A polygon consists of one or more rings. A ring is a connected sequence of four or more points that form a closed, non-self-intersecting loop. A polygon may contain multiple outer rings. The order of vertices or orientation for a ring indicates which side of the ring is the interior of the polygon. The neighborhood to the right of an observer walking along the ring in vertex order is the neighborhood inside the polygon. Vertices of rings defining holes in polygons are in a counterclockwise direction. Vertices for a single, ringed polygon are, therefore, always in clockwise order. The rings of a polygon are referred to as its parts</description>
+            <number name="ShapeType" id="103" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Polygon" value="5"/>
+                </fixedvalues>
+            </number>
+            <structref name="Box" id="104" structure="id:90"/>
+            <number name="NumParts" id="105" type="integer" length="4"/>
+            <number name="NumPoints" id="106" type="integer" length="4"/>
+            <number name="Parts" id="107" repeatmax="NumParts" type="integer" length="4"/>
+            <structref name="Points" id="108" repeatmax="NumPoints" structure="id:93"/>
+        </structure>
+        <structure name="PointMRecord" id="59" extends="id:80">
+            <description>A PointM consists of a pair of double-precision coordinates in the order X, Y, plus a measure M</description>
+            <number name="ShapeType" id="110" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="PointM" value="21"/>
+                </fixedvalues>
+            </number>
+            <number name="X" id="111" type="float" length="8">
+                <description>X coordinate</description>
+            </number>
+            <number name="Y" id="112" type="float" length="8">
+                <description>Y coordinate</description>
+            </number>
+            <number name="M" id="113" type="float" length="8">
+                <description>Measure</description>
+            </number>
+        </structure>
+        <structure name="MultiPointMRecord" id="61" extends="id:80">
+            <description>A MultiPointM represents a set of PointMs</description>
+            <number name="ShapeType" id="115" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="MultiPointM" value="28"/>
+                </fixedvalues>
+            </number>
+            <structref name="Box" id="116" structure="id:90"/>
+            <number name="NumPoints" id="117" type="integer" length="4"/>
+            <structref name="Points" id="118" repeatmax="NumPoints" structure="id:93"/>
+            <number name="Mmin" id="119" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Mmax" id="120" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Marray" id="121" repeatmax="NumPoints" type="float" length="8">
+                <description>Measure</description>
+            </number>
+        </structure>
+        <structure name="PolyLineM" id="63" extends="id:80">
+            <number name="ShapeType" id="123" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="PolyLineM" value="23"/>
+                </fixedvalues>
+            </number>
+            <structref name="Box" id="124" structure="id:90"/>
+            <number name="NumParts" id="125" type="integer" length="4"/>
+            <number name="NumPoints" id="126" type="integer" length="4"/>
+            <number name="Parts" id="127" repeatmax="NumParts" type="integer" length="4"/>
+            <structref name="Points" id="128" repeatmax="NumPoints" structure="id:93"/>
+            <number name="Mmin" id="129" repeatmin="0" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Mmax" id="130" repeatmin="0" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Marray" id="131" repeatmin="0" repeatmax="NumPoints" type="float" length="8">
+                <description>Measure</description>
+            </number>
+        </structure>
+        <structure name="PolygonMRecord" id="65" extends="id:80">
+            <description>A PolygonM consists of a number of rings. A ring is a closed, non-self-intersecting loop. Note that intersections are calculated in X,Y space, not in X,Y,M space. A PolygonM may contain multiple outer rings. The rings of a PolygonM are referred to as its parts</description>
+            <number name="ShapeType" id="133" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="PolygonM" value="25"/>
+                </fixedvalues>
+            </number>
+            <structref name="Box" id="134" structure="id:90"/>
+            <number name="NumParts" id="135" type="integer" length="4"/>
+            <number name="NumPoints" id="136" type="integer" length="4"/>
+            <number name="Parts" id="137" repeatmax="NumParts" type="integer" length="4"/>
+            <structref name="Points" id="138" repeatmax="NumPoints" structure="id:93"/>
+            <number name="Mmin" id="139" repeatmin="0" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Mmax" id="140" repeatmin="0" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Marray" id="141" repeatmin="0" repeatmax="NumPoints" type="float" length="8">
+                <description>Measure</description>
+            </number>
+        </structure>
+        <structure name="PointZRecord" id="67" extends="id:80">
+            <number name="ShapeType" id="143" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="PointZ" value="11"/>
+                </fixedvalues>
+            </number>
+            <number name="X" id="144" type="float" length="8">
+                <description>X coordinate</description>
+            </number>
+            <number name="Y" id="145" type="float" length="8">
+                <description>Y coordinate</description>
+            </number>
+            <number name="Z" id="146" type="float" length="8">
+                <description>Y coordinate</description>
+            </number>
+            <number name="M" id="147" type="float" length="8">
+                <description>Measure</description>
+            </number>
+        </structure>
+        <structure name="MultiPointZRecord" id="69" extends="id:80">
+            <description>A MultiPointZ represents a set of PointZs</description>
+            <number name="ShapeType" id="149" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="MultiPointZ" value="18"/>
+                </fixedvalues>
+            </number>
+            <structref name="Box" id="150" structure="id:90"/>
+            <number name="NumPoints" id="151" type="integer" length="4"/>
+            <structref name="Points" id="152" repeatmax="NumPoints" structure="id:93"/>
+            <number name="Zmin" id="153" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Zmax" id="154" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Zarray" id="155" repeatmax="NumPoints" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Mmin" id="156" repeatmin="0" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Mmax" id="157" repeatmin="0" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Marray" id="158" repeatmin="0" repeatmax="NumPoints" type="float" length="8">
+                <description>Measure</description>
+            </number>
+        </structure>
+        <structure name="PolyLineZRecord" id="71" extends="id:80">
+            <number name="ShapeType" id="160" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="PolyLineZ" value="13"/>
+                </fixedvalues>
+            </number>
+            <structref name="Box" id="161" structure="id:90"/>
+            <number name="NumParts" id="162" type="integer" length="4"/>
+            <number name="NumPoints" id="163" type="integer" length="4"/>
+            <number name="Parts" id="164" repeatmax="NumParts" type="integer" length="4"/>
+            <structref name="Points" id="165" repeatmax="NumPoints" structure="id:93"/>
+            <number name="Zmin" id="166" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Zmax" id="167" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Zarray" id="168" repeatmax="NumPoints" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Mmin" id="169" repeatmin="0" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Mmax" id="170" repeatmin="0" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Marray" id="171" repeatmin="0" repeatmax="NumPoints" type="float" length="8">
+                <description>Measure</description>
+            </number>
+        </structure>
+        <structure name="PolygonZRecord" id="73" extends="id:80">
+            <description>A PolygonZ consists of a number of rings. A ring is a closed, non-self-intersecting loop. A PolygonZ may contain multiple outer rings. The rings of a PolygonZ are referred to as its parts</description>
+            <number name="ShapeType" id="173" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="PolygonZ" value="15"/>
+                </fixedvalues>
+            </number>
+            <structref name="Box" id="174" structure="id:90"/>
+            <number name="NumParts" id="175" type="integer" length="4"/>
+            <number name="NumPoints" id="176" type="integer" length="4"/>
+            <number name="Parts" id="177" repeatmax="NumParts" type="integer" length="4"/>
+            <structref name="Points" id="178" repeatmax="NumPoints" structure="id:93"/>
+            <number name="Zmin" id="179" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Zmax" id="180" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Zarray" id="181" repeatmax="NumPoints" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Mmin" id="182" repeatmin="0" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Mmax" id="183" repeatmin="0" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Marray" id="184" repeatmin="0" repeatmax="NumPoints" type="float" length="8">
+                <description>Measure</description>
+            </number>
+        </structure>
+        <structure name="MultiPatchRecord" id="75" extends="id:80">
+            <number name="ShapeType" id="186" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="MultiPatch" value="31"/>
+                </fixedvalues>
+            </number>
+            <structref name="Box" id="187" structure="id:90"/>
+            <number name="NumParts" id="188" type="integer" length="4"/>
+            <number name="NumPoints" id="189" type="integer" length="4"/>
+            <number name="Parts" id="190" repeatmax="NumParts" type="integer" length="4"/>
+            <number name="PartTypes" id="191" repeatmax="NumParts" type="integer" length="4"/>
+            <structref name="Points" id="192" repeatmax="NumPoints" structure="id:93"/>
+            <number name="Zmin" id="193" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Zmax" id="194" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Zarray" id="195" repeatmax="NumPoints" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Mmin" id="196" repeatmin="0" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Mmax" id="197" repeatmin="0" type="float" length="8">
+                <description>Measure</description>
+            </number>
+            <number name="Marray" id="198" repeatmin="0" repeatmax="NumPoints" type="float" length="8">
+                <description>Measure</description>
+            </number>
+        </structure>
+        <structure name="Box" id="90" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Xmin" id="200" fillcolor="72FCD5" type="float" length="8"/>
+            <number name="Ymin" id="201" fillcolor="00FA92" type="float" length="8"/>
+            <number name="Xmax" id="202" fillcolor="7980FF" type="float" length="8"/>
+            <number name="Ymax" id="203" fillcolor="75D5FF" type="float" length="8"/>
+        </structure>
+        <structure name="Point" id="93" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Xmin" id="205" fillcolor="FFD478" type="float" length="8"/>
+            <number name="Ymin" id="206" fillcolor="FF9300" type="float" length="8"/>
+        </structure>
+    </grammar>
+</ufwb>

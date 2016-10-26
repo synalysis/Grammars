@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.0.4.25">
+    <grammar name="PMD Red" start="Pokémon Mystery Dungeon - Red Rescue Team" author="Kelvin Chung" fileextension="gba">
+        <description>Grammar for Pokémon Mystery Dungeon</description>
+        <structure name="Pokémon Mystery Dungeon - Red Rescue Team" id="328" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="US ROM Header" id="330" structure="id:329"/>
+            <structure name="&lt;new structure&gt;" id="331" length="992974"/>
+            <structref name="Starter Pokémon Data" id="334" structure="id:333"/>
+            <structure name="&lt;new structure-0.0.0.1&gt;" id="335" length="6818"/>
+            <structref name="Partner Pokémon Data" id="338" structure="id:337"/>
+            <structure name="&lt;new structure-0.0.1&gt;" id="339" length="3540"/>
+            <structref name="Attack Stages" id="342" structure="id:341"/>
+            <structref name="Defense Stages" id="343" structure="id:341"/>
+            <structref name="Accuracy Stages" id="344" structure="id:341"/>
+            <structref name="Evasion Stages" id="345" structure="id:341"/>
+            <structure name="&lt;new structure-0.1.1&gt;" id="346" length="89008"/>
+            <structref name="Type Names" id="349" structure="id:348"/>
+            <binary name="Type Name String Pool" id="350" length="144"/>
+            <structref name="Formatted Type Names" id="352" structure="id:351"/>
+            <binary name="Formatted Type Name String Pool" mustmatch="yes" id="353" length="228"/>
+            <structure name="&lt;new structure-0.1.2&gt;" id="354" length="1400"/>
+            <structref name="Ability Names" id="357" structure="id:356"/>
+            <binary name="Ability Name String Pool" id="358" length="908"/>
+            <structref name="Ability Descriptions" id="360" structure="id:359"/>
+            <binary name="Ability Description String Pool" id="361" length="4432"/>
+            <structref name="Range Types" id="363" structure="id:362"/>
+            <binary name="Range Type String Pool" id="364" length="544"/>
+            <structure name="&lt;new structure-0.2&gt;" id="365" length="44"/>
+            <structref name="Status Names" id="368" structure="id:367"/>
+            <binary name="Status Name String Pool" id="369" length="1448"/>
+            <structref name="Formatted Status Names" id="371" structure="id:370"/>
+            <binary name="Formatted Status String Pool" id="372" length="1476"/>
+            <structure name="&lt;new structure-0.2.1&gt;" id="373" length="804"/>
+            <structref name="Status Descriptions" id="376" structure="id:375"/>
+            <binary name="Status Description String Pool" id="377" length="13988"/>
+            <structref name="Dungeon Names" id="379" structure="id:378"/>
+            <binary name="Dungeon Name String Pool" id="380" length="1276"/>
+            <structref name="IQ Skill Names" id="382" structure="id:381"/>
+            <binary name="IQ Skill Name String Pool" id="383" length="376"/>
+            <structref name="IQ Skill Descriptions" id="385" structure="id:384"/>
+            <binary name="IQ Skill Description String Pool" id="386" length="1960"/>
+            <structref name="Tactic Names" id="388" structure="id:387"/>
+            <binary name="Tactic Name String Pool" id="389" length="184"/>
+            <structref name="Tactic Descriptions" id="391" structure="id:390"/>
+            <binary name="Tactic Description String Pool" id="392" length="852"/>
+            <structure name="&lt;new structure-0.3&gt;" id="393" length="2384"/>
+            <structref name="Friend Area Names" id="396" structure="id:395"/>
+            <binary name="Friend Area Name String Pool" id="397" length="888"/>
+            <structref name="Friend Area Descriptions" id="399" structure="id:398"/>
+            <binary name="Friend Area Description String Pool" id="400" length="6144"/>
+            <structure name="&lt;new structure-1&gt;" id="401" length="2035288">
+                <structure name="&lt;new structure&gt;-1" id="402" length="1430564"/>
+                <binary name="&lt;unused&gt;" id="404" strokecolor="919191" fillcolor="919191" length="578756"/>
+                <structure name="&lt;new structure&gt;" id="405" length="1304"/>
+                <structref name="Directory Data" id="408" repeatmin="431" repeatmax="431" structure="id:407"/>
+                <binary name="&lt;directory data string pool&gt;" id="409" length="3468"/>
+            </structure>
+            <structref name="Item Data SIRO Section" id="412" structure="id:411"/>
+            <structure name="&lt;new structure-2&gt;" id="413" length="296220"/>
+            <structref name="Pokémon Data SIRO Section" id="416" structure="id:415"/>
+            <structref name="Move Data SIRO Section" id="418" structure="id:417"/>
+            <binary name="&lt;unused&gt;" id="419" strokecolor="919191" fillcolor="919191" length="52416"/>
+            <structure name="&lt;new structure-3&gt;" id="420" length="142964"/>
+            <binary name="&lt;unused&gt;-1" id="422" strokecolor="919191" fillcolor="919191" length="53644"/>
+            <structure name="&lt;new structure-4&gt;" id="423" length="24"/>
+            <structure name="&lt;new structure-4.1&gt;" id="425">
+                <structref name="Directory Data" id="426" repeatmin="455" repeatmax="455" structure="id:407"/>
+                <binary name="&lt;directory name string pool&gt;" id="427" length="3700"/>
+            </structure>
+            <structure name="&lt;new structure-5&gt;" id="429" length="1153940"/>
+            <structure name="&lt;new structure-6&gt;" id="431" length="219560"/>
+            <binary name="&lt;unused&gt;-2" id="433" strokecolor="919191" fillcolor="919191" length="60928"/>
+            <structure name="&lt;new structure-7&gt;" id="434" length="24"/>
+            <structure name="&lt;new structure-8&gt;" id="436">
+                <structref name="Directory Data" id="437" repeatmin="497" repeatmax="497" structure="id:407"/>
+                <binary name="&lt;directory data string pool&gt;" id="438" length="3976"/>
+            </structure>
+            <structure name="&lt;new structure-9&gt;" id="440" length="18527492"/>
+        </structure>
+        <structure name="ROM Header" id="443" length="192" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="ARM B Jump Instruction" id="444" length="4"/>
+            <binary name="Nintendo Logo Data" id="445" length="156"/>
+            <string name="Game Title" mustmatch="yes" id="446" type="fixed-length" length="12" fixedval="POKE DUNGEON"/>
+            <string name="Game Code" id="447" type="fixed-length" length="4"/>
+            <binary name="Maker Code" id="448" length="2"/>
+            <binary name="&lt;fixed value&gt;" mustmatch="yes" id="449" length="1" fixedval="96"/>
+            <binary name="Main Unit Code" id="450" length="1"/>
+            <binary name="Device Type" id="451" length="1"/>
+            <binary name="&lt;reserved&gt;" id="452" length="7"/>
+            <number name="Mask ROM Version" id="453" type="integer" length="1"/>
+            <number name="Complement Check" id="454" type="integer" length="1"/>
+            <binary name="&lt;reserved-2&gt;" id="455" length="2"/>
+        </structure>
+        <structure name="US ROM Header" id="329" extends="id:443">
+            <string name="Game Code" mustmatch="yes" id="460" type="fixed-length" length="4" fixedval="B24E"/>
+        </structure>
+        <structure name="Euro ROM Header" id="470" extends="id:443">
+            <string name="Game Code" mustmatch="yes" id="474" type="fixed-length" length="4" fixedval="B24P"/>
+        </structure>
+        <structure name="Starter Pokémon Data" id="333" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Starter Pokémon Data Entry" id="485" repeatmin="13" repeatmax="13" structure="id:484"/>
+        </structure>
+        <structure name="Starter Pokémon Data Entry" id="484" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Male Starter" id="487" type="integer" length="2"/>
+            <number name="Female Starter" id="488" type="integer" length="2"/>
+        </structure>
+        <structure name="Partner Pokémon Data" id="337" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Partner Pokémon" id="490" repeatmin="10" repeatmax="10" type="integer" length="2"/>
+        </structure>
+        <structure name="Stat Stage Table" id="341" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="&lt;new number&gt;" id="492" repeatmin="21" repeatmax="21" type="integer" length="4"/>
+        </structure>
+        <structure name="Type Names" id="348" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Name" id="495" repeatmin="18" repeatmax="18" structure="id:494"/>
+        </structure>
+        <structure name="Formatted Type Names" id="351" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Formatted Name" id="497" repeatmin="18" repeatmax="18" structure="id:494"/>
+        </structure>
+        <structure name="Ability Names" id="356" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Name" id="499" repeatmin="77" repeatmax="77" structure="id:494"/>
+        </structure>
+        <structure name="Ability Descriptions" id="359" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Description" id="501" repeatmin="77" repeatmax="77" structure="id:494"/>
+        </structure>
+        <structure name="Range Types" id="362" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Range Type" id="503" repeatmin="49" repeatmax="49" structure="id:494"/>
+        </structure>
+        <structure name="Status Names" id="367" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Name" id="505" repeatmin="89" repeatmax="89" structure="id:494"/>
+        </structure>
+        <structure name="Formatted Status Names" id="370" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Name" id="507" repeatmin="89" repeatmax="89" structure="id:494"/>
+        </structure>
+        <structure name="Status Descriptions" id="375" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Status Description Entry" id="510" repeatmin="99" repeatmax="99" structure="id:509"/>
+        </structure>
+        <structure name="Status Description Entry" id="509" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Name" id="512" structure="id:494"/>
+            <structref name="Description" id="513" structure="id:494"/>
+        </structure>
+        <structure name="Dungeon Names" id="378" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Name" id="515" repeatmin="196" repeatmax="196" structure="id:494"/>
+        </structure>
+        <structure name="IQ Skill Names" id="381" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Name" id="517" repeatmin="24" repeatmax="24" structure="id:494"/>
+        </structure>
+        <structure name="IQ Skill Descriptions" id="384" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Description" id="519" repeatmin="24" repeatmax="24" structure="id:494"/>
+        </structure>
+        <structure name="Tactic Names" id="387" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Name" id="521" repeatmin="12" repeatmax="12" structure="id:494"/>
+        </structure>
+        <structure name="Tactic Descriptions" id="390" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Description" id="523" repeatmin="12" repeatmax="12" structure="id:494"/>
+        </structure>
+        <structure name="Friend Area Names" id="395" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Name" id="525" repeatmin="58" repeatmax="58" structure="id:494"/>
+        </structure>
+        <structure name="Friend Area Descriptions" id="398" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Description" id="527" repeatmin="58" repeatmax="58" structure="id:494"/>
+        </structure>
+        <structure name="Item Data SIRO Section" id="411" extends="id:529" endian="little">
+            <string name="&lt;header&gt;" id="530" type="fixed-length" length="4" fixedval="SIRO"/>
+            <offset name="Data Pointer" id="532" fillcolor="FF80FB" length="4" references="id:531" additional="-134217728" follownullreference="yes"/>
+            <binary name="&lt;new binary&gt;" id="533" length="8"/>
+            <binary name="Item Description String Pool" id="534" length="26280"/>
+            <structref name="Item Data" id="535" structure="id:531"/>
+            <binary name="Item Name String Pool" id="536" length="3140"/>
+        </structure>
+        <structure name="Item Data" id="531" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Item Data Entry" id="539" repeatmin="240" repeatmax="240" structure="id:538"/>
+        </structure>
+        <structure name="Item Data Entry" id="538" length="32" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Name" id="541" structure="id:494"/>
+            <structure name="&lt;new structure&gt;" id="542" length="12"/>
+            <structref name="Description" id="544" structure="id:494"/>
+        </structure>
+        <structure name="Pokémon Data SIRO Section" id="415" extends="id:529">
+            <string name="&lt;header&gt;" id="546" type="fixed-length" length="4" fixedval="SIRO"/>
+            <offset name="Data Pointer" id="548" length="4" references="id:547" additional="-134217728" follownullreference="yes"/>
+            <binary name="&lt;new binary&gt;" id="549" length="8"/>
+            <structref name="Pokémon Data" id="550" structure="id:547"/>
+            <binary name="Pokémon Data String Pool" id="551" length="6428"/>
+        </structure>
+        <structure name="Pokémon Data" id="547" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Pokémon Data Entry" id="554" repeatmin="424" repeatmax="424" structure="id:553"/>
+        </structure>
+        <structure name="Pokémon Data Entry" id="553" length="72" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Name" id="556" structure="id:494"/>
+            <structref name="Species" id="557" structure="id:494"/>
+            <structure name="&lt;new structure&gt;" id="558" length="1">
+                <binary name="&lt;new binary&gt;" id="559"/>
+            </structure>
+            <number name="Body Size" id="561" type="integer" length="1"/>
+            <structure name="&lt;new structure-1&gt;" id="562" length="9">
+                <binary name="&lt;new binary&gt;" id="563"/>
+            </structure>
+            <number name="Type" id="565" repeatmin="2" repeatmax="2" type="integer" length="1"/>
+            <number name="Mobility Type" mustmatch="yes" id="566" type="integer" length="1">
+                <fixedvalue name="Normal" value="0"/>
+                <fixedvalue name="Magma" value="4"/>
+                <fixedvalue name="Water" value="5"/>
+                <fixedvalue name="Floating" value="2"/>
+                <fixedvalue name="Ghost" value="3"/>
+            </number>
+            <number name="Friend Area" id="567" type="integer" length="1"/>
+            <number name="Ability" id="568" repeatmin="2" repeatmax="2" type="integer" length="1"/>
+            <structure name="&lt;new structure-3&gt;" id="569" length="5">
+                <binary name="&lt;new binary&gt;" id="570"/>
+            </structure>
+            <number name="Base HP" id="572" type="integer" length="2"/>
+            <number name="Base Experience" id="573" type="integer" length="2"/>
+            <structure name="&lt;new structure-4&gt;" id="574" length="2">
+                <binary name="&lt;new binary&gt;" id="575"/>
+            </structure>
+            <number name="Base Attack" id="577" type="integer" length="2"/>
+            <number name="Base Sp. Attack" id="578" type="integer" length="2"/>
+            <number name="Base Defense" id="579" type="integer" length="2"/>
+            <number name="Base Sp. Defense" id="580" type="integer" length="2"/>
+            <number name="Low Kick Tier" id="581" type="integer" length="2"/>
+            <number name="Sizebust Orb" id="582" type="integer" length="1"/>
+            <structure name="&lt;new structure-5&gt;" id="583" length="17">
+                <binary name="&lt;new binary&gt;" id="584"/>
+            </structure>
+            <number name="Recruit Rate" id="586" type="integer" length="2" signed="yes"/>
+        </structure>
+        <structure name="Move Data SIRO Section" id="417" extends="id:529">
+            <string name="&lt;header&gt;" id="588" type="fixed-length" length="4" fixedval="SIRO"/>
+            <offset name="Data Pointer" id="590" fillcolor="FF80FB" length="4" references="id:589" additional="-134217728" follownullreference="yes"/>
+            <binary name="&lt;new binary-1&gt;" id="591" length="10"/>
+            <binary name="Moves Learned Data Pool" id="592" length="28054"/>
+            <binary name="&lt;new binary-2&gt;" id="593" length="4"/>
+            <structref name="Move Data" id="595" structure="id:594"/>
+            <binary name="Move Data String Pool" id="596" length="29252"/>
+            <structref name="Moves Learned Data" id="598" structure="id:597"/>
+            <structref name="Move Data SIRO Section Data" id="599" structure="id:589"/>
+        </structure>
+        <structure name="Move Data SIRO Section Data" id="589" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <offset name="Move Data" id="601" fillcolor="FF80FB" length="4" references="id:594" additional="-134217728" follownullreference="yes"/>
+            <offset name="Moves Learned Data" id="602" fillcolor="FF80FB" length="4" references="id:597" additional="-134217728" follownullreference="yes"/>
+        </structure>
+        <structure name="Move Data" id="594" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Move Data Entry" id="605" repeatmin="413" repeatmax="413" structure="id:604"/>
+        </structure>
+        <structure name="Move Data Entry" id="604" length="36" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Name" id="607" structure="id:494"/>
+            <number name="Base Power" id="608" type="integer" length="2"/>
+            <number name="Type" id="609" type="integer" length="2"/>
+            <structure name="&lt;new structure&gt;" id="610" length="20">
+                <structure name="&lt;new structure&gt;" id="611" length="4"/>
+                <number name="PP" id="613" type="integer" length="1"/>
+                <number name="&lt;new number&gt;" id="614" type="integer" length="1"/>
+                <number name="&lt;new number-1&gt;" id="615" type="integer" length="1"/>
+                <number name="Accuracy" id="616" type="integer" length="1"/>
+                <structure name="&lt;new structure-1&gt;" id="617" length="3"/>
+                <number name="Critical" id="619" type="integer" length="1"/>
+            </structure>
+            <structref name="Description" id="621" structure="id:494"/>
+            <structref name="Usage String" id="622" structure="id:494"/>
+        </structure>
+        <structure name="Moves Learned Data" id="597" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Moves Learned Data Entry" id="625" repeatmin="424" repeatmax="424" structure="id:624"/>
+        </structure>
+        <structure name="Moves Learned Data Entry" id="624" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Level-Up Pointer" id="627" fillcolor="FF86D5" type="integer" length="4" display="hex"/>
+            <number name="TMs/HMs Pointer" id="628" fillcolor="FF86D5" type="integer" length="4" display="hex"/>
+        </structure>
+        <structure name="Null String" id="630" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="String" id="631" strokecolor="FDD480" fillcolor="FCFD84" type="zero-terminated"/>
+        </structure>
+        <structure name="Null String Pointer" id="494" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <offset name="Null String" id="633" fillcolor="FF80FB" length="4" references="id:630" additional="-134217728" follownullreference="yes"/>
+        </structure>
+        <structure name="Directory Data" id="407" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Name" id="635" structure="id:494"/>
+            <offset name="SIRO Section" id="636" fillcolor="FF80FB" length="4" references="id:529" additional="-134217728" follownullreference="yes"/>
+        </structure>
+        <structure name="SIRO Section" id="529" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="&lt;header&gt;" mustmatch="yes" id="638" strokecolor="FCFD84" fillcolor="919191" type="fixed-length" length="4" fixedval="SIRO"/>
+            <number name="Data Pointer" id="639" fillcolor="FF86D5" type="integer" length="4" display="hex"/>
+        </structure>
+    </grammar>
+</ufwb>

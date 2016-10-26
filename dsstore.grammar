@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9">
+    <grammar name="DS_Store" start="id:374" author="Andreas Pehnack" email="andreas@synalysis.com" fileextension="">
+        <description>Grammar for .DS_Store files</description>
+        <structure name="File" id="374" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Header" id="376" length="36">
+                <binary name="Magic1" id="378" unused="yes" length="4"/>
+                <string name="Magic2" id="379" type="fixed-length" length="4" encoding="ISO_8859-1:1987"/>
+                <offset name="InfoBlockOffset" id="382" length="4" references="id:380" referenced-size="id:383" follownullreference="yes"/>
+                <number name="InfoBlockLength" id="383" type="integer" length="4"/>
+                <number name="OffsetCopy" id="384" type="integer" length="4" display="hex"/>
+                <number name="BlockCount" id="385" type="integer" length="4"/>
+            </structure>
+        </structure>
+        <structure name="InfoBlock" id="380" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+    </grammar>
+</ufwb>

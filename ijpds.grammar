@@ -1,0 +1,872 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.7">
+    <grammar name="Inkjet Printer Data Stream" start="id:3" author="Andreas Pehnack" fileextension="ijpds,ijp">
+        <description>Grammar for the Kodak Inkjet Printer Data Stream</description>
+        <structure name="Defaults" id="4" encoding="IBM500" endian="big" signed="no">
+            <description>
+                Defines the default values.
+            </description>
+        </structure>
+        <structure name="Record" id="6" length="RecordLength" extends="id:4" strokecolor="FF0000" fillcolor="FFFF00">
+            <number name="RecordLength" id="7" strokecolor="FFFFFF" fillcolor="FF00FF" type="integer" length="2"/>
+            <number name="Cyclic Record Count" id="8" type="integer" length="1"/>
+            <number name="Control Code" mustmatch="yes" id="9" type="integer" length="1"/>
+        </structure>
+        <structure name="BOX" id="11" extends="id:6">
+            <description>
+                The BOX record defines the size of an area that is to be filled with a black or white fill pattern. The fill pattern is placed in the page bitmap using the current logical function as defined by a previous SLF record or by the default function (OR).
+                After this record, the cursor position is at the current X position and the current Y position plus the height of the box. The height and width of the box are in the upright orientation.
+                Some KODAK VERSAMARK printers support clipping of the image created by a BOX record. Clipping means that if part of the box falls outside the buffer, the part that is in the buffer is printed and the cursor is moved. The cursor is moved as if the entire image was printed, even though it may fall outside the buffer. See Appendix C to determine if your printer supports clipping for the BOX record.
+                If clipping is not supported and part of the box falls outside the buffer, none of the box is printed and the cursor is not moved.
+                In both cases (clipping supported and clipping not supported), a message is generated only if the image falls outside the limits set by the RCR record (or the default range if no RCR). Refer to the RCR record description.
+            </description>
+            <number name="RecordLength" id="12" type="integer"/>
+            <number name="Control Code" id="14" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="39"/>
+                </fixedvalues>
+            </number>
+            <number name="Height" id="15" type="integer" length="2">
+                <description>
+                    An unsigned binary value representing the height of the box in dots. The range depends on the printer and the PLR record. The height is measured down the length of the page in the Y direction when looking at the substrate in the direction it is moving. For example, hex 00 37 specifies a box height of 55 dots.
+                </description>
+            </number>
+            <number name="Width" id="16" type="integer" length="2">
+                <description>
+                    An unsigned binary value representing the width of the box in dots. The range is printer and printhead dependent. For example, the range is 1-4096 for systems using four stitched 4-inch printheads and 1-1024 for systems with one 4-inch printhead. The width is measured across the width of the page in the X direction when looking at the substrate in the direction it is moving. For example, hex 06 A1 specifies a width of 1697 dots.
+                </description>
+            </number>
+            <number name="Fill Pattern" id="17" type="integer" length="1">
+                <description>
+                    A binary value that specifies the fill pattern. Hex 00 = white and hex 01 = black.
+                </description>
+            </number>
+        </structure>
+        <structure name="CBM" id="19" extends="id:6">
+            <description>
+                The CBM record, which is interchangeable with the Image Bitmap (IBM) record, contains a compressed bitmap that is to be printed at the current cursor position according to the current logical function set by the last SLF record. The bitmap is placed on the page in the upright orientation.
+                After this record, the cursor position is at the current X position and the current Y position plus the height of the bitmap.
+            </description>
+            <number name="RecordLength" id="20" type="integer"/>
+            <number name="Control Code" id="22" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="62"/>
+                </fixedvalues>
+            </number>
+            <number name="Height" id="23" type="integer" length="2">
+                <description>
+                    An unsigned binary value representing the height of the bitmap in dots. The range is printer dependent and also dependent upon the blocking of input data. The height is measured down the length of the page in the Y direction when looking at the substrate in the direction it is moving. For example, hex 00 37 specifies a bitmap height of 55 dots.
+                </description>
+            </number>
+            <number name="Width" id="24" type="integer" length="2">
+                <description>
+                    An unsigned binary value representing the width of the bitmap in dots. The range is printer dependent. For example, the range is 1-4096 for systems using four stitched 4-inch printheads and 1-1024 for systems with one 4-inch printhead. The width is measured across the width of the page in the X direction when looking at the substrate in the direction it is moving. For example, hex 06 A1 specifies a width of 1697 dots.
+                </description>
+            </number>
+            <number name="Reserved" id="25" type="integer" length="2">
+                <description>
+                    This field is not used and must contain all binary zeroes.
+                </description>
+            </number>
+            <number name="Compression Type" id="26" type="integer" length="2">
+                <description>
+                    Specifies the compression algorithm used to compress the bitmapped character data. Undefined or unsupported compression types will cause the imager to display an error message and stop printing.
+                </description>
+                <fixedvalues>
+                    <fixedvalue value="0">
+                        <description>
+                        Reserved
+                    </description>
+                    </fixedvalue>
+                    <fixedvalue name="RLEV32" value="1">
+                        <description>
+                        32-bit Vertical Run Length Encoding (RLEV32)
+                    </description>
+                    </fixedvalue>
+                </fixedvalues>
+            </number>
+            <binary name="Compression Parameter" id="27" length="4">
+                <description>
+                    The meaning of these bytes depends on the compression type specified in bytes 10-11.
+                </description>
+            </binary>
+            <binary name="Bitmap" id="28" length="remaining">
+                <description>
+                    The bitmap is always imaged upright into the frame buffer at the current position and according to the current logical function. The cursor position following this command will be left at the current X position and at the current Y position plus the height of the bitmap.
+                    Should the compressed bitmap contain more or less uncompressed data than what is specified by the Height and Width fields, the imager will display an error message and imaging will stop.
+                    The compressed bitmap begins at byte position 17 and is arranged in horizontal raster format compressed using the compression method specified in byte positions 11 and 12. Each row of the raster must be padded to the right with binary zeroes (before compression) to make an integral number of 32-bit segments. The width of the bitmap (byte positions 7 and 8) does not have to be a multiple of 32 bits but the bitmap raster row length does.
+                </description>
+            </binary>
+        </structure>
+        <structure name="Character Definition" id="30" extends="id:6">
+            <number name="RecordLength" id="31" type="integer"/>
+            <number name="Character Identifier" id="34" type="integer" length="2">
+                <description>
+                    A binary code that identifies the character defined in this record. This is the code that must be used in the input data to access this character for printing. The range is 0 to 255 for single byte fonts or 0 to 65535 for double-byte fonts.
+                </description>
+            </number>
+            <number name="Options" id="35" type="integer" length="1">
+                <description>
+                    The bits in position 6 define options available for this character.
+                </description>
+                <mask name="Default character bit" value="0x80">
+                    <description>
+                        Defines if this character is the font's default character.
+                    </description>
+                    <fixedvalue name="Not Default Character" value="0x0">
+                        <description>
+                            This character is not defined as this font's default character.
+                        </description>
+                    </fixedvalue>
+                    <fixedvalue name="Default Character" value="0x80">
+                        <description>
+                            This character is defined as this font's default character. If a default character is defined, it must be the first character defined in the font, or unexpected results may occur. The default character becomes the character used for all undefined characters, including character 00.
+                        </description>
+                    </fixedvalue>
+                </mask>
+                <mask name="Continuation bit" value="0x40">
+                    <description>
+                        Defines if the pattern for this character is continued in the next CCD record.
+                    </description>
+                    <fixedvalue name="No Continuation" value="0x0">
+                        <description>
+                            The pattern for this character is not continued in the next CCD record.
+                        </description>
+                    </fixedvalue>
+                    <fixedvalue name="Continuation" value="0x40">
+                        <description>
+                            The pattern for this character is continued in the next CCD record. The continuation record looks identical to the previous record except that the pattern is different and the continuation bit is off unless the pattern is continued to the next CCD record.
+                        </description>
+                    </fixedvalue>
+                </mask>
+            </number>
+            <number name="Reserved" id="36" type="integer" length="1">
+                <description>
+                    This field is unused and must contain all binary zeros.
+                </description>
+            </number>
+            <number name="Width" id="37" type="integer" length="2">
+                <description>
+                    A binary number representing the width of the uncompressed character data to be combined into the RIP frame buffer. The range is 0 to 65535, although the practical size is limited by the page size and font memory limitations of the data station.
+                </description>
+            </number>
+            <number name="Height" id="38" type="integer" length="2">
+                <description>
+                    A binary number representing the height of the uncompressed character data to be combined into the RIP frame buffer. The range is 0 to 65535, although the practical size is limited by the page size and font memory limitations of the data station.
+                    Each character may have a different height and width, eliminating the need to supply data to position the character inside the character cell. If the CCD has a width or height of zero, a blank character is defined. No data is combined into the frame buffer of the RIP for characters with a width and/or height of zero.
+                </description>
+            </number>
+            <number name="X Offset" id="39" type="integer" length="4" signed="yes">
+                <description>
+                    A signed binary number that defines the number of dots to the left side of the bounding box of the character from the X position of the current cursor. The X offset moves relative to the fontÃ¢ÂÂs orientation. The range is -2,147,483,647 to 2,147,483,647, although useful values are limited by the page size of the RIP or Super RIP.
+                </description>
+            </number>
+            <number name="Y Offset" id="40" type="integer" length="4" signed="yes">
+                <description>
+                    A signed binary number that defines the number of dots to the top side of the bounding box of the character from the Y position of the current cursor. The Y offset moves relative to the fontÃ¢ÂÂs orientation. The range is -2,147,483,647 to 2,147,483,647, although useful values are limited by the page size of the RIP or Super RIP.
+                </description>
+            </number>
+            <number name="X Escapement" id="41" type="integer" length="4">
+                <description>
+                    A signed binary number that defines the direction and distance to the left side of the next character cell from the X position of the current character. The X escapement moves relative to the fontÃ¢ÂÂs orientation. The range is -2,147,483,647 to 2,147,483,647, although useful values are limited by the page size of the RIP or Super RIP.
+                </description>
+            </number>
+            <number name="Y Escapement" id="42" type="integer" length="4">
+                <description>
+                    A signed binary number that defines the direction and distance to the starting position of the next character cell from the Y position of the current character. The Y escapement moves relative to the fontÃ¢ÂÂs orientation. The range is -2,147,483,647 to 2,147,483,647, although useful values are limited by the page size of the RIP or Super RIP.
+                </description>
+            </number>
+        </structure>
+        <structure name="CCD" id="44" extends="id:30">
+            <description>
+                CCD records, which are interchangeable with Character Definition with Metrics (CDM) records, follow an SFM or FDM record and define each character in the font. The CCDs contain the bitmap patterns for the characters. Up to 256 characters can be defined for each FDM and up to 65,536 characters for an SFM.
+                Usually, there is one CCD for each character. However, in some fonts, a continuation CCD is used to divide a character bitmap into two or more records if it is necessary to limit the size of the records (because of block length restrictions or other reasons). The character bitmap can be broken only at the end of a row. When continuation CCDs are used, all fields up to the bitmap pattern field must be the same in each CCD for the character except for the continuation bit in the last CCD.
+                When an SFM or FDM is received, the printer defines null and default characters in the following manner. When an SFM or FDM is first processed by the printer, all characters in the font are set as null characters. If the first CCD received has the default bit set, then the character in this record is used as the default character. The default character is used for all undefined characters in the font, including character 00. Subsequent CCDs then redefine the characters for their respective character identifiers. If the first CCD does not have the default character bit set, then all characters remain null until redefined by subsequent CCDs.
+                A null character has zero width and height, zero X and Y escapement, and takes no space when printed.
+
+                Characters that cannot be compressed into a single CCD record must be continued in one or more additional consecutive CCD records. The compressed data must be divided among the continued records so that the smallest unit of data is not divided between two CCD records. For example, a CCD record compressed with RLEV32 must contain an integral number of 32-bit words in the data pattern and a Ã¢ÂÂrunÃ¢ÂÂ cannot be divided between multiple CCDs.
+                Should the character definition (including any continuation) contain more or less uncompressed data than what is specified by the Height and Width fields, the imager will display an error message and the font download will stop. A character definition must be completed for a given logical input RIP before any other character definitions are started.
+            </description>
+            <number name="Control Code" id="47" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="61"/>
+                </fixedvalues>
+            </number>
+            <number name="Reserved2" id="57" type="integer" length="2">
+                <description>
+                    This field is unused and must contain all binary zeros.
+                </description>
+            </number>
+            <number name="Compression Type" id="58" type="integer" length="2">
+                <description>
+                    Specifies the compression algorithm used to compress the bitmapped character data. Undefined or unsupported compression types will cause an error message to be displayed and the font download will stop.
+                </description>
+                <fixedvalues>
+                    <fixedvalue value="0">
+                        <description>
+                        Reserved
+                    </description>
+                    </fixedvalue>
+                    <fixedvalue value="1">
+                        <description>
+                        32-bit Vertical Run Length Encoding (RLEV32)
+                    </description>
+                    </fixedvalue>
+                </fixedvalues>
+            </number>
+            <number name="Compression Parameter" id="59" type="integer" length="4" display="hex">
+                <description>
+                    The meaning of these bytes depends on the compression type specified in bytes 30-31.
+                </description>
+            </number>
+            <binary name="Compressed Character Pattern" id="60" length="remaining">
+                <description>
+                    Only the upright orientation is supported. Use of rotated characters in this record will produce incorrect results.
+                    The character pattern data for upright characters is stored compressed and then decompressed when imaged. During imaging, the high order bit of the first decompressed byte/word controls the dot in the top left corner of the character bounding box, and subsequent bits in the same decompressed byte/word control adjacent dots in left to right order.
+                    The compressed character pattern begins at byte position 37 and is arranged in horizontal raster format compressed using the compression method specified in byte positions 31 and 32. Each row of the raster must be padded to the right with binary zeroes (before compression) to make an integral number of 32-bit segments. The width of the uncompressed character data (byte positions 9 and 10) does not have to be a multiple of 32 bits but the raster row length does.
+                </description>
+            </binary>
+        </structure>
+        <structure name="CDM" id="62" extends="id:30">
+            <description>
+                CDM records, which are interchangeable with CCD records, follow an SFM or FDM record and define each character in the font. The CDMs contain the bitmap patterns for the characters. Up to 256 characters can be defined for each FDM and up to 65,536 characters for an SFM.
+                Usually, there is one CDM for each character. However, in some fonts, a continuation CDM is used to divide a character bitmap into two or more records if it is necessary to limit the size of the records (because of block length restrictions or other reasons). The character bitmap can be broken only at the end of a row. When continuation CDMs are used, all fields up to the bitmap pattern field must be the same in each CDM for the character except for the continuation bit in the last CDM.
+                When an SFM or FDM is received, the printer defines null and default characters in the following manner. When an SFM or FDM is first processed by the printer, all characters in the font are set as null characters. If the first CDM received has the default bit set, then the character in this record is used as the default character. The default character is used for all undefined characters in the font, including character 00. Subsequent CDMs then redefine the characters for their respective character identifiers. If the first CDM does not have the default character bit set, then all characters remain null until redefined by subsequent CDMs.
+                A null character has zero width and height, zero X and Y escapement, and takes no space when printed.
+            </description>
+            <number name="Control Code" id="65" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="48"/>
+                </fixedvalues>
+            </number>
+            <number name="X Escapement" id="73" type="integer" signed="yes">
+                <description>
+                    A signed binary number that defines the direction and distance to the left side of the next character cell from the X position of the current character. The X escapement moves relative to the fontÃ¢ÂÂs orientation. The range is -2,147,483,647 to 2,147,483,647, although useful values are limited by the page size of the RIP or Super RIP.
+                </description>
+            </number>
+            <number name="Y Escapement" id="74" type="integer" signed="yes">
+                <description>
+                    A signed binary number that defines the direction and distance to the starting position of the next character cell from the Y position of the current character. The Y escapement moves relative to the fontÃ¢ÂÂs orientation. The range is -2,147,483,647 to 2,147,483,647, although useful values are limited by the page size of the RIP or Super RIP.
+                </description>
+            </number>
+            <binary name="Bitmap Pattern" id="75" length="remaining">
+                <description>
+                    This field contains the bitmap pattern for the character defined by this CDM. Each row of the pattern contains an integral number of 16-bit segments. The number of rows is determined by the height field (bytes 11-12). The number of 16-bit segments per row is determined by the width field (bytes 9-10). For example, if the height is 21 and the width is 28, this field must contain 21 rows consisting of two 16-bit segments each (42 16-bit segments or 84 bytes).
+                    The high-order bit in this field (bit hex 80 in byte position 29) controls the dot in the top left corner of the character bounding box. Subsequent bits in the same segment control dots in a left-to- right order in the first row of the character. The first dot in the second row of the character is controlled by the high-order bit of the nth 16-bit segment, where n is the number of segments per row plus one.
+                    Each row must be padded to the right with binary zeroes.
+                    If the character pattern will not fit in a block, a continuation CDM must be used. An integral number of rows must be used in each CDM record.
+                </description>
+            </binary>
+        </structure>
+        <structure name="CDR" id="77" extends="id:6">
+            <description>
+                CDR records follow the FDR record and define each character in the font. The CDRs contain the bitmap patterns for the characters. Up to 256 characters can be defined for each FDR. Usually, there is one CDR for each character. However, in some fonts, a continuation CDR is used to divide a character bitmap into two or more records if it is necessary to limit the size of the records (because of block length restrictions or other reasons). The character bitmap can be broken only at the end of a row. When continuation CDRs are used, all fields up to the bitmap pattern field must be the same in each CDR for the character except for the continuation bit in the last CDR.
+                As an option, a single CDR may immediately follow an SFD to define the default character for any undefined character in the super font.
+                When an FDR is received, the printer defines null and default characters in the following manner. When an FDR is first processed by the printer, all 256 characters in the font are set as null characters. If the first CDR received has a hex 00 in the Character Identifier field, then the character in this record is used as the default character for character identifiers hex 01 through FF (character 00 remains a null character). Subsequent CDRs then redefine the characters for their respective character identifiers. Character 00 can be redefined from the null character in this manner. If the first CDR does not have a hex 00 in the Character Identifier field, then all characters remain null until redefined by subsequent CDRs.
+                A null character has zero width, and takes no space when printed.
+            </description>
+            <number name="RecordLength" id="78" type="integer"/>
+            <number name="Control Code" id="80" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="20"/>
+                </fixedvalues>
+            </number>
+            <number name="Character Identifier" id="81" type="integer" length="1">
+                <description>
+                    A binary code that identifies the character defined in this record. This is the code that must be used in the input data to access this character for printing. The range is 0 - 255.
+                </description>
+            </number>
+            <number name="Equivalent Character Identifier" id="82" type="integer" length="1">
+                <description>
+                    A binary code that identifies a character in the font that has a bitmap pattern identical to this character. If 2 characters are the same, it is not necessary to repeat the bitmap pattern. The &quot;Equivalent&quot; bit in byte position 8 must be set for this field to be in effect.
+                    If the equivalent bit is set, the character defined in this field is part of the font currently being defined unless another font is identified in byte 9 or in bytes 9 and 10. If byte 9 identifies a regular font, then byte 10 (if present) is ignored. If byte 9 identifies a super font, then byte 10 must be present and identifies the subfont. In any case, the character must have been previously loaded in the same RIP.
+                </description>
+            </number>
+            <number name="Segment Count" id="83" type="integer" length="1">
+                <description>
+                    A binary number that specifies the number of 16-bit segments required to define one horizontal row of the character bitmap. The final segment does not have to be completely used. The &quot;Final segment width&quot; bits in position 8 define how many bits in the final segment are used. All binary zeroes (hex 00) in position 7 indicate a null character with zero width.
+                </description>
+            </number>
+            <number name="Options" id="84" type="integer" length="1">
+                <description>
+                    The bits in position 8 define options available for this character. Bit 0 is the high order bit (hex 80) and bit 7 is the low order bit (hex 01). Bit assignments are as follows.
+                </description>
+            </number>
+            <binary name="Bitmap Pattern" id="85" length="remaining">
+                <description>
+                    The bitmap pattern for the character defined by this CDR. The pattern data consists of m rows, each containing s 16-bit segments, where m is the font height (row count) defined in bytes 5-6 of the FDR, and s is the segment count defined in byte 7 of the CDR.
+                    Each row must be padded to the right with binary zeroes.
+                    If the equivalent bit in byte position 8 is set, this field can contain font or super font identifiers. Refer to the description for the Equivalent Character Identifier field (byte position 6).
+                    If the character pattern will not fit in a block, a continuation CDR must be used. An integral number of rows must be used in each CDR record.
+                </description>
+            </binary>
+        </structure>
+        <structure name="CSR" id="87" extends="id:6">
+            <description>
+                The CSR record restores the cursor position to the last position stored by a CSS record for the specified number. The restore number in this record references the save number in the CSS record.
+                If a cursor position was not stored for the number specified in the CSR record, the cursor is set to the default position (0,0).
+                The CSR record does not reset the saved cursor position it restores. Successive CSR records for the same position number, without an intermediate CSS record, set the cursor to the same saved position.
+            </description>
+            <number name="RecordLength" id="88" type="integer"/>
+            <number name="Control Code" id="90" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="55"/>
+                </fixedvalues>
+            </number>
+            <number name="Restore Number" id="91" type="integer" length="1">
+                <description>
+                    A binary number that identifies the saved cursor position. The range is 0-15, allowing 15 cursor positions to be restored. Restore number 0 always sets the cursor position to 0,0.
+                </description>
+            </number>
+        </structure>
+        <structure name="CSS" id="93" extends="id:6">
+            <number name="RecordLength" id="94" type="integer"/>
+            <number name="Control Code" id="96" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="54"/>
+                </fixedvalues>
+            </number>
+            <number name="Save Number" id="97" type="integer" length="1"/>
+        </structure>
+        <structure name="EFF" id="99" extends="id:6">
+            <number name="RecordLength" id="100" type="integer"/>
+            <number name="Control Code" id="102" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="2"/>
+                </fixedvalues>
+            </number>
+            <number name="Maximum Line Width" id="103" type="integer" length="2"/>
+        </structure>
+        <structure name="EOJ" id="105" extends="id:6">
+            <number name="RecordLength" id="106" type="integer"/>
+            <number name="Control Code" id="108" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="9"/>
+                </fixedvalues>
+            </number>
+            <string name="Message" id="109" type="zero-terminated"/>
+        </structure>
+        <structure name="FAR" id="111" extends="id:6">
+            <number name="RecordLength" id="112" type="integer"/>
+            <number name="Control Code" id="114" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="37"/>
+                </fixedvalues>
+            </number>
+            <number name="Number of Fonts" id="115" type="integer" length="2"/>
+            <number name="Default Font" id="116" type="integer" length="2"/>
+            <structure name="Font Assignment" id="117" repeatmax="unlimited">
+                <number name="Font Number" id="118" type="integer" length="2"/>
+                <string name="Font Name" id="119" type="fixed-length" length="8"/>
+            </structure>
+        </structure>
+        <structure name="FDR" id="122" extends="id:6">
+            <number name="RecordLength" id="123" type="integer"/>
+            <number name="Control Code" id="125" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="19"/>
+                </fixedvalues>
+            </number>
+            <number name="Row Count" id="126" type="integer" length="2"/>
+            <number name="Reserved" id="127" type="integer" length="1"/>
+            <number name="Interline Spacing (ILS)" id="128" type="integer" length="1"/>
+            <number name="Font Rotation" id="129" type="integer" length="1"/>
+            <number name="Font Number" id="130" type="integer" length="1"/>
+            <string name="Font Name" id="131" type="fixed-length" length="8"/>
+        </structure>
+        <structure name="FDM" id="133" extends="id:6">
+            <number name="RecordLength" id="134" type="integer"/>
+            <number name="Control Code" id="136" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="46"/>
+                </fixedvalues>
+            </number>
+            <number name="X Escapement" id="137" type="integer" length="4"/>
+            <number name="Y Escapement" id="138" type="integer" length="4"/>
+            <number name="Font Rotation" id="139" type="integer" length="1"/>
+            <number name="Font Number" id="140" type="integer" length="1"/>
+            <string name="Font Name" id="141" type="fixed-length" length="8"/>
+        </structure>
+        <structure name="GFF" id="143" extends="id:6">
+            <number name="RecordLength" id="144" type="integer"/>
+            <number name="Control Code" id="146" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="15"/>
+                </fixedvalues>
+            </number>
+            <number name="Record Displacement" id="147" type="integer" length="1"/>
+            <number name="Records Executed" id="148" type="integer" length="1"/>
+        </structure>
+        <structure name="IBM" id="150" extends="id:6">
+            <number name="RecordLength" id="151" type="integer"/>
+            <number name="Control Code" id="153" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="41"/>
+                </fixedvalues>
+            </number>
+            <number name="Height" id="154" type="integer" length="2"/>
+            <number name="Width" id="155" type="integer" length="2"/>
+            <number name="Reserved" id="156" type="integer" length="2"/>
+            <binary name="Bitmap" id="157" length="remaining"/>
+        </structure>
+        <structure name="IML" id="159" extends="id:6">
+            <number name="RecordLength" id="160" type="integer"/>
+            <number name="Control Code" id="162" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="12"/>
+                </fixedvalues>
+            </number>
+            <binary name="Print Line" id="163" length="remaining"/>
+        </structure>
+        <structure name="JC2" id="165" extends="id:6">
+            <number name="RecordLength" id="166" type="integer"/>
+            <number name="Control Code" id="168" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="36"/>
+                </fixedvalues>
+            </number>
+            <number name="Reserved" id="169" type="integer" length="2"/>
+            <number name="Even" id="170" type="integer" length="1" display="hex"/>
+            <binary name="Reserved-1" id="171" length="8"/>
+            <number name="RIP Configuration" id="172" type="integer" length="2" display="hex"/>
+            <binary name="Reserved2" id="173" length="10"/>
+            <number name="Stitched RIP Indicator" id="174" type="integer" length="1" display="hex"/>
+            <structure name="RIPs" id="175">
+                <number name="Stitched" id="176" repeatmin="16" repeatmax="16" type="integer" length="4" display="hex"/>
+            </structure>
+            <binary name="Reserved3" id="178" length="51"/>
+            <binary name="Security Code" id="179" length="8"/>
+            <string name="Job Information" id="180" type="fixed-length" length="23"/>
+            <string name="Data Prep Date" id="181" type="fixed-length" length="14"/>
+            <string name="Data Prep Time" id="182" type="fixed-length" length="14"/>
+            <binary name="Reserved4" id="183" length="2"/>
+            <string name="Job Identifier" id="184" type="fixed-length" length="8"/>
+        </structure>
+        <structure name="JCR" id="186" extends="id:6">
+            <number name="RecordLength" id="187" type="integer"/>
+            <number name="Control Code" id="189" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="0"/>
+                </fixedvalues>
+            </number>
+            <number name="Printhead Description" id="190" type="integer" length="1"/>
+            <number name="Print Resolution" id="191" type="integer" length="1"/>
+            <binary name="Reserved" id="192" length="7"/>
+            <number name="Default Font" id="193" type="integer" length="1"/>
+            <binary name="Reserved-1" id="194" length="3"/>
+            <number name="Print Density" id="195" type="integer" length="1"/>
+            <string name="Font Names" id="196" type="fixed-length" length="128"/>
+            <binary name="Security Code" id="197" length="4"/>
+            <string name="Job Information" id="198" type="fixed-length" length="23"/>
+            <string name="Data Prep Date" id="199" type="fixed-length" length="14"/>
+            <string name="Data Prep Time" id="200" type="fixed-length" length="14"/>
+            <binary name="Reserved4" id="201" length="2"/>
+            <string name="Job Identifier" id="202" type="fixed-length" length="8"/>
+        </structure>
+        <structure name="LFF" id="204" extends="id:6">
+            <number name="RecordLength" id="205" type="integer"/>
+            <number name="Control Code" id="207" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="File Number" id="208" type="integer" length="2"/>
+        </structure>
+        <structure name="MPL" id="210" extends="id:6">
+            <number name="RecordLength" id="211" type="integer"/>
+            <number name="Control Code" id="213" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="53"/>
+                </fixedvalues>
+            </number>
+            <number name="Mode" id="214" type="integer" length="1"/>
+        </structure>
+        <structure name="MSG" id="216" extends="id:6">
+            <number name="RecordLength" id="217" type="integer"/>
+            <number name="Control Code" id="219" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="10"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="NOP" id="221" extends="id:6">
+            <number name="RecordLength" id="222" type="integer"/>
+            <number name="Control Code" id="224" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="34"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="RIP" id="226" extends="id:6">
+            <number name="RecordLength" id="227" type="integer"/>
+            <number name="Control Code" id="229" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="35"/>
+                </fixedvalues>
+            </number>
+            <number name="RIP Number" id="230" type="integer" length="1" display="hex"/>
+        </structure>
+        <structure name="PHR" id="232" extends="id:6">
+            <number name="RecordLength" id="233" type="integer"/>
+            <number name="Control Code" id="235" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="38"/>
+                </fixedvalues>
+            </number>
+            <number name="Print Resolution - X Direction" id="236" type="integer" length="2"/>
+            <number name="Print Resolution - Y Direction" id="237" type="integer" length="2"/>
+            <number name="Number of Printheads" id="238" type="integer" length="2"/>
+            <structure name="Printhead Information" id="239" repeatmax="unlimited">
+                <number name="Number of Jets" id="240" type="integer" length="2"/>
+                <number name="Number of Drops" id="241" type="integer" length="2"/>
+                <number name="Relative Printhead Position" id="242" type="integer" length="2"/>
+                <binary name="Reserved" id="243" length="2"/>
+            </structure>
+        </structure>
+        <structure name="PLR" id="246" extends="id:6">
+            <number name="RecordLength" id="247" type="integer"/>
+            <number name="Control Code" id="249" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="59"/>
+                </fixedvalues>
+            </number>
+            <number name="Page Length Requirement" id="250" type="integer" length="4"/>
+        </structure>
+        <structure name="RCR" id="252" extends="id:6">
+            <number name="RecordLength" id="253" type="integer"/>
+            <number name="Control Code" id="255" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="50"/>
+                </fixedvalues>
+            </number>
+            <number name="Top Limit" id="256" type="integer" length="4"/>
+            <number name="Bottom Limit" id="257" type="integer" length="4"/>
+            <number name="Left Limit" id="258" type="integer" length="4"/>
+            <number name="Right Limit" id="259" type="integer" length="4"/>
+        </structure>
+        <structure name="RFF" id="261" extends="id:6">
+            <number name="RecordLength" id="262" type="integer"/>
+            <number name="Control Code" id="264" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="14"/>
+                </fixedvalues>
+            </number>
+            <number name="Record Displacement" id="265" type="integer" length="1"/>
+            <number name="Records Executed" id="266" type="integer" length="1"/>
+            <number name="Reserved" id="267" type="integer" length="1"/>
+            <number name="Fixed File Number" id="268" type="integer" length="1"/>
+        </structure>
+        <structure name="RSRC" id="270" extends="id:6">
+            <number name="RecordLength" id="271" type="integer"/>
+            <number name="Control Code" id="273" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="63"/>
+                </fixedvalues>
+            </number>
+            <number name="Resource Type" id="274" type="integer" length="1"/>
+            <number name="Reserved" id="275" type="integer" length="3"/>
+            <string name="Resource Name" id="276" type="zero-terminated"/>
+        </structure>
+        <structure name="SDC" id="278" extends="id:6">
+            <number name="RecordLength" id="279" type="integer"/>
+            <number name="Control Code" id="281" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="5">
+                        <description>
+                        SDC record without security
+                    </description>
+                    </fixedvalue>
+                    <fixedvalue value="17">
+                        <description>
+                        Security version of the SDC record
+                    </description>
+                    </fixedvalue>
+                </fixedvalues>
+            </number>
+            <number name="Vertical Space" id="282" type="integer" length="2"/>
+            <number name="Document Counter" id="283" type="integer" length="4"/>
+            <number name="User Output Signals" id="284" type="integer" length="2"/>
+            <number name="Starting Font Number" id="285" type="integer" length="1"/>
+            <number name="Starting ILS" id="286" type="integer" length="1"/>
+            <number name="Starting Fixed File Number" id="287" type="integer" length="1"/>
+            <number name="Reserved" id="288" type="integer" length="1"/>
+            <string name="Job Identifier" id="289" type="fixed-length" length="8"/>
+        </structure>
+        <structure name="SFD" id="291" extends="id:6">
+            <number name="RecordLength" id="292" type="integer"/>
+            <number name="Control Code" id="294" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="42"/>
+                </fixedvalues>
+            </number>
+            <number name="Row Count" id="295" type="integer" length="2"/>
+            <number name="Reserved" id="296" type="integer" length="1"/>
+            <number name="Interline Spacing (ILS)" id="297" type="integer" length="1"/>
+            <number name="Font Rotation" id="298" type="integer" length="1"/>
+            <number name="Super Font Number" id="299" type="integer" length="1"/>
+            <string name="Super Font Name" id="300" type="fixed-length" length="8"/>
+        </structure>
+        <structure name="SFF" id="302" extends="id:261">
+            <number name="Control Code" id="305" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="13"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="SFM" id="311" extends="id:6">
+            <number name="RecordLength" id="312" type="integer"/>
+            <number name="Control Code" id="314" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="47"/>
+                </fixedvalues>
+            </number>
+            <number name="X Escapement" id="315" type="integer" length="4"/>
+            <number name="Y Escapement" id="316" type="integer" length="4"/>
+            <number name="Font Rotation" id="317" type="integer" length="1"/>
+            <number name="Super Font Number" id="318" type="integer" length="1"/>
+            <string name="Super Font Name" id="319" type="fixed-length" length="8"/>
+        </structure>
+        <structure name="SFS" id="321" extends="id:6">
+            <number name="RecordLength" id="322" type="integer"/>
+            <number name="Control Code" id="324" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="49"/>
+                </fixedvalues>
+            </number>
+            <number name="Font Number" id="325" type="integer" length="1"/>
+            <number name="Reserved" id="326" type="integer" length="1"/>
+            <number name="X Line Spacing" id="327" type="integer" length="4"/>
+            <number name="Y Line Spacing" id="328" type="integer" length="4"/>
+            <number name="X Character Spacing" id="329" type="integer" length="4"/>
+            <number name="Y Character Spacing" id="330" type="integer" length="4"/>
+        </structure>
+        <structure name="SFT" id="332" extends="id:6">
+            <number name="RecordLength" id="333" type="integer"/>
+            <number name="Control Code" id="335" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="44"/>
+                </fixedvalues>
+            </number>
+            <number name="Font Number" id="336" type="integer" length="1"/>
+            <number name="Interline Spacing (ILS)" id="337" type="integer" length="1"/>
+        </structure>
+        <structure name="SFI" id="339" extends="id:332">
+            <number name="Control Code" id="342" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="11"/>
+                </fixedvalues>
+            </number>
+            <binary name="Print Line" id="345" length="remaining"/>
+        </structure>
+        <structure name="SIL" id="347" extends="id:332">
+            <number name="Control Code" id="350" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="43"/>
+                </fixedvalues>
+            </number>
+            <binary name="Print Line" id="353" length="remaining"/>
+        </structure>
+        <structure name="SLF" id="355" extends="id:6">
+            <number name="RecordLength" id="356" type="integer"/>
+            <number name="Control Code" id="358" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="40"/>
+                </fixedvalues>
+            </number>
+            <number name="Function" id="359" type="integer" length="1"/>
+        </structure>
+        <structure name="SOD" id="361" extends="id:6">
+            <number name="RecordLength" id="362" type="integer"/>
+            <number name="Control Code" id="364" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="4">
+                        <description>
+                        SOD record without security
+                    </description>
+                    </fixedvalue>
+                    <fixedvalue value="16">
+                        <description>
+                        Security version of the SOD record
+                    </description>
+                    </fixedvalue>
+                </fixedvalues>
+            </number>
+            <number name="Vertical Space" id="365" type="integer" length="2"/>
+            <number name="Document Counter" id="366" type="integer" length="4"/>
+            <number name="User Output Signals" id="367" type="integer" length="2"/>
+            <number name="Starting Font Number" id="368" type="integer" length="1"/>
+            <number name="Starting ILS" id="369" type="integer" length="1"/>
+            <number name="Starting Fixed File Number" id="370" type="integer" length="1"/>
+            <number name="Reserved" id="371" type="integer" length="1"/>
+            <string name="Job Identifier" id="372" type="fixed-length" length="8"/>
+        </structure>
+        <structure name="SOP" id="374" extends="id:6">
+            <number name="RecordLength" id="375" type="integer"/>
+            <number name="Control Code" id="377" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="32"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="SOR" id="379" extends="id:6">
+            <number name="RecordLength" id="380" type="integer"/>
+            <number name="Control Code" id="382" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="52"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="SPC" id="384" extends="id:6">
+            <number name="RecordLength" id="385" type="integer"/>
+            <number name="Control Code" id="387" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="7"/>
+                </fixedvalues>
+            </number>
+            <number name="Vertical Space" id="388" type="integer" length="2"/>
+        </structure>
+        <structure name="SPL" id="390" extends="id:6">
+            <number name="RecordLength" id="391" type="integer"/>
+            <number name="Control Code" id="393" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="58"/>
+                </fixedvalues>
+            </number>
+            <number name="Page Length" id="394" type="integer" length="2"/>
+        </structure>
+        <structure name="SPO" id="396" extends="id:6">
+            <number name="RecordLength" id="397" type="integer"/>
+            <number name="Control Code" id="399" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="33"/>
+                </fixedvalues>
+            </number>
+            <number name="X Position" id="400" type="integer" length="2"/>
+            <number name="Y Position" id="401" type="integer" length="2"/>
+        </structure>
+        <structure name="SPX" id="403" extends="id:6">
+            <number name="RecordLength" id="404" type="integer"/>
+            <number name="Control Code" id="406" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="33"/>
+                </fixedvalues>
+            </number>
+            <number name="X Position" id="407" type="integer" length="4"/>
+            <number name="Y Position" id="408" type="integer" length="4"/>
+        </structure>
+        <structure name="SRM" id="410" extends="id:6">
+            <number name="RecordLength" id="411" type="integer"/>
+            <number name="Control Code" id="413" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="57"/>
+                </fixedvalues>
+            </number>
+            <number name="Resolution Exponent" id="414" type="integer" length="1"/>
+        </structure>
+        <structure name="SRP" id="416" extends="id:6">
+            <number name="RecordLength" id="417" type="integer"/>
+            <number name="Control Code" id="419" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="56"/>
+                </fixedvalues>
+            </number>
+            <number name="X Value" id="420" type="integer" length="4"/>
+            <number name="Y Value" id="421" type="integer" length="4"/>
+        </structure>
+        <structure name="STP" id="423" extends="id:216">
+            <number name="Control Code" id="426" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="8"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="UIL" id="428" extends="id:6">
+            <number name="RecordLength" id="429" type="integer"/>
+            <number name="Control Code" id="431" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="51"/>
+                </fixedvalues>
+            </number>
+            <number name="Start of String" id="432" type="integer" length="2"/>
+            <number name="String Length" id="433" type="integer" length="2"/>
+        </structure>
+        <structure name="VCC" id="435" extends="id:6">
+            <number name="RecordLength" id="436" type="integer"/>
+            <number name="Control Code" id="438" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="45"/>
+                </fixedvalues>
+            </number>
+            <number name="Checksum" id="439" type="integer" length="4"/>
+        </structure>
+        <structure name="WFC" id="441" extends="id:6">
+            <number name="RecordLength" id="442" type="integer"/>
+            <number name="Control Code" id="444" type="integer">
+                <fixedvalues>
+                    <fixedvalue value="6"/>
+                </fixedvalues>
+            </number>
+            <number name="Vertical Space" id="445" type="integer" length="2"/>
+        </structure>
+        <structure name="Block" id="447" length="4096" extends="id:4" fillcolor="FFFF7F">
+            <structure name="Data" id="448" length="BlockLength">
+                <number name="BlockLength" id="449" strokecolor="FFFFFF" fillcolor="FF00FF" type="integer" length="2"/>
+                <structure name="Records" id="450" repeatmax="unlimited" consists-of="id:6" order="variable">
+                    <structref name="BOX" id="451" repeatmin="0" structure="id:11"/>
+                    <structref name="CBM" id="452" repeatmin="0" structure="id:19"/>
+                    <structref name="CCD" id="453" repeatmin="0" structure="id:44"/>
+                    <structref name="CDM" id="454" repeatmin="0" structure="id:62"/>
+                    <structref name="CDR" id="455" repeatmin="0" structure="id:77"/>
+                    <structref name="CSR" id="456" repeatmin="0" structure="id:87"/>
+                    <structref name="CSS" id="457" repeatmin="0" structure="id:93"/>
+                    <structref name="EOJ" id="458" repeatmin="0" structure="id:105"/>
+                    <structref name="FAR" id="459" repeatmin="0" structure="id:111"/>
+                    <structref name="FDR" id="460" repeatmin="0" structure="id:122"/>
+                    <structref name="FDM" id="461" repeatmin="0" structure="id:133"/>
+                    <structref name="GFF" id="462" repeatmin="0" structure="id:143"/>
+                    <structref name="IBM" id="463" repeatmin="0" structure="id:150"/>
+                    <structref name="IML" id="464" repeatmin="0" structure="id:159"/>
+                    <structref name="JC2" id="465" repeatmin="0" structure="id:165"/>
+                    <structref name="JCR" id="466" repeatmin="0" structure="id:186"/>
+                    <structref name="LFF" id="467" repeatmin="0" structure="id:204"/>
+                    <structref name="MSG" id="468" repeatmin="0" structure="id:216"/>
+                    <structref name="NOP" id="469" repeatmin="0" structure="id:221"/>
+                    <structref name="RIP" id="470" repeatmin="0" structure="id:226"/>
+                    <structref name="PHR" id="471" repeatmin="0" structure="id:232"/>
+                    <structref name="PLR" id="472" repeatmin="0" structure="id:246"/>
+                    <structref name="RCR" id="473" repeatmin="0" structure="id:252"/>
+                    <structref name="RFF" id="474" repeatmin="0" structure="id:261"/>
+                    <structref name="RSRC" id="475" repeatmin="0" structure="id:270"/>
+                    <structref name="SDC" id="476" repeatmin="0" structure="id:278"/>
+                    <structref name="SFD" id="477" repeatmin="0" structure="id:291"/>
+                    <structref name="SFF" id="478" repeatmin="0" structure="id:302"/>
+                    <structref name="SFI" id="479" repeatmin="0" structure="id:339"/>
+                    <structref name="SFM" id="480" repeatmin="0" structure="id:311"/>
+                    <structref name="SFS" id="481" repeatmin="0" structure="id:321"/>
+                    <structref name="SFT" id="482" repeatmin="0" structure="id:332"/>
+                    <structref name="SIL" id="483" repeatmin="0" structure="id:347"/>
+                    <structref name="SLF" id="484" repeatmin="0" structure="id:355"/>
+                    <structref name="SOD" id="485" repeatmin="0" structure="id:361"/>
+                    <structref name="SOP" id="486" repeatmin="0" structure="id:374"/>
+                    <structref name="SOR" id="487" repeatmin="0" structure="id:379"/>
+                    <structref name="SPC" id="488" repeatmin="0" structure="id:384"/>
+                    <structref name="SPL" id="489" repeatmin="0" structure="id:390"/>
+                    <structref name="SPO" id="490" repeatmin="0" structure="id:396"/>
+                    <structref name="SPX" id="491" repeatmin="0" structure="id:403"/>
+                    <structref name="SRM" id="492" repeatmin="0" structure="id:410"/>
+                    <structref name="SRP" id="493" repeatmin="0" structure="id:416"/>
+                    <structref name="STP" id="494" repeatmin="0" structure="id:423"/>
+                    <structref name="UIL" id="495" repeatmin="0" structure="id:428"/>
+                    <structref name="VCC" id="496" repeatmin="0" structure="id:435"/>
+                    <structref name="WFC" id="497" repeatmin="0" structure="id:441"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="IJPDS File" id="3" extends="id:4" consists-of="id:447" strokecolor="7F007F">
+            <description>
+                The whole file.
+            </description>
+            <structref name="Block" id="501" repeatmin="0" repeatmax="unlimited" structure="id:447"/>
+        </structure>
+    </grammar>
+</ufwb>

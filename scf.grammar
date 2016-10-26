@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.4">
+    <grammar name="SCF" start="id:4" author="Hannes Brandstätter-Müller" email="hannes.mueller@gmail.com" fileextension="SCF" complete="yes">
+        <description>Grammar for SCF files</description>
+        <structure name="SCF-File" id="4" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Header" id="5">
+                <string name="MagicHeader" id="6" type="fixed-length" length="4"/>
+                <number name="SampleNumber" id="7" type="integer" length="4"/>
+                <offset name="Samples" id="9" length="4" references="id:8" follownullreference="yes"/>
+                <number name="BaseNumber" id="10" type="integer" length="4"/>
+                <number name="ObsoleteBasesLeftClip" id="11" type="integer" length="4"/>
+                <number name="ObsoleteBasesRightClip" id="12" type="integer" length="4"/>
+                <offset name="Bases" id="14" length="4" references="id:13" follownullreference="yes"/>
+                <number name="CommentsSize" id="15" type="integer" length="4"/>
+                <offset name="Comments" id="17" length="4" references="id:16" follownullreference="yes"/>
+                <string name="version" id="18" type="fixed-length" length="4"/>
+                <number name="SampleSize" id="19" type="integer" length="4"/>
+                <number name="CodeSet" id="20" type="integer" length="4"/>
+                <number name="PrivateSize" id="21" type="integer" length="4"/>
+                <offset name="Private" id="23" length="4" references="id:22" follownullreference="yes"/>
+                <binary name="Spare" id="24" fillcolor="707071" length="72"/>
+            </structure>
+        </structure>
+        <structure name="Comments" id="16" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="Comment" id="27" fillcolor="87F900" type="fixed-length" length="CommentsSize" encoding="ISO_8859-1:1987"/>
+        </structure>
+        <structure name="Samples" id="8" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Samples-A" id="29" length="SampleSize*SampleNumber"/>
+            <binary name="Samples-C" id="30" length="SampleSize*SampleNumber"/>
+            <binary name="Samples-G" id="31" length="SampleSize*SampleNumber"/>
+            <binary name="Samples-T" id="32" length="SampleSize*SampleNumber"/>
+        </structure>
+        <structure name="Bases" id="13" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="PeakIndices" id="48">
+                <number name="PeakIndex" id="35" repeatmin="BaseNumber" repeatmax="BaseNumber" type="integer" length="4"/>
+            </structure>
+            <structure name="Probabilities" id="50">
+                <number name="ProbA" id="36" repeatmin="BaseNumber" repeatmax="BaseNumber" type="integer" length="1"/>
+                <number name="ProbC" id="37" repeatmin="BaseNumber" repeatmax="BaseNumber" type="integer" length="1"/>
+                <number name="ProbG" id="38" repeatmin="BaseNumber" repeatmax="BaseNumber" type="integer" length="1"/>
+                <number name="ProbT" id="39" repeatmin="BaseNumber" repeatmax="BaseNumber" type="integer" length="1"/>
+            </structure>
+            <structure name="BaseCalls" id="52">
+                <string name="Base" id="40" fillcolor="FFEA00" repeatmin="BaseNumber" repeatmax="BaseNumber" type="fixed-length" length="1"/>
+            </structure>
+            <structure name="Spares" id="54">
+                <binary name="Spare" id="41" repeatmin="BaseNumber" repeatmax="BaseNumber" length="3"/>
+            </structure>
+        </structure>
+        <structure name="Private" id="22" length="PrivateSize" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+    </grammar>
+</ufwb>

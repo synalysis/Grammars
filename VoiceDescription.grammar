@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.1.5.4">
+    <grammar name="VoiceDescription" start="id:31" author="David Descamps">
+        <description>Grammar for VoiceDescription files</description>
+        <structure name="VoiceDescription" id="31" encoding="macintosh" endian="big" signed="no">
+            <description>VoiceDescription is a type of resource file used in SpeechVoice bundles in Apple's Speech Synthesis system. The purpose of this file is to store informations about the bundle's voice such as its name, age and gender.
+
+The structure of this file is described in SpeechSynthesis/SpeechSynthesis.h
+
+Starting with Mac OS X 10.5 and its voice Alex, Apple began to replace VoiceDescription by the &quot;VoiceAttributes&quot; key in the Info.plist of SpeechVoice bundle.</description>
+            <number name="length" id="32" fillcolor="98298F" type="integer" length="4"/>
+            <structure name="VoiceSpec" id="33">
+                <string name="creator" id="34" fillcolor="FF8BD4" type="fixed-length" length="4"/>
+                <number name="id" id="35" fillcolor="008E55" type="integer" length="4"/>
+            </structure>
+            <number name="version" id="37" fillcolor="9A4E0E" type="integer" length="4"/>
+            <string name="name" id="38" fillcolor="51FBD7" type="pascal" length="64" encoding="macintosh"/>
+            <string name="comment" id="39" fillcolor="6B89FA" type="pascal" length="256" encoding="macintosh"/>
+            <number name="gender" id="40" fillcolor="008E55" type="integer" length="2">
+                <fixedvalue name="Neuter" value="0"/>
+                <fixedvalue name="Male" value="1"/>
+                <fixedvalue name="Female" value="2"/>
+            </number>
+            <number name="age" id="41" fillcolor="9B144F" type="integer" length="2"/>
+            <number name="script" id="42" fillcolor="D4F784" type="integer" length="2"/>
+            <number name="language" mustmatch="yes" id="43" fillcolor="58D8FD" type="integer" length="2">
+                <fixedvalue name="English" value="0"/>
+                <fixedvalue name="French" value="1"/>
+                <fixedvalue name="German" value="2"/>
+                <fixedvalue name="Italian" value="3"/>
+                <fixedvalue name="Dutch" value="4"/>
+                <fixedvalue name="Swedish" value="5"/>
+                <fixedvalue name="Spanish" value="6"/>
+                <fixedvalue name="Danish" value="7"/>
+                <fixedvalue name="Portuguese" value="8"/>
+                <fixedvalue name="Norwegian" value="9"/>
+                <fixedvalue name="Hebrew" value="10"/>
+                <fixedvalue name="Japanese" value="11"/>
+                <fixedvalue name="Arabic" value="12"/>
+                <fixedvalue name="Finnish" value="13"/>
+                <fixedvalue name="Greek" value="14"/>
+                <fixedvalue name="Icelandic" value="15"/>
+                <fixedvalue name="Maltese" value="16"/>
+                <fixedvalue name="Turkish" value="17"/>
+                <fixedvalue name="Croatian" value="18"/>
+                <fixedvalue name="Trad. Chinese" value="19"/>
+                <fixedvalue name="Urdu" value="20"/>
+                <fixedvalue name="Hindi" value="21"/>
+                <fixedvalue name="Thai" value="22"/>
+                <fixedvalue name="Korean" value="23"/>
+                <fixedvalue name="Lithuanian" value="24"/>
+                <fixedvalue name="Polish" value="25"/>
+                <fixedvalue name="Hungarian" value="26"/>
+                <fixedvalue name="Estonian" value="27"/>
+                <fixedvalue name="Latvian" value="28"/>
+                <fixedvalue name="Sami" value="29"/>
+                <fixedvalue name="Faroese" value="30"/>
+                <fixedvalue name="Farsi" value="31"/>
+                <fixedvalue name="Russian" value="32"/>
+                <fixedvalue name="Simp. Chinese" value="33"/>
+                <fixedvalue name="Flemish" value="34"/>
+                <fixedvalue name="Irish Gaelic" value="35"/>
+                <fixedvalue name="Albanian" value="36"/>
+                <fixedvalue name="Romanian" value="37"/>
+                <fixedvalue name="Czech" value="38"/>
+                <fixedvalue name="Slovak" value="39"/>
+                <fixedvalue name="Slovenian" value="40"/>
+                <fixedvalue name="Yiddish" value="41"/>
+                <fixedvalue name="Serbian" value="42"/>
+                <fixedvalue name="Macedonian" value="43"/>
+                <fixedvalue name="Bulgarian" value="44"/>
+                <fixedvalue name="Ukrainian" value="45"/>
+                <fixedvalue name="Belorussian" value="46"/>
+                <fixedvalue name="Uzbek" value="47"/>
+                <fixedvalue name="Kazakh" value="48"/>
+                <fixedvalue name="Azerbaijani" value="49"/>
+                <fixedvalue name="Azerbaijan (Ar)" value="50"/>
+                <fixedvalue name="Armenian" value="51"/>
+                <fixedvalue name="Georgian" value="52"/>
+                <fixedvalue name="Moldavian" value="53"/>
+                <fixedvalue name="Kirghiz" value="54"/>
+                <fixedvalue name="Tajiki" value="55"/>
+                <fixedvalue name="Turkmen" value="56"/>
+                <fixedvalue name="Mongolian" value="57"/>
+                <fixedvalue name="Mongolian (Cyr)" value="58"/>
+                <fixedvalue name="Pashto" value="59"/>
+                <fixedvalue name="Kurdish" value="60"/>
+                <fixedvalue name="Kashmiri" value="61"/>
+                <fixedvalue name="Sindhi" value="62"/>
+                <fixedvalue name="Tibetan" value="63"/>
+                <fixedvalue name="Nepali" value="64"/>
+                <fixedvalue name="Sanskrit" value="65"/>
+                <fixedvalue name="Marathi" value="66"/>
+                <fixedvalue name="Bengali" value="67"/>
+                <fixedvalue name="Assamese" value="68"/>
+                <fixedvalue name="Gujarati" value="69"/>
+                <fixedvalue name="Punjabi" value="70"/>
+                <fixedvalue name="Oriya" value="71"/>
+                <fixedvalue name="Malayalam" value="72"/>
+                <fixedvalue name="Kannada" value="73"/>
+                <fixedvalue name="Tamil" value="74"/>
+                <fixedvalue name="Telugu" value="75"/>
+                <fixedvalue name="Sinhalese" value="76"/>
+                <fixedvalue name="Burmese" value="77"/>
+                <fixedvalue name="Khmer" value="78"/>
+                <fixedvalue name="Lao" value="79"/>
+                <fixedvalue name="Vietnamese" value="80"/>
+                <fixedvalue name="Indonesian" value="81"/>
+                <fixedvalue name="Tagalog" value="82"/>
+                <fixedvalue name="Malay (Roman)" value="83"/>
+                <fixedvalue name="Malay (Ar)" value="84"/>
+                <fixedvalue name="Amharic" value="85"/>
+                <fixedvalue name="Tigrinya" value="86"/>
+                <fixedvalue name="Oromo" value="87"/>
+                <fixedvalue name="Somali" value="88"/>
+                <fixedvalue name="Swahili" value="89"/>
+                <fixedvalue name="Kinyarwanda" value="90"/>
+                <fixedvalue name="Rundi" value="91"/>
+                <fixedvalue name="Chewa" value="92"/>
+                <fixedvalue name="Malagasy" value="93"/>
+                <fixedvalue name="Esperanto" value="94"/>
+                <fixedvalue name="Welsh" value="128"/>
+                <fixedvalue name="Basque" value="129"/>
+                <fixedvalue name="Catalan" value="130"/>
+                <fixedvalue name="Latin" value="131"/>
+                <fixedvalue name="Quechua" value="132"/>
+                <fixedvalue name="Guarani" value="133"/>
+                <fixedvalue name="Aymara" value="134"/>
+                <fixedvalue name="Tatar" value="135"/>
+                <fixedvalue name="Uighur" value="136"/>
+                <fixedvalue name="Dzongkha" value="137"/>
+                <fixedvalue name="Javanese (Rom)" value="138"/>
+                <fixedvalue name="Sundanese (Rom)" value="139"/>
+                <fixedvalue name="Galician" value="140"/>
+                <fixedvalue name="Afrikaans" value="141"/>
+                <fixedvalue name="Breton" value="142"/>
+                <fixedvalue name="Inuktitut" value="143"/>
+                <fixedvalue name="Scottish Gaelic" value="144"/>
+                <fixedvalue name="Manx Gaelic" value="145"/>
+                <fixedvalue name="Irish Gaelic (mod)" value="146"/>
+                <fixedvalue name="Tongan" value="147"/>
+                <fixedvalue name="Greek Ancient" value="148"/>
+                <fixedvalue name="Greenlandic" value="149"/>
+                <fixedvalue name="Azerbaijan (Roman)" value="150"/>
+                <fixedvalue name="Nynorsk" value="151"/>
+                <fixedvalue name="Unspecified" value="32767"/>
+            </number>
+            <number name="region" id="44" fillcolor="FF7979" type="integer" length="2">
+                <fixedvalue name="US" value="0"/>
+                <fixedvalue name="France" value="1"/>
+                <fixedvalue name="Britain" value="2"/>
+                <fixedvalue name="Germany" value="3"/>
+                <fixedvalue name="Italy" value="4"/>
+                <fixedvalue name="Netherlands" value="5"/>
+                <fixedvalue name="Flemish" value="6"/>
+                <fixedvalue name="Sweden" value="7"/>
+                <fixedvalue name="Spain" value="8"/>
+                <fixedvalue name="Denmark" value="9"/>
+                <fixedvalue name="Portugal" value="10"/>
+                <fixedvalue name="Fr. Canada" value="11"/>
+                <fixedvalue name="Norway" value="12"/>
+                <fixedvalue name="Israel" value="13"/>
+                <fixedvalue name="Japan" value="14"/>
+                <fixedvalue name="Australia" value="15"/>
+                <fixedvalue name="Arabic" value="16"/>
+                <fixedvalue name="Finland" value="17"/>
+                <fixedvalue name="Fr. Swiss" value="18"/>
+                <fixedvalue name="Gr. Swiss" value="19"/>
+                <fixedvalue name="Greece" value="20"/>
+                <fixedvalue name="Iceland" value="21"/>
+                <fixedvalue name="Malta" value="22"/>
+                <fixedvalue name="Cyprus" value="23"/>
+                <fixedvalue name="Turkey" value="24"/>
+                <fixedvalue name="India Hindi" value="33"/>
+                <fixedvalue name="Pakistan Urdu" value="34"/>
+                <fixedvalue name="Italian Swiss" value="36"/>
+                <fixedvalue name="Romania" value="39"/>
+                <fixedvalue name="Greek Ancient" value="40"/>
+                <fixedvalue name="Lithuania" value="41"/>
+                <fixedvalue name="Poland" value="42"/>
+                <fixedvalue name="Hungary" value="43"/>
+                <fixedvalue name="Estonia" value="44"/>
+                <fixedvalue name="Latvia" value="45"/>
+                <fixedvalue name="Sami" value="46"/>
+                <fixedvalue name="Faroe Islands" value="47"/>
+                <fixedvalue name="Iran" value="48"/>
+                <fixedvalue name="Russia" value="49"/>
+                <fixedvalue name="Ireland" value="50"/>
+                <fixedvalue name="Korea" value="51"/>
+                <fixedvalue name="China" value="52"/>
+                <fixedvalue name="Taiwan" value="53"/>
+                <fixedvalue name="Thailand" value="54"/>
+                <fixedvalue name="Czech" value="56"/>
+                <fixedvalue name="Slovakia" value="57"/>
+                <fixedvalue name="Bengali" value="60"/>
+                <fixedvalue name="Belarus" value="61"/>
+                <fixedvalue name="Ukraine" value="62"/>
+                <fixedvalue name="Serbia" value="65"/>
+                <fixedvalue name="Slovenia" value="66"/>
+                <fixedvalue name="Macedonia" value="67"/>
+                <fixedvalue name="Croatia" value="68"/>
+                <fixedvalue name="Brazil" value="71"/>
+                <fixedvalue name="Bulgaria" value="72"/>
+                <fixedvalue name="Catalonia" value="73"/>
+            </number>
+            <number name="reserved" id="45" strokecolor="FF0705" fillcolor="FFF63F" repeatmin="4" repeatmax="4" type="integer" length="4"/>
+        </structure>
+    </grammar>
+</ufwb>

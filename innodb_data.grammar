@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.14">
+    <grammar name="InnoDB IBD" start="id:1038" author="Ryan Robson" email="ryan.robson@cpanel.net" fileextension="ibd">
+        <description>Grammar for IBD files</description>
+        <structure name="Defaults" id="1039" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+        <structure name="IBD File" id="1038" length="0" extends="id:1039" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Pages" id="1041" repeatmax="-1" order="variable">
+                <structref name="FSP_HDR Page" id="1043" repeatmin="0" structure="id:1042"/>
+                <structref name="IBUF_BITMAP Page" id="1045" repeatmin="0" structure="id:1044"/>
+                <structref name="INODE Page" id="1047" repeatmin="0" structure="id:1046"/>
+                <structref name="INDEX 1 Root Page" id="1049" repeatmin="0" structure="id:1048"/>
+                <structref name="INDEX 2 Root Page" id="1051" repeatmin="0" structure="id:1050"/>
+                <structref name="Page" id="1053" repeatmin="0" structure="id:1052"/>
+            </structure>
+        </structure>
+        <structure name="FIL Header Base" id="1056" length="24" alignment="0" consists-of="id:1057" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Checksum" id="1058" type="integer" length="4"/>
+            <number name="PageNum" id="1059" type="integer" length="4"/>
+            <number name="PrevPage" id="1060" type="integer" length="4"/>
+            <number name="NextPage" id="1061" type="integer" length="4"/>
+            <number name="LastModLSN" id="1062" type="integer" length="8"/>
+        </structure>
+        <structure name="FIL Header Tail" id="1064" length="12" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="FlushLSN" id="1065" type="integer" length="8"/>
+            <number name="SpaceID" id="1066" type="integer" length="4"/>
+        </structure>
+        <structure name="FIL Header" id="1057" length="38" repeatmax="-1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Checksum" id="1068" type="integer" length="4"/>
+            <number name="PageNum" id="1069" type="integer" length="4"/>
+            <number name="PrevPage" id="1070" type="integer" length="4"/>
+            <number name="NextPage" id="1071" type="integer" length="4"/>
+            <number name="LastModLSN" id="1072" type="integer" length="8"/>
+            <number name="PageType" id="1073" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="FSP_HDR" value="8"/>
+                    <fixedvalue name="IBUF_BITMAP" value="5"/>
+                    <fixedvalue name="SYS" value="6"/>
+                    <fixedvalue name="TRX_SYS" value="7"/>
+                    <fixedvalue name="XDES" value="9"/>
+                    <fixedvalue name="BLOB" value="10"/>
+                    <fixedvalue name="ZBLOB" value="11"/>
+                    <fixedvalue name="ZBLOB2" value="12"/>
+                    <fixedvalue name="ALLOCATED" value="0"/>
+                    <fixedvalue name="INODE" value="3"/>
+                    <fixedvalue name="IBUF_FREE_LIST" value="4"/>
+                    <fixedvalue name="UNDO_LOG" value="2"/>
+                    <fixedvalue name="INDEX" value="17855"/>
+                </fixedvalues>
+            </number>
+            <number name="FlushLSN" id="1074" type="integer" length="8"/>
+            <number name="SpaceID" id="1075" type="integer" length="4"/>
+        </structure>
+        <structure name="FIL Trailer" id="1077" length="8" alignment="1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="OldCsum" id="1078" fillcolor="C7FCBE" type="integer" length="4"/>
+            <number name="Low32LSN" id="1079" fillcolor="ECCBFF" type="integer" length="4"/>
+        </structure>
+        <structure name="FSP_HDR Header" id="1081" length="112" extends="id:1038" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="SpaceID" id="1090" fillcolor="83B555" type="integer" length="4"/>
+            <number name="Unused" id="1091" fillcolor="B2D7FF" type="integer" length="4"/>
+            <number name="HighPageNumSize" id="1092" fillcolor="D7FCB6" type="integer" length="4"/>
+            <number name="HighPageNumInit" id="1093" fillcolor="EEEEEE" type="integer" length="4">
+                <description>Free limit</description>
+            </number>
+            <number name="Flags" id="1094" fillcolor="FFDBD2" type="integer" length="4"/>
+            <number name="NumFreeFragPages" id="1095" type="integer" length="4"/>
+            <structure name="List of Free Nodes Base" id="1096" length="16">
+                <description>List of partially free extents not belonging to any segment</description>
+                <string name="ListFreeBase" id="1097" fillcolor="189BD6" type="fixed-length" length="16"/>
+            </structure>
+            <structure name="List of Partially Free Nodes" id="1099">
+                <string name="ListPartFreeFrag" id="1100" type="fixed-length" length="16"/>
+            </structure>
+            <structure name="List of Full Nodes" id="1102" length="16">
+                <string name="ListFullBase" id="1103" type="fixed-length" length="16"/>
+            </structure>
+            <number name="NextUnusedSeg" id="1105" fillcolor="73FDFF" type="integer" length="8"/>
+            <structure name="Full Inodes List Base" id="1106" length="16">
+                <string name="ListFullInodes" id="1107" type="fixed-length" length="16"/>
+            </structure>
+            <structure name="Free Inodes List Base" id="1109" length="16">
+                <string name="ListFreeInodes" id="1110" type="fixed-length" length="16"/>
+            </structure>
+        </structure>
+        <structure name="XDES Entries" id="1113" length="10240" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="XDES" id="1114" length="40" repeatmax="256">
+                <number name="FileSegID" id="1115" fillcolor="FFD478" type="integer" length="8"/>
+                <structure name="List node for XDES List" id="1116" length="12">
+                    <string name="XDESListNode" id="1117" fillcolor="8DF900" type="fixed-length" length="12"/>
+                </structure>
+                <number name="State" id="1119" type="integer" length="4">
+                    <fixedvalues>
+                        <fixedvalue name="Free" value="1"/>
+                        <fixedvalue name="Free_Frag" value="2"/>
+                        <fixedvalue name="Full_Frag" value="3"/>
+                        <fixedvalue name="FSEG" value="4"/>
+                        <fixedvalue name="Null" value="0"/>
+                    </fixedvalues>
+                </number>
+                <structure name="Page State Bitmap" id="1120" length="16">
+                    <binary name="Page Status" id="1121" repeatmax="-1" length="2" lengthunit="bit">
+                        <fixedvalues>
+                            <fixedvalue name="Free" value="01"/>
+                            <fixedvalue name="Clean" value="02"/>
+                        </fixedvalues>
+                    </binary>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="IBUF_BITMAP Data" id="1125" length="16338" repeatmin="0" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+        <structure name="INODE Entry" id="1127" length="192" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="FSEG_ID" id="1128" type="integer" length="8">
+                <description>FSEG ID</description>
+            </number>
+            <number name="NumNOT_FULL" id="1129" type="integer" length="4">
+                <description>Number of used pages in “NOT_FULL” list</description>
+            </number>
+            <structref name="ListBase &quot;FREE&quot;" id="1131" structure="id:1130"/>
+            <structref name="ListBase &quot;NOT_FULL&quot;" id="1132" structure="id:1130"/>
+            <structref name="ListBase &quot;FULL&quot;" id="1133" structure="id:1130"/>
+            <number name="Magic Number" id="1134" type="integer" length="4"/>
+            <structure name="Fragment Array Entries" id="1135">
+                <number name="FragArrayEntry" id="1136" fillcolor="FFD478" repeatmax="32" type="integer" length="4"/>
+            </structure>
+        </structure>
+        <structure name="INODE Page List Node" id="1139" length="12" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Prev" id="1140" length="6">
+                <number name="PageNum" id="1141" type="integer" length="4"/>
+                <number name="Offset" id="1142" type="integer" length="2"/>
+            </structure>
+            <structure name="Next" id="1144" length="6">
+                <number name="PageNum" id="1145" type="integer" length="4"/>
+                <number name="Offset" id="1146" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="List Base Node" id="1130" length="16" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="ListLength" id="1149" type="integer" length="4"/>
+            <structure name="Prev" id="1150" length="6" alignment="0">
+                <number name="PageNum" id="1151" type="integer" length="4"/>
+                <number name="Offset" id="1152" type="integer" length="2"/>
+            </structure>
+            <structure name="Next" id="1154" length="6" alignment="0">
+                <number name="PageNum" id="1155" type="integer" length="4"/>
+                <number name="Offset" id="1156" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="INDEX Header" id="1159" length="36" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="NumDirSlots" id="1160" type="integer" length="2"/>
+            <number name="HeapTopPos" id="1161" type="integer" length="2"/>
+            <number name="NumHeapRec_FormatFlag" id="1162" type="integer" length="2"/>
+            <number name="OffsetFirstGrbgRec" id="1163" type="integer" length="2"/>
+            <number name="GarbageSpace" id="1164" type="integer" length="2"/>
+            <number name="LastInsertPos" id="1165" type="integer" length="2"/>
+            <number name="PageDirection" id="1166" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="None" value="5"/>
+                </fixedvalues>
+            </number>
+            <number name="NumInsertsInDirection" id="1167" type="integer" length="2"/>
+            <number name="NumRecs" id="1168" type="integer" length="2"/>
+            <number name="MaxTxnID" id="1169" type="integer" length="8"/>
+            <number name="PageLevel" id="1170" type="integer" length="2"/>
+            <number name="Mysteries" id="1171" type="integer" length="4"/>
+            <number name="IndexID" id="1172" type="integer" length="4"/>
+        </structure>
+        <structure name="FSEG Header" id="1174" length="20" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Leaf" id="1175" length="10">
+                <number name="InodeSpaceID" id="1176" type="integer" length="4"/>
+                <number name="InodePageNum" id="1177" type="integer" length="4"/>
+                <number name="InodeByteOffset" id="1178" type="integer" length="2"/>
+            </structure>
+            <structure name="Non-leaf" id="1180" length="10">
+                <number name="InodeSpaceID" id="1181" type="integer" length="4"/>
+                <number name="InodePageNum" id="1182" type="integer" length="4"/>
+                <number name="InodeByteOffset" id="1183" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="System Records" id="1186" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Infimum" id="1187">
+                <number name="InfoFlags" id="1188" type="integer" length="4" lengthunit="bit">
+                    <mask name="Deleted" value="0x20">
+                        <fixedvalue name="Yes" value="0x1"/>
+                        <fixedvalue name="No" value="0x0"/>
+                    </mask>
+                    <mask name="FirstUserRecordNonLeafLeftMost" value="0x10">
+                        <fixedvalue name="Yes" value="0x1"/>
+                        <fixedvalue name="No" value="0x0"/>
+                    </mask>
+                </number>
+                <number name="NumRecsOwned" id="1189" type="integer" length="4" lengthunit="bit"/>
+                <binary name="Order" id="1190" length="13" lengthunit="bit"/>
+                <number name="RecType" id="1191" type="integer" length="3" lengthunit="bit">
+                    <mask name="Status" value="0x7">
+                        <fixedvalue name="Ordinary" value="0x0"/>
+                        <fixedvalue name="Node Pointer" value="0x1"/>
+                        <fixedvalue name="Infimum" value="0x2"/>
+                        <fixedvalue name="Supremum" value="0x3"/>
+                    </mask>
+                </number>
+                <scriptelement name="OffsetCorrect" id="1192" disabled="yes">
+                    <script name="unnamed" type="Generic">
+                        <source language="Lua"/>
+                    </script>
+                </scriptelement>
+                <number name="NextRecOffset" id="1193" type="integer" length="2"/>
+                <string name="InfimumOrSupremum" id="1194" type="fixed-length" length="8"/>
+            </structure>
+            <structure name="Supremum" id="1196">
+                <number name="InfoFlags" id="1197" type="integer" length="4" lengthunit="bit">
+                    <mask name="Deleted" value="0x20">
+                        <fixedvalue name="Yes" value="0x1"/>
+                        <fixedvalue name="No" value="0x0"/>
+                    </mask>
+                    <mask name="FirstUserRecordNonLeafLeftMost" value="0x10">
+                        <fixedvalue name="Yes" value="0x1"/>
+                        <fixedvalue name="No" value="0x0"/>
+                    </mask>
+                </number>
+                <number name="NumRecsOwned" id="1198" type="integer" length="4" lengthunit="bit"/>
+                <binary name="Order" id="1199" length="13" lengthunit="bit"/>
+                <number name="RecType" id="1200" type="integer" length="3" lengthunit="bit">
+                    <mask name="Status" value="0x7">
+                        <fixedvalue name="Ordinary" value="0x0"/>
+                        <fixedvalue name="Node Pointer" value="0x1"/>
+                        <fixedvalue name="Infimum" value="0x2"/>
+                        <fixedvalue name="Supremum" value="0x3"/>
+                    </mask>
+                </number>
+                <number name="NextRecOffset" id="1201" type="integer" length="2"/>
+                <string name="InfimumOrSupremum" id="1202" type="fixed-length" length="8"/>
+            </structure>
+        </structure>
+        <structure name="Page" id="1052" length="16384" extends="id:1039" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="FIL Header Base" id="1205" structure="id:1056"/>
+            <number name="PageType" mustmatch="yes" id="1206" type="integer" length="2"/>
+            <structref name="FIL Header Tail" id="1207" structure="id:1064"/>
+            <structure name="Data" id="1208"/>
+            <structref name="FIL Trailer" id="1210" structure="id:1077"/>
+        </structure>
+        <structure name="FSP_HDR Page" id="1042" length="16384" extends="id:1052">
+            <number name="PageType" id="1213" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="FSP_HDR" value="8"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="1214">
+                <structref name="FSP_HDR Header" id="1216" structure="id:1081"/>
+                <structref name="XDES Entries" id="1217" structure="id:1113"/>
+                <string name="Padding" id="1218" type="fixed-length" length="remaining"/>
+            </structure>
+        </structure>
+        <structure name="IBUF_BITMAP Page" id="1044" length="16384" alignment="0" extends="id:1052">
+            <number name="PageType" id="1223" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="IBUF_BITMAP" value="5"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="1224">
+                <structref name="IBUF_BITMAP Data" id="1226" structure="id:1125"/>
+            </structure>
+        </structure>
+        <structure name="INODE Page" id="1046" length="16384" alignment="0" extends="id:1052" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="PageType" id="1231" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="NODE" value="3"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="1232">
+                <structref name="INODE Page List Node" id="1234" structure="id:1139"/>
+                <structure name="INODE Entries" id="1235" length="16320">
+                    <structref name="INODE Entry" id="1236" repeatmax="85" structure="id:1127"/>
+                </structure>
+                <structure name="Empty" id="1238" length="6"/>
+            </structure>
+        </structure>
+        <structure name="INDEX 1 Root Page" id="1048" length="16384" extends="id:1052">
+            <number name="PageType" id="1244" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="INDEX" value="17855"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="1245">
+                <structref name="INDEX Header" id="1247" structure="id:1159"/>
+                <structref name="FSEG Header" id="1248" structure="id:1174"/>
+                <structref name="System Records" id="1249" structure="id:1186"/>
+                <structure name="User Records" id="1250" length="16256">
+                    <string name="RecordSpace" id="1251" type="fixed-length" length="16256"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="INDEX 2 Root Page" id="1050" length="16384" alignment="0" extends="id:1052">
+            <number name="PageType" id="1257" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="INDEX" value="17855"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="1258">
+                <structref name="INDEX Header" id="1260" structure="id:1159"/>
+                <structref name="FSEG Header" id="1261" structure="id:1174"/>
+                <structref name="System Records" id="1262" structure="id:1186"/>
+                <structure name="User Records" id="1263" length="16256" alignment="0">
+                    <string name="RecordSpace" id="1264" type="fixed-length" length="16256"/>
+                </structure>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.2.0.1">
+    <grammar name="KIPR grammar" start="id:77" author="Andreas Pehnack" fileextension="kipr">
+        <description>Grammar for KIPR files</description>
+        <structure name="KIPR file" id="77" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Header" id="78" length="22">
+                <string name="MThd" mustmatch="yes" id="79" type="fixed-length" length="4" encoding="ISO_8859-1:1987">
+                    <fixedvalues>
+                        <fixedvalue name="MThd" value="MThd"/>
+                    </fixedvalues>
+                </string>
+                <binary name="Unknown" id="80" unused="yes" length="10"/>
+                <string name="MTrk" id="81" type="fixed-length" length="4" encoding="ISO_8859-1:1987"/>
+                <number name="DataLength" id="82" type="integer" length="4"/>
+            </structure>
+            <structure name="Contents" id="84" length="DataLength">
+                <structure name="Record" id="85" length="0" repeatmax="-1">
+                    <number name="Type" id="86" type="integer" length="2"/>
+                    <number name="Length" id="87" type="integer" length="1"/>
+                    <structure name="Data" id="88" length="0" order="variable">
+                        <structref name="ExtendedRecord" id="120" repeatmin="0" structure="id:116"/>
+                        <structref name="StringRecordData" id="90" repeatmin="0" structure="id:89"/>
+                        <structref name="02Type" id="114" repeatmin="0" structure="id:106"/>
+                        <structref name="04Type" id="115" repeatmin="0" structure="id:110"/>
+                        <structref name="RecordData" id="102" repeatmin="0" structure="id:95"/>
+                    </structure>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="RecordData" id="95" length="Length" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Unknown" id="96" unused="yes" length="5"/>
+            <number name="RecordType" id="97" fillcolor="68D6FB" type="integer" length="1"/>
+        </structure>
+        <structure name="StringRecordData" id="89" extends="id:95">
+            <number name="RecordType" mustmatch="yes" id="100" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="StringType" value="3"/>
+                </fixedvalues>
+            </number>
+            <binary name="Unknown2" id="103" unused="yes" length="2"/>
+            <number name="StringID" id="104" fillcolor="CEFA8B" type="integer" length="1"/>
+            <string name="String" id="105" fillcolor="DE83F7" type="zero-terminated" encoding="ISO_8859-1:1987"/>
+        </structure>
+        <structure name="02Type" id="106" extends="id:95">
+            <number name="RecordType" id="109" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="02Type" value="2"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="04Type" id="110" extends="id:95">
+            <number name="RecordType" id="113" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="04Type" value="4"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="ExtendedRecord" id="116" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="ExtendedMarker" mustmatch="yes" id="118" type="integer" length="1" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="Marker" value="0x37"/>
+                </fixedvalues>
+            </number>
+            <binary name="Unknown" id="119" length="1079"/>
+        </structure>
+    </grammar>
+</ufwb>

@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.17">
+    <grammar name="Zj-Stream Grammar" start="id:2" author="Andreas Pehnack" email="andreas@synalysis.net" fileextension="prn">
+        <description>Grammar for Zenographics ZJ-Stream format</description>
+        <structure name="ZJ-Stream File" id="2" encoding="ISO_8859-1:1987" endian="dynamic" signed="no">
+            <string name="Signature" id="3" fillcolor="54FA8A" type="fixed-length" length="4" encoding="ISO_8859-1:1987"/>
+            <scriptelement name="SetEndianess" id="4">
+                <script name="unnamed" type="Generic">
+                    <source language="Lua">-- get collection with results so far
+results = currentMapper:getCurrentResults()
+
+-- get latest added result
+lastResult = results:getLastResult()
+
+-- access the parsed value
+value = lastResult:getValue()
+
+-- get the value parsed
+signature = value:getString()
+
+if (signature == &quot;JZJZ&quot;) then
+    currentMapper:setDynamicEndianness(synalysis.ENDIAN_BIG)
+else
+    currentMapper:setDynamicEndianness(synalysis.ENDIAN_LITTLE)
+end
+</source>
+                </script>
+            </scriptelement>
+            <structure name="Chunks" id="5" repeatmax="-1" order="variable">
+                <structref name="StartDocChunk" id="7" repeatmin="0" structure="id:6"/>
+                <structref name="EndDocChunk" id="9" repeatmin="0" structure="id:8"/>
+                <structref name="StartPageChunk" id="11" repeatmin="0" structure="id:10"/>
+                <structref name="EndPageChunk" id="13" repeatmin="0" structure="id:12"/>
+                <structref name="JBIG_BIH_Chunk" id="15" repeatmin="0" structure="id:14"/>
+                <structref name="JBIG_BID_Chunk" id="17" repeatmin="0" structure="id:16"/>
+                <structref name="EndJBIGChunk" id="19" repeatmin="0" structure="id:18"/>
+                <structref name="SignatureChunk" id="21" repeatmin="0" structure="id:20"/>
+                <structref name="RawImageChunk" id="23" repeatmin="0" structure="id:22"/>
+                <structref name="StartPlaneChunk" id="25" repeatmin="0" structure="id:24"/>
+                <structref name="EndPlaneChunk" id="27" repeatmin="0" structure="id:26"/>
+                <structref name="2600nPauseChunk" id="29" repeatmin="0" structure="id:28"/>
+                <structref name="CommentChunk" id="31" repeatmin="0" structure="id:30"/>
+                <structref name="UnknownChunk" id="33" structure="id:32"/>
+            </structure>
+        </structure>
+        <structure name="Chunk" id="36" encoding="ISO_8859-1:1987" endian="dynamic" signed="no">
+            <number name="totalChunkSize" id="37" fillcolor="57FCD8" type="integer" length="4"/>
+            <number name="chunkType" mustmatch="yes" id="38" fillcolor="DE83F7" type="integer" length="4"/>
+            <number name="paramCount" id="39" fillcolor="FF7B7A" type="integer" length="4"/>
+            <number name="reserved" id="40" fillcolor="FEFB8C" type="integer" length="2"/>
+            <string name="chunkSignature" id="41" fillcolor="FF88D3" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="42" length="totalChunkSize-16">
+                <structure name="Items" id="43" repeatmin="0" repeatmax="-1" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+                    <structref name="DuplexItem" id="45" repeatmin="0" structure="id:44"/>
+                    <structref name="BinItem" id="47" repeatmin="0" structure="id:46"/>
+                    <structref name="MediaItem" id="49" repeatmin="0" structure="id:48"/>
+                    <structref name="PaperItem" id="51" repeatmin="0" structure="id:50"/>
+                    <structref name="UIntItem" id="53" repeatmin="0" structure="id:52"/>
+                    <structref name="IntItem" id="55" repeatmin="0" structure="id:54"/>
+                    <structref name="StringItem" id="57" repeatmin="0" structure="id:56"/>
+                    <structref name="ByteLUTItem" id="59" repeatmin="0" structure="id:58"/>
+                </structure>
+                <binary name="Data" id="61" fillcolor="85D5FD" repeatmin="0" length="remaining"/>
+            </structure>
+        </structure>
+        <structure name="StartDocChunk" id="6" extends="id:36">
+            <number name="totalChunkSize" id="64" type="integer"/>
+            <number name="chunkType" id="65" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="StartDoc" value="0"/>
+                </fixedvalues>
+            </number>
+            <number name="paramCount" id="66" type="integer"/>
+            <number name="reserved" id="67" type="integer"/>
+            <string name="chunkSignature" id="68" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="69">
+                <binary name="Data" id="80" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="EndDocChunk" id="8" extends="id:36">
+            <number name="totalChunkSize" id="83" type="integer"/>
+            <number name="chunkType" id="84" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="EndDoc" value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="paramCount" id="85" type="integer"/>
+            <number name="reserved" id="86" type="integer"/>
+            <string name="chunkSignature" id="87" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="88">
+                <binary name="Data" id="99" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="StartPageChunk" id="10" extends="id:36">
+            <number name="totalChunkSize" id="102" type="integer"/>
+            <number name="chunkType" id="103" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="StartPage" value="2"/>
+                </fixedvalues>
+            </number>
+            <number name="paramCount" id="104" type="integer"/>
+            <number name="reserved" id="105" type="integer"/>
+            <string name="chunkSignature" id="106" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="107">
+                <binary name="Data" id="118" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="EndPageChunk" id="12" extends="id:36">
+            <number name="totalChunkSize" id="121" type="integer"/>
+            <number name="chunkType" id="122" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="EndPage" value="3"/>
+                </fixedvalues>
+            </number>
+            <number name="paramCount" id="123" type="integer"/>
+            <number name="reserved" id="124" type="integer"/>
+            <string name="chunkSignature" id="125" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="126">
+                <binary name="Data" id="137" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="JBIG_BIH_Chunk" id="14" extends="id:36">
+            <number name="totalChunkSize" id="140" type="integer"/>
+            <number name="chunkType" id="141" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JBIG_BIH" value="4"/>
+                </fixedvalues>
+            </number>
+            <number name="paramCount" id="142" type="integer"/>
+            <number name="reserved" id="143" type="integer"/>
+            <string name="chunkSignature" id="144" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="145">
+                <binary name="Data" id="156" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="JBIG_BID_Chunk" id="16" extends="id:36">
+            <number name="totalChunkSize" id="159" type="integer"/>
+            <number name="chunkType" id="160" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JBIG_BID" value="5"/>
+                </fixedvalues>
+            </number>
+            <number name="paramCount" id="161" type="integer"/>
+            <number name="reserved" id="162" type="integer"/>
+            <string name="chunkSignature" id="163" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="164">
+                <binary name="Data" id="175" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="EndJBIGChunk" id="18" extends="id:36">
+            <number name="totalChunkSize" id="178" type="integer"/>
+            <number name="chunkType" id="179" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="EndJBIG" value="6"/>
+                </fixedvalues>
+            </number>
+            <number name="paramCount" id="180" type="integer"/>
+            <number name="reserved" id="181" type="integer"/>
+            <string name="chunkSignature" id="182" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="183">
+                <binary name="Data" id="194" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="SignatureChunk" id="20" extends="id:36">
+            <number name="totalChunkSize" id="197" type="integer"/>
+            <number name="chunkType" id="198" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Signature" value="7"/>
+                </fixedvalues>
+            </number>
+            <number name="paramCount" id="199" type="integer"/>
+            <number name="reserved" id="200" type="integer"/>
+            <string name="chunkSignature" id="201" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="202">
+                <binary name="Data" id="213" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="RawImageChunk" id="22" extends="id:36">
+            <number name="totalChunkSize" id="216" type="integer"/>
+            <number name="chunkType" id="217" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="RawImage" value="8"/>
+                </fixedvalues>
+            </number>
+            <number name="paramCount" id="218" type="integer"/>
+            <number name="reserved" id="219" type="integer"/>
+            <string name="chunkSignature" id="220" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="221">
+                <binary name="Data" id="232" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="StartPlaneChunk" id="24" extends="id:36">
+            <number name="totalChunkSize" id="235" type="integer"/>
+            <number name="chunkType" id="236" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="StartPlane" value="9"/>
+                </fixedvalues>
+            </number>
+            <number name="paramCount" id="237" type="integer"/>
+            <number name="reserved" id="238" type="integer"/>
+            <string name="chunkSignature" id="239" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="240">
+                <binary name="Data" id="251" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="EndPlaneChunk" id="26" extends="id:36">
+            <number name="totalChunkSize" id="254" type="integer"/>
+            <number name="chunkType" id="255" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="EndPlane" value="10"/>
+                </fixedvalues>
+            </number>
+            <number name="paramCount" id="256" type="integer"/>
+            <number name="reserved" id="257" type="integer"/>
+            <string name="chunkSignature" id="258" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="259">
+                <binary name="Data" id="270" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="2600nPauseChunk" id="28" extends="id:36" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="totalChunkSize" id="273" type="integer"/>
+            <number name="chunkType" id="274" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="2600nPause" value="11"/>
+                </fixedvalues>
+            </number>
+            <number name="paramCount" id="275" type="integer"/>
+            <number name="reserved" id="276" type="integer"/>
+            <string name="chunkSignature" id="277" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="278">
+                <binary name="Data" id="289" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="UnknownChunk" id="32" extends="id:36">
+            <number name="totalChunkSize" id="292" type="integer"/>
+            <number name="chunkType" id="293" type="integer" minval="16" maxval="1023"/>
+            <number name="paramCount" id="294" type="integer"/>
+            <number name="reserved" id="295" type="integer"/>
+            <string name="chunkSignature" id="296" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="297">
+                <binary name="Data" id="308" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="CommentChunk" id="30" extends="id:36">
+            <number name="totalChunkSize" id="311" type="integer"/>
+            <number name="chunkType" id="312" type="integer" minval="1024"/>
+            <number name="paramCount" id="313" type="integer"/>
+            <number name="reserved" id="314" type="integer"/>
+            <string name="chunkSignature" id="315" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="316">
+                <binary name="Data" id="327" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="2600NChunk" id="330" extends="id:36">
+            <number name="totalChunkSize" id="331" type="integer"/>
+            <number name="chunkType" id="332" type="integer"/>
+            <number name="paramCount" id="333" type="integer"/>
+            <number name="reserved" id="334" type="integer"/>
+            <string name="chunkSignature" id="335" type="fixed-length" length="2"/>
+            <structure name="ChunkTail" id="336">
+                <binary name="Data" id="347" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="Item" id="350" length="size" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="size" id="351" fillcolor="FAD67D" type="integer" length="4"/>
+            <number name="ID" id="352" fillcolor="F9797B" type="integer" length="2" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="PAGECOUNT" value="0x0"/>
+                    <fixedvalue name="DMCOLLATE" value="0x1"/>
+                    <fixedvalue name="DMDUPLEX" value="0x2"/>
+                    <fixedvalue name="DMPAPER" value="0x3"/>
+                    <fixedvalue name="DMCOPIES" value="0x4"/>
+                    <fixedvalue name="DMDEFAULTSOURCE" value="0x5"/>
+                    <fixedvalue name="DMMEDIATYPE" value="0x6"/>
+                    <fixedvalue name="NBIE" value="0x7"/>
+                    <fixedvalue name="RESOLUTION_X" value="0x8"/>
+                    <fixedvalue name="RESOLUTION_Y" value="0x9"/>
+                    <fixedvalue name="OFFSET_X" value="0xA"/>
+                    <fixedvalue name="OFFSET_Y" value="0xB"/>
+                    <fixedvalue name="RASTER_X" value="0xC"/>
+                    <fixedvalue name="RASTER_Y" value="0xD"/>
+                    <fixedvalue name="COLLATE" value="0xE"/>
+                    <fixedvalue name="QUANTITY" value="0xF"/>
+                    <fixedvalue name="VIDEO_BPP" value="0x10"/>
+                    <fixedvalue name="VIDEO_X" value="0x11"/>
+                    <fixedvalue name="VIDEO_Y" value="0x12"/>
+                    <fixedvalue name="INTERLACE" value="0x13"/>
+                    <fixedvalue name="PLANE" value="0x14"/>
+                    <fixedvalue name="PALETTE" value="0x15"/>
+                    <fixedvalue name="RET" value="0x16"/>
+                    <fixedvalue name="ECONOMODE" value="0x17"/>
+                    <fixedvalue name="BITMAP_TYPE" value="0x65"/>
+                    <fixedvalue name="JBIG_BIH" value="0x66"/>
+                    <fixedvalue name="BITMAP_PIXELS" value="0x68"/>
+                    <fixedvalue name="INCRY" value="0x69"/>
+                    <fixedvalue name="BITMAP_BPP" value="0x6A"/>
+                    <fixedvalue name="BITMAP_STRIDE" value="0x6B"/>
+                    <fixedvalue name="ZX_0x6C" value="0x6C"/>
+                    <fixedvalue name="ZX_COLOR_OPT" value="0x6E"/>
+                    <fixedvalue name="ZX_0x6F" value="0x6F"/>
+                    <fixedvalue name="PAD" value="0x63"/>
+                    <fixedvalue name="QMS_FINEMODE" value="0x8000"/>
+                    <fixedvalue name="QMS_OUTBIN" value="0x8001"/>
+                    <fixedvalue name="MINOLTA_USERNAME" value="0x810E"/>
+                    <fixedvalue name="MINOLTA_FILENAME" value="0x8115"/>
+                    <fixedvalue name="MINOLTA_PAGE_NUMBER" value="0x8110"/>
+                    <fixedvalue name="MINOLTA_CUSTOM_X" value="0x8113"/>
+                    <fixedvalue name="MINOLTA_CUSTOM_Y" value="0x8114"/>
+                </fixedvalues>
+            </number>
+            <number name="type" id="353" fillcolor="8177FC" type="integer" length="1"/>
+            <number name="param" id="354" fillcolor="7FFF7C" type="integer" length="1"/>
+        </structure>
+        <structure name="UIntItem" id="52" extends="id:350">
+            <number name="size" id="356" type="integer"/>
+            <number name="ID" id="357" type="integer"/>
+            <number name="type" mustmatch="yes" id="358" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="UINT32" value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="param" id="359" type="integer"/>
+            <number name="Number" id="360" type="integer" length="4"/>
+        </structure>
+        <structure name="IntItem" id="54" extends="id:350">
+            <number name="size" id="362" type="integer"/>
+            <number name="ID" id="363" type="integer"/>
+            <number name="type" mustmatch="yes" id="364" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="INT32" value="2"/>
+                </fixedvalues>
+            </number>
+            <number name="param" id="365" type="integer"/>
+        </structure>
+        <structure name="StringItem" id="56" extends="id:350">
+            <number name="size" id="367" type="integer"/>
+            <number name="ID" id="368" type="integer"/>
+            <number name="type" mustmatch="yes" id="369" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="STRING" value="3"/>
+                </fixedvalues>
+            </number>
+            <number name="param" id="370" type="integer"/>
+        </structure>
+        <structure name="ByteLUTItem" id="58" extends="id:350">
+            <number name="size" id="372" type="integer"/>
+            <number name="ID" id="373" type="integer"/>
+            <number name="type" mustmatch="yes" id="374" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="BYTELUT" value="4"/>
+                </fixedvalues>
+            </number>
+            <number name="param" id="375" type="integer"/>
+        </structure>
+        <structure name="DuplexItem" id="44" extends="id:52">
+            <number name="ID" mustmatch="yes" id="378" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="DUPLEX" value="0x2"/>
+                </fixedvalues>
+            </number>
+            <number name="Number" id="381" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="DUPLEX_OFF" value="1"/>
+                    <fixedvalue name="DUPLEX_LONGEDGE" value="2"/>
+                    <fixedvalue name="DUPLEX_SHORTEDGE" value="3"/>
+                    <fixedvalue name="DUPLEX_MANUALLONG" value="4"/>
+                    <fixedvalue name="DUPLEX_MANUALSHORT" value="5"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="BinItem" id="46" extends="id:52">
+            <number name="ID" mustmatch="yes" id="384" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="DMDEFAULTSOURCE" value="0x5"/>
+                </fixedvalues>
+            </number>
+            <number name="Number" id="387" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="UPPER" value="1"/>
+                    <fixedvalue name="LOWER" value="2"/>
+                    <fixedvalue name="MIDDLE" value="3"/>
+                    <fixedvalue name="MANUAL" value="4"/>
+                    <fixedvalue name="ENVELOPE" value="5"/>
+                    <fixedvalue name="ENVMANUAL" value="6"/>
+                    <fixedvalue name="AUTO" value="7"/>
+                    <fixedvalue name="TRACTOR" value="8"/>
+                    <fixedvalue name="SMALLFMT" value="9"/>
+                    <fixedvalue name="LARGEFMT" value="10"/>
+                    <fixedvalue name="LARGECAPACITY" value="11"/>
+                    <fixedvalue name="CASSETTE" value="14"/>
+                    <fixedvalue name="FORMSOURCE" value="15"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="MediaItem" id="48" extends="id:52">
+            <number name="ID" mustmatch="yes" id="390" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="DMMEDIATYPE" value="0x6"/>
+                </fixedvalues>
+            </number>
+            <number name="Number" id="393" type="integer" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="STANDARD" value="0x1"/>
+                    <fixedvalue name="TRANSPARENCY" value="0x2"/>
+                    <fixedvalue name="GLOSSY" value="0x3"/>
+                    <fixedvalue name="USER" value="0x4"/>
+                    <fixedvalue name="ENVELOPE" value="0x101"/>
+                    <fixedvalue name="LETTERHEAD" value="0x103"/>
+                    <fixedvalue name="THICK_STOCK" value="0x105"/>
+                    <fixedvalue name="POSTCARD" value="0x106"/>
+                    <fixedvalue name="LABELS" value="0x107"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="PaperItem" id="50" extends="id:52">
+            <number name="ID" mustmatch="yes" id="396" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="DMPAPER" value="0x3"/>
+                </fixedvalues>
+            </number>
+            <number name="Number" id="399" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="LETTER" value="1"/>
+                    <fixedvalue name="LETTERSMALL" value="2"/>
+                    <fixedvalue name="TABLOID" value="3"/>
+                    <fixedvalue name="LEDGER" value="4"/>
+                    <fixedvalue name="LEGAL" value="5"/>
+                    <fixedvalue name="STATEMENT" value="6"/>
+                    <fixedvalue name="EXECUTIVE" value="7"/>
+                    <fixedvalue name="A3" value="8"/>
+                    <fixedvalue name="A4" value="9"/>
+                    <fixedvalue name="A4SMALL" value="10"/>
+                    <fixedvalue name="A5" value="11"/>
+                    <fixedvalue name="B4" value="12"/>
+                    <fixedvalue name="B5" value="13"/>
+                    <fixedvalue name="FOLIO" value="14"/>
+                    <fixedvalue name="QUARTO" value="15"/>
+                    <fixedvalue name="10X14" value="16"/>
+                    <fixedvalue name="11X17" value="17"/>
+                    <fixedvalue name="NOTE" value="18"/>
+                    <fixedvalue name="ENV_9" value="19"/>
+                    <fixedvalue name="ENV_10" value="20"/>
+                    <fixedvalue name="ENV_11" value="21"/>
+                    <fixedvalue name="ENV_12" value="22"/>
+                    <fixedvalue name="ENV_14" value="23"/>
+                    <fixedvalue name="CSHEET" value="24"/>
+                    <fixedvalue name="DSHEET" value="25"/>
+                    <fixedvalue name="ESHEET" value="26"/>
+                    <fixedvalue name="ENV_DL" value="27"/>
+                    <fixedvalue name="ENV_C5" value="28"/>
+                    <fixedvalue name="ENV_C3" value="29"/>
+                    <fixedvalue name="ENV_C4" value="30"/>
+                    <fixedvalue name="ENV_C6" value="31"/>
+                    <fixedvalue name="ENV_C65" value="32"/>
+                    <fixedvalue name="ENV_B4" value="33"/>
+                    <fixedvalue name="ENV_B5" value="34"/>
+                    <fixedvalue name="ENV_B6" value="35"/>
+                    <fixedvalue name="ENV_ITALY" value="36"/>
+                    <fixedvalue name="ENV_MONARCH" value="37"/>
+                    <fixedvalue name="ENV_PERSONAL" value="38"/>
+                    <fixedvalue name="FANFOLD_US" value="39"/>
+                    <fixedvalue name="FANFOLD_STD_GERMAN" value="40"/>
+                    <fixedvalue name="FANFOLD_LGL_GERMAN" value="41"/>
+                    <fixedvalue name="ISO_B4" value="42"/>
+                    <fixedvalue name="JAPANESE_POSTCARD" value="43"/>
+                    <fixedvalue name="9X11" value="44"/>
+                    <fixedvalue name="10X11" value="45"/>
+                    <fixedvalue name="15X11" value="46"/>
+                    <fixedvalue name="ENV_INVITE" value="47"/>
+                    <fixedvalue name="RESERVED_48" value="48"/>
+                    <fixedvalue name="RESERVED_49" value="49"/>
+                    <fixedvalue name="LETTER_EXTRA" value="50"/>
+                    <fixedvalue name="LEGAL_EXTRA" value="51"/>
+                    <fixedvalue name="TABLOID_EXTRA" value="52"/>
+                    <fixedvalue name="A4_EXTRA" value="53"/>
+                    <fixedvalue name="LETTER_TRANSVERSE" value="54"/>
+                    <fixedvalue name="A4_TRANSVERSE" value="55"/>
+                    <fixedvalue name="LETTER_EXTRA_TRANSVERSE" value="56"/>
+                    <fixedvalue name="A_PLUS" value="57"/>
+                    <fixedvalue name="B_PLUS" value="58"/>
+                    <fixedvalue name="LETTER_PLUS" value="59"/>
+                    <fixedvalue name="A4_PLUS" value="60"/>
+                    <fixedvalue name="A5_TRANSVERSE" value="61"/>
+                    <fixedvalue name="B5_TRANSVERSE" value="62"/>
+                    <fixedvalue name="A3_EXTRA" value="63"/>
+                    <fixedvalue name="A5_EXTRA" value="64"/>
+                    <fixedvalue name="A2" value="62"/>
+                    <fixedvalue name="A3_TRANSVERSE" value="67"/>
+                    <fixedvalue name="A3_EXTRA_TRANSVERSE" value="68"/>
+                </fixedvalues>
+            </number>
+        </structure>
+    </grammar>
+</ufwb>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.3.1">
+    <grammar name="Windows Bitmaps" start="id:72" author="Andreas Pehnack" fileextension="bmp" uti="com.microsoft.bmp">
+        <description>Grammar for the Windows Bitmap file format</description>
+        <structure name="Defaults" id="73" encoding="ISO_8859-1:1987" endian="little" signed="no"/>
+        <structure name="Bitmap File" id="72" extends="id:73">
+            <structref name="Header" id="76" structure="id:75"/>
+            <structref name="BITMAPINFOHEADER" id="78" structure="id:77"/>
+        </structure>
+        <structure name="Header" id="75" extends="id:73">
+            <number name="bfType" mustmatch="yes" id="80" type="integer" length="2" endian="big" display="hex">
+                <fixedvalues>
+                    <fixedvalue value="0x424D"/>
+                </fixedvalues>
+            </number>
+            <number name="bfSize" id="81" type="integer" length="4"/>
+            <number name="bfReserved" id="82" type="integer" length="4">
+                <fixedvalues>
+                    <fixedvalue value="0"/>
+                </fixedvalues>
+            </number>
+            <offset name="bfOffBits" id="84" length="4" references="id:83" follownullreference="yes"/>
+        </structure>
+        <structure name="BITMAPINFOHEADER" id="77" length="this.biSize" extends="id:73">
+            <number name="biSize" mustmatch="yes" id="86" type="integer" length="4">
+                <fixedvalues>
+                    <fixedvalue value="40"/>
+                </fixedvalues>
+            </number>
+            <number name="biWidth" id="87" type="integer" length="4"/>
+            <number name="biHeight" id="88" type="integer" length="4" signed="yes"/>
+            <number name="biPlanes" id="89" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="biBitCount" id="90" type="integer" length="2"/>
+            <number name="biCompression" id="91" type="integer" length="4"/>
+            <number name="biSizeImage" id="92" type="integer" length="4"/>
+            <number name="biXPelsPerMeter" id="93" type="integer" length="4"/>
+            <number name="biYPelsPerMeter" id="94" type="integer" length="4"/>
+            <number name="biClrUsed" id="95" type="integer" length="4"/>
+            <number name="biClrImportant" id="96" type="integer" length="4"/>
+        </structure>
+        <structure name="ImageData" id="83" extends="id:73">
+            <binary name="ImageData" id="98" length="remaining"/>
+        </structure>
+    </grammar>
+</ufwb>

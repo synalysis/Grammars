@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9">
+    <grammar name="libpcap" start="id:303" author="Bret Jordan" email="jordan2175@gmail.com" fileextension="pcap">
+        <description>Grammar for the BSD libpcap file format, ver 1.0 by Bret Jordan, blog.mywarwithentropy.com. GPLv3</description>
+        <structure name="Default" id="304" encoding="UTF-8" endian="dynamic" signed="no"/>
+        <structure name="LibPCAP File" id="303" extends="id:304">
+            <structure name="File Header" id="306" length="24">
+                <number name="magic_number" id="307" type="integer" length="4" endian="big" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="Big Endian" value="0xA1B2C3D4"/>
+                        <fixedvalue name="LIttle Endian" value="0xD4C3B2A1"/>
+                    </fixedvalues>
+                </number>
+                <scriptelement name="set_byte_order" id="308">
+                    <script name="unnamed" type="Generic">
+                        <source language="Lua">results = currentMapper:getCurrentResults()
+lastResult = results:getLastResult()
+value = lastResult:getValue()
+num = value:getUnsignedNumber()
+
+if (num == 0xA1B2C3D4) then
+    currentMapper:setDynamicEndianness(synalysis.ENDIAN_BIG)
+else
+    currentMapper:setDynamicEndianness(synalysis.ENDIAN_LITTLE)
+end</source>
+                    </script>
+                </scriptelement>
+                <number name="version_major" id="309" type="integer" length="2"/>
+                <number name="version_minor" id="310" type="integer" length="2"/>
+                <number name="thiszone" id="311" type="integer" length="4" signed="yes">
+                    <description>GMT to local correction</description>
+                </number>
+                <number name="sigfigs" id="312" type="integer" length="4">
+                    <description>Accuracy of timestamps</description>
+                </number>
+                <number name="snaplen" id="313" type="integer" length="4">
+                    <description>Max length of captured packets, in octets</description>
+                </number>
+                <number name="network" id="314" type="integer" length="4">
+                    <description>Data link type</description>
+                </number>
+            </structure>
+            <structure name="Packets" id="316" repeatmax="-1">
+                <structure name="Packet Header" id="317" length="16">
+                    <number name="frame.time" id="318" fillcolor="919191" type="integer" length="4">
+                        <description>Timestamp in seconds from epoch</description>
+                    </number>
+                    <number name="frame.time_usec" id="319" fillcolor="919191" type="integer" length="4">
+                        <description>Timestamp in microseconds from epoch</description>
+                    </number>
+                    <number name="frame.len" id="320" fillcolor="919191" type="integer" length="4">
+                        <description>Frame length on the wire (bytes)</description>
+                    </number>
+                    <number name="frame.cap_len" id="321" fillcolor="919191" type="integer" length="4">
+                        <description>Frame length stored into the capture file (bytes)</description>
+                    </number>
+                </structure>
+                <structure name="Packet Data" id="323" length="frame.cap_len" order="variable">
+                    <structref name="ARP Frame" id="325" repeatmin="0" structure="id:324"/>
+                    <structref name="IPv4 ICMP Packet" id="327" repeatmin="0" structure="id:326"/>
+                    <structref name="IPv4 TCP Packet" id="329" repeatmin="0" structure="id:328"/>
+                    <structref name="IPv4 UDP Packet" id="331" repeatmin="0" structure="id:330"/>
+                    <structref name="IPv4 Packet" id="333" repeatmin="0" structure="id:332"/>
+                    <structref name="IPv6 Packet" id="335" repeatmin="0" structure="id:334"/>
+                    <structref name="Ethernet II Frame" id="510" repeatmin="0" structure="id:339"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="Ethernet II Frame" id="339" extends="id:304">
+            <binary name="eth_dst" id="340" fillcolor="B4FAB4" length="6"/>
+            <binary name="eth_src" id="341" fillcolor="A7CBFE" length="6"/>
+            <number name="eth.type" mustmatch="yes" id="342" fillcolor="FFBE00" type="integer" length="2" endian="big" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="IPv4 Packet" value="0x800"/>
+                    <fixedvalue name="ARP Frame" value="0x806"/>
+                    <fixedvalue name="IPv6 Packet" value="0x86DD"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="ARP Frame" id="324" repeatmin="0" extends="id:339">
+            <binary name="eth_dst" id="344"/>
+            <binary name="eth_src" id="345"/>
+            <number name="eth.type" id="346" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="ARP Frame" value="0x806"/>
+                </fixedvalues>
+            </number>
+            <number name="arp.hw.type" id="347" fillcolor="AD861D" type="integer" length="2" endian="big"/>
+            <number name="arp.proto.type" id="348" fillcolor="AD861D" type="integer" length="2" display="hex"/>
+            <number name="arp.hw.size" id="349" fillcolor="AD861D" type="integer" length="1"/>
+            <number name="arp.proto.size" id="350" fillcolor="AD861D" type="integer" length="1"/>
+            <number name="arp.opcode" id="351" fillcolor="AD861D" type="integer" length="2" endian="big"/>
+            <binary name="arp.src.hw_mac" id="352" fillcolor="A7CBFE" length="6"/>
+            <structure name="arp.src.proto_ipv4" id="353" length="4" alignment="0">
+                <number name="ip.src_octet_1" id="354" fillcolor="A7CBFE" type="integer" length="1"/>
+                <number name="ip.src_octet_2" id="355" fillcolor="A7CBFE" type="integer" length="1"/>
+                <number name="ip.src_octet_3" id="356" fillcolor="A7CBFE" type="integer" length="1"/>
+                <number name="ip.src_octet_4" id="357" fillcolor="A7CBFE" type="integer" length="1"/>
+            </structure>
+            <binary name="arp.dst.hw_mac" id="359" fillcolor="B4FAB4" length="6"/>
+            <structure name="arp.dst.proto_ipv4" id="360" length="4" alignment="0">
+                <number name="ip.dst_octet_1" id="361" fillcolor="B4FAB4" type="integer" length="1"/>
+                <number name="ip.dst_octet_2" id="362" fillcolor="B4FAB4" type="integer" length="1"/>
+                <number name="ip.dst_octet_3" id="363" fillcolor="B4FAB4" type="integer" length="1"/>
+                <number name="ip.dst_octet_4" id="364" fillcolor="B4FAB4" type="integer" length="1"/>
+            </structure>
+            <binary name="eth.padding" id="366" fillcolor="AD861D" repeatmin="0" length="remaining"/>
+        </structure>
+        <structure name="IPv4 Packet" id="332" repeatmin="0" extends="id:339">
+            <binary name="eth_dst" id="368"/>
+            <binary name="eth_src" id="369"/>
+            <number name="eth.type" id="370" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="IPv4 Packet" value="0x800"/>
+                </fixedvalues>
+            </number>
+            <number name="ip.version" id="371" fillcolor="FFBE00" type="integer" length="4" lengthunit="bit"/>
+            <number name="ip.hdr_len" id="372" type="integer" length="4" lengthunit="bit">
+                <description>Number of 32 bit works.  Minimum value is 5, thus 5 x 32 bit = 160 bits = 20 bytes.  Being a 4-bit value, the maximum length is 15 words (15 x 32 bits) = 480 bits = 60 bytes</description>
+            </number>
+            <number name="ip.dsfield.dscp" id="373" type="integer" length="6" lengthunit="bit" display="binary"/>
+            <number name="ip.dsfield.ecn" id="374" type="integer" length="2" lengthunit="bit" display="binary"/>
+            <number name="ip.len" id="375" type="integer" length="2" endian="big">
+                <description>Number of 32 bit words in header thus ip.len x 32 = number of bits </description>
+            </number>
+            <number name="ip.id" id="376" type="integer" length="2" endian="big"/>
+            <number name="ip.flags" id="377" type="integer" length="3" lengthunit="bit" display="binary"/>
+            <number name="ip.frag_offset" id="378" type="integer" length="13" lengthunit="bit"/>
+            <number name="ip.ttl" id="379" type="integer" length="1"/>
+            <number name="ip.proto" mustmatch="yes" id="380" fillcolor="FFBE00" type="integer" length="1"/>
+            <number name="ip.checksum" id="381" type="integer" length="2" endian="big" display="hex"/>
+            <structure name="ip.src" id="382" length="4">
+                <number name="ip.src_octet_1" id="383" fillcolor="A7CBFE" type="integer" length="1"/>
+                <number name="ip.src_octet_2" id="384" fillcolor="A7CBFE" type="integer" length="1"/>
+                <number name="ip.src_octet_3" id="385" fillcolor="A7CBFE" type="integer" length="1"/>
+                <number name="ip.src_octet_4" id="386" fillcolor="A7CBFE" type="integer" length="1"/>
+            </structure>
+            <structure name="ip.dst" id="388" length="4">
+                <number name="ip.dst_octet_1" id="389" fillcolor="B4FAB4" type="integer" length="1"/>
+                <number name="ip.dst_octet_2" id="390" fillcolor="B4FAB4" type="integer" length="1"/>
+                <number name="ip.dst_octet_3" id="391" fillcolor="B4FAB4" type="integer" length="1"/>
+                <number name="ip.dst_octet_4" id="392" fillcolor="B4FAB4" type="integer" length="1"/>
+            </structure>
+        </structure>
+        <structure name="IPv6 Packet" id="334" repeatmin="0" extends="id:339">
+            <binary name="eth_dst" id="395"/>
+            <binary name="eth_src" id="396"/>
+            <number name="eth.type" id="397" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="IPv6 Packet" value="0x86DD"/>
+                </fixedvalues>
+            </number>
+            <number name="ip6.version" id="398" type="integer" length="4" lengthunit="bit"/>
+            <number name="ip6.traffic.class" id="399" type="integer" length="8" lengthunit="bit"/>
+            <number name="ip6.flow.label" id="400" type="integer" length="20" lengthunit="bit"/>
+            <number name="ipv6.payload_len" id="401" type="integer" length="2"/>
+            <number name="ipv6.next_header" id="402" type="integer" length="1"/>
+            <number name="ipv6.hop_limit" id="403" type="integer" length="1"/>
+            <binary name="ip6.src" id="404" length="16"/>
+            <binary name="ip6.dst" id="405" length="16"/>
+            <binary name="ip6.data" id="406" length="remaining"/>
+        </structure>
+        <structure name="IPv4 TCP Packet" id="328" repeatmin="0" extends="id:332">
+            <number name="ip.version" id="411" type="integer"/>
+            <number name="ip.proto" id="420" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="TCP" value="6"/>
+                </fixedvalues>
+            </number>
+            <structure name="ip.src" id="421">
+                <number name="ip.src_octet_1" id="423" type="integer"/>
+                <number name="ip.src_octet_2" id="424" type="integer"/>
+                <number name="ip.src_octet_3" id="425" type="integer"/>
+                <number name="ip.src_octet_4" id="426" type="integer"/>
+            </structure>
+            <structure name="ip.dst" id="428">
+                <number name="ip.dst_octet_1" id="429" type="integer"/>
+                <number name="ip.dst_octet_2" id="430" type="integer"/>
+                <number name="ip.dst_octet_3" id="431" type="integer"/>
+                <number name="ip.dst_octet_4" id="432" type="integer"/>
+            </structure>
+            <number name="tcp.srcport" id="434" fillcolor="5C82FF" type="integer" length="2"/>
+            <number name="tcp.dstport" id="435" fillcolor="48F94F" type="integer" length="2"/>
+            <number name="tcp.seq" id="436" fillcolor="9F659D" type="integer" length="4"/>
+            <number name="tcp.ack" id="437" fillcolor="9F659D" type="integer" length="4"/>
+            <number name="tcp.hdr_len" id="438" fillcolor="9F659D" type="integer" length="4" lengthunit="bit"/>
+            <binary name="tcp.reserved" id="439" fillcolor="9F659D" length="3" lengthunit="bit"/>
+            <binary name="tcp.flags" id="440" fillcolor="9F659D" length="9" lengthunit="bit"/>
+            <number name="tcp.window_size_value" id="441" fillcolor="9F659D" type="integer" length="2"/>
+            <number name="tcp.checksum" id="442" fillcolor="9F659D" type="integer" length="2"/>
+            <number name="tcp.urgent_pointer" id="443" fillcolor="9F659D" type="integer" length="2"/>
+            <binary name="ip.data" id="444" fillcolor="9F659D" length="remaining"/>
+        </structure>
+        <structure name="IPv4 UDP Packet" id="330" repeatmin="0" extends="id:332">
+            <number name="ip.version" id="449" type="integer"/>
+            <number name="ip.proto" id="458" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="UDP" value="17"/>
+                </fixedvalues>
+            </number>
+            <structure name="ip.src" id="459">
+                <number name="ip.src_octet_1" id="461" type="integer"/>
+                <number name="ip.src_octet_2" id="462" type="integer"/>
+                <number name="ip.src_octet_3" id="463" type="integer"/>
+                <number name="ip.src_octet_4" id="464" type="integer"/>
+            </structure>
+            <structure name="ip.dst" id="466">
+                <number name="ip.dst_octet_1" id="467" type="integer"/>
+                <number name="ip.dst_octet_2" id="468" type="integer"/>
+                <number name="ip.dst_octet_3" id="469" type="integer"/>
+                <number name="ip.dst_octet_4" id="470" type="integer"/>
+            </structure>
+            <number name="udp.srcport" id="472" fillcolor="5C82FF" type="integer" length="2"/>
+            <number name="udp.dstport" id="473" fillcolor="48F94F" type="integer" length="2"/>
+            <number name="udp.length" id="474" fillcolor="FEF84B" type="integer" length="2"/>
+            <number name="udp.checksum" id="475" fillcolor="FEF84B" type="integer" length="2"/>
+            <binary name="ip.data" id="476" fillcolor="FEF84B" length="remaining"/>
+        </structure>
+        <structure name="IPv4 ICMP Packet" id="326" repeatmin="0" extends="id:332">
+            <number name="ip.version" id="481" type="integer"/>
+            <number name="ip.proto" id="490" fillcolor="FF40F7" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="ICMP" value="1"/>
+                </fixedvalues>
+            </number>
+            <structure name="ip.src" id="491">
+                <number name="ip.src_octet_1" id="493" type="integer"/>
+                <number name="ip.src_octet_2" id="494" type="integer"/>
+                <number name="ip.src_octet_3" id="495" type="integer"/>
+                <number name="ip.src_octet_4" id="496" type="integer"/>
+            </structure>
+            <structure name="ip.dst" id="498">
+                <number name="ip.dst_octet_1" id="499" type="integer"/>
+                <number name="ip.dst_octet_2" id="500" type="integer"/>
+                <number name="ip.dst_octet_3" id="501" type="integer"/>
+                <number name="ip.dst_octet_4" id="502" type="integer"/>
+            </structure>
+            <number name="icmp.type" id="504" fillcolor="FFBE00" type="integer" length="1"/>
+            <number name="icmp.code" id="505" fillcolor="FFDBA2" type="integer" length="1"/>
+            <number name="icmp.checksum" id="506" fillcolor="FF40F7" type="integer" length="2" endian="big" display="hex"/>
+            <binary name="icmp.rest_of_header" id="507" fillcolor="FF40F7" length="4"/>
+            <binary name="ip.data" id="508" fillcolor="FF40F7" length="remaining"/>
+        </structure>
+    </grammar>
+</ufwb>

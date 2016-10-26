@@ -1,0 +1,737 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.3">
+    <grammar name="Standard Test Data Format v4" start="id:3" author="Joe Barnhart" email="jbarnhart@roos.com" fileextension="STDF STD" complete="yes">
+        <description>Grammar for STDF ver. 4 files</description>
+        <scripts>
+            <script name="Set Endian" type="Grammar" id="431">
+                <description>Sets dynamic endian value.</description>
+                <source language="Python">#
+#  Set global endanness...
+#
+
+def parseByteRange(element, byteView, bitPos, bitLength, results):
+	&quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
+
+	low = byteview.readByte(0)
+	high = byteview.readByte(1)
+
+	if (low==0) and (high==2):
+		something.setDynamicEndianness(ENDIAN_BIG)
+	else:
+		something.setDynamicEndianness(ENDIAN_LITTLE)
+
+	return 2
+</source>
+            </script>
+            <script name="DOSDateTime" type="DataType" id="434">
+                <description>DOS Date/Time type</description>
+                <source language="Python"># DOS date/time structure
+#                24                16                 8                 0
+# +-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+-+
+# |Y|Y|Y|Y|Y|Y|Y|M| |M|M|M|D|D|D|D|D| |h|h|h|h|h|m|m|m| |m|m|m|s|s|s|s|s|
+# +-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+-+
+#  \___________/\________/\_________/ \________/\____________/\_________/
+#      year        month       day      hour       minute        second
+
+from datetime import datetime
+
+def parseByteRange(element, byteView, bitPos, bitLength, results):
+	&quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
+
+	highWord = byteView.readUnsignedInt(bitPos/8, 2, ENDIAN_BIG)
+	lowWord = byteView.readUnsignedInt(bitPos/8+2, 2, ENDIAN_BIG)
+
+	year = (highWord &gt;&gt; 9) + 1980
+	month = (highWord &gt;&gt; 5) &amp; 0x1F
+	day = highWord &amp; 0x1F
+
+	hour = lowWord &gt;&gt; 11
+	minute = (lowWord &gt;&gt; 5) &amp; 0x3F
+	second = (lowWord &amp; 0x1F) * 2
+
+	dt = datetime(year, month, day, hour, minute, second)
+
+	value = Value()
+	value.setString(dt.isoformat(' '))
+
+	results.addElement(element, 4, 0, value)
+
+	return 4
+
+def fillByteRange(value, byteArray, bitPos, bitLength):
+	&quot;&quot;&quot;fillByteRange method&quot;&quot;&quot;
+
+	if (bitLength &lt; 32):
+		print &quot;Not enough space for DOS Date/Time structure, 32 bits needed&quot;
+
+	dateTimeString = value.getString()
+
+	dt = datetime.strptime(dateTimeString, &quot;%Y-%m-%d %H:%M:%S&quot;)
+
+	highWord = ((dt.year - 1980) &lt;&lt; 9) + (dt.month &lt;&lt; 5) + dt.day
+	lowWord = (dt.hour &lt;&lt; 11) + (dt.minute &lt;&lt; 5) + (dt.second / 2)
+
+	byteArray.writeUnsignedInt(highWord, bitPos/8, 2, ENDIAN_BIG)
+	byteArray.writeUnsignedInt(lowWord, bitPos/8+2, 2, ENDIAN_BIG)
+</source>
+            </script>
+        </scripts>
+        <structure name="STDF" id="3" length="0" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="Header" id="5" fillcolor="FFFEFF" structure="id:4"/>
+            <structref name="Body" id="7" repeatmin="0" structure="id:6"/>
+            <structref name="Summary" id="9" fillcolor="C4E0FE" repeatmin="0" structure="id:8"/>
+            <structref name="End" id="11" structure="id:10"/>
+        </structure>
+        <structure name="Header" id="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="FAR" id="14" structure="id:13"/>
+            <structref name="MIR" id="16" structure="id:15"/>
+            <structref name="RDR" id="18" repeatmin="0" structure="id:17"/>
+            <structref name="SDR" id="20" repeatmin="0" structure="id:19"/>
+            <structref name="WCR" id="22" repeatmin="0" structure="id:21"/>
+        </structure>
+        <structure name="Body" id="6" repeatmin="0" encoding="ISO_8859-1:1987" endian="little" signed="no" order="variable">
+            <structref name="Part" id="25" repeatmin="0" repeatmax="-1" structure="id:24"/>
+            <structref name="Wafer" id="27" repeatmin="0" repeatmax="-1" structure="id:26"/>
+            <structref name="PMR" id="29" repeatmin="0" repeatmax="-1" structure="id:28"/>
+            <structref name="PGR" id="31" repeatmin="0" repeatmax="-1" structure="id:30"/>
+            <structref name="PLR" id="33" repeatmin="0" repeatmax="-1" structure="id:32"/>
+        </structure>
+        <structure name="Wafer" id="26" repeatmin="0" repeatmax="-1" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="WIR" id="36" repeatmin="0" structure="id:35"/>
+            <structref name="Part" id="37" repeatmin="0" repeatmax="-1" structure="id:24"/>
+            <structref name="WRR" id="39" repeatmin="0" structure="id:38"/>
+        </structure>
+        <structure name="Part" id="24" repeatmin="0" repeatmax="-1" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="PIR" id="42" structure="id:41"/>
+            <structref name="Data" id="44" structure="id:43"/>
+            <structref name="PRR" id="46" structure="id:45"/>
+        </structure>
+        <structure name="Data" id="43" repeatmin="0" repeatmax="-1" encoding="ISO_8859-1:1987" endian="little" signed="no" order="variable">
+            <structref name="DTR" id="49" repeatmin="0" repeatmax="-1" structure="id:48"/>
+            <structref name="PTR" id="51" repeatmin="0" repeatmax="-1" structure="id:50"/>
+            <structref name="FTR" id="53" repeatmin="0" repeatmax="-1" structure="id:52"/>
+            <structref name="MPR" id="55" repeatmin="0" structure="id:54"/>
+            <structref name="BPS" id="57" repeatmin="0" repeatmax="-1" structure="id:56"/>
+            <structref name="EPS" id="59" repeatmin="0" repeatmax="-1" structure="id:58"/>
+            <structref name="PMR" id="60" repeatmin="0" structure="id:28"/>
+            <structref name="PGR" id="61" repeatmin="0" structure="id:30"/>
+        </structure>
+        <structure name="Summary" id="8" repeatmin="0" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="TSR" id="64" repeatmin="0" repeatmax="-1" structure="id:63"/>
+            <structref name="HBR" id="66" repeatmin="0" repeatmax="-1" structure="id:65"/>
+            <structref name="SBR" id="68" repeatmin="0" repeatmax="-1" structure="id:67"/>
+        </structure>
+        <structure name="End" id="10" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structref name="PCR" id="71" structure="id:70"/>
+            <structref name="MRR" id="73" structure="id:72"/>
+        </structure>
+        <structure name="Record" id="75" length="REC_LEN+4" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="REC_LEN" id="76" type="integer" length="2"/>
+            <binary name="REC_TYP" mustmatch="yes" id="77" length="1"/>
+            <binary name="REC_SUB" mustmatch="yes" id="78" length="1"/>
+        </structure>
+        <structure name="ATR" id="80" extends="id:75">
+            <number name="MOD_TIM" id="84" type="integer" length="4"/>
+            <string name="CMD_LINE" id="85" type="pascal"/>
+        </structure>
+        <structure name="BPS" id="56" extends="id:75">
+            <binary name="REC_TYP" id="88">
+                <fixedvalues>
+                    <fixedvalue value="14"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="89">
+                <fixedvalues>
+                    <fixedvalue value="0A"/>
+                </fixedvalues>
+            </binary>
+            <string name="SEQ_NAME" id="90" repeatmin="0" type="pascal"/>
+        </structure>
+        <structure name="DTR" id="48" extends="id:75">
+            <binary name="REC_TYP" id="93">
+                <fixedvalues>
+                    <fixedvalue value="32"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="94">
+                <fixedvalues>
+                    <fixedvalue value="1E"/>
+                </fixedvalues>
+            </binary>
+            <string name="TEXT_DAT" id="95" type="pascal"/>
+        </structure>
+        <structure name="EPS" id="58" extends="id:75">
+            <binary name="REC_TYP" id="98">
+                <fixedvalues>
+                    <fixedvalue value="14"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="99">
+                <fixedvalues>
+                    <fixedvalue value="14"/>
+                </fixedvalues>
+            </binary>
+        </structure>
+        <structure name="FAR" id="13" extends="id:75">
+            <binary name="REC_TYP" id="102">
+                <fixedvalues>
+                    <fixedvalue value="00"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="103">
+                <fixedvalues>
+                    <fixedvalue value="0A"/>
+                </fixedvalues>
+            </binary>
+            <binary name="CPU_TYPE" id="104" length="1">
+                <fixedvalues>
+                    <fixedvalue name="DEC" value="00"/>
+                    <fixedvalue name="SUN" value="01"/>
+                    <fixedvalue name="IBM PC" value="02"/>
+                </fixedvalues>
+            </binary>
+            <binary name="STDF_VER" id="105" length="1"/>
+        </structure>
+        <structure name="FTR" id="52" extends="id:75">
+            <binary name="REC_TYP" id="108">
+                <fixedvalues>
+                    <fixedvalue value="0F"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="109">
+                <fixedvalues>
+                    <fixedvalue value="14"/>
+                </fixedvalues>
+            </binary>
+            <binary name="TEST_FLG" id="110" length="1"/>
+            <binary name="OPT_FLAG" id="111" length="1"/>
+            <number name="CYCL_CNT" id="112" type="integer" length="4"/>
+            <number name="REL_VADR" id="113" type="integer" length="4"/>
+            <number name="REPT_CNT" id="114" type="integer" length="4"/>
+            <number name="NUM_FAIL" id="115" type="integer" length="4"/>
+            <number name="XFAIL_AD" id="116" type="integer" length="4" signed="yes"/>
+            <number name="YFAIL_AD" id="117" type="integer" length="4" signed="yes"/>
+            <number name="VECT_OFF" id="118" type="integer" length="2" signed="yes"/>
+            <number name="RTN_ICNT" id="119" type="integer" length="2"/>
+            <number name="PGM_ICNT" id="120" type="integer" length="2"/>
+            <number name="RTN_INDX" id="121" repeatmin="RTN_ICNT" repeatmax="RTN_ICNT" type="integer" length="2"/>
+            <number name="RTN_STAT" id="122" repeatmin="RTN_ICNT" repeatmax="RTN_ICNT" type="integer" length="4" lengthunit="bit"/>
+            <number name="PGM_INDX" id="123" repeatmin="PGM_ICNT" repeatmax="PGM_ICNT" type="integer" length="2"/>
+            <number name="PGM_STAT" id="124" repeatmin="PGM_ICNT" repeatmax="PGM_ICNT" type="integer" length="4" lengthunit="bit"/>
+            <structure name="FAIL_PIN" id="125" consists-of="id:126"/>
+            <string name="VECT_NAM" id="128" type="pascal"/>
+            <string name="TIME_SET" id="129" type="pascal"/>
+            <string name="OP_CODE" id="130" type="pascal"/>
+            <string name="TEST_TXT" id="131" type="pascal"/>
+            <string name="ALARM_ID" id="132" type="pascal"/>
+            <string name="PROG_TXT" id="133" type="pascal"/>
+            <string name="RSLT_TXT" id="134" type="pascal"/>
+            <number name="PATG_NUM" id="135" repeatmin="0" type="integer" length="1"/>
+            <structure name="SPIN_MAP" id="136" consists-of="id:126"/>
+        </structure>
+        <structure name="GDR" id="139" extends="id:75">
+            <binary name="GEN_DATA" id="143" length="REC_LEN"/>
+        </structure>
+        <structure name="HBR" id="65" extends="id:75">
+            <binary name="REC_TYP" id="146">
+                <fixedvalues>
+                    <fixedvalue value="01"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="147">
+                <fixedvalues>
+                    <fixedvalue value="28"/>
+                </fixedvalues>
+            </binary>
+            <number name="HEAD_NUM" id="148" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="ALL" value="255"/>
+                </fixedvalues>
+            </number>
+            <number name="SITE_NUM" id="149" type="integer" length="1"/>
+            <number name="HBIN_NUM" id="150" type="integer" length="2"/>
+            <number name="HBIN_CNT" id="151" type="integer" length="4"/>
+            <string name="HBIN_PF" id="152" type="fixed-length" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Pass" value="P"/>
+                    <fixedvalue name="Fail" value="F"/>
+                </fixedvalues>
+            </string>
+            <string name="HBIN_NAM" id="153" repeatmin="0" type="pascal"/>
+        </structure>
+        <structure name="MIR" id="15" extends="id:75">
+            <binary name="REC_TYP" id="156">
+                <fixedvalues>
+                    <fixedvalue value="01"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="157">
+                <fixedvalues>
+                    <fixedvalue value="0A"/>
+                </fixedvalues>
+            </binary>
+            <number name="SETUP_T" id="158" type="integer" length="4"/>
+            <number name="START_T" id="159" type="integer" length="4"/>
+            <number name="STAT_NUM" id="160" type="integer" length="1"/>
+            <string name="MODE_COD" id="161" type="fixed-length" length="1"/>
+            <string name="RTST_COD" id="162" type="fixed-length" length="1"/>
+            <string name="PROT_COD" id="163" type="fixed-length" length="1"/>
+            <number name="BURN_TIM" id="164" type="integer" length="2"/>
+            <string name="CMOD_COD" id="165" type="fixed-length" length="1"/>
+            <string name="LOT_ID" id="166" type="pascal"/>
+            <string name="PART_TYP" id="167" type="pascal"/>
+            <string name="NODE_NAM" id="168" type="pascal"/>
+            <string name="TSTR_TYP" id="169" type="pascal"/>
+            <string name="JOB_NAM" id="170" type="pascal"/>
+            <string name="JOB_REV" id="171" repeatmin="0" type="pascal"/>
+            <string name="SBLOT_ID" id="172" repeatmin="0" type="pascal"/>
+            <string name="OPER_NAM" id="173" repeatmin="0" type="pascal"/>
+            <string name="EXEC_TYP" id="174" repeatmin="0" type="pascal"/>
+            <string name="EXEC_VER" id="175" repeatmin="0" type="pascal"/>
+            <string name="TEST_COD" id="176" repeatmin="0" type="pascal"/>
+            <string name="TST_TEMP" id="177" repeatmin="0" type="pascal"/>
+            <string name="USER_TXT" id="178" repeatmin="0" type="pascal"/>
+            <string name="AUX_FILE" id="179" repeatmin="0" type="pascal"/>
+            <string name="PKG_TYP" id="180" repeatmin="0" type="pascal"/>
+            <string name="FAMLY_ID" id="181" repeatmin="0" type="pascal"/>
+            <string name="DATE_COD" id="182" repeatmin="0" type="pascal"/>
+            <string name="FACIL_ID" id="183" repeatmin="0" type="pascal"/>
+            <string name="FLOOR_ID" id="184" repeatmin="0" type="pascal"/>
+            <string name="PROC_ID" id="185" repeatmin="0" type="pascal"/>
+            <string name="OPER_FRQ" id="186" repeatmin="0" type="pascal"/>
+            <string name="SPEC_NAM" id="187" repeatmin="0" type="pascal"/>
+            <string name="SPEC_VER" id="188" repeatmin="0" type="pascal"/>
+            <string name="FLOW_ID" id="189" repeatmin="0" type="pascal"/>
+            <string name="SETUP_ID" id="190" repeatmin="0" type="pascal"/>
+            <string name="DSGN_REV" id="191" repeatmin="0" type="pascal"/>
+            <string name="ENG_ID" id="192" repeatmin="0" type="pascal"/>
+            <string name="ROM_COD" id="193" repeatmin="0" type="pascal"/>
+            <string name="SERL_NUM" id="194" repeatmin="0" type="pascal"/>
+            <string name="SUPR_NAM" id="195" repeatmin="0" type="pascal"/>
+        </structure>
+        <structure name="MPR" id="54" extends="id:75">
+            <binary name="REC_TYP" id="198">
+                <fixedvalues>
+                    <fixedvalue value="0F"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="199">
+                <fixedvalues>
+                    <fixedvalue value="0F"/>
+                </fixedvalues>
+            </binary>
+            <number name="TEST_NUM" id="200" type="integer" length="4"/>
+            <number name="HEAD_NUM" id="201" type="integer" length="1"/>
+            <number name="SITE_NUM" id="202" type="integer" length="1"/>
+            <binary name="TEST_FLG" id="203" length="1"/>
+            <binary name="PARM_FLG" id="204" length="1"/>
+            <number name="RTN_ICNT" id="205" type="integer" length="2"/>
+            <number name="RSLT_CNT" id="206" type="integer" length="2"/>
+            <number name="RTN_STAT" id="207" repeatmin="RTN_ICNT" repeatmax="RTN_ICNT" type="integer" length="4" lengthunit="bit"/>
+            <number name="RTN_RSLT" id="208" repeatmin="RSLT_CNT" repeatmax="RSLT_CNT" type="float" length="4"/>
+            <string name="TEST_TXT" id="209" type="pascal"/>
+            <string name="ALARM_ID" id="210" type="pascal"/>
+            <binary name="OPT_FLAG" id="211" length="1"/>
+            <number name="RES_SCAL" id="212" type="integer" length="1" signed="yes"/>
+            <number name="LLM_SCAL" id="213" type="integer" length="1" signed="yes"/>
+            <number name="HLM_SCAL" id="214" type="integer" length="1" signed="yes"/>
+            <number name="LO_LIMIT" id="215" type="float" length="4"/>
+            <number name="HI_LIMIT" id="216" type="float" length="4"/>
+            <number name="START_IN" id="217" type="float" length="4"/>
+            <number name="INCR_IN" id="218" type="float" length="4"/>
+            <number name="RTN_INDX" id="219" repeatmin="RTN_ICNT" repeatmax="RTN_ICNT" type="integer" length="2"/>
+            <string name="UNITS" id="220" type="pascal"/>
+            <string name="UNITS_IN" id="221" type="pascal"/>
+            <string name="C_RESFMT" id="222" type="pascal"/>
+            <string name="C_LLMFMT" id="223" type="pascal"/>
+            <string name="C_HLMFMT" id="224" type="pascal"/>
+            <number name="LO_SPEC" id="225" type="float" length="4"/>
+            <number name="HI_SPEC" id="226" type="float" length="4"/>
+        </structure>
+        <structure name="MRR" id="72" extends="id:75">
+            <binary name="REC_TYP" id="229">
+                <fixedvalues>
+                    <fixedvalue value="01"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="230">
+                <fixedvalues>
+                    <fixedvalue value="14"/>
+                </fixedvalues>
+            </binary>
+            <number name="FINISH_T" id="231" type="integer" length="4"/>
+            <string name="DISP_COD" id="232" type="fixed-length" length="1"/>
+            <string name="USR_DESC" id="233" repeatmin="0" type="pascal"/>
+            <string name="EXC_DESC" id="234" repeatmin="0" type="pascal"/>
+        </structure>
+        <structure name="PCR" id="70" extends="id:75">
+            <binary name="REC_TYP" id="237">
+                <fixedvalues>
+                    <fixedvalue value="01"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="238">
+                <fixedvalues>
+                    <fixedvalue value="1E"/>
+                </fixedvalues>
+            </binary>
+            <number name="HEAD_NUM" id="239" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="ALL" value="255"/>
+                </fixedvalues>
+            </number>
+            <number name="SITE_NUM" id="240" type="integer" length="1"/>
+            <number name="PART_CNT" id="241" type="integer" length="4"/>
+            <number name="RTST_CNT" id="242" repeatmin="0" type="integer" length="4"/>
+            <number name="ABRT_CNT" id="243" repeatmin="0" type="integer" length="4"/>
+            <number name="GOOD_CNT" id="244" repeatmin="0" type="integer" length="4"/>
+            <number name="FUNC_CNT" id="245" repeatmin="0" type="integer" length="4"/>
+        </structure>
+        <structure name="PIR" id="41" extends="id:75">
+            <binary name="REC_TYP" id="248">
+                <fixedvalues>
+                    <fixedvalue value="05"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="249">
+                <fixedvalues>
+                    <fixedvalue value="0A"/>
+                </fixedvalues>
+            </binary>
+            <number name="HEAD_NUM" id="250" type="integer" length="1"/>
+            <number name="SITE_NUM" id="251" type="integer" length="1"/>
+        </structure>
+        <structure name="PGR" id="30" extends="id:75">
+            <binary name="REC_TYP" id="254">
+                <fixedvalues>
+                    <fixedvalue value="01"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="255">
+                <fixedvalues>
+                    <fixedvalue value="3E"/>
+                </fixedvalues>
+            </binary>
+            <number name="PMR_INDX" id="256" type="integer" length="2"/>
+            <number name="CHAN_TYP" id="257" type="integer" length="2"/>
+            <string name="CHAN_NAM" id="258" type="pascal"/>
+            <string name="PHY_NAM" id="259" type="pascal"/>
+            <string name="LOG_NAM" id="260" type="pascal"/>
+            <number name="HEAD_NUM" id="261" type="integer" length="1"/>
+            <number name="SITE_NUM" id="262" type="integer" length="1"/>
+        </structure>
+        <structure name="PLR" id="32" extends="id:75">
+            <binary name="REC_TYP" id="265">
+                <fixedvalues>
+                    <fixedvalue value="01"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="266">
+                <fixedvalues>
+                    <fixedvalue value="3F"/>
+                </fixedvalues>
+            </binary>
+            <number name="GRP_CNT" id="267" type="integer" length="2"/>
+            <number name="GRP_INDX" id="268" repeatmin="GRP_CNT" repeatmax="GRP_CNT" type="integer" length="2"/>
+            <number name="GRP_MODE" id="269" repeatmin="0" repeatmax="GRP_CNT" type="integer" length="2"/>
+            <number name="GRP_RADX" id="270" repeatmin="0" repeatmax="GRP_CNT" type="integer" length="1"/>
+            <string name="PGM_CHAR" id="271" repeatmin="0" repeatmax="GRP_CNT" type="pascal"/>
+            <string name="RTN_CHAR" id="272" repeatmin="0" repeatmax="GRP_CNT" type="pascal"/>
+            <string name="PGM_CHAL" id="273" repeatmin="0" repeatmax="PGM_CNT" type="pascal"/>
+            <string name="RTN_CHAL" id="274" repeatmin="0" repeatmax="PGM_CNT" type="pascal"/>
+        </structure>
+        <structure name="PMR" id="28" extends="id:75">
+            <binary name="REC_TYP" id="277">
+                <fixedvalues>
+                    <fixedvalue value="01"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="278">
+                <fixedvalues>
+                    <fixedvalue value="3C"/>
+                </fixedvalues>
+            </binary>
+            <number name="PMR_INDX" id="279" type="integer" length="2" minval="1" maxval="32767"/>
+            <number name="CHAN_TYP" id="280" repeatmin="0" type="integer" length="2"/>
+            <string name="CHAN_NAM" id="281" repeatmin="0" type="pascal"/>
+            <string name="PHY_NAM" id="282" repeatmin="0" type="pascal"/>
+            <string name="LOG_NAM" id="283" repeatmin="0" type="pascal"/>
+            <number name="HEAD_NUM" id="284" repeatmin="0" type="integer" length="1"/>
+            <number name="SITE_NUM" id="285" repeatmin="0" type="integer" length="1"/>
+        </structure>
+        <structure name="PRR" id="45" extends="id:75">
+            <binary name="REC_TYP" id="288">
+                <fixedvalues>
+                    <fixedvalue value="05"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="289">
+                <fixedvalues>
+                    <fixedvalue value="14"/>
+                </fixedvalues>
+            </binary>
+            <number name="HEAD_NUM" id="290" type="integer" length="1"/>
+            <number name="SITE_NUM" id="291" type="integer" length="1"/>
+            <binary name="PART_FLG" id="292" length="1"/>
+            <number name="NUM_TEST" id="293" type="integer" length="2"/>
+            <number name="HARD_BIN" id="294" type="integer" length="2"/>
+            <number name="SOFT_BIN" id="295" repeatmin="0" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="NA" value="65535"/>
+                </fixedvalues>
+            </number>
+            <number name="X_COORD" id="296" repeatmin="0" type="integer" length="2" signed="yes">
+                <fixedvalues>
+                    <fixedvalue name="NA" value="-32768"/>
+                </fixedvalues>
+            </number>
+            <number name="Y_COORD" id="297" repeatmin="0" type="integer" length="2" signed="yes">
+                <fixedvalues>
+                    <fixedvalue name="NA" value="-32768"/>
+                </fixedvalues>
+            </number>
+            <number name="TEST_T" id="298" repeatmin="0" type="integer" length="4"/>
+            <string name="PART_ID" id="299" repeatmin="0" type="pascal"/>
+            <string name="PART_TXT" id="300" repeatmin="0" type="pascal"/>
+            <structref name="PART_FIX" id="302" repeatmin="0" structure="id:301"/>
+        </structure>
+        <structure name="PTR" id="50" extends="id:75">
+            <binary name="REC_TYP" id="305">
+                <fixedvalues>
+                    <fixedvalue value="0F"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="306">
+                <fixedvalues>
+                    <fixedvalue value="0A"/>
+                </fixedvalues>
+            </binary>
+            <number name="TEST_NUM" id="307" type="integer" length="4"/>
+            <number name="HEAD_NUM" id="308" type="integer" length="1"/>
+            <number name="SITE_NUM" id="309" type="integer" length="1"/>
+            <binary name="TEST_FLG" id="310" length="8" lengthunit="bit"/>
+            <binary name="PARM_FLG" id="311" length="1"/>
+            <number name="RESULT" id="312" type="float" length="4"/>
+            <string name="TEST_TXT" id="313" repeatmin="0" type="pascal"/>
+            <string name="ALARM_ID" id="314" repeatmin="0" type="pascal"/>
+            <binary name="OPT_FLAG" id="315" repeatmin="0" length="1"/>
+            <number name="RES_SCAL" id="316" repeatmin="0" type="integer" length="1" signed="yes"/>
+            <number name="LLM_SCAL" id="317" repeatmin="0" type="integer" length="1" signed="yes"/>
+            <number name="HLM_SCAL" id="318" repeatmin="0" type="integer" length="1" signed="yes"/>
+            <number name="LO_LIMIT" id="319" repeatmin="0" type="float" length="4"/>
+            <number name="HI_LIMIT" id="320" repeatmin="0" type="float" length="4"/>
+            <string name="UNITS" id="321" repeatmin="0" type="pascal"/>
+            <string name="C_RESFMT" id="322" repeatmin="0" type="pascal"/>
+            <string name="C_LLMFMT" id="323" repeatmin="0" type="pascal"/>
+            <string name="C_HLMFMT" id="324" repeatmin="0" type="pascal"/>
+            <number name="LO_SPEC" id="325" repeatmin="0" type="float" length="4"/>
+            <number name="HI_SPEC" id="326" repeatmin="0" type="float" length="4"/>
+        </structure>
+        <structure name="RDR" id="17" extends="id:75">
+            <binary name="REC_TYP" id="329">
+                <fixedvalues>
+                    <fixedvalue value="01"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="330">
+                <fixedvalues>
+                    <fixedvalue value="46"/>
+                </fixedvalues>
+            </binary>
+            <number name="NUM_BINS" id="331" type="integer" length="2"/>
+            <number name="RTST_BIN" id="332" repeatmin="NUM_BINS" repeatmax="NUM_BINS" type="integer" length="2"/>
+        </structure>
+        <structure name="SBR" id="67" extends="id:75">
+            <binary name="REC_TYP" id="335">
+                <fixedvalues>
+                    <fixedvalue value="01"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="336">
+                <fixedvalues>
+                    <fixedvalue value="32"/>
+                </fixedvalues>
+            </binary>
+            <number name="HEAD_NUM" id="337" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="ALL" value="255"/>
+                </fixedvalues>
+            </number>
+            <number name="SITE_NUM" id="338" type="integer" length="1"/>
+            <number name="SBIN_NUM" id="339" type="integer" length="2"/>
+            <number name="SBIN_CNT" id="340" type="integer" length="4"/>
+            <string name="SBIN_PF" id="341" type="fixed-length" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Pass" value="P"/>
+                    <fixedvalue name="Fail" value="F"/>
+                </fixedvalues>
+            </string>
+            <string name="SBIN_NAM" id="342" type="pascal"/>
+        </structure>
+        <structure name="SDR" id="19" extends="id:75">
+            <binary name="REC_TYP" id="345">
+                <fixedvalues>
+                    <fixedvalue value="01"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="346">
+                <fixedvalues>
+                    <fixedvalue value="50"/>
+                </fixedvalues>
+            </binary>
+            <number name="HEAD_NUM" id="347" type="integer" length="1"/>
+            <number name="SITE_GRP" id="348" type="integer" length="1"/>
+            <number name="SITE_CNT" id="349" type="integer" length="1"/>
+            <binary name="SITE_NUM" id="350" length="SITE_CNT"/>
+            <string name="HAND_TYP" id="351" repeatmin="0" type="pascal"/>
+            <string name="HAND_ID" id="352" repeatmin="0" type="pascal"/>
+            <string name="CARD_TYP" id="353" repeatmin="0" type="pascal"/>
+            <string name="CARD_ID" id="354" repeatmin="0" type="pascal"/>
+            <string name="LOAD_TYP" id="355" repeatmin="0" type="pascal"/>
+            <string name="LOAD_ID" id="356" repeatmin="0" type="pascal"/>
+            <string name="DIB_TYP" id="357" repeatmin="0" type="pascal"/>
+            <string name="DIB_ID" id="358" repeatmin="0" type="pascal"/>
+            <string name="CABL_TYP" id="359" repeatmin="0" type="pascal"/>
+            <string name="CABL_ID" id="360" repeatmin="0" type="pascal"/>
+            <string name="CONT_TYP" id="361" repeatmin="0" type="pascal"/>
+            <string name="CONT_ID" id="362" repeatmin="0" type="pascal"/>
+            <string name="LASR_TYP" id="363" repeatmin="0" type="pascal"/>
+            <string name="LASR_ID" id="364" repeatmin="0" type="pascal"/>
+            <string name="EXTR_TYP" id="365" repeatmin="0" type="pascal"/>
+            <string name="EXTR_ID" id="366" repeatmin="0" type="pascal"/>
+        </structure>
+        <structure name="TSR" id="63" extends="id:75">
+            <binary name="REC_TYP" id="369">
+                <fixedvalues>
+                    <fixedvalue value="0A"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="370">
+                <fixedvalues>
+                    <fixedvalue value="1E"/>
+                </fixedvalues>
+            </binary>
+            <number name="HEAD_NUM" id="371" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="ALL" value="255"/>
+                </fixedvalues>
+            </number>
+            <number name="SITE_NUM" id="372" type="integer" length="1"/>
+            <string name="TEST_TYP" id="373" type="fixed-length" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Parametric" value="P"/>
+                    <fixedvalue name="Multiple" value="M"/>
+                    <fixedvalue name="Functional" value="F"/>
+                </fixedvalues>
+            </string>
+            <number name="TEST_NUM" id="374" type="integer" length="4"/>
+            <number name="EXEC_CNT" id="375" repeatmin="0" type="integer" length="4">
+                <fixedvalues>
+                    <fixedvalue name="NA" value="4294967295"/>
+                </fixedvalues>
+            </number>
+            <number name="FAIL_CNT" id="376" repeatmin="0" type="integer" length="4">
+                <fixedvalues>
+                    <fixedvalue name="NA" value="4294967295"/>
+                </fixedvalues>
+            </number>
+            <number name="ALRM_CNT" id="377" repeatmin="0" type="integer" length="4">
+                <fixedvalues>
+                    <fixedvalue name="NA" value="4294967295"/>
+                </fixedvalues>
+            </number>
+            <string name="TEST_NAM" id="378" repeatmin="0" type="pascal"/>
+            <string name="SEQ_NAME" id="379" repeatmin="0" type="pascal"/>
+            <string name="TEST_LBL" id="380" repeatmin="0" type="pascal"/>
+            <binary name="OPT_FLAG" id="381" repeatmin="0" length="1"/>
+            <number name="TEST_TIM" id="382" repeatmin="0" type="float" length="4"/>
+            <number name="TEST_MIN" id="383" repeatmin="0" type="float" length="4"/>
+            <number name="TEST_MAX" id="384" repeatmin="0" type="float" length="4"/>
+            <number name="TST_SUMS" id="385" repeatmin="0" type="float" length="4"/>
+            <number name="TST_SQRS" id="386" repeatmin="0" type="float" length="4"/>
+        </structure>
+        <structure name="WCR" id="21" extends="id:75">
+            <binary name="REC_TYP" id="389">
+                <fixedvalues>
+                    <fixedvalue value="02"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="390">
+                <fixedvalues>
+                    <fixedvalue value="1E"/>
+                </fixedvalues>
+            </binary>
+            <number name="WAFR_SIZ" id="391" type="float" length="4"/>
+            <number name="DIE_HT" id="392" type="float" length="4"/>
+            <number name="DIE_WID" id="393" type="float" length="4"/>
+            <number name="WF_UNITS" id="394" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="UNKNOWN" value="0"/>
+                    <fixedvalue name="INCHES" value="1"/>
+                    <fixedvalue name="CENTIMETERS" value="2"/>
+                    <fixedvalue name="MILLIMETERS" value="3"/>
+                    <fixedvalue name="MILS" value="4"/>
+                </fixedvalues>
+            </number>
+            <string name="WF_FLAT" id="395" type="fixed-length" length="1">
+                <fixedvalues>
+                    <fixedvalue name="UP" value="U"/>
+                    <fixedvalue name="DOWN" value="D"/>
+                    <fixedvalue name="LEFT" value="L"/>
+                    <fixedvalue name="RIGHT" value="R"/>
+                    <fixedvalue name="UNKNOWN" value=" "/>
+                </fixedvalues>
+            </string>
+            <number name="CENTER_X" id="396" type="integer" length="2" signed="yes"/>
+            <number name="CENTER_Y" id="397" type="integer" length="2" signed="yes"/>
+            <string name="POS_X" id="398" type="fixed-length" length="1">
+                <fixedvalues>
+                    <fixedvalue name="LEFT" value="L"/>
+                    <fixedvalue name="RIGHT" value="R"/>
+                    <fixedvalue name="UNKNOWN" value=" "/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="WIR" id="35" extends="id:75">
+            <binary name="REC_TYP" id="401">
+                <fixedvalues>
+                    <fixedvalue value="02"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="402">
+                <fixedvalues>
+                    <fixedvalue value="0A"/>
+                </fixedvalues>
+            </binary>
+            <number name="HEAD_NUM" id="403" type="integer" length="1"/>
+            <number name="SITE_GRP" id="404" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="NA" value="255"/>
+                </fixedvalues>
+            </number>
+            <number name="START_T" id="405" type="integer" length="4"/>
+            <string name="WAFER_ID" id="406" type="pascal"/>
+        </structure>
+        <structure name="WRR" id="38" extends="id:75">
+            <binary name="REC_TYP" id="409">
+                <fixedvalues>
+                    <fixedvalue value="02"/>
+                </fixedvalues>
+            </binary>
+            <binary name="REC_SUB" id="410">
+                <fixedvalues>
+                    <fixedvalue value="14"/>
+                </fixedvalues>
+            </binary>
+        </structure>
+        <structure name="Types" id="412" encoding="ISO_8859-1:1987" endian="little" signed="no"/>
+        <structure name="VarBinary" id="301" alignment="1" extends="id:412">
+            <number name="Len" id="414" type="integer" length="1"/>
+            <binary name="Binary" id="415" length="Len" lengthunit="bit"/>
+        </structure>
+        <structure name="VarBinaryD" id="126" alignment="1" extends="id:412">
+            <number name="Len" id="417" type="integer" length="2"/>
+            <binary name="Binary" id="418" length="Len" lengthunit="bit"/>
+        </structure>
+    </grammar>
+</ufwb>

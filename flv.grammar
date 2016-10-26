@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.0.3.1">
+    <grammar name="Flash Video" start="FLV-Datei" author="Alexander Meinke" fileextension="flv" uti="com.adobe.flash.video">
+        <description>Grammatik für FLV-Dateien</description>
+        <structure name="FLV-Datei" id="2099" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="Header" id="2101"/>
+            <number name="PrevTagSize" mustmatch="yes" id="2102" fillcolor="A87846" type="integer" length="4">
+                <fixedvalue name="Always" value="0"/>
+            </number>
+            <structure name="Tags" id="2103" order="variable">
+                <structref name="MetaTag" id="2105" repeatmin="0"/>
+                <structref name="VideoTag" id="2107" repeatmin="0"/>
+                <structref name="AudioTag" id="2109" repeatmin="0"/>
+            </structure>
+        </structure>
+        <structure name="Header" id="2100" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="Signature" mustmatch="yes" id="2112" fillcolor="213BFB" type="fixed-length" length="3">
+                <fixedvalue name="FlashVideo" value="FLV"/>
+            </string>
+            <number name="Version" id="2113" fillcolor="1D34E0" type="integer" length="1"/>
+            <number name="Flags" id="2114" fillcolor="172ABF" type="integer" length="1" display="hex">
+                <mask name="Video" value="0x1">
+                    <fixedvalue name="Video" value="0x1"/>
+                </mask>
+                <mask name="Audio" value="0x4">
+                    <fixedvalue name="Audio" value="0x4"/>
+                </mask>
+            </number>
+            <number name="Size" id="2115" fillcolor="1122A0" type="integer" length="4"/>
+        </structure>
+        <structure name="Tag" id="2117" repeatmin="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Type" id="2118" type="integer" length="1" display="hex"/>
+            <number name="BodyLength" id="2119" type="integer" length="3"/>
+            <number name="Timestamp" id="2120" type="integer" length="3"/>
+            <number name="TimestampExtended" id="2121" type="integer" length="1"/>
+            <number name="StreamId" mustmatch="yes" id="2122" type="integer" length="3">
+                <fixedvalue name="Always" value="0"/>
+            </number>
+            <structure name="Body" id="2123" length="prev.BodyLength"/>
+            <number name="PrevTagSize" id="2125" fillcolor="A87846" type="integer" length="4"/>
+        </structure>
+        <structure name="MetaTag" id="2104" extends="Tag" fillcolor="1AFCFE">
+            <number name="Type" mustmatch="yes" id="2127" fillcolor="1AFCFE" type="integer">
+                <fixedvalue name="META" value="0x12"/>
+            </number>
+            <number name="BodyLength" id="2128" fillcolor="16E0E0" type="integer"/>
+            <number name="Timestamp" id="2129" fillcolor="11BFBF" type="integer"/>
+            <number name="TimestampExtended" id="2130" fillcolor="11BFBF" type="integer"/>
+            <number name="StreamId" id="2131" fillcolor="0CA0A0" type="integer">
+                <fixedvalue name="Always" value="0"/>
+            </number>
+            <number name="PrevTagSize" id="2136" type="integer"/>
+        </structure>
+        <structure name="VideoTag" id="2106" extends="Tag" fillcolor="00F729">
+            <number name="Type" mustmatch="yes" id="2138" fillcolor="00F729" type="integer">
+                <fixedvalue name="VIDEO" value="0x9"/>
+            </number>
+            <number name="BodyLength" id="2139" fillcolor="00E024" type="integer"/>
+            <number name="Timestamp" id="2140" fillcolor="00BF1D" type="integer"/>
+            <number name="TimestampExtended" id="2141" fillcolor="00BF1D" type="integer"/>
+            <number name="StreamId" id="2142" fillcolor="00A017" type="integer">
+                <fixedvalue name="Always" value="0"/>
+            </number>
+            <structure name="Body" id="2143" fillcolor="007F10">
+                <number name="Flags" id="2144" fillcolor="007F10" type="integer" length="1">
+                    <mask name="CodecId" value="0xF">
+                        <fixedvalue name="Sorensen H.263" value="0x2"/>
+                        <fixedvalue name="ScreenVideo" value="0x3"/>
+                        <fixedvalue name="On2 VP6" value="0x4"/>
+                        <fixedvalue name="On2 VP6 Alpha" value="0x5"/>
+                        <fixedvalue name="ScreenVideo 2" value="0x6"/>
+                        <fixedvalue name="H264 MPEG-4 AVC" value="0x7"/>
+                    </mask>
+                    <mask name="FrameType" value="0xF0">
+                        <fixedvalue name="Keyframe" value="0x10"/>
+                        <fixedvalue name="Inter Frame" value="0x20"/>
+                        <fixedvalue name="Disposable inter Frame" value="0x30"/>
+                    </mask>
+                </number>
+            </structure>
+            <number name="PrevTagSize" id="2146" type="integer"/>
+        </structure>
+        <structure name="AudioTag" id="2108" extends="Tag" fillcolor="FF47FC">
+            <number name="Type" mustmatch="yes" id="2148" fillcolor="FF47FC" type="integer">
+                <fixedvalue name="AUDIO" value="0x8"/>
+            </number>
+            <number name="BodyLength" id="2149" fillcolor="E03EE0" type="integer"/>
+            <number name="Timestamp" id="2150" fillcolor="BF33BF" type="integer"/>
+            <number name="TimestampExtended" id="2151" fillcolor="BF33BF" type="integer"/>
+            <number name="StreamId" id="2152" fillcolor="A02AA0" type="integer">
+                <fixedvalue name="Always" value="0"/>
+            </number>
+            <structure name="Body" id="2153" fillcolor="7F1F7F">
+                <number name="Flags" id="2154" fillcolor="7F1F7F" type="integer" length="1">
+                    <mask name="Type" value="0x1">
+                        <fixedvalue name="Mono" value="0x0"/>
+                        <fixedvalue name="Stereo" value="0x1"/>
+                    </mask>
+                    <mask name="Size" value="0x2">
+                        <fixedvalue name="8Bit" value="0x0"/>
+                        <fixedvalue name="16Bit" value="0x2"/>
+                    </mask>
+                    <mask name="Rate" value="0xC">
+                        <fixedvalue name="5.5kHz" value="0x0"/>
+                        <fixedvalue name="11kHz" value="0x4"/>
+                        <fixedvalue name="22kHz" value="0x8"/>
+                        <fixedvalue name="44kHz" value="0xC"/>
+                    </mask>
+                    <mask name="Format" value="0xF0">
+                        <fixedvalue name="Uncompressed" value="0x0"/>
+                        <fixedvalue name="ADPCM" value="0x10"/>
+                        <fixedvalue name="MP3" value="0x20"/>
+                        <fixedvalue name="Nellymoser 8kHz mono" value="0x50"/>
+                        <fixedvalue name="Nellymoser" value="0x60"/>
+                        <fixedvalue name="Speex" value="0xB0"/>
+                        <fixedvalue name="MPEG AAC" value="0xA0"/>
+                    </mask>
+                </number>
+            </structure>
+            <number name="PrevTagSize" id="2156" type="integer"/>
+        </structure>
+    </grammar>
+</ufwb>

@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.1.5.1">
+    <grammar name="Windows Wave" start="id:52" author="Andreas Pehnack / Dominik Vogel" fileextension="wav" uti="com.microsoft.waveform-audio">
+        <description>Grammar for WAV (RIFF) files</description>
+        <structure name="Defaults" id="53" alignment="2" repeatmin="0" encoding="ISO_8859-1:1987" endian="little" signed="no"/>
+        <structure name="Chunk" id="55" repeatmin="0" extends="id:53">
+            <string name="chunkID" id="56" fillcolor="FFD385" type="fixed-length" length="4"/>
+            <number name="chunkSize" id="57" fillcolor="58FEFE" type="integer" length="4"/>
+            <structure name="Contents" id="58" length="prev.chunkSize" alignment="1"/>
+        </structure>
+        <structure name="AFspChunk" id="61" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="62" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="afsp"/>
+            </string>
+            <number name="chunkSize" id="63" type="integer"/>
+            <structure name="Contents" id="64">
+                <string name="Identifier" id="65" type="fixed-length" length="4">
+                    <fixedvalue name="Identifier" value="AFSP"/>
+                </string>
+                <string name="Fields" id="66" repeatmin="0" repeatmax="100" type="zero-terminated"/>
+            </structure>
+        </structure>
+        <structure name="AXMLChunk" id="69" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="70" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="axml"/>
+            </string>
+            <number name="chunkSize" id="71" type="integer"/>
+            <structure name="Contents" id="72">
+                <string name="XML Data" id="73" type="zero-terminated"/>
+            </structure>
+        </structure>
+        <structure name="bext Chunk" id="76" repeatmin="0" extends="id:55" fillcolor="FF2915">
+            <string name="chunkID" mustmatch="yes" id="77" fillcolor="FF523A" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="bext"/>
+            </string>
+            <number name="chunkSize" id="78" fillcolor="67EBFC" type="integer"/>
+            <structure name="Contents" id="79">
+                <string name="Description" id="80" fillcolor="78F87E" repeatmin="0" type="fixed-length" length="256"/>
+                <string name="Originator" id="81" fillcolor="FF89FC" type="fixed-length" length="32"/>
+                <string name="Originator Reference" id="82" fillcolor="FE7E7B" type="fixed-length" length="32"/>
+                <string name="Origination Date" id="83" fillcolor="FED37F" repeatmin="0" type="fixed-length" length="10"/>
+                <string name="Origination Time" id="84" fillcolor="79FCFE" type="fixed-length" length="8"/>
+                <number name="Samples Since Midnight" id="85" fillcolor="0C98FB" type="integer" length="8"/>
+                <number name="BWF Version" id="86" fillcolor="A97846" type="integer" length="2"/>
+                <string name="UMID" id="87" fillcolor="D4F980" type="fixed-length" length="64"/>
+                <binary name="Reserved" id="88" length="190"/>
+                <string name="Info" id="89" fillcolor="FEF934" repeatmin="0" type="fixed-length" length="0"/>
+            </structure>
+        </structure>
+        <structure name="CuePoint" id="92" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="ID" id="93" type="integer" length="4"/>
+            <number name="Position" id="94" type="integer" length="4"/>
+            <string name="Data Chunk ID" id="95" type="fixed-length" length="4"/>
+            <number name="Chunk Start" id="96" type="integer" length="4"/>
+            <number name="Block Start" id="97" type="integer" length="4"/>
+            <number name="Sample Offset" id="98" type="integer" length="4"/>
+        </structure>
+        <structure name="CueChunk" id="100" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="101" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="cue "/>
+            </string>
+            <number name="chunkSize" id="102" type="integer"/>
+            <structure name="Contents" id="103">
+                <number name="Num Cue Points" id="104" fillcolor="438F2A" type="integer" length="4"/>
+                <structref name="CuePoints" id="105" repeatmin="0" repeatmax="100" structure="id:92"/>
+            </structure>
+        </structure>
+        <structure name="DataChunk" id="108" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="109" type="fixed-length" length="4" fixedval="data"/>
+            <number name="chunkSize" id="110" type="integer"/>
+            <structure name="Contents" id="111">
+                <binary name="Samples" id="112" fillcolor="FE7E7B"/>
+            </structure>
+        </structure>
+        <structure name="DispChunk" id="115" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="116" type="fixed-length" length="4">
+                <fixedvalue name="Identifier1" value="disp"/>
+                <fixedvalue name="Identifier2" value="DISP"/>
+            </string>
+            <number name="chunkSize" id="117" type="integer"/>
+            <structure name="Contents" id="118">
+                <number name="Type" id="119" type="integer" length="4">
+                    <fixedvalue name="Text" value="1"/>
+                    <fixedvalue name="Bitmap" value="2"/>
+                    <fixedvalue name="DIB" value="8"/>
+                    <fixedvalue name="Palette" value="9"/>
+                </number>
+                <binary name="Data" id="120"/>
+            </structure>
+        </structure>
+        <structure name="FactChunk" id="123" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="124" type="fixed-length" length="4" fixedval="fact"/>
+            <number name="chunkSize" id="125" type="integer"/>
+            <structure name="Contents" id="126">
+                <number name="Format Dependent Data" id="127" fillcolor="CEFA8B" type="integer" length="4"/>
+            </structure>
+        </structure>
+        <structure name="MPEG1WaveFormat" id="130" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="wfx" mustmatch="yes" id="131" type="integer" length="2" display="hex">
+                <fixedvalue name="Wave Format MPEG" value="0x50"/>
+            </number>
+            <number name="Head Layer" id="132" type="integer" length="2">
+                <fixedvalue name="ACM MPEG Layer 1" value="1"/>
+                <fixedvalue name="ACM MPEG Layer 2" value="2"/>
+                <fixedvalue name="ACM MPEG Layer 3" value="3"/>
+            </number>
+            <number name="Head Bitrate" id="133" type="integer" length="4"/>
+            <number name="Head Mode" id="134" type="integer" length="2" display="hex">
+                <mask name="Head Mode" value="0xF">
+                    <fixedvalue name="Stereo" value="0x1"/>
+                    <fixedvalue name="Joint Stereo" value="0x2"/>
+                    <fixedvalue name="Dual Channel" value="0x4"/>
+                    <fixedvalue name="Single Channel" value="0x8"/>
+                </mask>
+            </number>
+            <number name="Head Mode Ext" id="135" type="integer" length="2"/>
+            <number name="HeadEmphasis" id="136" type="integer" length="2">
+                <fixedvalue name="no emphasis" value="1"/>
+                <fixedvalue name="50/15 ms emphasis" value="2"/>
+                <fixedvalue name="reserved" value="3"/>
+                <fixedvalue name="CCITT J.17" value="4"/>
+            </number>
+            <number name="HeadFlags" id="137" type="integer" length="2">
+                <mask name="Head Flags" value="0x1F">
+                    <fixedvalue name="Private Bit" value="0x1"/>
+                    <fixedvalue name="Copyright" value="0x2"/>
+                    <fixedvalue name="Original Home" value="0x4"/>
+                    <fixedvalue name="Protection Bit" value="0x8"/>
+                    <fixedvalue name="ID MPEG1" value="0x10"/>
+                </mask>
+            </number>
+            <number name="PTS Low" id="138" type="integer" length="4"/>
+            <number name="PTS High" id="139" type="integer" length="4"/>
+        </structure>
+        <structure name="VOXFormat" id="141" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="Identifier" mustmatch="yes" id="142" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="VOX!"/>
+            </string>
+            <number name="Unknown1" id="143" type="integer" length="4"/>
+            <number name="Unknown2" id="144" type="integer" length="4"/>
+            <number name="Unknown3" id="145" type="integer" length="4"/>
+            <binary name="Unknown4" id="146"/>
+        </structure>
+        <structure name="FormatChunk" id="148" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="149" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="fmt "/>
+            </string>
+            <number name="chunkSize" id="150" type="integer"/>
+            <structure name="Contents" id="151">
+                <number name="Compression code" id="152" fillcolor="FF278D" type="integer" length="2">
+                    <fixedvalue name="Unknown" value="0"/>
+                    <fixedvalue name="PCM/uncompressed" value="1"/>
+                    <fixedvalue name="Microsoft ADPCM" value="2"/>
+                    <fixedvalue name="ITU G.711 a-law" value="6"/>
+                    <fixedvalue name="ITU G.711 µ-law" value="7"/>
+                    <fixedvalue name="IMA ADPCM" value="17"/>
+                    <fixedvalue name="ITU G.723 ADPCM (Yamaha)" value="20"/>
+                    <fixedvalue name="GSM 6.10" value="49"/>
+                    <fixedvalue name="ITU G.721 ADPCM" value="64"/>
+                    <fixedvalue name="MPEG" value="80"/>
+                    <fixedvalue name="Experimental" value="65536"/>
+                </number>
+                <number name="Number of Channels" id="153" fillcolor="FF84F7" type="integer" length="2"/>
+                <number name="Sample rate" id="154" fillcolor="FF9130" type="integer" length="4"/>
+                <number name="Average bytes per Second" id="155" fillcolor="7AF951" type="integer" length="4"/>
+                <number name="Block align" id="156" fillcolor="0098F7" type="integer" length="2"/>
+                <number name="Significant bits per Sample" id="157" fillcolor="9C3AF5" type="integer" length="2"/>
+                <number name="ExtraFormatBytes" id="158" type="integer" length="2"/>
+                <structure name="Extension" id="159" length="prev.ExtraFormatBytes">
+                    <structref name="MPEG1WaveFormat" id="160" repeatmin="0" structure="id:130"/>
+                    <structref name="VOXFormat" id="161" repeatmin="0" structure="id:141"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="InstrumentChunk" id="165" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="166" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="inst"/>
+            </string>
+            <number name="chunkSize" id="167" type="integer">
+                <fixedvalue name="size" value="7"/>
+            </number>
+            <structure name="Contents" id="168">
+                <number name="Unshifted Note" id="169" type="integer" length="1"/>
+                <number name="Fine Tune (dB)" id="170" type="integer" length="1" signed="yes"/>
+                <number name="Gain" id="171" type="integer" length="1" signed="yes"/>
+                <number name="Low Note" id="172" type="integer" length="1"/>
+                <number name="High Note" id="173" type="integer" length="1"/>
+                <number name="Low Velocity" id="174" type="integer" length="1"/>
+                <number name="High Velocity" id="175" type="integer" length="1"/>
+            </structure>
+        </structure>
+        <structure name="JunkChunk" id="178" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="179" type="fixed-length" length="4">
+                <fixedvalue name="Identifier1" value="junk"/>
+                <fixedvalue name="Identifier2" value="JUNK"/>
+                <fixedvalue name="Identifier3" value="filr"/>
+            </string>
+            <number name="chunkSize" id="180" type="integer"/>
+        </structure>
+        <structure name="LabeledTextChunk" id="184" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="185" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="ltxt"/>
+            </string>
+            <number name="chunkSize" id="186" type="integer"/>
+            <structure name="Contents" id="187">
+                <number name="Cue Point ID" id="188" type="integer" length="4"/>
+                <number name="Sample Length" id="189" type="integer" length="4"/>
+                <string name="Purpose ID" id="190" type="fixed-length" length="4">
+                    <fixedvalue name="Script Text" value="scrp"/>
+                    <fixedvalue name="Close Caption" value="capt"/>
+                </string>
+                <number name="Country" id="191" type="integer" length="2"/>
+                <number name="Language" id="192" type="integer" length="2"/>
+                <number name="Dialect" id="193" type="integer" length="2"/>
+                <number name="Code Page" id="194" type="integer" length="2"/>
+                <string name="Text" id="195" type="zero-terminated"/>
+            </structure>
+        </structure>
+        <structure name="LabelChunk" id="198" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="199" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="labl"/>
+            </string>
+            <number name="chunkSize" id="200" type="integer"/>
+            <structure name="Contents" id="201">
+                <number name="Cue Point ID" id="202" type="integer" length="4"/>
+                <string name="Text" id="203" type="zero-terminated"/>
+            </structure>
+        </structure>
+        <structure name="LinkChunk" id="206" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="207" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="link"/>
+            </string>
+            <number name="chunkSize" id="208" type="integer"/>
+            <structure name="Contents" id="209">
+                <string name="XML Data" id="210" type="zero-terminated"/>
+            </structure>
+        </structure>
+        <structure name="ListSubChunk" id="213" repeatmin="0" extends="id:55">
+            <string name="chunkID" id="214" type="fixed-length" length="4">
+                <fixedvalue name="Identifier1" value="ICRD"/>
+                <fixedvalue name="Identifier2" value="ISFT"/>
+                <fixedvalue name="Identifier3" value="ICMT"/>
+                <fixedvalue name="Identifier4" value="ICOP"/>
+            </string>
+            <number name="chunkSize" id="215" type="integer"/>
+            <structure name="Contents" id="216">
+                <string name="listData" id="217" type="zero-terminated"/>
+            </structure>
+        </structure>
+        <structure name="ListChunk" id="220" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="221" type="fixed-length" length="4">
+                <fixedvalue name="Identifier1" value="list"/>
+                <fixedvalue name="Identifier2" value="LIST"/>
+            </string>
+            <number name="chunkSize" id="222" type="integer"/>
+            <structure name="Contents" id="223">
+                <string name="Type ID" id="224" type="fixed-length" length="4">
+                    <fixedvalue name="TypeID" value="adtl"/>
+                </string>
+                <structref name="Structure reference" id="225" repeatmin="0" repeatmax="100" structure="id:213"/>
+            </structure>
+        </structure>
+        <structure name="MPEGAudioChunk" id="228" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="229" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="mext"/>
+            </string>
+            <number name="chunkSize" id="230" type="integer"/>
+            <structure name="Contents" id="231">
+                <number name="Sound Information" id="232" type="integer" length="2">
+                    <mask name="Homogeneous data" value="0x1">
+                        <fixedvalue name="Homogeneous sound data" value="0x1"/>
+                        <fixedvalue name="Non-homogeneous sound data" value="0x0"/>
+                    </mask>
+                    <mask name="Padding" value="0x2">
+                        <fixedvalue name="Padding bit is used" value="0x0"/>
+                        <fixedvalue name="Padding bit is set to 0" value="0x2"/>
+                    </mask>
+                    <mask name="Sequence" value="0x4">
+                        <fixedvalue name="The file contains a sequence of frames" value="0x4"/>
+                    </mask>
+                    <mask name="Free Format" value="0x8">
+                        <fixedvalue name="Free format is used" value="0x8"/>
+                        <fixedvalue name="No free format audio frame" value="0x0"/>
+                    </mask>
+                </number>
+                <number name="Frame Size" id="233" type="integer" length="2"/>
+                <number name="Ancillary Data Length" id="234" type="integer" length="2"/>
+                <number name="Ancillary Data Def" id="235" type="integer" length="2" display="hex">
+                    <mask name="Energy left" value="0x1">
+                        <fixedvalue name="Energy of left channel present in ancillary data" value="0x1"/>
+                    </mask>
+                    <mask name="Private" value="0x2">
+                        <fixedvalue name="A private byte is free for internal use in ancillary data" value="0x2"/>
+                    </mask>
+                    <mask name="Energy right" value="0x4">
+                        <fixedvalue name="Energy of right channel present in ancillary data" value="0x4"/>
+                    </mask>
+                    <mask name="ADR data" value="0x8">
+                        <fixedvalue name="reserved for ADR data" value="0x8"/>
+                    </mask>
+                    <mask name="DAB data" value="0x10">
+                        <fixedvalue name="reserved for DAB data" value="0x10"/>
+                    </mask>
+                    <mask name="J 52 data" value="0x20">
+                        <fixedvalue name="reserved for J 52 data" value="0x20"/>
+                    </mask>
+                    <mask name="future use" value="0xFFC0"/>
+                </number>
+                <string name="Reserved" id="236" type="fixed-length" length="4"/>
+            </structure>
+        </structure>
+        <structure name="NetMix Chunk" id="239" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="240" type="fixed-length" length="4">
+                <fixedvalue name="Version 1" value="nmix"/>
+                <fixedvalue name="Version 2 (Encrypted)" value="nmen"/>
+                <fixedvalue name="Version 3 (OpenXML)" value="oXML"/>
+            </string>
+            <number name="chunkSize" id="241" type="integer"/>
+            <structure name="Contents" id="242">
+                <string name="Metadata" id="243" fillcolor="FE7E7B" type="fixed-length" length="0"/>
+            </structure>
+        </structure>
+        <structure name="NoteChunk" id="246" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="247" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="note"/>
+            </string>
+            <number name="chunkSize" id="248" type="integer"/>
+            <structure name="Contents" id="249">
+                <number name="Cue Point ID" id="250" type="integer" length="4"/>
+                <string name="Text" id="251" type="zero-terminated"/>
+            </structure>
+        </structure>
+        <structure name="OVWF Chunk" id="254" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="255" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="ovwf"/>
+            </string>
+            <number name="chunkSize" id="256" type="integer"/>
+            <structure name="Contents" id="257">
+                <number name="Unknown 1" id="258" fillcolor="FE7E7B" type="integer" length="4"/>
+                <number name="Length" id="259" fillcolor="7A84FB" type="integer" length="4"/>
+                <number name="Unknown 2" id="260" fillcolor="FF89FC" type="integer" length="4"/>
+                <number name="Unknown 3" id="261" fillcolor="FE9223" type="integer" length="4"/>
+                <number name="Unknown 4" id="262" fillcolor="91F72E" type="integer" length="4"/>
+                <number name="Unknown 5" id="263" fillcolor="0C98FB" type="integer" length="4"/>
+                <number name="Number of Datapoints" id="264" fillcolor="FF3692" type="integer" length="4"/>
+                <structure name="Waveform Data" id="265">
+                    <structure name="Interpolation Point" id="266" repeat="id:264" repeatmin="0" repeatmax="-1">
+                        <number name="min Value" id="267" fillcolor="FEFA81" type="integer" length="1"/>
+                        <number name="max Value" id="268" fillcolor="78F87E" type="integer" length="1"/>
+                    </structure>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="PadChunk" id="273" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="274" type="fixed-length" length="4">
+                <fixedvalue name="Identifier1" value="pad "/>
+                <fixedvalue name="Identifier2" value="PAD "/>
+            </string>
+            <number name="chunkSize" id="275" type="integer"/>
+            <structure name="Contents" id="276">
+                <binary name="RandomData" id="277"/>
+            </structure>
+        </structure>
+        <structure name="PlaylistSegment" id="280" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Cue Point ID" id="281" type="integer" length="4"/>
+            <number name="Length (in samples)" id="282" type="integer" length="4"/>
+            <number name="Number of Repeats" id="283" type="integer" length="4"/>
+        </structure>
+        <structure name="PositionPeak" id="285" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Value" id="286" type="integer" length="4" display="hex"/>
+            <number name="Position" id="287" type="integer" length="4"/>
+        </structure>
+        <structure name="PeakChunk" id="289" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="290" type="fixed-length" length="4">
+                <fixedvalue name="Identifier1" value="peak"/>
+                <fixedvalue name="Identifier2" value="PEAK"/>
+            </string>
+            <number name="chunkSize" id="291" type="integer"/>
+            <structure name="Contents" id="292">
+                <number name="Version" id="293" type="integer" length="4"/>
+                <number name="Timestamp" id="294" type="integer" length="4"/>
+                <structref name="PositionPeak" id="295" repeatmin="0" repeatmax="100" structure="id:285"/>
+            </structure>
+        </structure>
+        <structure name="PeakEnvelopeChunk" id="298" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="299" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="levl"/>
+            </string>
+            <number name="chunkSize" id="300" type="integer"/>
+            <structure name="Contents" id="301">
+                <number name="Version" id="302" type="integer" length="2"/>
+                <number name="Format" id="303" type="integer" length="2">
+                    <fixedvalue name="UINT8" value="1"/>
+                    <fixedvalue name="UINT16" value="2"/>
+                </number>
+                <number name="Points per Value" id="304" type="integer" length="2"/>
+                <number name="Block Size" id="305" type="integer" length="2"/>
+                <number name="Peak Channels" id="306" type="integer" length="2"/>
+                <number name="Number of Peak Frames" id="307" type="integer" length="2"/>
+                <number name="Pos Peak of Peaks" id="308" type="integer" length="2"/>
+                <number name="Offset to Peaks" id="309" type="integer" length="2"/>
+                <string name="Timestamp" id="310" type="fixed-length" length="28"/>
+                <string name="reserved" id="311" type="fixed-length" length="60"/>
+                <string name="Peak envelope data" id="312" type="zero-terminated"/>
+            </structure>
+        </structure>
+        <structure name="PlaylistChunk" id="315" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="316" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="plst"/>
+            </string>
+            <number name="chunkSize" id="317" type="integer"/>
+            <structure name="Contents" id="318">
+                <number name="Number of Segments" id="319" type="integer" length="4"/>
+                <structref name="PlaylistSegment" id="320" repeatmin="0" repeatmax="100" structure="id:280"/>
+            </structure>
+        </structure>
+        <structure name="QualityChunk" id="323" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="324" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="qlty"/>
+            </string>
+            <number name="chunkSize" id="325" type="integer"/>
+            <structure name="Contents" id="326">
+                <number name="File Security Report" id="327" type="integer" length="4" display="hex"/>
+                <number name="File Security Wave" id="328" type="integer" length="4" display="hex"/>
+                <string name="Basic Data" id="329" type="zero-terminated"/>
+                <string name="Start Modulation" id="330" type="zero-terminated"/>
+                <string name="Quality Event" id="331" type="zero-terminated"/>
+                <string name="Quality Parameter 1" id="332" type="zero-terminated"/>
+                <string name="End Modulation" id="333" type="zero-terminated"/>
+                <string name="Quality Parameter 2" id="334" type="zero-terminated"/>
+                <string name="Operator Comment" id="335" type="zero-terminated"/>
+                <string name="Cue Sheet" id="336" type="zero-terminated"/>
+            </structure>
+        </structure>
+        <structure name="ReplayGainAdjustmentChunk" id="339" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="340" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="rgad"/>
+            </string>
+            <number name="chunkSize" id="341" type="integer"/>
+            <structure name="Contents" id="342">
+                <number name="Peak Amplitude" id="343" type="integer" length="4"/>
+                <number name="Radio Rg Adjust" id="344" type="integer" length="2">
+                    <mask name="Name Code" value="0xE000">
+                        <fixedvalue name="Not set" value="0x0"/>
+                        <fixedvalue name="Radio Gain Adjustment" value="0x2000"/>
+                    </mask>
+                    <mask name="Originator" value="0x1C00">
+                        <fixedvalue name="unspecified" value="0x0"/>
+                        <fixedvalue name="pre-set by artist/producer" value="0x400"/>
+                        <fixedvalue name="set by user" value="0x800"/>
+                        <fixedvalue name="determined automatically" value="0x1000"/>
+                    </mask>
+                    <mask name="Sign Bit" value="0x200">
+                        <fixedvalue name="Positive" value="0x0"/>
+                        <fixedvalue name="Negative" value="0x200"/>
+                    </mask>
+                </number>
+                <number name="Audiophile Rg Adjust" id="345" type="integer" length="2">
+                    <mask name="Name Code" value="0xE000">
+                        <fixedvalue name="Not set" value="0x0"/>
+                        <fixedvalue name="Audiophile Gain Adjustment" value="0x4000"/>
+                    </mask>
+                    <mask name="Originator" value="0x1C00">
+                        <fixedvalue name="unspecified" value="0x0"/>
+                        <fixedvalue name="pre-set by artist/producer" value="0x400"/>
+                        <fixedvalue name="set by user" value="0x800"/>
+                        <fixedvalue name="determined automatically" value="0x1000"/>
+                    </mask>
+                    <mask name="Sign Bit" value="0x200">
+                        <fixedvalue name="Positive" value="0x0"/>
+                        <fixedvalue name="Negative" value="0x200"/>
+                    </mask>
+                </number>
+            </structure>
+        </structure>
+        <structure name="SampleLoop" id="348" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Cue Point ID" id="349" type="integer" length="4"/>
+            <number name="Type" id="350" type="integer" length="4"/>
+            <number name="Start" id="351" type="integer" length="4"/>
+            <number name="End" id="352" type="integer" length="4"/>
+            <number name="Fraction" id="353" type="integer" length="4"/>
+            <number name="Play Count" id="354" type="integer" length="4"/>
+        </structure>
+        <structure name="SamplerChunk" id="356" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="357" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="smpl"/>
+            </string>
+            <number name="chunkSize" id="358" type="integer"/>
+            <structure name="Contents" id="359">
+                <number name="Manufacturer" id="360" type="integer" length="4"/>
+                <number name="Product" id="361" type="integer" length="4"/>
+                <number name="Sample Period" id="362" type="integer" length="4"/>
+                <number name="MIDI Unity Note" id="363" type="integer" length="4"/>
+                <number name="MIDI Pitch Fraction" id="364" type="integer" length="4"/>
+                <number name="SMPTE Format" id="365" type="integer" length="4">
+                    <fixedvalue name="no SMPTE offset" value="0"/>
+                    <fixedvalue name="24 fps" value="24"/>
+                    <fixedvalue name="25 fps" value="25"/>
+                    <fixedvalue name="29 fps" value="29"/>
+                    <fixedvalue name="30 fps" value="30"/>
+                </number>
+                <number name="Num Sample Loops" id="366" type="integer" length="4"/>
+                <number name="Sampler Data" id="367" type="integer" length="4"/>
+                <structref name="SampleLoop" id="368" repeatmin="0" repeatmax="100" structure="id:348"/>
+            </structure>
+        </structure>
+        <structure name="SilentChunk" id="371" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="372" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="slnt"/>
+            </string>
+            <number name="chunkSize" id="373" type="integer"/>
+            <structure name="Contents" id="374">
+                <number name="Number of Silent Samples" id="375" type="integer" length="4"/>
+            </structure>
+        </structure>
+        <structure name="SMED Chunk" id="378" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="379" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="SMED"/>
+            </string>
+            <number name="chunkSize" id="380" type="integer"/>
+            <structure name="Contents" id="381">
+                <binary name="encrypted Data" id="382" fillcolor="FE7E7B"/>
+            </structure>
+        </structure>
+        <structure name="WaveListChunk" id="385" repeatmin="0" extends="id:55">
+            <string name="chunkID" mustmatch="yes" id="386" type="fixed-length" length="4">
+                <fixedvalue name="Identifier" value="wavl"/>
+            </string>
+            <number name="chunkSize" id="387" type="integer"/>
+            <structure name="Contents" id="388" repeatmax="100">
+                <structref name="SilentChunk" id="389" structure="id:371"/>
+                <structref name="DataChunk" id="390" structure="id:108"/>
+            </structure>
+        </structure>
+        <structure name="WAV file" id="52" repeatmin="0" extends="id:53">
+            <structure name="RIFFHEADER" id="393" length="12" fillcolor="FFFEFF">
+                <string name="groupID" id="394" fillcolor="54FA8A" type="fixed-length" length="4" encoding="ISO_8859-1:1987"/>
+                <number name="size" id="395" fillcolor="58FEFE" type="integer" length="4"/>
+                <string name="riffType" id="396" fillcolor="7B82F6" type="fixed-length" length="4" encoding="ISO_8859-1:1987"/>
+            </structure>
+            <structure name="Chunks" id="398" alignment="2" repeatmin="0" repeatmax="-1" consists-of="id:55" order="variable">
+                <structref name="FormatChunk" id="399" repeatmin="0" structure="id:148"/>
+                <structref name="Broadcast Wave" id="400" repeatmin="0" structure="id:76"/>
+                <structref name="FactChunk" id="401" repeatmin="0" structure="id:123"/>
+                <structref name="Sample Data" id="402" repeatmin="0" structure="id:108"/>
+                <structref name="CueChunk" id="403" repeatmin="0" structure="id:100"/>
+                <structref name="DispChunk" id="404" repeatmin="0" structure="id:115"/>
+                <structref name="InstrumentChunk" id="405" repeatmin="0" structure="id:165"/>
+                <structref name="JunkChunk" id="406" repeatmin="0" structure="id:178"/>
+                <structref name="LabelChunk" id="407" repeatmin="0" structure="id:198"/>
+                <structref name="LabeledTextChunk" id="408" repeatmin="0" structure="id:184"/>
+                <structref name="ListChunk" id="409" repeatmin="0" structure="id:220"/>
+                <structref name="NoteChunk" id="410" repeatmin="0" structure="id:246"/>
+                <structref name="PeakChunk" id="411" repeatmin="0" structure="id:289"/>
+                <structref name="PlaylistChunk" id="412" repeatmin="0" structure="id:315"/>
+                <structref name="SamplerChunk" id="413" repeatmin="0" structure="id:356"/>
+                <structref name="SilentChunk" id="414" repeatmin="0" structure="id:371"/>
+                <structref name="WaveListChunk" id="415" repeatmin="0" structure="id:385"/>
+                <structref name="QualityChunk" id="416" repeatmin="0" structure="id:323"/>
+                <structref name="PeakEnvelopeChunk" id="417" repeatmin="0" structure="id:298"/>
+                <structref name="LinkChunk" id="418" repeatmin="0" structure="id:206"/>
+                <structref name="AXMLChunk" id="419" repeatmin="0" structure="id:69"/>
+                <structref name="AFspChunk" id="420" repeatmin="0" structure="id:61"/>
+                <structref name="PadChunk" id="421" repeatmin="0" structure="id:273"/>
+                <structref name="ReplayGainAdjustmentChunk" id="422" repeatmin="0" structure="id:339"/>
+                <structref name="NetMix Metadata" id="423" repeatmin="0" structure="id:239"/>
+                <structref name="Digidesign Waveform" id="424" repeatmin="0" structure="id:254"/>
+                <structref name="Soundminer v4 (Encrypted)" id="425" repeatmin="0" structure="id:378"/>
+                <structref name="Unknown Chunk" id="426" repeatmin="0" structure="id:55"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

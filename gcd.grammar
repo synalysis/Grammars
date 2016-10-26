@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.3">
+    <grammar name="Fallout GCD" start="id:2" author="Cheba" email="cheba@pointlessone.org" fileextension="GCD">
+        <description>Fallout Character description file format.
+
+Gery — calculated values.
+Red — unknown fields.</description>
+        <structure name="Character Description" id="2" length="0" alignment="1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Game Flags" mustmatch="yes" id="10" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Sneak" value="00000001"/>
+                    <fixedvalue name="Level" value="00000008"/>
+                    <fixedvalue name="Addict" value="00000010"/>
+                    <fixedvalue name="None" value="00000000"/>
+                </fixedvalues>
+            </binary>
+            <structure name="Primary Stats" id="4">
+                <number name="Strength" id="8" type="integer" length="4" minval="0" maxval="10"/>
+                <number name="Perception" id="11" type="integer" length="4" minval="0" maxval="10"/>
+                <number name="Endurance" id="12" type="integer" length="4" minval="0" maxval="10"/>
+                <number name="Charisma" id="13" type="integer" length="4" minval="0" maxval="10"/>
+                <number name="Intelligence" id="14" type="integer" length="4" minval="0" maxval="10"/>
+                <number name="Agility" id="15" type="integer" length="4" minval="0" maxval="10"/>
+                <number name="Luck" id="16" type="integer" length="4" minval="0" maxval="10"/>
+            </structure>
+            <structure name="Secondary Stats" id="17">
+                <number name="Hit Points *" id="19" fillcolor="C0C0C0" type="integer" length="4" minval="0" maxval="999"/>
+                <number name="Action Points *" id="20" fillcolor="C0C0C0" type="integer" length="4" minval="0" maxval="999"/>
+                <number name="Armor Class *" id="23" fillcolor="C0C0C0" type="integer" length="4" minval="0"/>
+                <number name="&lt;unknown&gt;" id="24" fillcolor="FF7D78" type="integer" length="4" maxval="999">
+                    <fixedvalues>
+                        <fixedvalue value="0"/>
+                    </fixedvalues>
+                </number>
+                <number name="Melee Damage *" id="25" fillcolor="C0C0C0" type="integer" length="4" minval="0" maxval="999"/>
+                <number name="Carry Weight *" id="26" fillcolor="C0C0C0" type="integer" length="4" minval="0"/>
+                <number name="Sequence *" id="27" fillcolor="C0C0C0" type="integer" length="4" minval="0" maxval="999"/>
+                <number name="Healing Rate *" id="28" fillcolor="C0C0C0" type="integer" length="4" minval="0" maxval="99"/>
+                <number name="Critical Chance *" id="29" fillcolor="C0C0C0" type="integer" length="4" minval="0"/>
+                <number name="Critical hit modifier *" id="30" fillcolor="C0C0C0" type="integer" length="4" minval="0" maxval="100"/>
+                <structure name="Damage Threshold" id="31">
+                    <number name="Normal" id="33" type="integer" length="4" minval="0"/>
+                    <number name="Laser" id="34" type="integer" length="4" minval="0" maxval="999"/>
+                    <number name="Fire" id="35" type="integer" length="4" minval="0"/>
+                    <number name="Plasma" id="36" type="integer" length="4" minval="0" maxval="999"/>
+                    <number name="Electrical" id="37" type="integer" length="4" minval="0"/>
+                    <number name="EMP" id="38" type="integer" length="4" minval="0" maxval="999"/>
+                    <number name="Explosive" id="39" type="integer" length="4" minval="0" maxval="999"/>
+                </structure>
+                <structure name="Damage Resistance" id="40">
+                    <number name="Normal" id="42" type="integer" length="4" minval="0" maxval="100"/>
+                    <number name="Laser" id="43" type="integer" length="4" minval="0" maxval="100"/>
+                    <number name="Fire" id="44" type="integer" length="4" minval="0" maxval="100"/>
+                    <number name="Plasma" id="45" type="integer" length="4" minval="0"/>
+                    <number name="Electrical" id="46" type="integer" length="4" minval="0" maxval="100"/>
+                    <number name="EMP" id="47" type="integer" length="4" minval="0" maxval="100"/>
+                    <number name="Explosive" id="48" type="integer" length="4" minval="0" maxval="100"/>
+                </structure>
+                <number name="Radiation Resistance *" id="49" fillcolor="C0C0C0" type="integer" length="4" minval="0"/>
+                <number name="Poison Resistance *" id="50" fillcolor="C0C0C0" type="integer" length="4" minval="0"/>
+                <number name="Age" id="51" type="integer" length="4" minval="0" maxval="35"/>
+                <number name="Gender" id="52" type="integer" length="4" minval="0" maxval="1">
+                    <fixedvalues>
+                        <fixedvalue name="Male" value="0"/>
+                        <fixedvalue name="Female" value="1"/>
+                    </fixedvalues>
+                </number>
+                <structure name="Bonuses to primary stats" id="53">
+                    <number name="Strength" id="55" type="integer" length="4" minval="0"/>
+                    <number name="Perception" id="56" type="integer" length="4" minval="0" maxval="10"/>
+                    <number name="Endurance" id="57" type="integer" length="4" minval="0"/>
+                    <number name="Charisma" id="58" type="integer" length="4" minval="0" maxval="10"/>
+                    <number name="Intelligence" id="59" type="integer" length="4" minval="0" maxval="10"/>
+                    <number name="Agility" id="60" type="integer" length="4" minval="0" maxval="10"/>
+                    <number name="Luck" id="61" type="integer" length="4" minval="0" maxval="10"/>
+                </structure>
+                <structure name="Bonuses to secondary stats" id="62">
+                    <number name="Hit Points" id="64" type="integer" length="4" minval="0"/>
+                    <number name="Action Points" id="65" type="integer" length="4" maxval="999"/>
+                    <number name="Armor Class" id="66" type="integer" length="4" minval="0" maxval="999"/>
+                    <number name="&lt;unknown&gt;" id="67" fillcolor="FF7D78" type="integer" length="4">
+                        <fixedvalues>
+                            <fixedvalue value="0"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="Melee Damage" id="68" type="integer" length="4" minval="0" maxval="999"/>
+                    <number name="Carry Weight" id="69" type="integer" length="4" minval="0"/>
+                    <number name="Sequence" id="70" type="integer" length="4" minval="0" maxval="99"/>
+                    <number name="Healing Rate" id="71" type="integer" length="4" minval="0"/>
+                    <number name="Critical Chance" id="72" type="integer" length="4" minval="0" maxval="100"/>
+                    <number name="Critical hit modifier" id="73" type="integer" length="4" minval="0" maxval="100"/>
+                    <structure name="Damage Threshold" id="74">
+                        <number name="Normal" id="76" type="integer" length="4" minval="0" maxval="999"/>
+                        <number name="Laser" id="77" type="integer" length="4" minval="0" maxval="999"/>
+                        <number name="Fire" id="78" type="integer" length="4" minval="0" maxval="999"/>
+                        <number name="Plasma" id="79" type="integer" length="4" minval="0" maxval="999"/>
+                        <number name="Electrical" id="80" type="integer" length="4" minval="0" maxval="999"/>
+                        <number name="EMP" id="81" type="integer" length="4" minval="0" maxval="999"/>
+                        <number name="Explosive" id="82" type="integer" length="4" minval="0" maxval="999"/>
+                    </structure>
+                    <structure name="Damage Resistance" id="83">
+                        <number name="Normal" id="85" type="integer" length="4" minval="0" maxval="100"/>
+                        <number name="Laser" id="86" type="integer" length="4" maxval="100"/>
+                        <number name="Fire" id="87" type="integer" length="4" minval="0" maxval="100"/>
+                        <number name="Plasma" id="88" type="integer" length="4" minval="0" maxval="100"/>
+                        <number name="Elecrical" id="89" type="integer" length="4" minval="0" maxval="100"/>
+                        <number name="EMP" id="90" type="integer" length="4" minval="0" maxval="100"/>
+                        <number name="Explosive" id="91" type="integer" length="4" minval="0" maxval="100"/>
+                    </structure>
+                    <number name="Radiation Resistance" id="92" type="integer" length="4" minval="0" maxval="100"/>
+                    <number name="Poison Resistance" id="93" type="integer" length="4" minval="0" maxval="100"/>
+                    <number name="Age" id="94" type="integer" length="4" minval="0" maxval="35"/>
+                    <number name="Gender" id="95" type="integer" length="4" minval="0" maxval="1">
+                        <fixedvalues>
+                            <fixedvalue name="Male" value="0"/>
+                            <fixedvalue name="Female" value="1"/>
+                        </fixedvalues>
+                    </number>
+                </structure>
+            </structure>
+            <structure name="Skills" id="96">
+                <number name="Small Guns" id="98" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Big Guns" id="99" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Energy Weapons" id="100" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Unarmed" id="101" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Melee Weapons" id="102" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Throwing" id="103" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="First Aid" id="104" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Doctor" id="105" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Sneak" id="106" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Lockpick" id="107" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Steal" id="108" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Traps" id="109" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Science" id="110" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Repair" id="111" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Speech" id="112" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Barter" id="113" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Gambling" id="114" type="integer" length="4" minval="0" maxval="300"/>
+                <number name="Outdoorsman" id="115" type="integer" length="4" minval="0" maxval="300"/>
+            </structure>
+            <binary name="&lt;unknown&gt;" id="118" fillcolor="FF7D78" length="12">
+                <fixedvalues>
+                    <fixedvalue name="Zeros" value="000000000000000000000000"/>
+                </fixedvalues>
+            </binary>
+            <string name="Name" id="117" type="fixed-length" length="32"/>
+            <number name="First tagged skill" id="119" type="integer" length="4" minval="0" maxval="17"/>
+            <number name="Second tagged skill" id="120" type="integer" length="4" minval="0" maxval="17"/>
+            <number name="Third tagged skill" id="121" type="integer" length="4" minval="0" maxval="17"/>
+            <number name="Fourth tagged skill" id="122" type="integer" length="4" minval="0" maxval="17"/>
+            <number name="First trait" id="123" type="integer" length="4" minval="0" maxval="15"/>
+            <number name="Second trait" id="124" type="integer" length="4" minval="0" maxval="15"/>
+            <number name="Character points" id="125" type="integer" length="4" minval="0" maxval="70"/>
+        </structure>
+    </grammar>
+</ufwb>

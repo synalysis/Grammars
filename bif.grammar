@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.13">
+    <grammar name="BIF file" start="id:61" author="Thomas Åkerlund" complete="yes">
+        <description>Grammar for the BIF file format</description>
+        <structure name="BIFF_version_0" id="61" length="0" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <description>All multibyte integers are stored in little-endian format. That is, the first byte is the least significant byte and the last byte is the most significant.</description>
+            <binary name="magic_number" mustmatch="yes" id="62" fillcolor="FF2600" length="8">
+                <description>This is a file identifier. It contains enough information to identify the file type uniquely.
+
+Must match 89 42 49 46 0D 0A 1A 0A</description>
+                <fixedvalues>
+                    <fixedvalue name="value" value="894249460D0A1A0A"/>
+                </fixedvalues>
+            </binary>
+            <binary name="version" id="63" fillcolor="FFAAEC" length="4">
+                <description>This space is reserved for a revision number. The current specification is file format version 0. The value should be incremented for non-backward-compatible revisions of this document.</description>
+            </binary>
+            <number name="image_count" id="64" fillcolor="FF9300" type="integer" length="4">
+                <description>This is an unsigned 32-bit value (N) that represents the number of BIF images in the file. The number of entries in the index will be N+1, including the end-of-data entry.</description>
+            </number>
+            <number name="framewise_seperation" id="65" fillcolor="FFE030" type="integer" length="4">
+                <description>This specifies the denomination of the frame timestamp values. In order to obtain the &quot;real&quot; timestamp (in milliseconds) of a frame, this value is multiplied by the timestamp entry in the BIF index. If this value is 0, the timestamp multiplier shall be 1000 milliseconds.</description>
+            </number>
+            <binary name="reserved" mustmatch="yes" id="66" fillcolor="FFAAEC" length="44">
+                <description>These bytes are reserved for future expansion.</description>
+                <fixedvalues>
+                    <fixedvalue name="reserved" value="0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"/>
+                </fixedvalues>
+            </binary>
+            <structure name="bif_index" id="67" length="0" alignment="1" repeat="id:64" consists-of="id:68" fillcolor="62FA99">
+                <description>This space is used for the BIF index entries. There are N+1 entries. Each entry contains two unsigned 32-bit values.
+
+index	|		4 bytes			| 		4 bytes
+————————————————————————————————
+index 0	|	Frame 0 timestamp		|	absolute offset of frame
+index 1	|	Frame 1 timestamp		|	absolute offset of frame
+index 2	|	Frame 2 timestamp		|	absolute offset of frame
+...		|						|
+index N-1	|	Frame N-1 timestamp	|	absolute offset of frame
+index N	|	0xffffffff				|	last byte of data + 1
+
+
+Because the size of each BIF is determined by subtracting its offset from the offset of the next entry in the index, the BIFs shall appear in the index in the same order as they appear in the data section, and they shall be adjacent. The absolute timestamps of the BIF captures can be obtained by multiplying the frame timestamp by the timestamp multiplier.</description>
+                <structure name="frame" id="69" length="0" repeat="id:64" repeatmin="0" repeatmax="-1">
+                    <number name="timestamp" id="70" fillcolor="62FA99" type="integer" length="4"/>
+                    <number name="offset" id="71" fillcolor="FFE030" type="integer" length="4" display="hex"/>
+                </structure>
+                <structure name="end_of_final_frame" id="73" length="0" alignment="0" consists-of="id:68">
+                    <binary name="end_frame" mustmatch="yes" id="74" fillcolor="FFAAEC" length="4">
+                        <fixedvalues>
+                            <fixedvalue name="value" value="FFFFFFFF"/>
+                        </fixedvalues>
+                    </binary>
+                    <number name="end_frame_offset" id="75" fillcolor="FFE030" type="integer" length="4" display="hex"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="ID: 19" id="68" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+    </grammar>
+</ufwb>

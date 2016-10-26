@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9">
+    <grammar name="EFIRES" start="id:818" author="Buick Wong" email="ibuick@ibuick.com" fileextension="efires">
+        <description>Grammar for EFIRES files</description>
+        <structure name="EFIRES file" id="818" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="EFI Version" id="819" type="integer" length="2" endian="little"/>
+            <number name="Number of Elements" id="820" type="integer" length="2" endian="little"/>
+            <structure name="Element Description" id="821" length="72" repeat="id:820" repeatmax="-1" endian="little">
+                <string name="Name" id="822" type="fixed-length" length="64"/>
+                <number name="Offset" id="823" type="integer" length="4" display="hex"/>
+                <number name="Size" id="824" type="integer" length="4"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

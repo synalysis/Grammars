@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.7">
+    <grammar name="LaxMan" start="id:57" author="Scott Hendrickson" fileextension="lax" uti="public.lex-source">
+        <description>Grammar for lax format for LaxMan mind machine</description>
+        <scripts>
+            <script name="OptionalFileName" type="DataType" id="87">
+                <description>File name under certain conditions</description>
+                <source language="Python"># custom data type script
+
+def parseByteRange(element, byteView, bitPos, bitLength, results):
+	# this method parses data starting at bitPos, bitLength bits are remaining
+	&quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
+
+	# if there's a file name specified there shouldn't be a '\0'
+	testByte = byteView.readByte(bitPos/8 + 3)
+
+	print testByte
+
+	# create and set new value
+	value = Value()
+	value.setString(&quot;Value of custom element&quot;)
+
+	# how many bytes were processed?
+	processedBytes = 0
+	iteration = 0
+
+	results.addElement(element, processedBytes, iteration, value)
+
+	# return number of processed bytes
+	return processedBytes
+
+def fillByteRange(value, byteArray, bitPos, bitLength):
+    # this method translates edited values back to the file
+	&quot;&quot;&quot;fillByteRange method&quot;&quot;&quot;
+
+    # write an integer back to file
+	# byteArray.writeUnsignedIntBits(highWord, bitPos, bitLength, ENDIAN_BIG)
+
+</source>
+            </script>
+        </scripts>
+        <structure name="LaxMan Session" id="57" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Header" id="58">
+                <string name="Version" id="59" fillcolor="6D51FD" type="fixed-length" length="4" encoding="windows-1252"/>
+                <string name="SessionName" id="60" fillcolor="28FF10" type="fixed-length" length="50" encoding="windows-1252"/>
+                <number name="FileNameLength" id="89" type="integer" length="2"/>
+                <string name=" MP3 File Name" id="61" fillcolor="42FEFE" repeatmin="0" type="fixed-length" length="FileNameLength"/>
+                <number name="Session TIme" id="91" type="integer" length="4"/>
+                <number name="NumberOfSegments" id="90" type="integer" length="2"/>
+            </structure>
+            <structure name="Segment" id="65" length="23" repeatmin="NumberOfSegments" repeatmax="NumberOfSegments">
+                <binary name="Color" id="66" fillcolor="8078FD" length="2"/>
+                <binary name="&lt;new binary&gt;" id="67" length="1"/>
+                <binary name="&lt;new binary-2&gt;" id="68" length="1"/>
+                <number name="Frequency" id="94" type="integer" length="2"/>
+                <binary name="Sound Intensity" id="70" fillcolor="83D5FE" length="1"/>
+                <binary name="Light Intensity" id="71" fillcolor="28FF10" length="1"/>
+                <binary name="&lt;new binary-7&gt;" id="72" length="1"/>
+                <binary name="Light Contrast" id="73" fillcolor="FCFF7C" length="1"/>
+                <binary name="CrossFade Switch" id="74" fillcolor="F90593" length="1"/>
+                <binary name="&lt;new binary-3&gt;" id="75" length="1"/>
+                <number name="Audio Pulse" id="95" type="integer" length="1"/>
+                <number name="Audio Pitch" id="96" type="integer" length="1"/>
+                <number name="Start Time" id="93" type="integer" length="4"/>
+                <number name="Segment Time" id="92" type="integer" length="4"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>

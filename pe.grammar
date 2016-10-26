@@ -1,0 +1,1677 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.17">
+    <grammar name="Portable Executable" start="id:2" author="ape" fileextension="exe,dll" uti="com.microsoft.windows-executable">
+        <description>Grammar for PE (.exe, .dll) files</description>
+        <scripts>
+            <script name="UnixTime" type="DataType" id="193">
+                <description>Unix Time</description>
+                <source language="Python"># Unix time
+
+from datetime import datetime, timedelta
+
+def parseByteRange(element, byteView, bitPos, bitLength, results):
+	&quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
+
+	timeStamp = byteView.readUnsignedInt(bitPos/8, 4, ENDIAN_LITTLE)
+
+	value = Value()
+
+	if (timeStamp != 0):
+		dt = datetime.fromtimestamp(timeStamp)
+		dtAdjusted = dt - timedelta(hours=1)
+		dateString = dtAdjusted.strftime(&quot;%Y-%m-%d %H:%M:%S&quot;)
+		value.setString(dateString)
+	else:
+		value.setString(&quot;&lt;not set&gt;&quot;)
+
+	results.addElement(element, 4, 0, value)
+
+	return 4
+</source>
+            </script>
+        </scripts>
+        <structure name="EXE file" id="2" extends="id:3" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="MS-DOS-2-Section" id="4">
+                <string name="e_magic" id="5" fillcolor="FF7D78" type="fixed-length" length="2">
+                    <description>Magic number</description>
+                    <fixedvalues>
+                        <fixedvalue name="NT" value="PE"/>
+                        <fixedvalue name="MZ" value="MZ"/>
+                    </fixedvalues>
+                </string>
+                <number name="e_cblp" id="6" fillcolor="FFD478" type="integer" length="2">
+                    <description>Bytes on last page of file</description>
+                </number>
+                <number name="e_cp" id="7" fillcolor="FEFC78" type="integer" length="2">
+                    <description>Pages in file</description>
+                </number>
+                <number name="e_crlc" id="8" fillcolor="D4FB78" type="integer" length="2">
+                    <description>Relocations</description>
+                </number>
+                <number name="e_cparhdr" id="9" fillcolor="72FA78" type="integer" length="2">
+                    <description>Size of header in paragraphs</description>
+                </number>
+                <number name="e_minalloc" id="10" fillcolor="72FCD5" type="integer" length="2">
+                    <description>Minimum extra paragraphs needed</description>
+                </number>
+                <number name="e_maxalloc" id="11" fillcolor="73FDFF" type="integer" length="2">
+                    <description>Maximum extra paragraphs needed</description>
+                </number>
+                <number name="e_ss" id="12" fillcolor="75D5FF" type="integer" length="2">
+                    <description>Initial (relative) SS value</description>
+                </number>
+                <number name="e_sp" id="13" fillcolor="7980FF" type="integer" length="2">
+                    <description>Initial SP value</description>
+                </number>
+                <number name="e_csum" id="14" fillcolor="D783FF" type="integer" length="2">
+                    <description>Checksum</description>
+                </number>
+                <number name="e_ip" id="15" fillcolor="FF84FF" type="integer" length="2">
+                    <description>Initial IP value</description>
+                </number>
+                <number name="e_cs" id="16" fillcolor="FF89D8" type="integer" length="2">
+                    <description>Initial (relative) CS value</description>
+                </number>
+                <number name="e_lfarlc" id="17" fillcolor="FF2600" type="integer" length="2">
+                    <description>File address of relocation table </description>
+                </number>
+                <number name="e_ovno" id="18" fillcolor="FF9300" type="integer" length="2">
+                    <description>Overlay number</description>
+                </number>
+                <number name="e_res" id="19" fillcolor="FEFB00" repeatmax="4" type="integer" length="2">
+                    <description>Reserved words </description>
+                </number>
+                <number name="e_oemid" id="20" fillcolor="8DF900" type="integer" length="2">
+                    <description>OEM identifier (for e_oeminfo) </description>
+                </number>
+                <number name="e_oeminfo" id="21" fillcolor="00F900" type="integer" length="2">
+                    <description>OEM information; e_oemid specific </description>
+                </number>
+                <number name="e_res2" id="22" fillcolor="00FCFF" repeatmax="10" type="integer" length="2">
+                    <description>Reserved words </description>
+                </number>
+                <offset name="e_lfanew" id="24" fillcolor="0096FF" length="4" references="id:23" follownullreference="no">
+                    <description>File address of new exe header </description>
+                </offset>
+            </structure>
+        </structure>
+        <structure name="PE-Signature" id="23" extends="id:3" encoding="ISO_8859-1:1987" signed="no">
+            <binary name="Signature" mustmatch="yes" id="27" fillcolor="FF40FF" length="4">
+                <fixedvalues>
+                    <fixedvalue name="PE" value="50450000"/>
+                </fixedvalues>
+            </binary>
+            <number name="MachineType" id="28" fillcolor="FFD478" type="integer" length="2" display="hex">
+                <description>The number that identifies the type of target machine</description>
+                <fixedvalues>
+                    <fixedvalue name="Unknown" value="0x0"/>
+                    <fixedvalue name="Matsushita AM33" value="0x1D3"/>
+                    <fixedvalue name="AMD64 x64" value="0x8664"/>
+                    <fixedvalue name="ARM little endian" value="0x1C0"/>
+                    <fixedvalue name="ARMv7 (or higher) Thumb mode only" value="0x1C4"/>
+                    <fixedvalue name="ARMv8 in 64-bit mode" value="0xAA64"/>
+                    <fixedvalue name="EFI byte code" value="0xEBC"/>
+                    <fixedvalue name="Intel 386 or later and compatible processors" value="0x14C"/>
+                    <fixedvalue name="Intel Itanium processor family" value="0x200"/>
+                    <fixedvalue name="Mitsubishi M32R little endian" value="0x9041"/>
+                    <fixedvalue name="MIPS16" value="0x266"/>
+                    <fixedvalue name="MIPS with FPU" value="0x366"/>
+                    <fixedvalue name="MIPS16 with FPU" value="0x466"/>
+                    <fixedvalue name="Power PC little endian" value="0x1F0"/>
+                    <fixedvalue name="Power PC with floating point support" value="0x1F1"/>
+                    <fixedvalue name="MIPS little endian" value="0x166"/>
+                    <fixedvalue name="Hitachi SH3" value="0x1A2"/>
+                    <fixedvalue name="Hitachi SH3 DSP" value="0x1A3"/>
+                    <fixedvalue name="Hitachi SH4" value="0x1A6"/>
+                    <fixedvalue name="Hitachi SH5" value="0x1A8"/>
+                    <fixedvalue name="ARM or Thumb (interworking)" value="0x1C2"/>
+                    <fixedvalue name="MIPS little-endian WCE v2" value="0x169"/>
+                </fixedvalues>
+            </number>
+            <number name="NumberOfSections" id="29" fillcolor="929000" type="integer" length="2">
+                <description>The number of sections. This indicates the size of the section table, which immediately follows the headers</description>
+            </number>
+            <custom name="TimeDateStamp" id="30" fillcolor="D4FB78" length="4" script="id:193"/>
+            <offset name="PointerToSymbolTable" id="32" fillcolor="009192" length="4" references="id:31" follownullreference="no">
+                <description>The file offset of the COFF symbol table, or zero if no COFF symbol table is present. This value should be zero for an image because COFF debugging information is deprecated</description>
+            </offset>
+            <number name="NumberOfSymbols" id="33" fillcolor="D4FB78" type="integer" length="4">
+                <description>The number of entries in the symbol table. This data can be used to locate the string table, which immediately follows the symbol table. This value should be zero for an image because COFF debugging information is deprecated</description>
+            </number>
+            <number name="SizeOfOptionalHeader" id="34" fillcolor="75D5FF" type="integer" length="2">
+                <description>The size of the optional header, which is required for executable files but not for object files. This value should be zero for an object file</description>
+            </number>
+            <number name="Characteristics" id="35" fillcolor="D783FF" type="integer" length="2" display="hex">
+                <description>The flags that indicate the attributes of the file</description>
+                <mask name="IMAGE_FILE_RELOCS_STRIPPED" value="0x1">
+                    <fixedvalue name="Image only, Windows CE, and Windows NT and later" value="0x1"/>
+                </mask>
+                <mask name="IMAGE_FILE_EXECUTABLE_IMAGE" value="0x2">
+                    <fixedvalue name="File is executable" value="0x2"/>
+                </mask>
+                <mask name="IMAGE_FILE_LINE_NUMS_STRIPPED" value="0x4">
+                    <fixedvalue name="COFF line numbers have been removed" value="0x4"/>
+                </mask>
+                <mask name="IMAGE_FILE_LOCAL_SYMS_STRIPPED" value="0x8">
+                    <fixedvalue name="COFF symbol table entries for local symbols have been removed" value="0x8"/>
+                </mask>
+                <mask name="IMAGE_FILE_AGGRESSIVE_WS_TRIM" value="0x10">
+                    <fixedvalue name="Obsolete. Aggressively trim working set" value="0x10"/>
+                </mask>
+                <mask name="IMAGE_FILE_LARGE_ADDRESS_AWARE" value="0x20">
+                    <fixedvalue name="Application can handle &gt; 2 GB addresses" value="0x20"/>
+                </mask>
+                <mask name="Reserved" value="0x40">
+                    <fixedvalue name="This flag is reserved for future use" value="0x40"/>
+                </mask>
+                <mask name="IMAGE_FILE_BYTES_REVERSED_LO" value="0x80">
+                    <fixedvalue name="Little endian" value="0x80"/>
+                </mask>
+                <mask name="IMAGE_FILE_32BIT_MACHINE" value="0x100">
+                    <fixedvalue name="Machine is based on a 32-bit-word architecture" value="0x100"/>
+                </mask>
+                <mask name="IMAGE_FILE_DEBUG_STRIPPED" value="0x200">
+                    <fixedvalue name="Debugging information is removed from the image file" value="0x200"/>
+                </mask>
+                <mask name="IMAGE_FILE_REMOVABLE_RUN_FROM_SWAP" value="0x400">
+                    <fixedvalue name="If the image is on removable media, fully load it and copy it to the swap file" value="0x400"/>
+                </mask>
+                <mask name="IMAGE_FILE_NET_RUN_FROM_SWAP" value="0x800">
+                    <fixedvalue name="If the image is on network media, fully load it and copy it to the swap file" value="0x800"/>
+                </mask>
+                <mask name="IMAGE_FILE_SYSTEM" value="0x1000">
+                    <fixedvalue name="The image file is a system file, not a user program" value="0x1000"/>
+                </mask>
+                <mask name="IMAGE_FILE_DLL" value="0x2000">
+                    <fixedvalue name="The image file is a dynamic-link library (DLL)" value="0x2000"/>
+                </mask>
+                <mask name="IMAGE_FILE_UP_SYSTEM_ONLY" value="0x4000">
+                    <fixedvalue name="The file should be run only on a uniprocessor machine" value="0x4000"/>
+                </mask>
+                <mask name="IMAGE_FILE_BYTES_REVERSED_HI" value="0x8000">
+                    <fixedvalue name="Big endian" value="0x8000"/>
+                </mask>
+            </number>
+            <structure name="OptionalHeader" id="36" length="0" alignment="0" order="variable">
+                <structref name="PE32" id="38" repeatmin="0" structure="id:37"/>
+                <structref name="PE32+" id="40" repeatmin="0" structure="id:39"/>
+                <structref name="Generic" id="42" repeatmin="0" structure="id:41"/>
+            </structure>
+            <structure name="SectionTable" id="44" repeatmax="NumberOfSections">
+                <description>Each row of the section table is, in effect, a section header. This table immediately follows the optional header, if any. This positioning is required because the file header does not contain a direct pointer to the section table. Instead, the location of the section table is determined by calculating the location of the first byte after the headers. Make sure to use the size of the optional header as specified in the file header. 
+The number of entries in the section table is given by the NumberOfSections field in the file header. Entries in the section table are numbered starting from one (1). The code and data memory section entries are in the order chosen by the linker. 
+In an image file, the VAs for sections must be assigned by the linker so that they are in ascending order and adjacent, and they must be a multiple of the SectionAlignment value in the optional header. </description>
+                <structure name="Selector" id="45" order="variable">
+                    <structref name="ImportDataSectionHeader" id="47" repeatmin="0" structure="id:46"/>
+                    <structref name="RelocationsSectionHeader" id="335" repeatmin="0" structure="id:294"/>
+                    <structref name="ResourceSectionHeader" id="49" repeatmin="0" structure="id:48"/>
+                    <structref name="SectionHeader" id="51" repeatmin="0" structure="id:50"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="Defaults" id="3" encoding="ISO_8859-1:1987" endian="little" signed="no"/>
+        <structure name="CoffSymbolTable" id="31" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Symbol" id="56">
+                <string name="Name" id="57" type="fixed-length" length="8" encoding="UTF-8">
+                    <description>The name of the symbol, represented by a union of three structures. An array of 8 bytes is used if the name is not more than 8 bytes long</description>
+                </string>
+                <number name="Value" id="58" type="integer" length="4">
+                    <description>The value that is associated with the symbol. The interpretation of this field depends on SectionNumber and StorageClass. A typical meaning is the relocatable address</description>
+                </number>
+                <number name="SectionNumber" id="59" type="integer" length="2" signed="yes">
+                    <description>The signed integer that identifies the section, using a one-based index into the section table</description>
+                    <fixedvalues>
+                        <fixedvalue name="IMAGE_SYM_UNDEFINED" value="0"/>
+                        <fixedvalue name="IMAGE_SYM_ABSOLUTE" value="-1"/>
+                        <fixedvalue name="IMAGE_SYM_DEBUG" value="-2"/>
+                    </fixedvalues>
+                </number>
+                <number name="Type" id="60" type="integer" length="2">
+                    <description>A number that represents type. Microsoft tools set this field to 0x20 (function) or 0x0 (not a function)</description>
+                    <fixedvalues>
+                        <fixedvalue name="IMAGE_SYM_TYPE_NULL" value="0"/>
+                        <fixedvalue name="IMAGE_SYM_TYPE_VOID" value="1"/>
+                        <fixedvalue name="IMAGE_SYM_TYPE_CHAR" value="2"/>
+                        <fixedvalue name="IMAGE_SYM_TYPE_SHORT" value="3"/>
+                        <fixedvalue name="IMAGE_SYM_TYPE_INT" value="4"/>
+                        <fixedvalue name="IMAGE_SYM_TYPE_LONG" value="5"/>
+                        <fixedvalue name="IMAGE_SYM_TYPE_FLOAT" value="6"/>
+                        <fixedvalue name="IMAGE_SYM_TYPE_DOUBLE" value="7"/>
+                        <fixedvalue name="IMAGE_SYM_TYPE_STRUCT" value="8"/>
+                        <fixedvalue name="IMAGE_SYM_TYPE_UNION" value="9"/>
+                        <fixedvalue name="IMAGE_SYM_TYPE_ENUM" value="10"/>
+                        <fixedvalue name="IMAGE_SYM_TYPE_MOE" value="11"/>
+                        <fixedvalue name="IMAGE_SYM_TYPE_BYTE" value="12"/>
+                        <fixedvalue name="IMAGE_SYM_TYPE_WORD" value="13"/>
+                        <fixedvalue name="IMAGE_SYM_TYPE_UINT" value="14"/>
+                        <fixedvalue name="IMAGE_SYM_TYPE_DWORD" value="15"/>
+                    </fixedvalues>
+                </number>
+                <number name="StorageClass" id="61" type="integer" length="1" signed="yes">
+                    <description>An enumerated value that represents storage class</description>
+                    <fixedvalues>
+                        <fixedvalue name="IMAGE_SYM_CLASS_END_OF_FUNCTION" value="-1"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_NULL" value="0"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_AUTOMATIC" value="1"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_EXTERNAL" value="2"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_STATIC" value="3"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_REGISTER" value="4"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_EXTERNAL_DEF" value="5"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_LABEL" value="6"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_UNDEFINED_LABEL" value="7"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_MEMBER_OF_STRUCT" value="8"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_ARGUMENT" value="9"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_STRUCT_TAG" value="10"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_MEMBER_OF_UNION" value="11"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_UNION_TAG" value="12"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_TYPE_DEFINITION" value="13"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_UNDEFINED_STATIC" value="14"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_ENUM_TAG" value="15"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_MEMBER_OF_ENUM" value="16"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_REGISTER_PARAM" value="17"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_BIT_FIELD" value="18"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_BLOCK" value="100"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_FUNCTION" value="101"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_END_OF_STRUCT" value="102"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_FILE" value="103"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_SECTION" value="104"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_WEAK_EXTERNAL" value="105"/>
+                        <fixedvalue name="IMAGE_SYM_CLASS_CLR_TOKEN" value="107"/>
+                    </fixedvalues>
+                </number>
+                <number name="NumberOfAuxSymbols" id="62" type="integer" length="1">
+                    <description>The number of auxiliary symbol table entries that follow this record</description>
+                </number>
+                <structure name="AuxRecord" id="63" repeat="id:62"/>
+            </structure>
+        </structure>
+        <structure name="OptionalHeader" id="41" length="SizeOfOptionalHeader" extends="id:3">
+            <number name="MagicNumber" mustmatch="yes" id="67" fillcolor="FF84FF" type="integer" length="2" display="hex">
+                <description>The unsigned integer that identifies the state of the image file. The most common number is 0x10B, which identifies it as a normal executable file. 0x107 identifies it as a ROM image, and 0x20B identifies it as a PE32+ executable</description>
+            </number>
+            <number name="MajorLinkerVersion" id="68" fillcolor="72FA78" type="integer" length="1">
+                <description>The linker major version number</description>
+            </number>
+            <number name="MinorLinkerVersion" id="69" fillcolor="FF7D78" type="integer" length="1">
+                <description>The linker minor version number</description>
+            </number>
+            <number name="SizeOfCode" id="70" fillcolor="FEFB00" type="integer" length="4">
+                <description>The size of the code (text) section, or the sum of all code sections if there are multiple sections</description>
+            </number>
+            <number name="SizeOfInitializedData" id="71" fillcolor="8DF900" type="integer" length="4">
+                <description>The size of the initialized data section, or the sum of all such sections if there are multiple data sections</description>
+            </number>
+            <number name="SizeOfUninitializedData" id="72" fillcolor="0096FF" type="integer" length="4">
+                <description>The size of the uninitialized data section (BSS), or the sum of all such sections if there are multiple BSS sections</description>
+            </number>
+            <number name="AddressOfEntryPoint" id="73" fillcolor="FF40FF" type="integer" length="4">
+                <description>The address of the entry point relative to the image base when the executable file is loaded into memory. For program images, this is the starting address. For device drivers, this is the address of the initialization function. An entry point is optional for DLLs. When no entry point is present, this field must be zero</description>
+            </number>
+            <number name="BaseOfCode" id="74" fillcolor="73FDFF" type="integer" length="4">
+                <description>The address that is relative to the image base of the beginning-of-code section when it is loaded into memory</description>
+            </number>
+        </structure>
+        <structure name="OptionalHeaderPE32" id="37" length="SizeOfOptionalHeader" alignment="0" extends="id:41" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="MagicNumber" id="76" type="integer">
+                <description>PE32+ images allow for a 64-bit address space while limiting the image size to 2 gigabytes. Other PE32+ modifications are addressed in their respective sections</description>
+                <fixedvalues>
+                    <fixedvalue name="PE32" value="0x10B"/>
+                </fixedvalues>
+            </number>
+            <number name="MajorLinkerVersion" id="77" type="integer">
+                <description>The linker major version number</description>
+            </number>
+            <number name="MinorLinkerVersion" id="78" type="integer">
+                <description>The linker minor version number</description>
+            </number>
+            <number name="SizeOfCode" id="79" type="integer">
+                <description>The size of the code (text) section, or the sum of all code sections if there are multiple sections</description>
+            </number>
+            <number name="SizeOfInitializedData" id="80" type="integer">
+                <description>The size of the initialized data section, or the sum of all such sections if there are multiple data sections</description>
+            </number>
+            <number name="SizeOfUninitializedData" id="81" type="integer">
+                <description>The size of the uninitialized data section (BSS), or the sum of all such sections if there are multiple BSS sections</description>
+            </number>
+            <number name="AddressOfEntryPoint" id="82" type="integer" display="hex">
+                <description>The address of the entry point relative to the image base when the executable file is loaded into memory. For program images, this is the starting address. For device drivers, this is the address of the initialization function. An entry point is optional for DLLs. When no entry point is present, this field must be zero</description>
+            </number>
+            <number name="BaseOfCode" id="83" type="integer" display="hex">
+                <description>The address that is relative to the image base of the beginning-of-code section when it is loaded into memory</description>
+            </number>
+            <number name="BaseOfData" id="84" fillcolor="00FA92" type="integer" length="4" display="hex">
+                <description>The address that is relative to the image base of the beginning-of-data section when it is loaded into memory</description>
+            </number>
+            <structref name="WindowsSpecific" id="86" repeatmin="0" structure="id:85"/>
+            <structref name="ExportTable" id="88" repeatmin="0" structure="id:87"/>
+            <structref name="ImportTable" id="89" repeatmin="0" structure="id:87"/>
+            <structref name="ResourceTable" id="90" repeatmin="0" structure="id:87"/>
+            <structref name="ExceptionTable" id="91" repeatmin="0" structure="id:87"/>
+            <structref name="CertificateTable" id="92" repeatmin="0" structure="id:87"/>
+            <structref name="BaseRelocationTable" id="93" repeatmin="0" structure="id:87"/>
+            <structref name="Debug" id="94" repeatmin="0" structure="id:87"/>
+            <structref name="Architecture" id="95" repeatmin="0" structure="id:87"/>
+            <structref name="GlobalPtr" id="96" repeatmin="0" structure="id:87"/>
+            <structref name="TLS_Table" id="97" repeatmin="0" structure="id:87"/>
+            <structref name="LoadConfigTable" id="98" repeatmin="0" structure="id:87"/>
+            <structref name="BoundImport" id="99" repeatmin="0" structure="id:87"/>
+            <structref name="IAT" id="100" repeatmin="0" structure="id:87"/>
+            <structref name="DelayImportDescriptor" id="101" repeatmin="0" structure="id:87"/>
+            <structref name="CLR_RuntimeHeader" id="102" repeatmin="0" structure="id:87"/>
+            <structref name="Reserved" id="103" repeatmin="0" structure="id:87"/>
+        </structure>
+        <structure name="OptionalHeaderPE32+" id="39" extends="id:41">
+            <number name="MagicNumber" id="105" type="integer">
+                <description>PE32+ images allow for a 64-bit address space while limiting the image size to 2 gigabytes. Other PE32+ modifications are addressed in their respective sections</description>
+                <fixedvalues>
+                    <fixedvalue name="PE32+" value="0x20B"/>
+                </fixedvalues>
+            </number>
+            <number name="MajorLinkerVersion" id="106" type="integer">
+                <description>The linker major version number</description>
+            </number>
+            <number name="MinorLinkerVersion" id="107" type="integer">
+                <description>The linker minor version number</description>
+            </number>
+            <number name="SizeOfCode" id="108" type="integer">
+                <description>The size of the code (text) section, or the sum of all code sections if there are multiple sections</description>
+            </number>
+            <number name="SizeOfInitializedData" id="109" type="integer">
+                <description>The size of the initialized data section, or the sum of all such sections if there are multiple data sections</description>
+            </number>
+            <number name="SizeOfUninitializedData" id="110" type="integer">
+                <description>The size of the uninitialized data section (BSS), or the sum of all such sections if there are multiple BSS sections</description>
+            </number>
+            <number name="AddressOfEntryPoint" id="111" type="integer">
+                <description>The address of the entry point relative to the image base when the executable file is loaded into memory. For program images, this is the starting address. For device drivers, this is the address of the initialization function. An entry point is optional for DLLs. When no entry point is present, this field must be zero</description>
+            </number>
+            <number name="BaseOfCode" id="112" type="integer">
+                <description>The address that is relative to the image base of the beginning-of-code section when it is loaded into memory</description>
+            </number>
+            <structref name="WindowsSpecific" id="114" structure="id:113"/>
+            <structref name="ExportTable" id="115" structure="id:87"/>
+            <structref name="ImportTable" id="116" structure="id:87"/>
+            <structref name="ResourceTable" id="117" structure="id:87"/>
+            <structref name="ExceptionTable" id="118" structure="id:87"/>
+            <structref name="CertificateTable" id="119" structure="id:87"/>
+            <structref name="BaseRelocationTable" id="120" structure="id:87"/>
+            <structref name="Debug" id="121" structure="id:87"/>
+            <structref name="Architecture" id="122" structure="id:87"/>
+            <structref name="GlobalPtr" id="123" structure="id:87"/>
+            <structref name="TLS_Table" id="124" structure="id:87"/>
+            <structref name="LoadConfigTable" id="125" structure="id:87"/>
+            <structref name="BoundImport" id="126" structure="id:87"/>
+            <structref name="IAT" id="127" structure="id:87"/>
+            <structref name="DelayImportDescriptor" id="128" structure="id:87"/>
+            <structref name="CLR_RuntimeHeader" id="129" structure="id:87"/>
+            <structref name="Reserved" id="130" structure="id:87"/>
+        </structure>
+        <structure name="WindowsSpecific" id="132" extends="id:3">
+            <description>The next 21 fields are an extension to the COFF optional header format. They contain additional information that is required by the linker and loader in Windows</description>
+            <number name="ImageBase" id="133" fillcolor="FF89D8" type="integer" length="4" display="hex">
+                <description>The preferred address of the first byte of image when loaded into memory; must be a multiple of 64 K. The default for DLLs is 0x10000000. The default for Windows CE EXEs is 0x00010000. The default for Windows NT, Windows 2000, Windows XP, Windows 95, Windows 98, and Windows Me is 0x00400000</description>
+            </number>
+            <number name="SectionAlignment" id="134" fillcolor="FF84FF" type="integer" length="4" display="hex">
+                <description>The alignment (in bytes) of sections when they are loaded into memory. It must be greater than or equal to FileAlignment. The default is the page size for the architecture</description>
+            </number>
+            <number name="FileAlignment" id="135" fillcolor="D783FF" type="integer" length="4" display="hex">
+                <description>The alignment factor (in bytes) that is used to align the raw data of sections in the image file. The value should be a power of 2 between 512 and 64 K, inclusive. The default is 512. If the SectionAlignment is less than the architecture’s page size, then FileAlignment must match SectionAlignment</description>
+            </number>
+            <number name="MajorOperatingSystemVersion" id="136" fillcolor="7980FF" type="integer" length="2">
+                <description>The major version number of the required operating system</description>
+            </number>
+            <number name="MinorOperatingSystemVersion" id="137" fillcolor="75D5FF" type="integer" length="2">
+                <description>The minor version number of the required operating system</description>
+            </number>
+            <number name="MajorImageVersion" id="138" fillcolor="73FDFF" type="integer" length="2">
+                <description>The major version number of the image</description>
+            </number>
+            <number name="MinorImageVersion" id="139" fillcolor="72FCD5" type="integer" length="2">
+                <description>The minor version number of the image</description>
+            </number>
+            <number name="MajorSubsystemVersion" id="140" fillcolor="72FA78" type="integer" length="2">
+                <description>The major version number of the subsystem</description>
+            </number>
+            <number name="MinorSubsystemVersion" id="141" fillcolor="D4FB78" type="integer" length="2">
+                <description>The minor version number of the subsystem</description>
+            </number>
+            <number name="Win32VersionValue" id="142" fillcolor="FEFC78" type="integer" length="4">
+                <description>Reserved, must be zero</description>
+            </number>
+            <number name="SizeOfImage" id="143" fillcolor="FFD478" type="integer" length="4" display="hex">
+                <description>The size (in bytes) of the image, including all headers, as the image is loaded in memory. It must be a multiple of SectionAlignment</description>
+            </number>
+            <number name="SizeOfHeaders" id="144" fillcolor="FF7D78" type="integer" length="4" display="hex">
+                <description>The combined size of an MS‑DOS stub, PE header, and section headers rounded up to a multiple of FileAlignment</description>
+            </number>
+            <number name="CheckSum" id="145" fillcolor="FF2F92" type="integer" length="4" display="hex">
+                <description>The image file checksum. The algorithm for computing the checksum is incorporated into IMAGHELP.DLL. The following are checked for validation at load time: all drivers, any DLL loaded at boot time, and any DLL that is loaded into a critical Windows process</description>
+            </number>
+            <number name="Subsystem" id="146" fillcolor="FF40FF" type="integer" length="2">
+                <description>The subsystem that is required to run this image. For more information, see “Windows Subsystem” later in this specification</description>
+                <fixedvalues>
+                    <fixedvalue name="An unknown subsystem" value="0"/>
+                    <fixedvalue name="Device drivers and native Windows processes" value="1"/>
+                    <fixedvalue name="The Windows graphical user interface (GUI) subsystem" value="2"/>
+                    <fixedvalue name="The Windows character subsystem" value="3"/>
+                    <fixedvalue name="The Posix character subsystem" value="7"/>
+                    <fixedvalue name="Windows CE" value="9"/>
+                    <fixedvalue name="An Extensible Firmware Interface (EFI) application" value="10"/>
+                    <fixedvalue name="An EFI driver with boot services" value="11"/>
+                    <fixedvalue name="An EFI driver with run-time services" value="12"/>
+                    <fixedvalue name="An EFI ROM image" value="13"/>
+                    <fixedvalue name="XBOX" value="14"/>
+                </fixedvalues>
+            </number>
+            <number name="DllCharacteristics" id="147" fillcolor="9437FF" type="integer" length="2" display="hex">
+                <mask name="Reserved" value="0x100F">
+                    <fixedvalue name="Reserved" value="0x1"/>
+                    <fixedvalue name="Reserved" value="0x2"/>
+                    <fixedvalue name="Reserved" value="0x4"/>
+                    <fixedvalue name="Reserved" value="0x8"/>
+                    <fixedvalue name="Reserved" value="0x1000"/>
+                </mask>
+                <mask name="IMAGE_DLL_CHARACTERISTICS_DYNAMIC_BASE" value="0x40">
+                    <fixedvalue name="DLL can be relocated at load tim" value="0x40"/>
+                </mask>
+                <mask name="IMAGE_DLL_CHARACTERISTICS_FORCE_INTEGRITY" value="0x80">
+                    <fixedvalue name="Code Integrity checks are enforced" value="0x80"/>
+                </mask>
+                <mask name="IMAGE_DLL_CHARACTERISTICS_NX_COMPAT" value="0x100">
+                    <fixedvalue name="Image is NX compatible" value="0x100"/>
+                </mask>
+                <mask name="IMAGE_DLLCHARACTERISTICS_NO_ISOLATION" value="0x200">
+                    <fixedvalue name="Isolation aware, but do not isolate the image" value="0x200"/>
+                </mask>
+                <mask name="IMAGE_DLLCHARACTERISTICS_ NO_SEH" value="0x400">
+                    <fixedvalue name="Does not use structured exception (SE) handling. No SE handler may be called in this image" value="0x400"/>
+                </mask>
+                <mask name="IMAGE_DLLCHARACTERISTICS_ NO_BIND" value="0x800">
+                    <fixedvalue name="Do not bind the image" value="0x800"/>
+                </mask>
+                <mask name="IMAGE_DLLCHARACTERISTICS_ WDM_DRIVER" value="0x2000">
+                    <fixedvalue name="A WDM driver" value="0x2000"/>
+                </mask>
+                <mask name="IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE" value="0x8000">
+                    <fixedvalue name="Terminal Server aware" value="0x8000"/>
+                </mask>
+            </number>
+            <number name="SizeOfStackReserve" id="148" fillcolor="0096FF" type="integer" length="4" display="hex">
+                <description>The size of the stack to reserve. Only SizeOfStackCommit is committed; the rest is made available one page at a time until the reserve size is reached</description>
+            </number>
+            <number name="SizeOfStackCommit" id="149" fillcolor="00FCFF" type="integer" length="4" display="hex">
+                <description>The size of the stack to commit</description>
+            </number>
+            <number name="SizeOfHeapReserve" id="150" fillcolor="00FA92" type="integer" length="4" display="hex">
+                <description>The size of the local heap space to reserve. Only SizeOfHeapCommit is committed; the rest is made available one page at a time until the reserve size is reached</description>
+            </number>
+            <number name="SizeOfHeapCommit" id="151" fillcolor="00F900" type="integer" length="4" display="hex">
+                <description>The size of the local heap space to commit</description>
+            </number>
+            <number name="LoaderFlags" id="152" fillcolor="8DF900" type="integer" length="4" display="hex">
+                <description>Reserved, must be zero</description>
+            </number>
+            <number name="NumberOfRvaAndSizes" id="153" fillcolor="FEFB00" type="integer" length="4">
+                <description>The number of data-directory entries in the remainder of the optional header. Each describes a location and size</description>
+            </number>
+        </structure>
+        <structure name="WindowsSpecificPE32" id="85" extends="id:132">
+            <number name="ImageBase" id="155" type="integer">
+                <description>The preferred address of the first byte of image when loaded into memory; must be a multiple of 64 K. The default for DLLs is 0x10000000. The default for Windows CE EXEs is 0x00010000. The default for Windows NT, Windows 2000, Windows XP, Windows 95, Windows 98, and Windows Me is 0x00400000</description>
+            </number>
+            <number name="SectionAlignment" id="156" type="integer">
+                <description>The alignment (in bytes) of sections when they are loaded into memory. It must be greater than or equal to FileAlignment. The default is the page size for the architecture</description>
+            </number>
+            <number name="FileAlignment" id="157" type="integer">
+                <description>The alignment factor (in bytes) that is used to align the raw data of sections in the image file. The value should be a power of 2 between 512 and 64 K, inclusive. The default is 512. If the SectionAlignment is less than the architecture’s page size, then FileAlignment must match SectionAlignment</description>
+            </number>
+            <number name="MajorOperatingSystemVersion" id="158" type="integer">
+                <description>The major version number of the required operating system</description>
+            </number>
+            <number name="MinorOperatingSystemVersion" id="159" type="integer">
+                <description>The minor version number of the required operating system</description>
+            </number>
+            <number name="MajorImageVersion" id="160" type="integer">
+                <description>The major version number of the image</description>
+            </number>
+            <number name="MinorImageVersion" id="161" type="integer">
+                <description>The minor version number of the image</description>
+            </number>
+            <number name="MajorSubsystemVersion" id="162" type="integer">
+                <description>The major version number of the subsystem</description>
+            </number>
+            <number name="MinorSubsystemVersion" id="163" type="integer">
+                <description>The minor version number of the subsystem</description>
+            </number>
+            <number name="Win32VersionValue" id="164" type="integer">
+                <description>Reserved, must be zero</description>
+            </number>
+            <number name="SizeOfImage" id="165" type="integer">
+                <description>The size (in bytes) of the image, including all headers, as the image is loaded in memory. It must be a multiple of SectionAlignment</description>
+            </number>
+            <number name="SizeOfHeaders" id="166" type="integer">
+                <description>The combined size of an MS‑DOS stub, PE header, and section headers rounded up to a multiple of FileAlignment</description>
+            </number>
+            <number name="CheckSum" id="167" type="integer">
+                <description>The image file checksum. The algorithm for computing the checksum is incorporated into IMAGHELP.DLL. The following are checked for validation at load time: all drivers, any DLL loaded at boot time, and any DLL that is loaded into a critical Windows process</description>
+            </number>
+            <number name="Subsystem" id="168" type="integer">
+                <description>The subsystem that is required to run this image. For more information, see “Windows Subsystem” later in this specification</description>
+            </number>
+            <number name="DllCharacteristics" id="169" type="integer">
+                <mask name="Reserved" value="0x100F">
+                    <fixedvalue name="Reserved" value="0x1"/>
+                    <fixedvalue name="Reserved" value="0x2"/>
+                    <fixedvalue name="Reserved" value="0x4"/>
+                    <fixedvalue name="Reserved" value="0x8"/>
+                    <fixedvalue name="Reserved" value="0x1000"/>
+                </mask>
+                <mask name="IMAGE_DLL_CHARACTERISTICS_DYNAMIC_BASE" value="0x40">
+                    <fixedvalue name="DLL can be relocated at load tim" value="0x40"/>
+                </mask>
+                <mask name="IMAGE_DLL_CHARACTERISTICS_FORCE_INTEGRITY" value="0x80">
+                    <fixedvalue name="Code Integrity checks are enforced" value="0x80"/>
+                </mask>
+                <mask name="IMAGE_DLL_CHARACTERISTICS_NX_COMPAT" value="0x100">
+                    <fixedvalue name="Image is NX compatible" value="0x100"/>
+                </mask>
+                <mask name="IMAGE_DLLCHARACTERISTICS_NO_ISOLATION" value="0x200">
+                    <fixedvalue name="Isolation aware, but do not isolate the image" value="0x200"/>
+                </mask>
+                <mask name="IMAGE_DLLCHARACTERISTICS_ NO_SEH" value="0x400">
+                    <fixedvalue name="Does not use structured exception (SE) handling. No SE handler may be called in this image" value="0x400"/>
+                </mask>
+                <mask name="IMAGE_DLLCHARACTERISTICS_ NO_BIND" value="0x800">
+                    <fixedvalue name="Do not bind the image" value="0x800"/>
+                </mask>
+                <mask name="IMAGE_DLLCHARACTERISTICS_ WDM_DRIVER" value="0x2000">
+                    <fixedvalue name="A WDM driver" value="0x2000"/>
+                </mask>
+                <mask name="IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE" value="0x8000">
+                    <fixedvalue name="Terminal Server aware" value="0x8000"/>
+                </mask>
+            </number>
+            <number name="SizeOfStackReserve" id="170" type="integer">
+                <description>The size of the stack to reserve. Only SizeOfStackCommit is committed; the rest is made available one page at a time until the reserve size is reached</description>
+            </number>
+            <number name="SizeOfStackCommit" id="171" type="integer">
+                <description>The size of the stack to commit</description>
+            </number>
+            <number name="SizeOfHeapReserve" id="172" type="integer">
+                <description>The size of the local heap space to reserve. Only SizeOfHeapCommit is committed; the rest is made available one page at a time until the reserve size is reached</description>
+            </number>
+            <number name="SizeOfHeapCommit" id="173" type="integer">
+                <description>The size of the local heap space to commit</description>
+            </number>
+            <number name="LoaderFlags" id="174" type="integer">
+                <description>Reserved, must be zero</description>
+            </number>
+            <number name="NumberOfRvaAndSizes" id="175" type="integer">
+                <description>The number of data-directory entries in the remainder of the optional header. Each describes a location and size</description>
+            </number>
+        </structure>
+        <structure name="WindowsSpecificPE32+" id="113" extends="id:132">
+            <number name="ImageBase" id="177" type="integer" length="8">
+                <description>The preferred address of the first byte of image when loaded into memory; must be a multiple of 64 K. The default for DLLs is 0x10000000. The default for Windows CE EXEs is 0x00010000. The default for Windows NT, Windows 2000, Windows XP, Windows 95, Windows 98, and Windows Me is 0x00400000</description>
+            </number>
+            <number name="SectionAlignment" id="178" type="integer">
+                <description>The alignment (in bytes) of sections when they are loaded into memory. It must be greater than or equal to FileAlignment. The default is the page size for the architecture</description>
+            </number>
+            <number name="FileAlignment" id="179" type="integer">
+                <description>The alignment factor (in bytes) that is used to align the raw data of sections in the image file. The value should be a power of 2 between 512 and 64 K, inclusive. The default is 512. If the SectionAlignment is less than the architecture’s page size, then FileAlignment must match SectionAlignment</description>
+            </number>
+            <number name="MajorOperatingSystemVersion" id="180" type="integer">
+                <description>The major version number of the required operating system</description>
+            </number>
+            <number name="MinorOperatingSystemVersion" id="181" type="integer">
+                <description>The minor version number of the required operating system</description>
+            </number>
+            <number name="MajorImageVersion" id="182" type="integer">
+                <description>The major version number of the image</description>
+            </number>
+            <number name="MinorImageVersion" id="183" type="integer">
+                <description>The minor version number of the image</description>
+            </number>
+            <number name="MajorSubsystemVersion" id="184" type="integer">
+                <description>The major version number of the subsystem</description>
+            </number>
+            <number name="MinorSubsystemVersion" id="185" type="integer">
+                <description>The minor version number of the subsystem</description>
+            </number>
+            <number name="Win32VersionValue" id="186" type="integer">
+                <description>Reserved, must be zero</description>
+            </number>
+            <number name="SizeOfImage" id="187" type="integer">
+                <description>The size (in bytes) of the image, including all headers, as the image is loaded in memory. It must be a multiple of SectionAlignment</description>
+            </number>
+            <number name="SizeOfHeaders" id="188" type="integer">
+                <description>The combined size of an MS‑DOS stub, PE header, and section headers rounded up to a multiple of FileAlignment</description>
+            </number>
+            <number name="CheckSum" id="189" type="integer">
+                <description>The image file checksum. The algorithm for computing the checksum is incorporated into IMAGHELP.DLL. The following are checked for validation at load time: all drivers, any DLL loaded at boot time, and any DLL that is loaded into a critical Windows process</description>
+            </number>
+            <number name="Subsystem" id="190" type="integer">
+                <description>The subsystem that is required to run this image. For more information, see “Windows Subsystem” later in this specification</description>
+            </number>
+            <number name="DllCharacteristics" id="191" type="integer">
+                <mask name="Reserved" value="0x100F">
+                    <fixedvalue name="Reserved" value="0x1"/>
+                    <fixedvalue name="Reserved" value="0x2"/>
+                    <fixedvalue name="Reserved" value="0x4"/>
+                    <fixedvalue name="Reserved" value="0x8"/>
+                    <fixedvalue name="Reserved" value="0x1000"/>
+                </mask>
+                <mask name="IMAGE_DLL_CHARACTERISTICS_DYNAMIC_BASE" value="0x40">
+                    <fixedvalue name="DLL can be relocated at load tim" value="0x40"/>
+                </mask>
+                <mask name="IMAGE_DLL_CHARACTERISTICS_FORCE_INTEGRITY" value="0x80">
+                    <fixedvalue name="Code Integrity checks are enforced" value="0x80"/>
+                </mask>
+                <mask name="IMAGE_DLL_CHARACTERISTICS_NX_COMPAT" value="0x100">
+                    <fixedvalue name="Image is NX compatible" value="0x100"/>
+                </mask>
+                <mask name="IMAGE_DLLCHARACTERISTICS_NO_ISOLATION" value="0x200">
+                    <fixedvalue name="Isolation aware, but do not isolate the image" value="0x200"/>
+                </mask>
+                <mask name="IMAGE_DLLCHARACTERISTICS_ NO_SEH" value="0x400">
+                    <fixedvalue name="Does not use structured exception (SE) handling. No SE handler may be called in this image" value="0x400"/>
+                </mask>
+                <mask name="IMAGE_DLLCHARACTERISTICS_ NO_BIND" value="0x800">
+                    <fixedvalue name="Do not bind the image" value="0x800"/>
+                </mask>
+                <mask name="IMAGE_DLLCHARACTERISTICS_ WDM_DRIVER" value="0x2000">
+                    <fixedvalue name="A WDM driver" value="0x2000"/>
+                </mask>
+                <mask name="IMAGE_DLLCHARACTERISTICS_TERMINAL_SERVER_AWARE" value="0x8000">
+                    <fixedvalue name="Terminal Server aware" value="0x8000"/>
+                </mask>
+            </number>
+            <number name="SizeOfStackReserve" id="192" type="integer" length="8">
+                <description>The size of the stack to reserve. Only SizeOfStackCommit is committed; the rest is made available one page at a time until the reserve size is reached</description>
+            </number>
+            <number name="SizeOfStackCommit" id="193" type="integer" length="8">
+                <description>The size of the stack to commit</description>
+            </number>
+            <number name="SizeOfHeapReserve" id="194" type="integer" length="8">
+                <description>The size of the local heap space to reserve. Only SizeOfHeapCommit is committed; the rest is made available one page at a time until the reserve size is reached</description>
+            </number>
+            <number name="SizeOfHeapCommit" id="195" type="integer" length="8">
+                <description>The size of the local heap space to commit</description>
+            </number>
+            <number name="LoaderFlags" id="196" type="integer">
+                <description>Reserved, must be zero</description>
+            </number>
+            <number name="NumberOfRvaAndSizes" id="197" type="integer">
+                <description>The number of data-directory entries in the remainder of the optional header. Each describes a location and size</description>
+            </number>
+        </structure>
+        <structure name="DataDirectory" id="87" extends="id:3" valueexpression="VirtualAddress">
+            <description>Address/size pairs for special tables that are found in the image file and are used by the operating system (for example, the import table and the export table)</description>
+            <number name="VirtualAddress" id="199" fillcolor="00FA92" type="integer" length="4" display="hex"/>
+            <number name="Size" id="200" fillcolor="75D5FF" type="integer" length="4"/>
+        </structure>
+        <structure name="RawData" id="202" extends="id:3" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Data" id="203" fillcolor="FFD478" length="remaining"/>
+        </structure>
+        <structure name="LineNumbers" id="210" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>COFF line numbers are no longer produced and, in the future, will not be consumed. COFF line numbers indicate the relationship between code and line numbers in source files. The Microsoft format for COFF line numbers is similar to standard COFF, but it has been extended to allow a single section to relate to line numbers in multiple source files.
+COFF line numbers consist of an array of fixed-length records. The location (file offset) and size of the array are specified in the section header.
+</description>
+            <number name="Type" id="211" type="integer" length="4">
+                <description>This is a union of two fields: SymbolTableIndex and VirtualAddress. Whether SymbolTableIndex or RVA is used depends on the value of Linenumber</description>
+            </number>
+            <number name="Linenumber" id="212" type="integer" length="2">
+                <description>When nonzero, this field specifies a one-based line number. When zero, the Type field is interpreted as a symbol table index for a function</description>
+            </number>
+        </structure>
+        <structure name="SectionHeader" id="50" repeat="id:29" extends="id:3">
+            <binary name="Name" mustmatch="yes" id="214" fillcolor="FEFB00" length="8">
+                <description>An 8-byte, null-padded UTF-8 encoded string. If the string is exactly 8 characters long, there is no terminating null. For longer names, this field contains a slash (/) that is followed by an ASCII representation of a decimal number that is an offset into the string table. Executable images do not use a string table and do not support section names longer than 8 characters. Long names in object files are truncated if they are emitted to an executable file.
+
+The “$” character (dollar sign) has a special interpretation in section names in object files.&#13;When determining the image section that will contain the contents of an object section, the linker discards the “$” and all characters that follow it. Thus, an object section named .text$X actually contributes to the .text section in the image.&#13;However, the characters following the “$” determine the ordering of the contributions to the image section. All contributions with the same object-section name are allocated contiguously in the image, and the blocks of contributions are sorted in lexical order by object-section name. Therefore, everything in object files with section name .text$X ends up together, after the .text$W contributions and before the .text$Y contributions.&#13;The section name in an image file never contains a “$” character&#13;</description>
+            </binary>
+            <number name="VirtualSize" id="215" fillcolor="8DF900" type="integer" length="4">
+                <description>The total size of the section when loaded into memory. If this value is greater than SizeOfRawData, the section is zero-padded. This field is valid only for executable images and should be set to zero for object files</description>
+            </number>
+            <number name="VirtualAddress" id="216" fillcolor="00FCFF" type="integer" length="4" display="hex">
+                <description>For executable images, the address of the first byte of the section relative to the image base when the section is loaded into memory. For object files, this field is the address of the first byte before relocation is applied; for simplicity, compilers should set this to zero. Otherwise, it is an arbitrary value that is subtracted from offsets during relocation</description>
+            </number>
+            <number name="SizeOfRawData" id="217" fillcolor="FF84FF" type="integer" length="4" display="hex">
+                <description>The size of the section (for object files) or the size of the initialized data on disk (for image files). For executable images, this must be a multiple of FileAlignment from the optional header. If this is less than VirtualSize, the remainder of the section is zero-filled. Because the SizeOfRawData field is rounded but the VirtualSize field is not, it is possible for SizeOfRawData to be greater than VirtualSize as well. When a section contains only uninitialized data, this field should be zero</description>
+            </number>
+            <offset name="PointerToRawData" id="218" fillcolor="D783FF" length="4" references="id:202" referenced-size="id:217" follownullreference="no">
+                <description>The file pointer to the first page of the section within the COFF file. For executable images, this must be a multiple of FileAlignment from the optional header. For object files, the value should be aligned on a 4‑byte boundary for best performance. When a section contains only uninitialized data, this field should be zero</description>
+            </offset>
+            <offset name="PointerToRelocations" id="219" fillcolor="75D5FF" length="4" references="id:205" follownullreference="no">
+                <description>The file pointer to the beginning of relocation entries for the section. This is set to zero for executable images or if there are no relocations</description>
+            </offset>
+            <offset name="PointerToLineNumbers" id="220" fillcolor="FFD478" length="4" references="id:210" follownullreference="no">
+                <description>The file pointer to the beginning of line-number entries for the section. This is set to zero if there are no COFF line numbers. This value should be zero for an image because COFF debugging information is deprecated</description>
+            </offset>
+            <number name="NumberOfRelocations" id="221" fillcolor="FF7D78" type="integer" length="2">
+                <description>The number of relocation entries for the section. This is set to zero for executable images</description>
+            </number>
+            <number name="NumberOfLinenumbers" id="222" fillcolor="7980FF" type="integer" length="2">
+                <description>The number of line-number entries for the section. This value should be zero for an image because COFF debugging information is deprecated</description>
+            </number>
+            <number name="Characteristics" id="223" fillcolor="FF9300" type="integer" length="4" display="hex">
+                <description>The flags that describe the characteristics of the section
+IMAGE_SCN_LNK_NRELOC_OVFL indicates that the count of relocations for the section exceeds the 16 bits that are reserved for it in the section header. If the bit is set and the NumberOfRelocations field in the section header is 0xffff, the actual relocation count is stored in the 32-bit VirtualAddress field of the first relocation. It is an error if IMAGE_SCN_LNK_NRELOC_OVFL is set and there are fewer than 0xffff relocations in the section
+</description>
+                <mask name="Reserved" value="0x42F"/>
+                <mask name="IMAGE_SCN_TYPE_NO_PAD" value="0x8">
+                    <fixedvalue name="The section should not be padded to the next boundary" value="0x8"/>
+                </mask>
+                <mask name="IMAGE_SCN_CNT_CODE" value="0x20">
+                    <fixedvalue name="The section contains executable code" value="0x20"/>
+                </mask>
+                <mask name="IMAGE_SCN_CNT_INITIALIZED_DATA" value="0x40">
+                    <fixedvalue name="The section contains initialized data" value="0x40"/>
+                </mask>
+                <mask name="IMAGE_SCN_CNT_UNINITIALIZED_DATA" value="0x80">
+                    <fixedvalue name="The section contains uninitialized data" value="0x80"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_OTHER" value="0x100">
+                    <fixedvalue name="Reserved for future use" value="0x100"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_INFO" value="0x200">
+                    <fixedvalue name="The section contains comments or other information" value="0x200"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_REMOVE" value="0x800">
+                    <fixedvalue name="The section will not become part of the image" value="0x800"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_COMDAT" value="0x1000">
+                    <fixedvalue name="The section contains COMDAT data" value="0x1000"/>
+                </mask>
+                <mask name="IMAGE_SCN_GPREL" value="0x8000">
+                    <fixedvalue name="The section contains data referenced through the global pointer (GP)" value="0x8000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_PURGEABLE" value="0x20000">
+                    <fixedvalue name="Reserved for future use" value="0x4E20"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_16BIT" value="0x20000">
+                    <fixedvalue name="For ARM machine types, the section contains Thumb code" value="0x20000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_LOCKED" value="0x40000">
+                    <fixedvalue name="Reserved for future use" value="0x40000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_PRELOAD" value="0x80000">
+                    <fixedvalue name="Reserved for future use" value="0x80000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_1BYTES" value="0x100000">
+                    <fixedvalue name="Align data on a 1-byte boundary" value="0x186A0"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_2BYTES" value="0x200000">
+                    <fixedvalue name="Align data on a 2-byte boundary" value="0x200000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_4BYTES" value="0x300000">
+                    <fixedvalue name="Align data on a 4-byte boundary" value="0x300000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_8BYTES" value="0x400000">
+                    <fixedvalue name="Align data on an 8-byte boundary" value="0x400000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_16BYTES" value="0x500000">
+                    <fixedvalue name="Align data on a 16-byte boundary" value="0x500000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_32BYTES" value="0x600000">
+                    <fixedvalue name="Align data on a 32-byte boundary" value="0x600000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_64BYTES" value="0x700000">
+                    <fixedvalue name="Align data on a 64-byte boundary" value="0x700000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_128BYTES" value="0x800000">
+                    <fixedvalue name="Align data on a 128-byte boundary" value="0x800000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_256BYTES" value="0x900000">
+                    <fixedvalue name="Align data on a 256-byte boundary" value="0x900000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_512BYTES" value="0xA00000">
+                    <fixedvalue name="Align data on a 512-byte boundary" value="0xA00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_1024BYTES" value="0xB00000">
+                    <fixedvalue name="Align data on a 1024-byte boundary" value="0xB00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_2048BYTES" value="0xC00000">
+                    <fixedvalue name="Align data on a 2048-byte boundary" value="0xC00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_4096BYTES" value="0xD00000">
+                    <fixedvalue name="Align data on a 4096-byte boundary" value="0xD00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_8192BYTES" value="0xE00000">
+                    <fixedvalue name="Align data on a 8192-byte boundary" value="0xE00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_NRELOC_OVFL" value="0x1000000">
+                    <fixedvalue name="The section contains extended relocations" value="0x1000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_DISCARDABLE" value="0x2000000">
+                    <fixedvalue name="The section can be discarded as needed" value="0x2000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_NOT_CACHED" value="0x4000000">
+                    <fixedvalue name="The section cannot be cached" value="0x4000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_NOT_PAGED" value="0x8000000">
+                    <fixedvalue name="The section is not pageable" value="0x8000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_SHARED" value="0x10000000">
+                    <fixedvalue name="The section can be shared in memory" value="0x10000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_EXECUTE" value="0x20000000">
+                    <fixedvalue name="The section can be executed as code" value="0x20000000"/>
+                </mask>
+            </number>
+        </structure>
+        <structure name="ImportDataSectionHeader" id="46" extends="id:50">
+            <binary name="Name" id="225" length="8">
+                <description>An 8-byte, null-padded UTF-8 encoded string. If the string is exactly 8 characters long, there is no terminating null. For longer names, this field contains a slash (/) that is followed by an ASCII representation of a decimal number that is an offset into the string table. Executable images do not use a string table and do not support section names longer than 8 characters. Long names in object files are truncated if they are emitted to an executable file.
+
+The “$” character (dollar sign) has a special interpretation in section names in object files.&#13;When determining the image section that will contain the contents of an object section, the linker discards the “$” and all characters that follow it. Thus, an object section named .text$X actually contributes to the .text section in the image.&#13;However, the characters following the “$” determine the ordering of the contributions to the image section. All contributions with the same object-section name are allocated contiguously in the image, and the blocks of contributions are sorted in lexical order by object-section name. Therefore, everything in object files with section name .text$X ends up together, after the .text$W contributions and before the .text$Y contributions.&#13;The section name in an image file never contains a “$” character&#13;</description>
+                <fixedvalues>
+                    <fixedvalue name=".idata" value="2E69646174610000"/>
+                </fixedvalues>
+            </binary>
+            <number name="VirtualSize" id="226" type="integer">
+                <description>The total size of the section when loaded into memory. If this value is greater than SizeOfRawData, the section is zero-padded. This field is valid only for executable images and should be set to zero for object files</description>
+            </number>
+            <number name="VirtualAddress" id="227" type="integer">
+                <description>For executable images, the address of the first byte of the section relative to the image base when the section is loaded into memory. For object files, this field is the address of the first byte before relocation is applied; for simplicity, compilers should set this to zero. Otherwise, it is an arbitrary value that is subtracted from offsets during relocation</description>
+            </number>
+            <number name="SizeOfRawData" id="228" type="integer">
+                <description>The size of the section (for object files) or the size of the initialized data on disk (for image files). For executable images, this must be a multiple of FileAlignment from the optional header. If this is less than VirtualSize, the remainder of the section is zero-filled. Because the SizeOfRawData field is rounded but the VirtualSize field is not, it is possible for SizeOfRawData to be greater than VirtualSize as well. When a section contains only uninitialized data, this field should be zero</description>
+            </number>
+            <offset name="PointerToRawData" id="230" references="id:229" referenced-size="id:228">
+                <description>The file pointer to the first page of the section within the COFF file. For executable images, this must be a multiple of FileAlignment from the optional header. For object files, the value should be aligned on a 4‑byte boundary for best performance. When a section contains only uninitialized data, this field should be zero</description>
+            </offset>
+            <offset name="PointerToRelocations" id="231" references="id:205">
+                <description>The file pointer to the beginning of relocation entries for the section. This is set to zero for executable images or if there are no relocations</description>
+            </offset>
+            <offset name="PointerToLineNumbers" id="232" references="id:210">
+                <description>The file pointer to the beginning of line-number entries for the section. This is set to zero if there are no COFF line numbers. This value should be zero for an image because COFF debugging information is deprecated</description>
+            </offset>
+            <number name="NumberOfRelocations" id="233" type="integer">
+                <description>The number of relocation entries for the section. This is set to zero for executable images</description>
+            </number>
+            <number name="NumberOfLinenumbers" id="234" type="integer">
+                <description>The number of line-number entries for the section. This value should be zero for an image because COFF debugging information is deprecated</description>
+            </number>
+            <number name="Characteristics" id="235" type="integer">
+                <description>The flags that describe the characteristics of the section
+IMAGE_SCN_LNK_NRELOC_OVFL indicates that the count of relocations for the section exceeds the 16 bits that are reserved for it in the section header. If the bit is set and the NumberOfRelocations field in the section header is 0xffff, the actual relocation count is stored in the 32-bit VirtualAddress field of the first relocation. It is an error if IMAGE_SCN_LNK_NRELOC_OVFL is set and there are fewer than 0xffff relocations in the section
+</description>
+                <mask name="Reserved" value="0x42F"/>
+                <mask name="IMAGE_SCN_TYPE_NO_PAD" value="0x8">
+                    <fixedvalue name="The section should not be padded to the next boundary" value="0x8"/>
+                </mask>
+                <mask name="IMAGE_SCN_CNT_CODE" value="0x20">
+                    <fixedvalue name="The section contains executable code" value="0x20"/>
+                </mask>
+                <mask name="IMAGE_SCN_CNT_INITIALIZED_DATA" value="0x40">
+                    <fixedvalue name="The section contains initialized data" value="0x40"/>
+                </mask>
+                <mask name="IMAGE_SCN_CNT_UNINITIALIZED_DATA" value="0x80">
+                    <fixedvalue name="The section contains uninitialized data" value="0x80"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_OTHER" value="0x100">
+                    <fixedvalue name="Reserved for future use" value="0x100"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_INFO" value="0x200">
+                    <fixedvalue name="The section contains comments or other information" value="0x200"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_REMOVE" value="0x800">
+                    <fixedvalue name="The section will not become part of the image" value="0x800"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_COMDAT" value="0x1000">
+                    <fixedvalue name="The section contains COMDAT data" value="0x1000"/>
+                </mask>
+                <mask name="IMAGE_SCN_GPREL" value="0x8000">
+                    <fixedvalue name="The section contains data referenced through the global pointer (GP)" value="0x8000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_PURGEABLE" value="0x20000">
+                    <fixedvalue name="Reserved for future use" value="0x4E20"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_16BIT" value="0x20000">
+                    <fixedvalue name="For ARM machine types, the section contains Thumb code" value="0x20000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_LOCKED" value="0x40000">
+                    <fixedvalue name="Reserved for future use" value="0x40000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_PRELOAD" value="0x80000">
+                    <fixedvalue name="Reserved for future use" value="0x80000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_1BYTES" value="0x100000">
+                    <fixedvalue name="Align data on a 1-byte boundary" value="0x186A0"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_2BYTES" value="0x200000">
+                    <fixedvalue name="Align data on a 2-byte boundary" value="0x200000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_4BYTES" value="0x300000">
+                    <fixedvalue name="Align data on a 4-byte boundary" value="0x300000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_8BYTES" value="0x400000">
+                    <fixedvalue name="Align data on an 8-byte boundary" value="0x400000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_16BYTES" value="0x500000">
+                    <fixedvalue name="Align data on a 16-byte boundary" value="0x500000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_32BYTES" value="0x600000">
+                    <fixedvalue name="Align data on a 32-byte boundary" value="0x600000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_64BYTES" value="0x700000">
+                    <fixedvalue name="Align data on a 64-byte boundary" value="0x700000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_128BYTES" value="0x800000">
+                    <fixedvalue name="Align data on a 128-byte boundary" value="0x800000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_256BYTES" value="0x900000">
+                    <fixedvalue name="Align data on a 256-byte boundary" value="0x900000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_512BYTES" value="0xA00000">
+                    <fixedvalue name="Align data on a 512-byte boundary" value="0xA00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_1024BYTES" value="0xB00000">
+                    <fixedvalue name="Align data on a 1024-byte boundary" value="0xB00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_2048BYTES" value="0xC00000">
+                    <fixedvalue name="Align data on a 2048-byte boundary" value="0xC00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_4096BYTES" value="0xD00000">
+                    <fixedvalue name="Align data on a 4096-byte boundary" value="0xD00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_8192BYTES" value="0xE00000">
+                    <fixedvalue name="Align data on a 8192-byte boundary" value="0xE00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_NRELOC_OVFL" value="0x1000000">
+                    <fixedvalue name="The section contains extended relocations" value="0x1000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_DISCARDABLE" value="0x2000000">
+                    <fixedvalue name="The section can be discarded as needed" value="0x2000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_NOT_CACHED" value="0x4000000">
+                    <fixedvalue name="The section cannot be cached" value="0x4000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_NOT_PAGED" value="0x8000000">
+                    <fixedvalue name="The section is not pageable" value="0x8000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_SHARED" value="0x10000000">
+                    <fixedvalue name="The section can be shared in memory" value="0x10000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_EXECUTE" value="0x20000000">
+                    <fixedvalue name="The section can be executed as code" value="0x20000000"/>
+                </mask>
+            </number>
+        </structure>
+        <structure name="ImportData" id="229" extends="id:3">
+            <scriptelement name="MapImageImportDescriptors" id="237">
+                <script name="unnamed" type="Generic">
+                    <source language="Python"># map IMAGE_IMPORT_DESCRIPTOR structures as long as not all values are zero
+
+pointerSize = 4
+
+currentPos = currentMapper.getCurrentOffset()
+
+# ImageImportDescriptor
+
+grammar = currentMapper.getCurrentGrammar()
+imageImportDescriptorStructure = grammar.getStructureByName(&quot;ImageImportDescriptor&quot;)
+
+byteView = currentMapper.getCurrentByteView()
+
+parsedBytes = 0
+
+while True:
+	originalFirstThunk = byteView.readUnsignedInt(currentPos, pointerSize, ENDIAN_LITTLE)
+	timeDate = byteView.readUnsignedInt(currentPos+4, pointerSize, ENDIAN_LITTLE)
+	forwarderChain = byteView.readUnsignedInt(currentPos+8, pointerSize, ENDIAN_LITTLE)
+	name = byteView.readUnsignedInt(currentPos+12, pointerSize, ENDIAN_LITTLE)
+	firstThunk = byteView.readUnsignedInt(currentPos+16, pointerSize, ENDIAN_LITTLE)
+
+	if ((originalFirstThunk == 0) and (timeDate == 0) and (forwarderChain == 0) and (name == 0) and (firstThunk == 0)):
+		break
+
+	print(&quot;Map structure at position &quot; + format(currentPos, &quot;04x&quot;))
+	structureLength = currentMapper.mapStructure(imageImportDescriptorStructure)
+#	structureLength = currentMapper.mapStructureAtPosition(imageImportDescriptorStructure, currentPos, 20)
+
+	if (structureLength &lt; 1):
+		# probably something failed when mapping,
+		# e. g. the offset had no valid target
+		break
+
+	parsedBytes += structureLength
+	currentPos += structureLength
+
+parsedBytes
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="ImageImportDescriptor" id="239" length="0" extends="id:3" valueexpression="NameString">
+            <number name="OriginalFirstThunk" id="240" fillcolor="00F900" type="integer" length="4" display="hex"/>
+            <custom name="TimeDateStamp" id="241" fillcolor="FF40FF" length="4" script="id:193"/>
+            <number name="ForwarderChain" id="242" fillcolor="FEFB00" type="integer" length="4" display="hex"/>
+            <offset name="Name" id="244" fillcolor="FF84FF" length="4" references="id:243" additional="PointerToRawData-VirtualAddress" follownullreference="no"/>
+            <number name="FirstThunk" id="245" fillcolor="7980FF" type="integer" length="4" display="hex"/>
+            <scriptelement name="ReadImports" id="246">
+                <script name="unnamed" type="Generic">
+                    <source language="Python"># OriginalFirstThunk + PointerToRawData - VirtualAddress
+
+pointerSize = 4
+
+# get collection with results so far
+results = currentMapper.getCurrentResults()
+
+# get results
+originalFirstThunkResult = results.getResultByName(&quot;OriginalFirstThunk&quot;)
+pointerToRawDataResult = results.getResultByName(&quot;PointerToRawData&quot;)
+virtualAddressResult = results.getResultByName(&quot;VirtualAddress&quot;)
+
+# get value objects
+originalFirstThunkValue = originalFirstThunkResult.getValue()
+pointerToRawDataValue = pointerToRawDataResult.getValue()
+virtualAddressValue = virtualAddressResult.getValue()
+
+# get actual values
+originalFirstThunk = originalFirstThunkValue.getUnsigned()
+pointerToRawData = pointerToRawDataValue.getUnsigned()
+virtualAddress = virtualAddressValue.getUnsigned()
+
+referenceAddress = originalFirstThunk + pointerToRawData - virtualAddress
+
+print (&quot;referenceAddress: &quot; + format(referenceAddress, '04x'))
+
+grammar = currentMapper.getCurrentGrammar()
+imageImportStructure = grammar.getStructureByName(&quot;ImageImportByName&quot;)
+
+byteView = currentMapper.getCurrentByteView()
+
+while True:
+	imageImportByNameBaseAddress = byteView.readUnsignedInt(referenceAddress, pointerSize, ENDIAN_LITTLE)
+
+	if (imageImportByNameBaseAddress == 0):
+		break
+
+	imageImportByNameAddress = imageImportByNameBaseAddress + pointerToRawData - virtualAddress
+	currentMapper.mapStructureAtPosition(imageImportStructure, imageImportByNameAddress, 50)
+	referenceAddress += pointerSize
+
+	print(&quot;Mapped inner structure&quot;)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="ImageImportByName" id="248" extends="id:3" valueexpression="Name">
+            <number name="Hint" id="249" fillcolor="7980FF" type="integer" length="2"/>
+            <string name="Name" id="250" fillcolor="72FCD5" type="zero-terminated"/>
+        </structure>
+        <structure name="NameString" id="243" extends="id:3" valueexpression="Name">
+            <string name="Name" id="252" fillcolor="D783FF" type="zero-terminated"/>
+        </structure>
+        <structure name="ResourceSectionHeader" id="48" extends="id:50">
+            <binary name="Name" id="254">
+                <description>An 8-byte, null-padded UTF-8 encoded string. If the string is exactly 8 characters long, there is no terminating null. For longer names, this field contains a slash (/) that is followed by an ASCII representation of a decimal number that is an offset into the string table. Executable images do not use a string table and do not support section names longer than 8 characters. Long names in object files are truncated if they are emitted to an executable file.
+
+The “$” character (dollar sign) has a special interpretation in section names in object files.&#13;When determining the image section that will contain the contents of an object section, the linker discards the “$” and all characters that follow it. Thus, an object section named .text$X actually contributes to the .text section in the image.&#13;However, the characters following the “$” determine the ordering of the contributions to the image section. All contributions with the same object-section name are allocated contiguously in the image, and the blocks of contributions are sorted in lexical order by object-section name. Therefore, everything in object files with section name .text$X ends up together, after the .text$W contributions and before the .text$Y contributions.&#13;The section name in an image file never contains a “$” character&#13;</description>
+                <fixedvalues>
+                    <fixedvalue name=".rsrc" value="2E72737263000000"/>
+                </fixedvalues>
+            </binary>
+            <number name="VirtualSize" id="255" type="integer">
+                <description>The total size of the section when loaded into memory. If this value is greater than SizeOfRawData, the section is zero-padded. This field is valid only for executable images and should be set to zero for object files</description>
+            </number>
+            <number name="VirtualAddress" id="256" type="integer">
+                <description>For executable images, the address of the first byte of the section relative to the image base when the section is loaded into memory. For object files, this field is the address of the first byte before relocation is applied; for simplicity, compilers should set this to zero. Otherwise, it is an arbitrary value that is subtracted from offsets during relocation</description>
+            </number>
+            <number name="SizeOfRawData" id="257" type="integer">
+                <description>The size of the section (for object files) or the size of the initialized data on disk (for image files). For executable images, this must be a multiple of FileAlignment from the optional header. If this is less than VirtualSize, the remainder of the section is zero-filled. Because the SizeOfRawData field is rounded but the VirtualSize field is not, it is possible for SizeOfRawData to be greater than VirtualSize as well. When a section contains only uninitialized data, this field should be zero</description>
+            </number>
+            <offset name="PointerToRawData" id="259" references="id:258" referenced-size="id:257">
+                <description>The file pointer to the first page of the section within the COFF file. For executable images, this must be a multiple of FileAlignment from the optional header. For object files, the value should be aligned on a 4‑byte boundary for best performance. When a section contains only uninitialized data, this field should be zero</description>
+            </offset>
+            <offset name="PointerToRelocations" id="260" references="id:205">
+                <description>The file pointer to the beginning of relocation entries for the section. This is set to zero for executable images or if there are no relocations</description>
+            </offset>
+            <offset name="PointerToLineNumbers" id="261" references="id:210">
+                <description>The file pointer to the beginning of line-number entries for the section. This is set to zero if there are no COFF line numbers. This value should be zero for an image because COFF debugging information is deprecated</description>
+            </offset>
+            <number name="NumberOfRelocations" id="262" type="integer">
+                <description>The number of relocation entries for the section. This is set to zero for executable images</description>
+            </number>
+            <number name="NumberOfLinenumbers" id="263" type="integer">
+                <description>The number of line-number entries for the section. This value should be zero for an image because COFF debugging information is deprecated</description>
+            </number>
+            <number name="Characteristics" id="264" type="integer">
+                <description>The flags that describe the characteristics of the section
+IMAGE_SCN_LNK_NRELOC_OVFL indicates that the count of relocations for the section exceeds the 16 bits that are reserved for it in the section header. If the bit is set and the NumberOfRelocations field in the section header is 0xffff, the actual relocation count is stored in the 32-bit VirtualAddress field of the first relocation. It is an error if IMAGE_SCN_LNK_NRELOC_OVFL is set and there are fewer than 0xffff relocations in the section
+</description>
+                <mask name="Reserved" value="0x42F"/>
+                <mask name="IMAGE_SCN_TYPE_NO_PAD" value="0x8">
+                    <fixedvalue name="The section should not be padded to the next boundary" value="0x8"/>
+                </mask>
+                <mask name="IMAGE_SCN_CNT_CODE" value="0x20">
+                    <fixedvalue name="The section contains executable code" value="0x20"/>
+                </mask>
+                <mask name="IMAGE_SCN_CNT_INITIALIZED_DATA" value="0x40">
+                    <fixedvalue name="The section contains initialized data" value="0x40"/>
+                </mask>
+                <mask name="IMAGE_SCN_CNT_UNINITIALIZED_DATA" value="0x80">
+                    <fixedvalue name="The section contains uninitialized data" value="0x80"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_OTHER" value="0x100">
+                    <fixedvalue name="Reserved for future use" value="0x100"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_INFO" value="0x200">
+                    <fixedvalue name="The section contains comments or other information" value="0x200"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_REMOVE" value="0x800">
+                    <fixedvalue name="The section will not become part of the image" value="0x800"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_COMDAT" value="0x1000">
+                    <fixedvalue name="The section contains COMDAT data" value="0x1000"/>
+                </mask>
+                <mask name="IMAGE_SCN_GPREL" value="0x8000">
+                    <fixedvalue name="The section contains data referenced through the global pointer (GP)" value="0x8000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_PURGEABLE" value="0x20000">
+                    <fixedvalue name="Reserved for future use" value="0x4E20"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_16BIT" value="0x20000">
+                    <fixedvalue name="For ARM machine types, the section contains Thumb code" value="0x20000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_LOCKED" value="0x40000">
+                    <fixedvalue name="Reserved for future use" value="0x40000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_PRELOAD" value="0x80000">
+                    <fixedvalue name="Reserved for future use" value="0x80000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_1BYTES" value="0x100000">
+                    <fixedvalue name="Align data on a 1-byte boundary" value="0x186A0"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_2BYTES" value="0x200000">
+                    <fixedvalue name="Align data on a 2-byte boundary" value="0x200000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_4BYTES" value="0x300000">
+                    <fixedvalue name="Align data on a 4-byte boundary" value="0x300000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_8BYTES" value="0x400000">
+                    <fixedvalue name="Align data on an 8-byte boundary" value="0x400000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_16BYTES" value="0x500000">
+                    <fixedvalue name="Align data on a 16-byte boundary" value="0x500000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_32BYTES" value="0x600000">
+                    <fixedvalue name="Align data on a 32-byte boundary" value="0x600000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_64BYTES" value="0x700000">
+                    <fixedvalue name="Align data on a 64-byte boundary" value="0x700000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_128BYTES" value="0x800000">
+                    <fixedvalue name="Align data on a 128-byte boundary" value="0x800000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_256BYTES" value="0x900000">
+                    <fixedvalue name="Align data on a 256-byte boundary" value="0x900000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_512BYTES" value="0xA00000">
+                    <fixedvalue name="Align data on a 512-byte boundary" value="0xA00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_1024BYTES" value="0xB00000">
+                    <fixedvalue name="Align data on a 1024-byte boundary" value="0xB00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_2048BYTES" value="0xC00000">
+                    <fixedvalue name="Align data on a 2048-byte boundary" value="0xC00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_4096BYTES" value="0xD00000">
+                    <fixedvalue name="Align data on a 4096-byte boundary" value="0xD00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_8192BYTES" value="0xE00000">
+                    <fixedvalue name="Align data on a 8192-byte boundary" value="0xE00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_NRELOC_OVFL" value="0x1000000">
+                    <fixedvalue name="The section contains extended relocations" value="0x1000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_DISCARDABLE" value="0x2000000">
+                    <fixedvalue name="The section can be discarded as needed" value="0x2000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_NOT_CACHED" value="0x4000000">
+                    <fixedvalue name="The section cannot be cached" value="0x4000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_NOT_PAGED" value="0x8000000">
+                    <fixedvalue name="The section is not pageable" value="0x8000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_SHARED" value="0x10000000">
+                    <fixedvalue name="The section can be shared in memory" value="0x10000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_EXECUTE" value="0x20000000">
+                    <fixedvalue name="The section can be executed as code" value="0x20000000"/>
+                </mask>
+            </number>
+        </structure>
+        <structure name="ImageResourceDirectory" id="258" extends="id:3">
+            <number name="Characteristics" id="266" fillcolor="FEFC78" type="integer" length="4" display="hex"/>
+            <number name="TimeDateStamp" id="267" fillcolor="72FA78" type="integer" length="4" display="hex"/>
+            <number name="MajorVersion" id="268" fillcolor="75D5FF" type="integer" length="2"/>
+            <number name="MinorVersion" id="269" fillcolor="7980FF" type="integer" length="2"/>
+            <number name="NumberOfNamedEntries" id="270" fillcolor="FF84FF" type="integer" length="2"/>
+            <number name="NumberOfIdEntries" id="271" fillcolor="FF9300" type="integer" length="2"/>
+            <scriptelement name="MapResources" id="272">
+                <script name="unnamed" type="Generic">
+                    <source language="Python"># map resource entries
+
+pointerSize = 4
+
+# get collection with results so far
+results = currentMapper.getCurrentResults()
+
+# get results
+sizeOfRawDataResult = results.getResultByName(&quot;SizeOfRawData&quot;)
+pointerToRawDataResult = results.getResultByName(&quot;PointerToRawData&quot;)
+
+numberOfNamedEntriesResult = results.getResultByName(&quot;NumberOfNamedEntries&quot;)
+numberOfIdEntriesResult = results.getResultByName(&quot;NumberOfIdEntries&quot;)
+resourceSectionSizeResult = results.getResultByName(&quot;SizeOfRawData&quot;)
+
+# get value objects
+sizeOfRawDataValue = sizeOfRawDataResult.getValue()
+pointerToRawDataValue = pointerToRawDataResult.getValue()
+
+numberOfNamedEntriesValue = numberOfNamedEntriesResult.getValue()
+numberOfIdEntriesValue = numberOfIdEntriesResult.getValue()
+resourceSectionSizeValue = resourceSectionSizeResult.getValue()
+
+# get actual values
+sizeOfRawData = sizeOfRawDataValue.getUnsigned()
+pointerToRawData = pointerToRawDataValue.getUnsigned()
+
+numberOfNamedEntries = numberOfNamedEntriesValue.getUnsigned()
+numberOfIdEntries = numberOfIdEntriesValue.getUnsigned()
+resourceSectionSize = resourceSectionSizeValue.getUnsigned()
+
+grammar = currentMapper.getCurrentGrammar()
+imageResourceDirectoryEntry = grammar.getStructureByName(&quot;ImageResourceDirectoryEntry&quot;)
+nameIdElement = imageResourceDirectoryEntry.getElementByName(&quot;NameId&quot;)
+nameOffsetElement = imageResourceDirectoryEntry.getElementByName(&quot;NameOffset&quot;)
+indicatorBitElement = imageResourceDirectoryEntry.getElementByName(&quot;IndicatorBit&quot;)
+dataElement = imageResourceDirectoryEntry.getElementByName(&quot;Data&quot;)
+resourceDirectoryEntry = grammar.getStructureByName(&quot;ImageResourceDirectory&quot;)
+resourceDataEntry = grammar.getStructureByName(&quot;ResourceDataEntry&quot;)
+nameStringEntry = grammar.getStructureByName(&quot;LengthPrefixedUnicodeString&quot;)
+
+byteView = currentMapper.getCurrentByteView()
+currentPos = currentMapper.getCurrentOffset()
+results =  currentMapper.getCurrentResults()
+
+
+# parse resource directory entry in function not to confuse
+# current position in recursive calls
+def parseImageResourceDirectoryEntry(currentPos, entryNum):
+    &quot;parse IMAGE_RESOURCE_DIRECTORY_ENTRY&quot;
+
+    parsedBytes = 0
+
+    results.addStructureStart(imageResourceDirectoryEntry, currentPos, entryNum, &quot;ImageResourceDirectoryEntry&quot;, True)
+
+    nameNumber = byteView.readUnsignedInt(currentPos, 4, ENDIAN_LITTLE)
+
+    # highest bit indicates pointer to name
+    if (nameNumber &amp; 0x80000000) == 0:
+        currentMapper.mapElementWithSize(nameIdElement, 4)
+    else:
+        currentMapper.mapElementWithSize(nameOffsetElement, 4)
+        nameOffset = pointerToRawData + (nameNumber &amp; 0x7FFFFFFF)
+        remainingSize = pointerToRawData + sizeOfRawData - nameOffset
+        
+        # read actual string length (UTF-16 LE)
+        stringLength = byteView.readUnsignedInt(nameOffset, 2, ENDIAN_LITTLE) * 2
+
+        currentMapper.mapStructureAtPosition(nameStringEntry, nameOffset, stringLength + 2)
+
+    parsedBytes += 4
+
+    dataNumber = byteView.readUnsignedInt(currentPos+parsedBytes, 4, ENDIAN_LITTLE)
+    currentMapper.mapElementWithSize(dataElement, 4)
+    parsedBytes += 4
+
+    print(&quot;dataNumber: &quot; + str(dataNumber))
+
+    directoryOffset = pointerToRawData + (dataNumber &amp; 0x7FFFFFFF)
+    remainingSize = pointerToRawData + sizeOfRawData - directoryOffset
+
+    print(&quot;pointerToRawData: &quot; + str(pointerToRawData))
+    print(&quot;remainingSize: &quot; + str(remainingSize))
+
+    # highest bit indicates offset to other directory entry
+    if (dataNumber &amp; 0x80000000) == 0:
+        currentMapper.mapStructureAtPosition(resourceDataEntry, directoryOffset, remainingSize)
+
+    else:
+        # add address of resource section data
+        currentMapper.mapStructureAtPosition(resourceDirectoryEntry, directoryOffset, remainingSize)
+
+    results.addStructureEnd(currentPos+parsedBytes)
+
+    return parsedBytes
+
+# parse resource directory entry in function not to confuse
+# current position in recursive calls
+def parseImageResourceDirectoryEntries(currentPos, numberOfNamedEntries, numberOfIdEntries):
+    &quot;parse IMAGE_RESOURCE_DIRECTORY_ENTRY&quot;
+
+    for entryNum in range(0, numberOfNamedEntries):
+        print &quot;parse named entry&quot;
+        currentPos += parseImageResourceDirectoryEntry(currentPos, entryNum)
+
+    #
+    for entryNum in range(0, numberOfIdEntries):
+        print &quot;parse Id entry&quot;
+        currentPos += parseImageResourceDirectoryEntry(currentPos, entryNum)
+
+parseImageResourceDirectoryEntries(currentPos, numberOfNamedEntries, numberOfIdEntries)
+
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="ImageResourceDirectoryEntry" id="274" disabled="yes" extends="id:3">
+            <number name="NameId" id="275" fillcolor="0096FF" type="integer" length="32" lengthunit="bit">
+                <fixedvalues>
+                    <fixedvalue name="Cursor" value="1"/>
+                    <fixedvalue name="Bitmap" value="2"/>
+                    <fixedvalue name="Icon" value="3"/>
+                    <fixedvalue name="Menu" value="4"/>
+                    <fixedvalue name="Dialog" value="5"/>
+                    <fixedvalue name="String" value="6"/>
+                    <fixedvalue name="FontDir" value="7"/>
+                    <fixedvalue name="Font" value="8"/>
+                    <fixedvalue name="Accelerators" value="9"/>
+                    <fixedvalue name="RC Data" value="10"/>
+                    <fixedvalue name="Message Table" value="11"/>
+                    <fixedvalue name="Cursor Group" value="12"/>
+                    <fixedvalue name="Icon Group" value="14"/>
+                    <fixedvalue name="Version Info" value="16"/>
+                    <fixedvalue name="New Bitmap" value="8194"/>
+                    <fixedvalue name="New Menu" value="8196"/>
+                    <fixedvalue name="New Dialog" value="8197"/>
+                    <fixedvalue name="Error" value="32767"/>
+                </fixedvalues>
+            </number>
+            <number name="NameOffset" id="276" fillcolor="9437FF" type="integer" length="4" display="hex"/>
+            <number name="IndicatorBit" id="277" type="integer" length="1" lengthunit="bit"/>
+            <number name="Data" id="278" fillcolor="FFD478" type="integer" length="4" display="hex"/>
+            <offset name="ResourceDirectoryOffset" id="279" length="3" references="id:258" additional="536" follownullreference="yes"/>
+        </structure>
+        <structure name="LengthPrefixedUnicodeString" id="281" extends="id:3" valueexpression="String">
+            <string name="String" id="282" fillcolor="FEFC78" type="pascal" length="remaining" encoding="UTF-16LE"/>
+        </structure>
+        <structure name="ResourceDataEntry" id="284" extends="id:3">
+            <number name="Data" id="285" fillcolor="00F900" type="integer" length="4" display="hex"/>
+            <number name="Size" id="286" fillcolor="7980FF" type="integer" length="4"/>
+            <number name="CodePage" id="287" fillcolor="D783FF" type="integer" length="4"/>
+            <number name="Reserved" id="288" fillcolor="00FCFF" type="integer" length="4"/>
+            <scriptelement name="ReadResource" id="289">
+                <script name="unnamed" type="Generic">
+                    <source language="Python"># OriginalFirstThunk + PointerToRawData - VirtualAddress
+
+pointerSize = 4
+
+# get collection with results so far
+results = currentMapper.getCurrentResults()
+
+# get results
+pointerToRawDataResult = results.getResultByName(&quot;PointerToRawData&quot;)
+virtualAddressResult = results.getResultByName(&quot;VirtualAddress&quot;)
+dataResult = results.getResultByName(&quot;Data&quot;)
+sizeResult = results.getResultByName(&quot;Size&quot;)
+
+# get value objects
+pointerToRawDataValue = pointerToRawDataResult.getValue()
+virtualAddressValue = virtualAddressResult.getValue()
+dataValue = dataResult.getValue()
+sizeValue = sizeResult.getValue()
+
+# get actual values
+pointerToRawData = pointerToRawDataValue.getUnsigned()
+virtualAddress = virtualAddressValue.getUnsigned()
+data = dataValue.getUnsigned()
+size = sizeValue.getUnsigned()
+
+referenceAddress = data + pointerToRawData - virtualAddress
+
+print (&quot;referenceAddress: &quot; + format(referenceAddress, '04x'))
+
+grammar = currentMapper.getCurrentGrammar()
+resourceDataStructure = grammar.getStructureByName(&quot;ResourceData&quot;)
+
+byteView = currentMapper.getCurrentByteView()
+
+currentMapper.mapStructureAtPosition(resourceDataStructure, referenceAddress, size)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="ResourceData" id="291" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="Data" id="292" fillcolor="75D5FF" length="remaining"/>
+        </structure>
+        <structure name="RelocationsSectionHeader" id="294" repeatmin="0" repeatmax="-1" extends="id:50">
+            <binary name="Name" id="295">
+                <description>An 8-byte, null-padded UTF-8 encoded string. If the string is exactly 8 characters long, there is no terminating null. For longer names, this field contains a slash (/) that is followed by an ASCII representation of a decimal number that is an offset into the string table. Executable images do not use a string table and do not support section names longer than 8 characters. Long names in object files are truncated if they are emitted to an executable file.
+
+The “$” character (dollar sign) has a special interpretation in section names in object files.&#13;When determining the image section that will contain the contents of an object section, the linker discards the “$” and all characters that follow it. Thus, an object section named .text$X actually contributes to the .text section in the image.&#13;However, the characters following the “$” determine the ordering of the contributions to the image section. All contributions with the same object-section name are allocated contiguously in the image, and the blocks of contributions are sorted in lexical order by object-section name. Therefore, everything in object files with section name .text$X ends up together, after the .text$W contributions and before the .text$Y contributions.&#13;The section name in an image file never contains a “$” character&#13;</description>
+                <fixedvalues>
+                    <fixedvalue name=".reloc" value="2E72656C6F630000"/>
+                </fixedvalues>
+            </binary>
+            <number name="VirtualSize" id="296" type="integer">
+                <description>The total size of the section when loaded into memory. If this value is greater than SizeOfRawData, the section is zero-padded. This field is valid only for executable images and should be set to zero for object files</description>
+            </number>
+            <number name="VirtualAddress" id="297" type="integer">
+                <description>For executable images, the address of the first byte of the section relative to the image base when the section is loaded into memory. For object files, this field is the address of the first byte before relocation is applied; for simplicity, compilers should set this to zero. Otherwise, it is an arbitrary value that is subtracted from offsets during relocation</description>
+            </number>
+            <number name="SizeOfRawData" id="298" type="integer">
+                <description>The size of the section (for object files) or the size of the initialized data on disk (for image files). For executable images, this must be a multiple of FileAlignment from the optional header. If this is less than VirtualSize, the remainder of the section is zero-filled. Because the SizeOfRawData field is rounded but the VirtualSize field is not, it is possible for SizeOfRawData to be greater than VirtualSize as well. When a section contains only uninitialized data, this field should be zero</description>
+            </number>
+            <offset name="PointerToRawData" id="299" references="id:306" referenced-size="id:298">
+                <description>The file pointer to the first page of the section within the COFF file. For executable images, this must be a multiple of FileAlignment from the optional header. For object files, the value should be aligned on a 4‑byte boundary for best performance. When a section contains only uninitialized data, this field should be zero</description>
+            </offset>
+            <offset name="PointerToRelocations" id="300" references="id:205">
+                <description>The file pointer to the beginning of relocation entries for the section. This is set to zero for executable images or if there are no relocations</description>
+            </offset>
+            <offset name="PointerToLineNumbers" id="301" references="id:210">
+                <description>The file pointer to the beginning of line-number entries for the section. This is set to zero if there are no COFF line numbers. This value should be zero for an image because COFF debugging information is deprecated</description>
+            </offset>
+            <number name="NumberOfRelocations" id="302" type="integer">
+                <description>The number of relocation entries for the section. This is set to zero for executable images</description>
+            </number>
+            <number name="NumberOfLinenumbers" id="303" type="integer">
+                <description>The number of line-number entries for the section. This value should be zero for an image because COFF debugging information is deprecated</description>
+            </number>
+            <number name="Characteristics" id="304" type="integer">
+                <description>The flags that describe the characteristics of the section
+IMAGE_SCN_LNK_NRELOC_OVFL indicates that the count of relocations for the section exceeds the 16 bits that are reserved for it in the section header. If the bit is set and the NumberOfRelocations field in the section header is 0xffff, the actual relocation count is stored in the 32-bit VirtualAddress field of the first relocation. It is an error if IMAGE_SCN_LNK_NRELOC_OVFL is set and there are fewer than 0xffff relocations in the section
+</description>
+                <mask name="Reserved" value="0x42F"/>
+                <mask name="IMAGE_SCN_TYPE_NO_PAD" value="0x8">
+                    <fixedvalue name="The section should not be padded to the next boundary" value="0x8"/>
+                </mask>
+                <mask name="IMAGE_SCN_CNT_CODE" value="0x20">
+                    <fixedvalue name="The section contains executable code" value="0x20"/>
+                </mask>
+                <mask name="IMAGE_SCN_CNT_INITIALIZED_DATA" value="0x40">
+                    <fixedvalue name="The section contains initialized data" value="0x40"/>
+                </mask>
+                <mask name="IMAGE_SCN_CNT_UNINITIALIZED_DATA" value="0x80">
+                    <fixedvalue name="The section contains uninitialized data" value="0x80"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_OTHER" value="0x100">
+                    <fixedvalue name="Reserved for future use" value="0x100"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_INFO" value="0x200">
+                    <fixedvalue name="The section contains comments or other information" value="0x200"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_REMOVE" value="0x800">
+                    <fixedvalue name="The section will not become part of the image" value="0x800"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_COMDAT" value="0x1000">
+                    <fixedvalue name="The section contains COMDAT data" value="0x1000"/>
+                </mask>
+                <mask name="IMAGE_SCN_GPREL" value="0x8000">
+                    <fixedvalue name="The section contains data referenced through the global pointer (GP)" value="0x8000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_PURGEABLE" value="0x20000">
+                    <fixedvalue name="Reserved for future use" value="0x4E20"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_16BIT" value="0x20000">
+                    <fixedvalue name="For ARM machine types, the section contains Thumb code" value="0x20000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_LOCKED" value="0x40000">
+                    <fixedvalue name="Reserved for future use" value="0x40000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_PRELOAD" value="0x80000">
+                    <fixedvalue name="Reserved for future use" value="0x80000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_1BYTES" value="0x100000">
+                    <fixedvalue name="Align data on a 1-byte boundary" value="0x186A0"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_2BYTES" value="0x200000">
+                    <fixedvalue name="Align data on a 2-byte boundary" value="0x200000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_4BYTES" value="0x300000">
+                    <fixedvalue name="Align data on a 4-byte boundary" value="0x300000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_8BYTES" value="0x400000">
+                    <fixedvalue name="Align data on an 8-byte boundary" value="0x400000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_16BYTES" value="0x500000">
+                    <fixedvalue name="Align data on a 16-byte boundary" value="0x500000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_32BYTES" value="0x600000">
+                    <fixedvalue name="Align data on a 32-byte boundary" value="0x600000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_64BYTES" value="0x700000">
+                    <fixedvalue name="Align data on a 64-byte boundary" value="0x700000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_128BYTES" value="0x800000">
+                    <fixedvalue name="Align data on a 128-byte boundary" value="0x800000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_256BYTES" value="0x900000">
+                    <fixedvalue name="Align data on a 256-byte boundary" value="0x900000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_512BYTES" value="0xA00000">
+                    <fixedvalue name="Align data on a 512-byte boundary" value="0xA00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_1024BYTES" value="0xB00000">
+                    <fixedvalue name="Align data on a 1024-byte boundary" value="0xB00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_2048BYTES" value="0xC00000">
+                    <fixedvalue name="Align data on a 2048-byte boundary" value="0xC00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_4096BYTES" value="0xD00000">
+                    <fixedvalue name="Align data on a 4096-byte boundary" value="0xD00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_ALIGN_8192BYTES" value="0xE00000">
+                    <fixedvalue name="Align data on a 8192-byte boundary" value="0xE00000"/>
+                </mask>
+                <mask name="IMAGE_SCN_LNK_NRELOC_OVFL" value="0x1000000">
+                    <fixedvalue name="The section contains extended relocations" value="0x1000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_DISCARDABLE" value="0x2000000">
+                    <fixedvalue name="The section can be discarded as needed" value="0x2000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_NOT_CACHED" value="0x4000000">
+                    <fixedvalue name="The section cannot be cached" value="0x4000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_NOT_PAGED" value="0x8000000">
+                    <fixedvalue name="The section is not pageable" value="0x8000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_SHARED" value="0x10000000">
+                    <fixedvalue name="The section can be shared in memory" value="0x10000000"/>
+                </mask>
+                <mask name="IMAGE_SCN_MEM_EXECUTE" value="0x20000000">
+                    <fixedvalue name="The section can be executed as code" value="0x20000000"/>
+                </mask>
+            </number>
+        </structure>
+        <structure name="RelocationData" id="306" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="BaseRelocationBlock" id="338" repeatmax="-1" structure="id:336"/>
+        </structure>
+        <structure name="BaseRelocationBlock" id="336" length="BlockSize" extends="id:3" valueexpression="PageRVA">
+            <description>To apply a base relocation, the difference is calculated between the preferred base address and the base where the image is actually loaded. If the image is loaded at its preferred base, the difference is zero and thus the base relocations do not have to be applied</description>
+            <number name="PageRVA" id="339" fillcolor="72FA78" type="integer" length="4" display="hex">
+                <description>The image base plus the page RVA is added to each offset to create the VA where the base relocation must be applied</description>
+            </number>
+            <number name="BlockSize" id="340" fillcolor="00FCFF" type="integer" length="4" display="hex">
+                <description>The total number of bytes in the base relocation block, including the Page RVA and Block Size fields and the Type/Offset fields that follow</description>
+            </number>
+            <number name="Entry" id="345" repeatmax="-1" type="integer" length="2" display="hex">
+                <mask name="Type" value="0xF000">
+                    <fixedvalue name="IMAGE_REL_BASED_ABSOLUTE" value="0x0"/>
+                    <fixedvalue name="IMAGE_REL_BASED_HIGH" value="0x1000"/>
+                    <fixedvalue name="IMAGE_REL_BASED_LOW" value="0x2000"/>
+                    <fixedvalue name="IMAGE_REL_BASED_HIGHLOW" value="0x3000"/>
+                    <fixedvalue name="IMAGE_REL_BASED_HIGHADJ" value="0x4000"/>
+                    <fixedvalue name="IMAGE_REL_BASED_MIPS_JMPADDR" value="0x5000"/>
+                    <fixedvalue name="IMAGE_REL_BASED_ARM_MOV32" value="0x5000"/>
+                    <fixedvalue name="IMAGE_REL_BASED_RISCV_HIGH20" value="0x5000"/>
+                    <fixedvalue name="IMAGE_REL_BASED_THUMB_MOV32" value="0x7000"/>
+                    <fixedvalue name="IMAGE_REL_BASED_RISCV_LOW12I" value="0x7000"/>
+                    <fixedvalue name="IMAGE_REL_BASED_RISCV_LOW12S" value="0x8000"/>
+                    <fixedvalue name="IMAGE_REL_BASED_MIPS_JMPADDR16" value="0x9000"/>
+                    <fixedvalue name="IMAGE_REL_BASED_DIR64" value="0xA000"/>
+                </mask>
+                <mask name="Offset" value="0xFFF">
+                    <fixedvalue name="Offset" value="0xFFF"/>
+                </mask>
+            </number>
+        </structure>
+        <structure name="RelocationEntries" id="205" extends="id:3" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="VirtualAddress" id="206" fillcolor="73FDFF" type="integer" length="4"/>
+            <number name="SymbolTableIndex" id="207" fillcolor="72FA78" type="integer" length="4"/>
+            <number name="Type" id="208" fillcolor="FEFC78" type="integer" length="2">
+                <description>The Type field of the relocation record indicates what kind of relocation should be performed. Different relocation types are defined for each type of machine</description>
+            </number>
+        </structure>
+        <structure name="AuxFormat1" id="308" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>A symbol table record marks the beginning of a function definition if it has all of the following: a storage class of EXTERNAL (2), a Type value that indicates it is a function (0x20), and a section number that is greater than zero. Note that a symbol table record that has a section number of UNDEFINED (0) does not define the function and does not have an auxiliary record. Function-definition symbol records are followed by an auxiliary record in the format described in the following table</description>
+            <number name="TagIndex" id="309" type="integer" length="4"/>
+            <number name="TotalSize" id="310" type="integer" length="4"/>
+            <offset name="PointerToLineNumber" id="311" length="4" references="id:210" follownullreference="yes"/>
+        </structure>
+        <structure name="AuxFormat2" id="313" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>For each function definition in the symbol table, three items describe the beginning, ending, and number of lines. Each of these symbols has storage class FUNCTION (101)</description>
+            <number name="Unused" id="314" type="integer" length="4"/>
+            <number name="Linenumber" id="315" type="integer" length="2"/>
+            <binary name="Unused2" id="316" length="6"/>
+            <number name="PointerToNextFunction" id="317" type="integer" length="4">
+                <description>The symbol-table index of the next .bf symbol record. If the function is the last in the symbol table, this field is set to zero. It is not used for .ef records</description>
+            </number>
+            <number name="Unused3" id="318" type="integer" length="2"/>
+        </structure>
+        <structure name="AuxFormat3" id="320" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>“Weak externals” are a mechanism for object files that allows flexibility at link time. A module can contain an unresolved external symbol (sym1), but it can also include an auxiliary record that indicates that if sym1 is not present at link time, another external symbol (sym2) is used to resolve references instead. If a definition of sym1 is linked, then an external reference to the symbol is resolved normally. If a definition of sym1 is not linked, then all references to the weak external for sym1 refer to sym2 instead. The external symbol, sym2, must always be linked; typically, it is defined in the module that contains the weak reference to sym1.
+Weak externals are represented by a symbol table record with EXTERNAL storage class, UNDEF section number, and a value of zero.</description>
+            <number name="TagIndex" id="321" type="integer" length="4">
+                <description>The symbol-table index of sym2, the symbol to be linked if sym1 is not found</description>
+            </number>
+            <number name="Characteristics" id="322" type="integer" length="1">
+                <description>A value of IMAGE_WEAK_EXTERN_SEARCH_NOLIBRARY indicates that no library search for sym1 should be performed. 
+A value of IMAGE_WEAK_EXTERN_SEARCH_LIBRARY indicates that a library search for sym1 should be performed. A value of IMAGE_WEAK_EXTERN_SEARCH_ALIAS indicates that sym1 is an alias for sym2.</description>
+            </number>
+            <binary name="Unused" id="323" length="10">
+                <description>Unused</description>
+            </binary>
+        </structure>
+        <structure name="AuxFormat4" id="325" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>This format follows a symbol-table record with storage class FILE (103). The symbol name itself should be .file, and the auxiliary record that follows it gives the name of a source-code file</description>
+            <string name="FileName" id="326" type="fixed-length" length="18"/>
+        </structure>
+        <structure name="AuxFormat5" id="328" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>This format follows a symbol-table record that defines a section. Such a record has a symbol name that is the name of a section (such as .text or .drectve) and has storage class STATIC (3). The auxiliary record provides information about the section to which it refers. Thus, it duplicates some of the information in the section header</description>
+        </structure>
+        <structure name="VersionInfo" id="330" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Size" id="331" type="integer" length="2"/>
+            <number name="VersionId" id="332" type="integer" length="4"/>
+            <string name="Identifier" id="333" type="fixed-length" length="30" encoding="UTF-16LE">
+                <fixedvalues>
+                    <fixedvalue name="ID" value="VS_VERSION_INFO"/>
+                </fixedvalues>
+            </string>
+        </structure>
+    </grammar>
+</ufwb>

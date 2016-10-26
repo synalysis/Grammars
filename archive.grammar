@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.16.2">
+    <grammar name="Archive" start="id:26" author="Saleem Abdulrasool" email="compnerd@compnerd.org" fileextension="a,lib" complete="yes">
+        <description>Archive File</description>
+        <structure name="Archive" id="26" length="0" encoding="ISO_8859-1:1987" endian="dynamic" signed="no">
+            <string name="Signature" id="27" type="fixed-length" length="8">
+                <fixedvalues>
+                    <fixedvalue name="Signature" value="!&lt;arch&gt;\n"/>
+                </fixedvalues>
+            </string>
+            <structref name="Members" id="29" repeatmax="-1" structure="id:28"/>
+        </structure>
+        <structure name="Member" id="28" repeatmax="-1" encoding="ISO_8859-1:1987" endian="big" signed="no" valueexpression="Header">
+            <structure name="Header" id="31" valueexpression="Name">
+                <string name="Name" id="32" type="fixed-length" length="16"/>
+                <string name="Date" id="33" type="fixed-length" length="12"/>
+                <string name="UID" id="34" type="fixed-length" length="6"/>
+                <string name="GID" id="35" type="fixed-length" length="6"/>
+                <string name="Mode" id="36" type="fixed-length" length="8"/>
+                <string name="Size" id="37" type="fixed-length" length="10"/>
+                <binary name="End" mustmatch="yes" id="38" length="2">
+                    <fixedvalues>
+                        <fixedvalue name="Marker" value="600A"/>
+                    </fixedvalues>
+                </binary>
+            </structure>
+            <binary name="Content" id="40" length="Size"/>
+            <binary name="Padding" mustmatch="yes" id="41" repeatmin="0" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Byte" value="0A"/>
+                </fixedvalues>
+            </binary>
+        </structure>
+    </grammar>
+</ufwb>

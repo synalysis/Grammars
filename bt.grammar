@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9">
+    <grammar name="Binary Terrain" start="id:43" author="Martin Michaels" fileextension="bt">
+        <description>Grammar for Binary Terrain files</description>
+        <structure name="Marker" id="43" length="10" encoding="ISO_8859-1:1987" endian="big" signed="no" strokecolor="FEFFFF" fillcolor="000000"/>
+        <structure name="Columns" id="45" length="4" encoding="ISO_8859-1:1987" endian="big" signed="no" fillcolor="00FCFF"/>
+        <structure name="Rows" id="47" length="4" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+        <structure name="HorizontalUnits" id="49" length="2" encoding="ISO_8859-1:1987" endian="big" signed="no" fillcolor="00FCFF"/>
+        <structure name="UTMZone" id="51" length="2" encoding="ISO_8859-1:1987" endian="big" signed="no" fillcolor="FF40FF"/>
+        <structure name="Datum" id="53" length="2" encoding="ISO_8859-1:1987" endian="big" signed="no" fillcolor="FEFB00"/>
+        <structure name="LeftExtent" id="55" length="8" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+        <structure name="RightExtent" id="57" length="8" encoding="ISO_8859-1:1987" endian="big" signed="no" fillcolor="00FCFF"/>
+        <structure name="BottomExtent" id="59" length="8" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+        <structure name="TopExtent" id="61" length="8" encoding="ISO_8859-1:1987" endian="big" signed="no" fillcolor="00FCFF"/>
+        <structure name="ExternalProjection" id="63" length="2" encoding="ISO_8859-1:1987" endian="big" signed="no" fillcolor="FF9200"/>
+        <structure name="Scale" id="67" length="4" encoding="ISO_8859-1:1987" endian="big" signed="no" fillcolor="0432FF"/>
+        <structure name="Unused" id="69" length="190" encoding="ISO_8859-1:1987" endian="big" signed="no" fillcolor="000000"/>
+        <structure name="Data" id="71" length="Remaining" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+    </grammar>
+</ufwb>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.1.5.1">
+    <grammar name="Apple Unirast" start="id:126" author="Andreas Pehnack" fileextension="urf">
+        <description>Grammatik für URF-Dateien</description>
+        <structure name="URF File" id="126" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Header" id="127" length="12">
+                <string name="EyeCatcher" mustmatch="yes" id="128" type="fixed-length" length="8" encoding="ISO_8859-1:1987">
+                    <fixedvalue name="EyeCatcher" value="UNIRAST"/>
+                </string>
+                <number name="PageCount" id="129" type="integer" length="4"/>
+            </structure>
+            <structref name="Page" id="132" structure="id:131"/>
+        </structure>
+        <structure name="Page" id="131" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="PageHeader" id="134" length="32">
+                <number name="BitsPerPixel" id="135" type="integer" length="1"/>
+                <number name="ColorSpace" id="136" type="integer" length="1"/>
+                <number name="Duplex" id="137" type="integer" length="1"/>
+                <number name="Quality" id="138" type="integer" length="1"/>
+                <number name="Unknown1" id="139" type="integer" length="4"/>
+                <number name="Unknown2" id="140" type="integer" length="4"/>
+                <number name="PageWidth" id="141" type="integer" length="4"/>
+                <number name="PageHeight" id="142" type="integer" length="4"/>
+                <number name="Resolution" id="143" type="integer" length="4"/>
+                <number name="Unknown3" id="144" type="integer" length="4"/>
+                <number name="Unknown4" id="145" type="integer" length="4"/>
+            </structure>
+        </structure>
+        <structure name="Data" id="147" repeatmax="-1" encoding="ISO_8859-1:1987" endian="big" signed="no" debug="yes">
+            <number name="LineRepeat" id="148" type="integer" length="1"/>
+            <structref name="FillLine" id="150" repeatmin="0" structure="id:149"/>
+            <structref name="CopySinglePixel" id="152" repeatmin="0" structure="id:151"/>
+            <structref name="CopyPixels" id="154" repeatmin="0" structure="id:153"/>
+        </structure>
+        <structure name="FillLine" id="149" encoding="ISO_8859-1:1987" endian="big" signed="no" debug="yes">
+            <number name="PackbitCode" mustmatch="yes" id="157" type="integer" length="1" display="hex">
+                <fixedvalue name="Marker" value="0x80"/>
+            </number>
+        </structure>
+        <structure name="CopySinglePixel" id="151" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="PackbitCode" mustmatch="yes" id="159" type="integer" length="1" signed="yes" minval="0" maxval="127"/>
+            <binary name="RepeatPixel" id="160" length="BitsPerPixel/8"/>
+        </structure>
+        <structure name="CopyPixels" id="153" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="PackbitCode" mustmatch="yes" id="162" type="integer" length="1" signed="yes" minval="-128" maxval="-1"/>
+            <binary name="CopyPixel" id="163" repeatmax="-PackbitCode + 1" length="BitsPerPixel/8"/>
+        </structure>
+    </grammar>
+</ufwb>

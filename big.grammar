@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.0.3.1">
+    <grammar name="EA BIG Archive" start="EA BIG Archive" author="Kelvin Chung" fileextension="big,viv">
+        <description>Grammar for BIG files</description>
+        <structure name="EA BIG Archive" id="856" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Header" id="857">
+                <structref name="BIG Identifier" id="859"/>
+                <number name="Archive Size" id="860" fillcolor="FCFC3E" type="integer" length="4" endian="little" display="hex"/>
+                <number name="Number of files" id="861" fillcolor="FCFC3E" type="integer" length="4"/>
+                <offset name="File Data" id="863" fillcolor="FF30FA" length="4" references="File Data"/>
+                <structure name="File Headers" id="864" repeat="id:861" repeatmax="unlimited" consists-of="File Header">
+                    <structref name="File Header" id="866"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="BIG Identifier" id="858" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="Identifier" mustmatch="yes" id="870" type="fixed-length" length="4" encoding="ISO_8859-1:1987" fixedval="BIGF"/>
+        </structure>
+        <structure name="File Header" id="865" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <offset name="File Offset" id="873" strokecolor="FCFC3E" fillcolor="FF30FA" length="4" references="File" referenced-size="id:874"/>
+            <number name="Size" id="874" strokecolor="FCFC3E" fillcolor="00FB38" type="integer" length="4"/>
+            <string name="File Name" id="875" strokecolor="FCFC3E" fillcolor="02FDFD" type="zero-terminated"/>
+        </structure>
+        <structure name="File Data" id="862" repeat="id:861" repeatmax="unlimited" consists-of="File" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="File" id="877"/>
+        </structure>
+        <structure name="File" id="872" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="File Contents" id="879" strokecolor="00901B"/>
+        </structure>
+    </grammar>
+</ufwb>

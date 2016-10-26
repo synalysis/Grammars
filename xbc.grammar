@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.15">
+    <grammar name="XBC grammar" start="id:6" author="Andreas Pehnack" email="andreas.pehnack@me.com" fileextension="xbc">
+        <description>Grammar for XBC files</description>
+        <structure name="XBC file" id="6" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="&lt;Binary Fill Bytes&gt;" id="13" unused="yes" length="4"/>
+            <structref name="String1" id="14" structure="id:8"/>
+            <structref name="String2" id="15" structure="id:8"/>
+            <binary name="Unknown" id="16" length="8"/>
+            <structref name="String3" id="17" structure="id:8"/>
+            <binary name="Unknown2" id="18" length="14"/>
+            <structref name="String4" id="19" structure="id:8"/>
+            <binary name="Unknown3" id="20" length="26"/>
+            <structref name="String5" id="21" structure="id:8"/>
+            <binary name="Unknown4" id="22" length="30"/>
+            <structref name="String6" id="23" structure="id:8"/>
+            <binary name="Unknown5" id="24" length="16"/>
+            <structref name="String7" id="25" structure="id:8"/>
+            <binary name="Unknown6" id="26" length="12"/>
+            <structref name="String8" id="27" structure="id:8"/>
+        </structure>
+        <structure name="String" id="8" length="0" encoding="ISO_8859-1:1987" endian="little" signed="no" valueexpression="String">
+            <number name="Length" id="11" type="integer" length="2"/>
+            <string name="String" id="12" type="fixed-length" length="Length" encoding="ISO_8859-1:1987"/>
+        </structure>
+    </grammar>
+</ufwb>

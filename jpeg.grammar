@@ -1,0 +1,3427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.8.1">
+    <grammar name="JPEG" start="id:1369" author="Andreas Pehnack" email="andreas@synalysis.com" fileextension="jpg,jpeg" uti="public.jpeg">
+        <description>Grammar for JPEG files</description>
+        <structure name="JPG file" id="1369" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Markers" id="1370" repeatmax="-1" order="variable">
+                <structref name="SOI" id="1372" repeatmin="0" structure="id:1371"/>
+                <structref name="SOF0" id="1374" repeatmin="0" structure="id:1373"/>
+                <structref name="ImageData" id="1376" repeatmin="0" structure="id:1375"/>
+                <structref name="RestartImageData" id="1378" repeatmin="0" structure="id:1377"/>
+                <structref name="COMMENT" id="1380" repeatmin="0" structure="id:1379"/>
+                <structref name="DHP" id="1382" repeatmin="0" structure="id:1381"/>
+                <structref name="DHT" id="1384" repeatmin="0" structure="id:1383"/>
+                <structref name="DNL" id="1386" repeatmin="0" structure="id:1385"/>
+                <structref name="DRI" id="1388" repeatmin="0" structure="id:1387"/>
+                <structref name="DQT" id="1390" repeatmin="0" structure="id:1389"/>
+                <structref name="EOI" id="1392" repeatmin="0" structure="id:1391"/>
+                <structref name="EXP" id="1394" repeatmin="0" structure="id:1393"/>
+                <structref name="APP0" id="1396" repeatmin="0" structure="id:1395"/>
+                <structref name="App1_XMP" id="1398" repeatmin="0" structure="id:1397"/>
+                <structref name="App1_EXIF" id="1400" repeatmin="0" structure="id:1399"/>
+                <structref name="App2_ICC" id="1402" repeatmin="0" structure="id:1401"/>
+                <structref name="App3" id="1404" repeatmin="0" structure="id:1403"/>
+                <structref name="App4" id="1406" repeatmin="0" structure="id:1405"/>
+                <structref name="App5" id="1408" repeatmin="0" structure="id:1407"/>
+                <structref name="App6" id="1410" repeatmin="0" structure="id:1409"/>
+                <structref name="App7" id="1412" repeatmin="0" structure="id:1411"/>
+                <structref name="App8" id="1414" repeatmin="0" structure="id:1413"/>
+                <structref name="App9" id="1416" repeatmin="0" structure="id:1415"/>
+                <structref name="App10" id="1418" repeatmin="0" structure="id:1417"/>
+                <structref name="App11" id="1420" repeatmin="0" structure="id:1419"/>
+                <structref name="App12" id="1422" repeatmin="0" structure="id:1421"/>
+                <structref name="App13_Adobe" id="1424" repeatmin="0" structure="id:1423"/>
+                <structref name="App13_Photoshop" id="1426" repeatmin="0" structure="id:1425"/>
+                <structref name="App14" id="1428" repeatmin="0" structure="id:1427"/>
+                <structref name="App15" id="1430" repeatmin="0" structure="id:1429"/>
+                <structref name="JPG" id="1432" repeatmin="0" structure="id:1431"/>
+                <structref name="JPG0" id="1434" repeatmin="0" structure="id:1433"/>
+                <structref name="JPG1" id="1436" repeatmin="0" structure="id:1435"/>
+                <structref name="JPG2" id="1438" repeatmin="0" structure="id:1437"/>
+                <structref name="JPG3" id="1440" repeatmin="0" structure="id:1439"/>
+                <structref name="JPG4" id="1442" repeatmin="0" structure="id:1441"/>
+                <structref name="JPG5" id="1444" repeatmin="0" structure="id:1443"/>
+                <structref name="JPG6" id="1446" repeatmin="0" structure="id:1445"/>
+                <structref name="JPG7" id="1448" repeatmin="0" structure="id:1447"/>
+                <structref name="JPG8" id="1450" repeatmin="0" structure="id:1449"/>
+                <structref name="JPG9" id="1452" repeatmin="0" structure="id:1451"/>
+                <structref name="JPG10" id="1454" repeatmin="0" structure="id:1453"/>
+                <structref name="JPG11" id="1456" repeatmin="0" structure="id:1455"/>
+                <structref name="JPG12" id="1458" repeatmin="0" structure="id:1457"/>
+                <structref name="JPG13" id="1460" repeatmin="0" structure="id:1459"/>
+                <structref name="Marker" id="1462" repeatmin="0" structure="id:1461"/>
+            </structure>
+        </structure>
+        <structure name="Marker" id="1461" length="2" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Fixed" mustmatch="yes" id="1465" fillcolor="73FDFF" type="integer" length="1" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="FF" value="0xFF"/>
+                </fixedvalues>
+            </number>
+            <number name="ID" mustmatch="yes" id="1466" fillcolor="75D5FF" type="integer" length="1" display="hex"/>
+        </structure>
+        <structure name="SegmentMarker" id="1468" length="length+2" extends="id:1461" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Fixed" id="1469" type="integer"/>
+            <number name="ID" id="1470" type="integer"/>
+            <number name="length" id="1471" type="integer" length="2">
+                <description>Total field byte count, including the byte count value (2 bytes), but excluding the marker itself</description>
+            </number>
+        </structure>
+        <structure name="SOI" id="1371" extends="id:1461">
+            <description>start-of-image marker</description>
+            <number name="Fixed" id="1473" type="integer"/>
+            <number name="ID" id="1474" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="D8" value="0xD8"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="SOFx" id="1373" extends="id:1468">
+            <description>baseline DCT process frame marker</description>
+            <number name="ID" id="1477" type="integer">
+                <description>SOF0: Baseline DCT&#13;SOF1: Extended sequential DCT, Huffman coding&#13;SOF2: Progressive DCT, Huffman coding
+SOF3: Lossless (sequential), Huffman coding&#13;SOF9: Extended sequential DCT, arithmetic coding&#13;SOF10: Progressive DCT, arithmetic coding&#13;SOF11: Lossless (sequential), arithmetic coding</description>
+                <fixedvalues>
+                    <fixedvalue name="SOF0" value="0xC0"/>
+                    <fixedvalue name="SOF1" value="0xC1"/>
+                    <fixedvalue name="SOF2" value="0xC2"/>
+                    <fixedvalue name="SOF3" value="0xC3"/>
+                    <fixedvalue name="SOF5" value="0xC5"/>
+                    <fixedvalue name="SOF6" value="0xC6"/>
+                    <fixedvalue name="SOF7" value="0xC7"/>
+                    <fixedvalue name="SOF9" value="0xC9"/>
+                    <fixedvalue name="SOF10" value="0xCA"/>
+                    <fixedvalue name="SOF11" value="0xCB"/>
+                    <fixedvalue name="SOF13" value="0xCD"/>
+                    <fixedvalue name="SOF14" value="0xCE"/>
+                    <fixedvalue name="SOF15" value="0xCF"/>
+                </fixedvalues>
+            </number>
+            <number name="precision" id="1479" type="integer" length="1">
+                <description>Sample precision – Specifies the precision in bits for the samples of the components in the frame.</description>
+            </number>
+            <number name="lines" id="1480" type="integer" length="2">
+                <description>Number of lines – Specifies the maximum number of lines in the source image. This shall be equal to the number of lines in the component with the maximum number of vertical samples (see A.1.1). Value 0 indicates that the number of lines shall be defined by the DNL marker and parameters at the end of the first scan</description>
+            </number>
+            <number name="samples_per_line" id="1481" type="integer" length="2">
+                <description>Number of samples per line – Specifies the maximum number of samples per line in the source image. This shall be equal to the number of samples per line in the component with the maximum number of horizontal samples</description>
+            </number>
+            <number name="components" id="1482" type="integer" length="1">
+                <description>Number of image components in frame – Specifies the number of source image components in the frame. The value of Nf shall be equal to the number of sets of frame component specification parameters (Ci, Hi, Vi, and Tqi) present in the frame header</description>
+            </number>
+            <structure name="Components" id="1483" repeat="id:1482" repeatmax="4">
+                <number name="ID" id="1484" type="integer" length="1">
+                    <description>Component identifier – Assigns a unique label to the ith component in the sequence of frame component specification parameters. These values shall be used in the scan headers to identify the components in the scan. The value of Ci shall be different from the values of C1 through Ci − 1</description>
+                </number>
+                <number name="horzSamplingFactor" id="1485" type="integer" length="4" lengthunit="bit">
+                    <description>Horizontal sampling factor – Specifies the relationship between the component horizontal dimension and maximum image dimension X (see A.1.1); also specifies the number of horizontal data units of component Ci in each MCU, when more than one component is encoded in a scan</description>
+                </number>
+                <number name="vertSamplingFactor" id="1486" type="integer" length="4" lengthunit="bit">
+                    <description>Vertical sampling factor – Specifies the relationship between the component vertical dimension and maximum image dimension Y (see A.1.1); also specifies the number of vertical data units of component Ci in each MCU, when more than one component is encoded in a scan</description>
+                </number>
+                <number name="destSel" id="1487" type="integer" length="1">
+                    <description>Quantization table destination selector – Specifies one of four possible quantization table destinations from which the quantization table to use for dequantization of DCT coefficients of component Ci is retrieved. If the decoding process uses the dequantization procedure, this table shall have been installed in this destination by the time the decoder is ready to decode the scan(s) containing component Ci. The destination shall not be re- specified, or its contents changed, until all scans containing Ci have been completed</description>
+                </number>
+            </structure>
+        </structure>
+        <structure name="SOS" id="1490" extends="id:1468">
+            <description>start-of-scan marker</description>
+            <number name="ID" id="1492" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="SOS" value="0xDA"/>
+                </fixedvalues>
+            </number>
+            <number name="length" id="1493" type="integer">
+                <description>Scan header length – Specifies the length of the scan header</description>
+            </number>
+            <number name="components" id="1494" type="integer" length="1">
+                <description>Number of image components in scan – Specifies the number of source image components in the scan. The value of Ns shall be equal to the number of sets of scan component specification parameters (Csj, Tdj, and Taj) present in the scan header</description>
+            </number>
+            <structure name="CompSel" id="1495" repeat="id:1494" repeatmax="-1">
+                <description>Scan component selector – Selects which of the Nf image components specified in the frame parameters shall be the jth component in the scan. Each Csj shall match one of the Ci values specified in the frame header, and the ordering in the scan header shall follow the ordering in the frame header.</description>
+                <number name="DC" id="1496" type="integer" length="4" lengthunit="bit">
+                    <description>DC entropy coding table destination selector – Specifies one of four possible DC entropy coding table destinations from which the entropy table needed for decoding of the DC coefficients of component Csj is retrieved. The DC entropy table shall have been installed in this destination (see B.2.4.2 and B.2.4.3) by the time the decoder is ready to decode the current scan. This parameter specifies the entropy coding table destination for the lossless processes</description>
+                </number>
+                <number name="AC" id="1497" type="integer" length="4" lengthunit="bit">
+                    <description>AC entropy coding table destination selector – Specifies one of four possible AC entropy coding table destinations from which the entropy table needed for decoding of the AC coefficients of component Csj is retrieved. The AC entropy table selected shall have been installed in this destination (see B.2.4.2 and B.2.4.3) by the time the decoder is ready to decode the current scan. This parameter is zero for the lossless processes</description>
+                </number>
+            </structure>
+            <number name="Ss" id="1499" type="integer" length="1">
+                <description>Start of spectral or predictor selection – In the DCT modes of operation, this parameter specifies the first DCT coefficient in each block in zig-zag order which shall be coded in the scan. This parameter shall be set to zero for the sequential DCT processes. In the lossless mode of operations this parameter is used to select the predictor.</description>
+            </number>
+            <number name="Se" id="1500" type="integer" length="1">
+                <description>End of spectral selection – Specifies the last DCT coefficient in each block in zig-zag order which shall be coded in the scan. This parameter shall be set to 63 for the sequential DCT processes. In the lossless mode of operations this parameter has no meaning. It shall be set to zero</description>
+            </number>
+            <number name="Ah" id="1501" type="integer" length="4" lengthunit="bit">
+                <description>Successive approximation bit position high – This parameter specifies the point transform used in the preceding scan (i.e. successive approximation bit position low in the preceding scan) for the band of coefficients specified by Ss and Se. This parameter shall be set to zero for the first scan of each band of coefficients. In the lossless mode of operations this parameter has no meaning. It shall be set to zero.</description>
+            </number>
+            <number name="AI" id="1502" type="integer" length="4" lengthunit="bit">
+                <description>Successive approximation bit position low or point transform – In the DCT modes of operation this parameter specifies the point transform, i.e. bit position low, used before coding the band of coefficients specified by Ss and Se. This parameter shall be set to zero for the sequential DCT processes. In the lossless mode of operations, this parameter specifies the point transform, Pt</description>
+            </number>
+        </structure>
+        <structure name="COMMENT" id="1379" extends="id:1468">
+            <number name="ID" id="1505" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="COMMENT" value="0xFE"/>
+                </fixedvalues>
+            </number>
+            <string name="Comment" id="1507" type="fixed-length" length="remaining"/>
+        </structure>
+        <structure name="DAC" id="1509" extends="id:1468">
+            <description>Define arithmetic coding conditioning</description>
+            <number name="ID" id="1511" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="DAC" value="0xCC"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="DHP" id="1381" extends="id:1468">
+            <description>Define hierarchical progression</description>
+            <number name="ID" id="1515" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="DHP" value="0xDE"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="DHT" id="1383" extends="id:1468">
+            <description>Define Huffman table(s)</description>
+            <number name="ID" id="1519" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="DHT" value="0xC4"/>
+                </fixedvalues>
+            </number>
+            <number name="tableClass" id="1521" type="integer" length="4" lengthunit="bit">
+                <description>Table class – 0 = DC table or lossless table, 1 = AC table</description>
+                <fixedvalues>
+                    <fixedvalue name="DC or lossless" value="0"/>
+                    <fixedvalue name="AC" value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="tableDest" id="1522" type="integer" length="4" lengthunit="bit">
+                <description>Huffman table destination identifier – Specifies one of four possible destinations at the decoder into which the Huffman table shall be installed</description>
+            </number>
+            <number name="codes" id="1523" repeatmax="16" type="integer" length="1">
+                <description>Number of Huffman codes of length i – Specifies the number of Huffman codes for each of the 16 possible lengths allowed by this Specification. Li’s are the elements of the list BITS</description>
+            </number>
+            <number name="values" id="1524" repeatmax="-1" type="integer" length="1">
+                <description>Value associated with each Huffman code – Specifies, for each i, the value associated with each Huffman code of length i. The meaning of each value is determined by the Huffman coding model. The Vi,j’s are the elements of the list HUFFVAL</description>
+            </number>
+        </structure>
+        <structure name="DNL" id="1385" extends="id:1468">
+            <description>Define number of lines</description>
+            <number name="ID" id="1527" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="DNL" value="0xDC"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="DRI" id="1387" extends="id:1468">
+            <number name="ID" id="1531" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="DRI" value="0xDD"/>
+                </fixedvalues>
+            </number>
+            <number name="restartInterval" id="1533" type="integer" length="2">
+                <description>Restart interval – Specifies the number of MCU in the restart interval</description>
+            </number>
+        </structure>
+        <structure name="DQT" id="1389" extends="id:1468">
+            <description>define-quantization-tables marker</description>
+            <number name="ID" id="1536" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="DB" value="0xDB"/>
+                </fixedvalues>
+            </number>
+            <structure name="QuantTable" id="1537" order="variable">
+                <structref name="QuantTable8" id="1540" repeatmin="0" structure="id:1539"/>
+                <structref name="QuantTable16" id="1542" repeatmin="0" structure="id:1541"/>
+            </structure>
+        </structure>
+        <structure name="EOI" id="1391" extends="id:1461">
+            <number name="Fixed" id="1545" type="integer"/>
+            <number name="ID" id="1546" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="EOI" value="0xD9"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="EXP" id="1393" extends="id:1468">
+            <description>Expand reference component</description>
+            <number name="ID" id="1549" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="EXP" value="0xDF"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="RSTx" id="1552" extends="id:1461">
+            <number name="Fixed" id="1553" type="integer"/>
+            <number name="ID" id="1554" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="RST0" value="0xD0"/>
+                    <fixedvalue name="RST1" value="0xD1"/>
+                    <fixedvalue name="RST2" value="0xD2"/>
+                    <fixedvalue name="RST3" value="0xD3"/>
+                    <fixedvalue name="RST4" value="0xD4"/>
+                    <fixedvalue name="RST5" value="0xD5"/>
+                    <fixedvalue name="RST6" value="0xD6"/>
+                    <fixedvalue name="RST7" value="0xD7"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="APP0" id="1395" extends="id:1468">
+            <number name="ID" id="1557" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="E0" value="0xE0"/>
+                </fixedvalues>
+            </number>
+            <string name="identifier" mustmatch="yes" id="1559" type="fixed-length" length="5">
+                <description>= X'4A', X'46', X'49', X'46', X'00'&#13;This zero terminated string (“JFIF”) uniquely identifies this APP0 marker. This string shall have zero parity (bit 7=0).</description>
+                <fixedvalues>
+                    <fixedvalue name="JFIF" value="JFIF"/>
+                </fixedvalues>
+            </string>
+            <number name="major version" id="1560" type="integer" length="1"/>
+            <number name="minor version" id="1561" type="integer" length="1"/>
+            <number name="units" id="1562" type="integer" length="1">
+                <description>Units for the X and Y densities</description>
+                <fixedvalues>
+                    <fixedvalue name="no units" value="0"/>
+                    <fixedvalue name="dots per inch" value="1"/>
+                    <fixedvalue name="dots per cm" value="2"/>
+                </fixedvalues>
+            </number>
+            <number name="Xdensity" id="1563" type="integer" length="2">
+                <description>Horizontal pixel density</description>
+            </number>
+            <number name="Ydensity" id="1564" type="integer" length="2">
+                <description>Vertical pixel density</description>
+            </number>
+            <number name="Xthumbnail" id="1565" type="integer" length="1">
+                <description>Thumbnail horizontal pixel count</description>
+            </number>
+            <number name="Ythumbnail" id="1566" type="integer" length="1">
+                <description>Thumbnail vertical pixel count</description>
+            </number>
+            <structure name="Thumbnail" id="1567" length="Xthumbnail*Ythumbnail" repeatmin="0" repeatmax="-1">
+                <number name="red" id="1568" type="integer" length="1"/>
+                <number name="green" id="1569" type="integer" length="1"/>
+                <number name="blue" id="1570" type="integer" length="1"/>
+            </structure>
+        </structure>
+        <structure name="App1_EXIF" id="1399" extends="id:1468">
+            <number name="ID" id="1574" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="E1" value="0xE1"/>
+                </fixedvalues>
+            </number>
+            <grammarref name="Exif" id="1576" filename="exif.grammar"/>
+        </structure>
+        <structure name="App1_XMP" id="1397" extends="id:1468" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="ID" id="1579" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="E1" value="0xE1"/>
+                </fixedvalues>
+            </number>
+            <string name="XMP" mustmatch="yes" id="1581" type="fixed-length" length="29">
+                <fixedvalues>
+                    <fixedvalue name="ID" value="http://ns.adobe.com/xap/1.0/"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="App2" id="1583" extends="id:1468">
+            <number name="ID" id="1585" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="APP2" value="0xE2"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="App2_ICC" id="1401" extends="id:1583">
+            <string name="ICC" mustmatch="yes" id="1591" type="fixed-length" length="12">
+                <fixedvalues>
+                    <fixedvalue name="ID" value="ICC_PROFILE"/>
+                </fixedvalues>
+            </string>
+            <number name="blockNum" id="1592" type="integer" length="1"/>
+            <number name="blockTotal" id="1593" type="integer" length="1"/>
+            <grammarref name="ICC File" id="1594" disabled="yes" filename="icc.grammar" uti="com.apple.colorsync-profile"/>
+        </structure>
+        <structure name="App3" id="1403" extends="id:1468">
+            <number name="ID" id="1597" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="APP3" value="0xE3"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="App4" id="1405" extends="id:1468">
+            <number name="ID" id="1601" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="APP4" value="0xE4"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="App5" id="1407" extends="id:1468">
+            <number name="ID" id="1605" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="APP5" value="0xE5"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="App6" id="1409" extends="id:1468">
+            <number name="ID" id="1609" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="APP6" value="0xE6"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="App7" id="1411" extends="id:1468">
+            <number name="ID" id="1613" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="APP7" value="0xE7"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="App8" id="1413" extends="id:1468">
+            <number name="ID" id="1617" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="APP8" value="0xE8"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="App9" id="1415" extends="id:1468">
+            <number name="ID" id="1621" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="APP9" value="0xE9"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="App10" id="1417" extends="id:1468">
+            <number name="ID" id="1625" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="APP10" value="0xEA"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="App11" id="1419" extends="id:1468">
+            <number name="ID" id="1629" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="APP11" value="0xEB"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="App12" id="1421" extends="id:1468">
+            <description>Photoshop uses the JPEG APP12 &quot;Ducky&quot; segment to store some information in &quot;Save for Web&quot; images</description>
+            <number name="ID" id="1633" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="APP12" value="0xEC"/>
+                </fixedvalues>
+            </number>
+            <string name="Ducky" id="1635" type="fixed-length" length="5">
+                <fixedvalues>
+                    <fixedvalue name="ID" value="Ducky"/>
+                </fixedvalues>
+            </string>
+            <structure name="Tags" id="1636" repeatmax="-1" order="variable">
+                <structure name="Quality" id="1637" repeatmin="0">
+                    <number name="Tag" mustmatch="yes" id="1638" type="integer" length="2">
+                        <fixedvalues>
+                            <fixedvalue name="Quality" value="1"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="Length" id="1639" type="integer" length="2"/>
+                    <number name="Value" id="1640" type="integer" length="Length"/>
+                </structure>
+                <structure name="Comment" id="1642" repeatmin="0">
+                    <number name="Tag" mustmatch="yes" id="1643" type="integer" length="2">
+                        <fixedvalues>
+                            <fixedvalue name="Comment" value="2"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="Length" id="1644" type="integer" length="2"/>
+                    <string name="Comment" id="1645" type="fixed-length" length="Length"/>
+                </structure>
+                <structure name="Copyright" id="1647" length="0" alignment="0" repeatmin="0">
+                    <number name="Tag" mustmatch="yes" id="1648" type="integer" length="2">
+                        <fixedvalues>
+                            <fixedvalue name="Copyright" value="3"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="Length" id="1649" type="integer" length="2"/>
+                    <string name="Comment" id="1650" type="fixed-length" length="remaining"/>
+                </structure>
+                <structure name="End" id="1652" repeatmin="0">
+                    <number name="Tag" mustmatch="yes" id="1653" type="integer" length="2">
+                        <fixedvalues>
+                            <fixedvalue name="End" value="0"/>
+                        </fixedvalues>
+                    </number>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="App13_Adobe" id="1423" extends="id:1468">
+            <number name="ID" id="1658" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="APP13" value="0xED"/>
+                </fixedvalues>
+            </number>
+            <string name="Adobe" mustmatch="yes" id="1660" type="fixed-length" length="9">
+                <fixedvalues>
+                    <fixedvalue name="Adobe" value="Adobe_CM"/>
+                </fixedvalues>
+            </string>
+        </structure>
+        <structure name="App13_Photoshop" id="1425" extends="id:1468">
+            <number name="ID" id="1663" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="APP13" value="0xED"/>
+                </fixedvalues>
+            </number>
+            <string name="Photoshop" mustmatch="yes" id="1665" type="fixed-length" length="14">
+                <fixedvalues>
+                    <fixedvalue name="Photoshop" value="Photoshop 3.0"/>
+                </fixedvalues>
+            </string>
+            <structure name="Blocks" id="1666" repeatmin="0" repeatmax="-1" order="variable">
+                <structref name="App13Block1000" id="1668" repeatmin="0" structure="id:1667"/>
+                <structref name="App13Block1001" id="1670" repeatmin="0" structure="id:1669"/>
+                <structref name="App13Block1003" id="1672" repeatmin="0" structure="id:1671"/>
+                <structref name="App13Block1005" id="1674" repeatmin="0" structure="id:1673"/>
+                <structref name="App13Block1006" id="1676" repeatmin="0" structure="id:1675"/>
+                <structref name="App13Block1007" id="1678" repeatmin="0" structure="id:1677"/>
+                <structref name="App13Block1008" id="1680" repeatmin="0" structure="id:1679"/>
+                <structref name="App13Block1009" id="1682" repeatmin="0" structure="id:1681"/>
+                <structref name="App13Block1010" id="1684" repeatmin="0" structure="id:1683"/>
+                <structref name="App13Block1011" id="1686" repeatmin="0" structure="id:1685"/>
+                <structref name="App13Block1012" id="1688" repeatmin="0" structure="id:1687"/>
+                <structref name="App13Block1013" id="1690" repeatmin="0" structure="id:1689"/>
+                <structref name="App13Block1014" id="1692" repeatmin="0" structure="id:1691"/>
+                <structref name="App13Block1015" id="1694" repeatmin="0" structure="id:1693"/>
+                <structref name="App13Block1016" id="1696" repeatmin="0" structure="id:1695"/>
+                <structref name="App13Block1017" id="1698" repeatmin="0" structure="id:1697"/>
+                <structref name="App13Block1018" id="1700" repeatmin="0" structure="id:1699"/>
+                <structref name="App13Block1019" id="1702" repeatmin="0" structure="id:1701"/>
+                <structref name="App13Block1020" id="1704" repeatmin="0" structure="id:1703"/>
+                <structref name="App13Block1021" id="1706" repeatmin="0" structure="id:1705"/>
+                <structref name="App13Block1022" id="1708" repeatmin="0" structure="id:1707"/>
+                <structref name="App13Block1023" id="1710" repeatmin="0" structure="id:1709"/>
+                <structref name="App13Block1024" id="1712" repeatmin="0" structure="id:1711"/>
+                <structref name="App13Block1025" id="1714" repeatmin="0" structure="id:1713"/>
+                <structref name="App13Block1026" id="1716" repeatmin="0" structure="id:1715"/>
+                <structref name="App13Block1027" id="1718" repeatmin="0" structure="id:1717"/>
+                <structref name="App13Block1028" id="1720" repeatmin="0" structure="id:1719"/>
+                <structref name="App13Block1029" id="1722" repeatmin="0" structure="id:1721"/>
+                <structref name="App13Block1030" id="1724" repeatmin="0" structure="id:1723"/>
+                <structref name="App13Block1032" id="1726" repeatmin="0" structure="id:1725"/>
+                <structref name="App13Block1033" id="1728" repeatmin="0" structure="id:1727"/>
+                <structref name="App13Block1034" id="1730" repeatmin="0" structure="id:1729"/>
+                <structref name="App13Block1035" id="1732" repeatmin="0" structure="id:1731"/>
+                <structref name="App13Block1036" id="1734" repeatmin="0" structure="id:1733"/>
+                <structref name="App13Block1037" id="1736" repeatmin="0" structure="id:1735"/>
+                <structref name="App13Block1038" id="1738" repeatmin="0" structure="id:1737"/>
+                <structref name="App13Block1039" id="1740" repeatmin="0" structure="id:1739"/>
+                <structref name="App13Block1040" id="1742" repeatmin="0" structure="id:1741"/>
+                <structref name="App13Block1041" id="1744" repeatmin="0" structure="id:1743"/>
+                <structref name="App13Block1042" id="1746" repeatmin="0" structure="id:1745"/>
+                <structref name="App13Block1043" id="1748" repeatmin="0" structure="id:1747"/>
+                <structref name="App13Block1044" id="1750" repeatmin="0" structure="id:1749"/>
+                <structref name="App13Block1045" id="1752" repeatmin="0" structure="id:1751"/>
+                <structref name="App13Block1046" id="1754" repeatmin="0" structure="id:1753"/>
+                <structref name="App13Block1047" id="1756" repeatmin="0" structure="id:1755"/>
+                <structref name="App13Block1049" id="1758" repeatmin="0" structure="id:1757"/>
+                <structref name="App13Block1050" id="1760" repeatmin="0" structure="id:1759"/>
+                <structref name="App13Block1051" id="1762" repeatmin="0" structure="id:1761"/>
+                <structref name="App13Block1052" id="1764" repeatmin="0" structure="id:1763"/>
+                <structref name="App13Block1053" id="1766" repeatmin="0" structure="id:1765"/>
+                <structref name="App13Block1054" id="1768" repeatmin="0" structure="id:1767"/>
+                <structref name="App13Block1057" id="1770" repeatmin="0" structure="id:1769"/>
+                <structref name="App13Block1058" id="1772" repeatmin="0" structure="id:1771"/>
+                <structref name="App13Block1059" id="1774" repeatmin="0" structure="id:1773"/>
+                <structref name="App13Block1060" id="1776" repeatmin="0" structure="id:1775"/>
+                <structref name="App13Block1061" id="1778" repeatmin="0" structure="id:1777"/>
+                <structref name="App13Block1062" id="1780" repeatmin="0" structure="id:1779"/>
+                <structref name="App13Block1064" id="1782" repeatmin="0" structure="id:1781"/>
+                <structref name="App13Block1065" id="1784" repeatmin="0" structure="id:1783"/>
+                <structref name="App13Block1066" id="1786" repeatmin="0" structure="id:1785"/>
+                <structref name="App13Block1067" id="1788" repeatmin="0" structure="id:1787"/>
+                <structref name="App13Block1069" id="1790" repeatmin="0" structure="id:1789"/>
+                <structref name="App13Block1070" id="1792" repeatmin="0" structure="id:1791"/>
+                <structref name="App13Block1071" id="1794" repeatmin="0" structure="id:1793"/>
+                <structref name="App13Block1072" id="1796" repeatmin="0" structure="id:1795"/>
+                <structref name="App13Block1073" id="1798" repeatmin="0" structure="id:1797"/>
+                <structref name="App13Block1074" id="1800" repeatmin="0" structure="id:1799"/>
+                <structref name="App13Block1075" id="1802" repeatmin="0" structure="id:1801"/>
+                <structref name="App13Block1076" id="1804" repeatmin="0" structure="id:1803"/>
+                <structref name="App13Block1077" id="1806" repeatmin="0" structure="id:1805"/>
+                <structref name="App13Block1078" id="1808" repeatmin="0" structure="id:1807"/>
+                <structref name="App13Block1080" id="1810" repeatmin="0" structure="id:1809"/>
+                <structref name="App13Block1082" id="1812" repeatmin="0" structure="id:1811"/>
+                <structref name="App13Block1083" id="1814" repeatmin="0" structure="id:1813"/>
+                <structref name="App13Block1084" id="1816" repeatmin="0" structure="id:1815"/>
+                <structref name="App13Block1085" id="1818" repeatmin="0" structure="id:1817"/>
+                <structref name="App13Block1086" id="1820" repeatmin="0" structure="id:1819"/>
+                <structref name="App13Block1087" id="1822" repeatmin="0" structure="id:1821"/>
+                <structref name="App13Block1088" id="1824" repeatmin="0" structure="id:1823"/>
+                <structref name="App13Block2xxx-2997" id="1826" repeatmin="0" structure="id:1825"/>
+                <structref name="App13Block2999" id="1828" repeatmin="0" structure="id:1827"/>
+                <structref name="App13Block3000" id="1830" repeatmin="0" structure="id:1829"/>
+                <structref name="App13Block4xxx" id="1832" repeatmin="0" structure="id:1831"/>
+                <structref name="App13Block7000" id="1834" repeatmin="0" structure="id:1833"/>
+                <structref name="App13Block7001" id="1836" repeatmin="0" structure="id:1835"/>
+                <structref name="App13Block8000" id="1838" repeatmin="0" structure="id:1837"/>
+                <structref name="App13Block10000" id="1840" repeatmin="0" structure="id:1839"/>
+                <structref name="App13Block" id="1842" repeatmin="0" structure="id:1841"/>
+            </structure>
+        </structure>
+        <structure name="App14" id="1427" extends="id:1468">
+            <number name="ID" id="1846" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="EE" value="0xEE"/>
+                </fixedvalues>
+            </number>
+            <string name="identifier" id="1848" type="fixed-length" length="5">
+                <description>= X'4A', X'46', X'49', X'46', X'00'&#13;This zero terminated string (“JFIF”) uniquely identifies this APP0 marker. This string shall have zero parity (bit 7=0).</description>
+                <fixedvalues>
+                    <fixedvalue name="Adobe" value="Adobe"/>
+                </fixedvalues>
+            </string>
+            <number name="major version" id="1849" type="integer" length="1"/>
+            <number name="minor version" id="1850" type="integer" length="1"/>
+            <number name="flag0" id="1851" type="integer" length="2"/>
+            <number name="flag1" id="1852" type="integer" length="2"/>
+            <number name="color_transform_code" id="1853" type="integer" length="1"/>
+        </structure>
+        <structure name="App15" id="1429" extends="id:1468">
+            <number name="ID" id="1856" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="APP15" value="0xEF"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="JPG" id="1431" extends="id:1468">
+            <number name="ID" id="1860" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JPG" value="0xC8"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="JPG0" id="1433" extends="id:1468">
+            <number name="ID" id="1864" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JPG0" value="0xF0"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="JPG1" id="1435" extends="id:1468">
+            <number name="ID" id="1868" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JPG1" value="0xF1"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="JPG2" id="1437" extends="id:1468">
+            <number name="ID" id="1872" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JPG2" value="0xF2"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="JPG3" id="1439" extends="id:1468">
+            <number name="ID" id="1876" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JPG3" value="0xF3"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="JPG4" id="1441" extends="id:1468">
+            <number name="ID" id="1880" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JPG4" value="0xF4"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="JPG5" id="1443" extends="id:1468">
+            <number name="ID" id="1884" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JPG5" value="0xF5"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="JPG6" id="1445" extends="id:1468">
+            <number name="ID" id="1888" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JPG6" value="0xF6"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="JPG7" id="1447" extends="id:1468">
+            <number name="ID" id="1892" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JPG7" value="0xF7"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="JPG8" id="1449" extends="id:1468">
+            <number name="ID" id="1896" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JPG8" value="0xF8"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="JPG9" id="1451" extends="id:1468">
+            <number name="ID" id="1900" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JPG9" value="0xF9"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="JPG10" id="1453" extends="id:1468">
+            <number name="ID" id="1904" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JPG10" value="0xFA"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="JPG11" id="1455" extends="id:1468">
+            <number name="ID" id="1908" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JPG11" value="0xFB"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="JPG12" id="1457" extends="id:1468">
+            <number name="ID" id="1912" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JPG12" value="0xFC"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="JPG13" id="1459" extends="id:1468">
+            <number name="ID" id="1916" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="JPG13" value="0xFD"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="QuantTable8" id="1539" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Pq" mustmatch="yes" id="1919" type="integer" length="4" lengthunit="bit">
+                <description>Quantization table element precision – Specifies the precision of the Qk values. Value 0 indicates 8-bit Qk&#13;values; value 1 indicates 16-bit Qk values. Pq shall be zero for 8 bit sample precision P</description>
+                <fixedvalues>
+                    <fixedvalue name="8-bit precision" value="0"/>
+                </fixedvalues>
+            </number>
+            <number name="Tq" id="1920" type="integer" length="4" lengthunit="bit">
+                <description>Quantization table destination identifier – Specifies one of four possible destinations at the decoder into which the quantization table shall be installed.</description>
+            </number>
+            <number name="Qk" id="1921" repeatmax="64" type="integer" length="1">
+                <description>Quantization table element – Specifies the kth element out of 64 elements, where k is the index in the zig- zag ordering of the DCT coefficients. The quantization elements shall be specified in zig-zag scan order.</description>
+            </number>
+        </structure>
+        <structure name="QuantTable16" id="1541" extends="id:1539">
+            <number name="Pq" id="1923" type="integer">
+                <description>Quantization table element precision – Specifies the precision of the Qk values. Value 0 indicates 8-bit Qk&#13;values; value 1 indicates 16-bit Qk values. Pq shall be zero for 8 bit sample precision P</description>
+                <fixedvalues>
+                    <fixedvalue name="16-bit precision" value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="Qk" id="1925" repeatmax="64" type="integer" length="2">
+                <description>Quantization table element – Specifies the kth element out of 64 elements, where k is the index in the zig- zag ordering of the DCT coefficients. The quantization elements shall be specified in zig-zag scan order.</description>
+            </number>
+        </structure>
+        <structure name="ImageData" id="1375" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="SOS" id="1927" structure="id:1490"/>
+            <scriptelement name="ScanImage" id="1928">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">
+endFound = False
+theOffset = currentOffset
+byteView = currentMapper.getCurrentByteView()
+results = currentMapper.getCurrentResults()
+grammar = currentMapper.getCurrentGrammar()
+
+while not endFound:
+	theByte = byteView.readByte(theOffset);
+	if (theByte == 0xff):
+		theSecondByte = byteView.readByte(theOffset + 1);
+		if ((theSecondByte &gt; 0) and (theSecondByte &lt; 0xFF)):
+			endFound = True
+			theValue = Value();
+			theValue.setString( &quot;EOF&quot;);
+			# print &quot;End found at offset &quot; + str(theOffset)
+			struct = grammar.getStructureByName(&quot;ImageBytes&quot;)
+			element = struct.getElementByName(&quot;ImageBytes&quot;)
+			length = theOffset - currentOffset
+			currentMapper.mapElementWithSize(element, length);
+
+	theOffset = theOffset + 1;
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="RestartImageData" id="1377" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="RST" id="1930" structure="id:1552"/>
+            <scriptelement name="ScanImage" id="1931">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">
+endFound = False
+theOffset = currentOffset
+byteView = currentMapper.getCurrentByteView()
+results = currentMapper.getCurrentResults()
+grammar = currentMapper.getCurrentGrammar()
+
+while not endFound:
+	theByte = byteView.readByte(theOffset);
+	if (theByte == 0xff):
+		theSecondByte = byteView.readByte(theOffset + 1);
+		if ((theSecondByte &gt; 0) and (theSecondByte &lt; 0xFF)):
+			endFound = True
+			theValue = Value();
+			theValue.setString( &quot;EOF&quot;);
+			# print &quot;End found at offset &quot; + str(theOffset)
+			struct = grammar.getStructureByName(&quot;ImageBytes&quot;)
+			element = struct.getElementByName(&quot;ImageBytes&quot;)
+			length = theOffset - currentOffset
+			currentMapper.mapElementWithSize(element, length);
+
+	theOffset = theOffset + 1;
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="ImageBytes" id="1933" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="ImageBytes" id="1934" length="remaining"/>
+        </structure>
+        <structure name="App13Block" id="1841" alignment="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="Type" mustmatch="yes" id="1936" type="fixed-length" length="4">
+                <fixedvalues>
+                    <fixedvalue name="8BIM" value="8BIM"/>
+                </fixedvalues>
+            </string>
+            <number name="Identifier" mustmatch="yes" id="1937" type="integer" length="2"/>
+            <structref name="PaddedName" id="1939" structure="id:1938"/>
+            <number name="DataSize" id="1940" type="integer" length="4"/>
+            <structure name="Data" id="1941" length="DataSize"/>
+            <scriptelement name="ConditionalPadByte" id="1943">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1000" id="1667" extends="id:1841">
+            <description>Obsolete--Photoshop 2.0 only</description>
+            <number name="Identifier" id="1946" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Obsolete" value="1000"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="1947">
+                <number name="ChannelCount" id="1950" type="integer" length="2"/>
+                <number name="Rows" id="1951" type="integer" length="2"/>
+                <number name="Columns" id="1952" type="integer" length="2"/>
+                <number name="Depth" id="1953" type="integer" length="2"/>
+                <number name="Mode" id="1954" type="integer" length="2"/>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="1956">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1001" id="1669" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Macintosh print manager print info record</description>
+            <number name="Identifier" id="1959" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Mac print info" value="1001"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="1964">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1003" id="1671" extends="id:1841">
+            <description>(Obsolete--Photoshop 2.0 only ) Indexed color table</description>
+            <number name="Identifier" id="1967" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Indexed color table" value="1003"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="1972">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1005" id="1673" extends="id:1841">
+            <description>ResolutionInfo structure. See Appendix A in Photoshop API Guide.pdf</description>
+            <number name="Identifier" id="1975" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="ResolutionInfo" value="1005"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="1980">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1006" id="1675" extends="id:1841">
+            <description>Names of the alpha channels as a series of Pascal strings</description>
+            <number name="Identifier" id="1983" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1006" value="1006"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="1988">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1007" id="1677" extends="id:1841">
+            <description>(Obsolete) See ID 1077DisplayInfo structure. See Appendix A in Photoshop API Guide.pdf</description>
+            <number name="Identifier" id="1991" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1007" value="1007"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="1996">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1008" id="1679" extends="id:1841">
+            <description>The caption as a Pascal string</description>
+            <number name="Identifier" id="1999" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1008" value="1008"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2004">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1009" id="1681" extends="id:1841">
+            <description>Border information. Contains a fixed number (2 bytes real, 2 bytes fraction) for the border width, and 2 bytes for border units (1 = inches, 2 = cm, 3 = points, 4 = picas, 5 = columns)</description>
+            <number name="Identifier" id="2007" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1009" value="1009"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2012">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1010" id="1683" extends="id:1841">
+            <description>Background color</description>
+            <number name="Identifier" id="2015" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1010" value="1010"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2020">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1011" id="1685" extends="id:1841">
+            <description>Print flags. A series of one-byte boolean values (see Page Setup dialog): labels, crop marks, color bars, registration marks, negative, flip, interpolate, caption, print flags</description>
+            <number name="Identifier" id="2023" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1011" value="1011"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2024">
+                <number name="labels" id="2027" type="integer" length="1"/>
+                <number name="crop marks" id="2028" type="integer" length="1"/>
+                <number name="color bars" id="2029" type="integer" length="1"/>
+                <number name="registration marks" id="2030" type="integer" length="1"/>
+                <number name="negative" id="2031" type="integer" length="1"/>
+                <number name="flip" id="2032" type="integer" length="1"/>
+                <number name="interpolate" id="2033" type="integer" length="1"/>
+                <number name="caption" id="2034" type="integer" length="1"/>
+                <number name="print flags" id="2035" type="integer" length="1"/>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2037">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1012" id="1687" extends="id:1841">
+            <description>Grayscale and multichannel halftoning information</description>
+            <number name="Identifier" id="2040" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1012" value="1012"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2045">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1013" id="1689" extends="id:1841">
+            <description>Color halftoning information</description>
+            <number name="Identifier" id="2048" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1013" value="1013"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2049">
+                <binary name="ColorHalftoningInfo" id="2052" length="remaining"/>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2054">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1014" id="1691" extends="id:1841">
+            <description>Duotone halftoning information</description>
+            <number name="Identifier" id="2057" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1014" value="1014"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2062">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1015" id="1693" extends="id:1841">
+            <description>Grayscale and multichannel transfer function</description>
+            <number name="Identifier" id="2065" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1016" value="1016"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2066">
+                <binary name="TransferFunction" id="2069" length="remaining">
+                    <description>Grayscale and multichannel transfer function</description>
+                </binary>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2071">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1016" id="1695" extends="id:1841">
+            <description>Color transfer functions</description>
+            <number name="Identifier" id="2074" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1016" value="1016"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2079">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1017" id="1697" extends="id:1841">
+            <description>Duotone transfer functions</description>
+            <number name="Identifier" id="2082" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1017" value="1017"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2087">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1018" id="1699" extends="id:1841">
+            <description>Duotone image information</description>
+            <number name="Identifier" id="2090" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1018" value="1018"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2095">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1019" id="1701" extends="id:1841">
+            <description>Two bytes for the effective black and white values for the dot range</description>
+            <number name="Identifier" id="2098" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1019" value="1019"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2103">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1020" id="1703" extends="id:1841">
+            <description>(Obsolete)</description>
+            <number name="Identifier" id="2106" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1020" value="1020"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2111">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1021" id="1705" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>EPS options</description>
+            <number name="Identifier" id="2114" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1021" value="1021"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2119">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1022" id="1707" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Quick Mask information. 2 bytes containing Quick Mask channel ID; 1- byte boolean indicating whether the mask was initially empty</description>
+            <number name="Identifier" id="2122" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1022" value="1022"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2127">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1023" id="1709" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Obsolete)</description>
+            <number name="Identifier" id="2130" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1023" value="1023"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2135">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1024" id="1711" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Layer state information. 2 bytes containing the index of target layer (0 = bottom layer)</description>
+            <number name="Identifier" id="2138" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1024" value="1024"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2143">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1025" id="1713" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Working path (not saved)</description>
+            <number name="Identifier" id="2146" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1025" value="1025"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2151">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1026" id="1715" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Layers group information. 2 bytes per layer containing a group ID for the dragging groups. Layers in a group have the same group ID</description>
+            <number name="Identifier" id="2154" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1026" value="1026"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2159">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1027" id="1717" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Obsolete)</description>
+            <number name="Identifier" id="2162" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1027" value="1027"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2167">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1028" id="1719" extends="id:1841">
+            <description>IPTC-NAA record. Contains the File Info... information. See the documentation in the IPTC folder of the Documentation folder</description>
+            <number name="Identifier" id="2170" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="IPTC-NAA" value="1028"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2171">
+                <binary name="IPTC Metadata" id="2174" length="remaining"/>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2176">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1029" id="1721" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Image mode for raw format files</description>
+            <number name="Identifier" id="2179" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1029" value="1029"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2184">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1030" id="1723" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>JPEG quality. Private</description>
+            <number name="Identifier" id="2187" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1030" value="1030"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2188">
+                <number name="JPEG quality" id="2191" type="integer" length="2" signed="yes" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="Quality 1 (Low)" value="0xFFFD"/>
+                        <fixedvalue name="Quality 2 (Low)" value="0xFFFE"/>
+                        <fixedvalue name="Quality 3 (Low)" value="0xFFFF"/>
+                        <fixedvalue name="Quality 4 (Low)" value="0x0"/>
+                        <fixedvalue name="Quality 5 (Medium)" value="0x1"/>
+                        <fixedvalue name="Quality 6 (Medium)" value="0x2"/>
+                        <fixedvalue name="Quality 7 (Medium)" value="0x3"/>
+                        <fixedvalue name="Quality 8 (High)" value="0x4"/>
+                        <fixedvalue name="Quality 9 (High)" value="0x5"/>
+                        <fixedvalue name="Quality 10 (Maximum)" value="0x6"/>
+                        <fixedvalue name="Quality 11 (Maximum)" value="0x7"/>
+                        <fixedvalue name="Quality 12 (Maximum)" value="0x8"/>
+                    </fixedvalues>
+                </number>
+                <number name="Format" id="2192" type="integer" length="2" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="Standard" value="0x0"/>
+                        <fixedvalue name="Optimised" value="0x1"/>
+                        <fixedvalue name="Progressive" value="0x101"/>
+                    </fixedvalues>
+                </number>
+                <number name="ProgressiveScans" id="2193" type="integer" length="2" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="3 Scans" value="0x1"/>
+                        <fixedvalue name="4 Scans" value="0x2"/>
+                        <fixedvalue name="5 Scans" value="0x3"/>
+                    </fixedvalues>
+                </number>
+                <number name="Unknown" id="2194" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="Always 1" value="1"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2196">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1032" id="1725" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 4.0) Grid and guides information</description>
+            <number name="Identifier" id="2199" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1032" value="1032"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2200">
+                <number name="Version" id="2203" type="integer" length="4"/>
+                <number name="HorzGrid" id="2204" type="integer" length="4">
+                    <description>Future implementation of document-specific grids. Currently, sets the grid cycle to every quarter inch, i.e. 576 for both horizontal &amp; vertical (at 72 dpi, that is 18 * 32 = 576)</description>
+                </number>
+                <number name="VertGrid" id="2205" type="integer" length="4">
+                    <description>Future implementation of document-specific grids. Currently, sets the grid cycle to every quarter inch, i.e. 576 for both horizontal &amp; vertical (at 72 dpi, that is 18 * 32 = 576)</description>
+                </number>
+                <number name="fGuideCount" id="2206" type="integer" length="1">
+                    <description>Number of guide resource blocks (can be 0)</description>
+                </number>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2208">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1033" id="1727" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 4.0) Thumbnail resource for Photoshop 4.0 only</description>
+            <number name="Identifier" id="2211" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1033" value="1033"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2216">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1034" id="1729" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 4.0) Copyright flag. Boolean indicating whether image is copyrighted. Can be set via Property suite or by user in File Info...</description>
+            <number name="Identifier" id="2219" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1034" value="1034"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2220">
+                <number name="CopyrightFlag" id="2223" type="integer" length="1"/>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2225">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1035" id="1731" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 4.0) URL. Handle of a text string with uniform resource locator. Can be set via Property suite or by user in File Info...</description>
+            <number name="Identifier" id="2228" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1035" value="1035"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2233">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1036" id="1733" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 5.0) Thumbnail resource (supersedes resource 1033)</description>
+            <number name="Identifier" id="2236" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1036" value="1036"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2237">
+                <structref name="ThumbnailResource" id="2241" structure="id:2240"/>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2243">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1037" id="1735" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 5.0) Global Angle. 4 bytes that contain an integer between 0 and 359, which is the global lighting angle for effects layer. If not present, assumed to be 30</description>
+            <number name="Identifier" id="2246" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1037" value="1037"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2247">
+                <number name="GlobalAngle" id="2250" type="integer" length="4"/>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2252">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1038" id="1737" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Obsolete) See ID 1073 below. (Photoshop 5.0) Color samplers resource</description>
+            <number name="Identifier" id="2255" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1038" value="1038"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2260">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1039" id="1739" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 5.0) ICC Profile. The raw bytes of an ICC (International Color Consortium) format profile. See ICC1v42_2006-05.pdf in the Documentation folder and icProfileHeader.h in Sample Code\Common\Includes</description>
+            <number name="Identifier" id="2263" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1039" value="1039"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2268">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1040" id="1741" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 5.0) Watermark. One byte</description>
+            <number name="Identifier" id="2271" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1040" value="1040"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2276">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1041" id="1743" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 5.0) ICC Untagged Profile. 1 byte that disables any assumed profile handling when opening the file. 1 = intentionally untagged</description>
+            <number name="Identifier" id="2279" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1041" value="1041"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2280">
+                <number name="ProfileHandling" id="2283" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="intentionally untagged" value="1"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2285">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1042" id="1745" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 5.0) Effects visible. 1-byte global flag to show/hide all the effects layer. Only present when they are hidden</description>
+            <number name="Identifier" id="2288" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1042" value="1042"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2293">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1043" id="1747" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 5.0) Spot Halftone. 4 bytes for version, 4 bytes for length, and the variable length data</description>
+            <number name="Identifier" id="2296" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1043" value="1043"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2301">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1044" id="1749" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 5.0) Document-specific IDs seed number. 4 bytes: Base value, starting at which layer IDs will be generated (or a greater value if existing IDs already exceed it). Its purpose is to avoid the case where we add layers, flatten, save, open, and then add more layers that end up with the same IDs as the first set</description>
+            <number name="Identifier" id="2304" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1044" value="1044"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2305">
+                <number name="BaseValue" id="2308" type="integer" length="4"/>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2310">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1045" id="1751" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 5.0) Unicode Alpha Names. Unicode string</description>
+            <number name="Identifier" id="2313" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1045" value="1045"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2318">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1046" id="1753" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 6.0) Indexed Color Table Count. 2 bytes for the number of colors in table that are actually defined</description>
+            <number name="Identifier" id="2321" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1046" value="1046"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2326">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1047" id="1755" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 6.0) Transparency Index. 2 bytes for the index of transparent color, if any</description>
+            <number name="Identifier" id="2329" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1047" value="1047"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2334">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1049" id="1757" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 6.0) Global Altitude. 4 byte entry for altitude</description>
+            <number name="Identifier" id="2337" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1049" value="1049"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2338">
+                <number name="GlobalAltitude" id="2341" type="integer" length="4"/>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2343">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1050" id="1759" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 6.0) Slices</description>
+            <number name="Identifier" id="2346" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1050" value="1050"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2347">
+                <structure name="Slices" id="2350" order="variable">
+                    <structref name="SlicesBlock6" id="2352" repeatmin="0" structure="id:2351"/>
+                    <structref name="SlicesBlock7_8" id="2354" repeatmin="0" structure="id:2353"/>
+                </structure>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2357">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1051" id="1761" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 6.0) Workflow URL. Unicode string</description>
+            <number name="Identifier" id="2360" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1051" value="1051"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2365">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1052" id="1763" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 6.0) Jump To XPEP. 2 bytes major version, 2 bytes minor version, 4 bytes count. Following is repeated for count: 4 bytes block size, 4 bytes key, if key = 'jtDd' , then next is a Boolean for the dirty flag; otherwise it's a 4 byte entry for the mod date</description>
+            <number name="Identifier" id="2368" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1052" value="1052"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2373">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1053" id="1765" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 6.0) Alpha Identifiers. 4 bytes of length, followed by 4 bytes each for every alpha identifier</description>
+            <number name="Identifier" id="2376" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1053" value="1053"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2381">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1054" id="1767" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 6.0) URL List. 4 byte count of URLs, followed by 4 byte long, 4 byte ID, and Unicode string for each count</description>
+            <number name="Identifier" id="2384" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1054" value="1054"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2385">
+                <number name="URL count" id="2388" type="integer" length="4"/>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2390">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1057" id="1769" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Photoshop 6.0) Version Info. 4 bytes version, 1 byte hasRealMergedData , Unicode string: writer name, Unicode string: reader name, 4 bytes file version</description>
+            <number name="Identifier" id="2393" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1057" value="1057"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2394">
+                <number name="Version" id="2397" type="integer" length="4"/>
+                <number name="hasRealMergedData" id="2398" type="integer" length="1"/>
+                <number name="WriterNameLength" id="2399" type="integer" length="4"/>
+                <string name="WriterName" id="2400" type="fixed-length" length="WriterNameLength*2" encoding="UTF-16"/>
+                <number name="ReaderNameLength" id="2401" type="integer" length="4"/>
+                <string name="ReaderName" id="2402" type="fixed-length" length="ReaderNameLength*2" encoding="UTF-16"/>
+                <number name="FileVersion" id="2403" type="integer" length="4"/>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2405">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1058" id="1771" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 7.0) EXIF data 1</description>
+            <number name="Identifier" id="2408" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1058" value="1058"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2413">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1059" id="1773" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 7.0) EXIF data 3</description>
+            <number name="Identifier" id="2416" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1059" value="1059"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2421">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1060" id="1775" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 7.0) XMP metadata. File info as XML description</description>
+            <number name="Identifier" id="2424" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1060" value="1060"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2429">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1061" id="1777" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop 7.0) Caption digest. 16 bytes: RSA Data Security, MD5 message-digest algorithm</description>
+            <number name="Identifier" id="2432" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1061" value="1061"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2433">
+                <binary name="MD5" id="2436" length="16"/>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2438">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1062" id="1779" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Photoshop 7.0) Print scale. 2 bytes style (0 = centered, 1 = size to fit, 2 = user defined). 4 bytes x location (floating point). 4 bytes y location (floating point). 4 bytes scale (floating point)</description>
+            <number name="Identifier" id="2441" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1062" value="1062"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2442">
+                <number name="Style" id="2445" type="integer" length="2">
+                    <fixedvalues>
+                        <fixedvalue name="centered" value="0"/>
+                        <fixedvalue name="size to fit" value="1"/>
+                        <fixedvalue name="user defined" value="2"/>
+                    </fixedvalues>
+                </number>
+                <number name="x location" id="2446" type="float" length="4"/>
+                <number name="y location" id="2447" type="float" length="4"/>
+                <number name="scale" id="2448" type="float" length="4"/>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2450">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1064" id="1781" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS) Pixel Aspect Ratio. 4 bytes (version = 1 or 2), 8 bytes double, x / y of a pixel. Version 2, attempting to correct values for NTSC and PAL, previously off by a factor of approx. 5%</description>
+            <number name="Identifier" id="2453" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1064" value="1064"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2458">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1065" id="1783" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS) Layer Comps. 4 bytes (descriptor version = 16), Descriptor</description>
+            <number name="Identifier" id="2461" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1065" value="1065"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2466">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1066" id="1785" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS) Alternate Duotone Colors. 2 bytes (version = 1), 2 bytes count, following is repeated for each count: [ Color: 2 bytes for space followed by 4 * 2 byte color component ], following this is another 2 byte count, usually 256, followed by Lab colors one byte each for L, a, b. This resource is not read or used by Photoshop</description>
+            <number name="Identifier" id="2469" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1066" value="1066"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2474">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1067" id="1787" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS)Alternate Spot Colors. 2 bytes (version = 1), 2 bytes channel count, following is repeated for each count: 4 bytes channel ID, Color: 2 bytes for space followed by 4 * 2 byte color component. This resource is not read or used by Photoshop</description>
+            <number name="Identifier" id="2477" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1067" value="1067"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2482">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1069" id="1789" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS2) Layer Selection ID(s). 2 bytes count, following is repeated for each count: 4 bytes layer ID</description>
+            <number name="Identifier" id="2485" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1069" value="1069"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2490">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1070" id="1791" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS2) HDR Toning information</description>
+            <number name="Identifier" id="2493" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1070" value="1070"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2498">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1071" id="1793" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS2) Print info</description>
+            <number name="Identifier" id="2501" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1071" value="1071"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2506">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1072" id="1795" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS2) Layer Group(s) Enabled ID. 1 byte for each layer in the document, repeated by length of the resource. NOTE: Layer groups have start and end markers</description>
+            <number name="Identifier" id="2509" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1072" value="1072"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2514">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1073" id="1797" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS3) Color samplers resource. Also see ID 1038 for old format</description>
+            <number name="Identifier" id="2517" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1073" value="1073"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2522">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1074" id="1799" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Photoshop CS3) Measurement Scale. 4 bytes (descriptor version = 16), Descriptor</description>
+            <number name="Identifier" id="2525" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1074" value="1074"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2530">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1075" id="1801" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS3) Timeline Information. 4 bytes (descriptor version = 16), Descriptor</description>
+            <number name="Identifier" id="2533" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1075" value="1075"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2538">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1076" id="1803" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS3) Sheet Disclosure. 4 bytes (descriptor version = 16), Descriptor</description>
+            <number name="Identifier" id="2541" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1076" value="1076"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2546">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1077" id="1805" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS3) DisplayInfo structure to support floating point clors. Also see ID 1007. See Appendix A in Photoshop API Guide.pdf</description>
+            <number name="Identifier" id="2549" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1077" value="1077"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2554">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1078" id="1807" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS3) Onion Skins. 4 bytes (descriptor version = 16), Descriptor</description>
+            <number name="Identifier" id="2557" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1078" value="1078"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2562">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1080" id="1809" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS4) Count Information. 4 bytes (descriptor version = 16), Descriptor (see See Descriptor structure) Information about the count in the document. See the Count Tool</description>
+            <number name="Identifier" id="2565" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1080" value="1080"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2570">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1082" id="1811" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS5) Print Information. 4 bytes (descriptor version = 16), Descriptor (see See Descriptor structure) Information about the current print settings in the document. The color management options</description>
+            <number name="Identifier" id="2573" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1082" value="1082"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2578">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1083" id="1813" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS5) Print Style. 4 bytes (descriptor version = 16), Descriptor (see See Descriptor structure) Information about the current print style in the document. The printing marks, labels, ornaments, etc.</description>
+            <number name="Identifier" id="2581" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1083" value="1083"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2586">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1084" id="1815" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS5) Macintosh NSPrintInfo. Variable OS specific info for Macintosh. NSPrintInfo. It is recommened that you do not interpret or use this data</description>
+            <number name="Identifier" id="2589" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1084" value="1084"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2594">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1085" id="1817" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS5) Windows DEVMODE. Variable OS specific info for Windows. DEVMODE. It is recommened that you do not interpret or use this data</description>
+            <number name="Identifier" id="2597" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1085" value="1085"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2602">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1086" id="1819" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS6) Auto Save File Path. Unicode string. It is recommened that you do not interpret or use this data</description>
+            <number name="Identifier" id="2605" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1086" value="1086"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2610">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1087" id="1821" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS6) Auto Save Format. Unicode string. It is recommened that you do not interpret or use this data</description>
+            <number name="Identifier" id="2613" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1087" value="1087"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2618">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block1088" id="1823" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CC) Path Selection State. 4 bytes (descriptor version = 16), Descriptor Information about the current path selection state</description>
+            <number name="Identifier" id="2621" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="1088" value="1088"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2626">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block2xxx-2997" id="1825" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Path Information (saved paths)</description>
+            <number name="Identifier" id="2629" type="integer" minval="2000" maxval="2997"/>
+            <scriptelement name="ConditionalPadByte" id="2634">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block2999" id="1827" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Name of clipping path</description>
+            <number name="Identifier" id="2637" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="2999" value="2999"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2642">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block3000" id="1829" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CC) Origin Path Info. 4 bytes (descriptor version = 16), Descriptor Information about the origin path data</description>
+            <number name="Identifier" id="2645" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="3000" value="3000"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2650">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block4xxx" id="1831" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Plug-In resource(s). Resources added by a plug-in. See the plug-in API found in the SDK documentation</description>
+            <number name="Identifier" id="2653" type="integer" minval="4000" maxval="4999"/>
+            <scriptelement name="ConditionalPadByte" id="2658">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block7000" id="1833" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Image Ready variables. XML representation of variables definition</description>
+            <number name="Identifier" id="2661" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="7000" value="7000"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2666">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block7001" id="1835" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Image Ready data sets</description>
+            <number name="Identifier" id="2669" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="7001" value="7001"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2674">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block8000" id="1837" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>(Photoshop CS3) Lightroom workflow, if present the document is in the middle of a Lightroom workflow</description>
+            <number name="Identifier" id="2677" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="8000" value="8000"/>
+                </fixedvalues>
+            </number>
+            <scriptelement name="ConditionalPadByte" id="2682">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="App13Block10000" id="1839" extends="id:1841" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>Print flags information. 2 bytes version ( = 1), 1 byte center crop marks, 1 byte ( = 0), 4 bytes bleed width value, 2 bytes bleed width scale</description>
+            <number name="Identifier" id="2685" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="100000" value="10000"/>
+                </fixedvalues>
+            </number>
+            <structure name="Data" id="2686">
+                <number name="Version" id="2689" type="integer" length="2"/>
+                <number name="center crop marks" id="2690" type="integer" length="1"/>
+                <number name="reserved" id="2691" type="integer" length="1"/>
+                <number name="bleed width value" id="2692" type="integer" length="4"/>
+                <number name="bleed width scale" id="2693" type="integer" length="2"/>
+            </structure>
+            <scriptelement name="ConditionalPadByte" id="2695">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+dataResult = results.getResultByName(&quot;DataSize&quot;)
+value = dataResult.getValue()
+length = value.getUnsigned()
+
+print length
+
+if length % 2 == 1:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="Elements" id="2697" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="PaddingByte" id="2698" length="1"/>
+        </structure>
+        <structure name="PaddedName" id="1938" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="Name" id="2700" type="pascal"/>
+            <scriptelement name="ConditionalPadByte" id="2701">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+
+lastResult = results.getLastResult()
+
+value = lastResult.getValue()
+
+text = value.getString()
+
+textLength = 0
+
+if text != None:
+	textLength = text.length
+
+if textLength % 2 == 0:
+	# add padding element with one byte
+	grammar = currentMapper.getCurrentGrammar()
+	structure = grammar.getStructureByName(&quot;Elements&quot;)
+	element = structure.getElementByName(&quot;PaddingByte&quot;)
+	currentMapper.mapElementWithSize(element, 1)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="PaddedData" id="2703" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Data" id="2704"/>
+        </structure>
+        <structure name="SlicesBlock" id="2707" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Version" mustmatch="yes" id="2708" type="integer" length="4"/>
+        </structure>
+        <structure name="SlicesBlock6" id="2351" extends="id:2707">
+            <number name="Version" id="2710" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Version6" value="6"/>
+                </fixedvalues>
+            </number>
+            <structure name="BoundingRect" id="2711">
+                <number name="top" id="2712" type="integer" length="4"/>
+                <number name="left" id="2713" type="integer" length="4"/>
+                <number name="bottom" id="2714" type="integer" length="4"/>
+                <number name="right" id="2715" type="integer" length="4"/>
+            </structure>
+            <structref name="SlicesGroupName" id="2718" structure="id:2717"/>
+            <number name="NumberOfSlices" id="2719" type="integer" length="4"/>
+            <structref name="SlicesResourceBlock" id="2721" repeatmin="NumberOfSlices" repeatmax="NumberOfSlices" structure="id:2720"/>
+        </structure>
+        <structure name="SlicesBlock7_8" id="2353" extends="id:2707">
+            <number name="Version" id="2723" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Version7" value="7"/>
+                    <fixedvalue name="Version8" value="8"/>
+                </fixedvalues>
+            </number>
+            <number name="DescriptorVersion" id="2724" type="integer" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Photoshop 6.0" value="16"/>
+                </fixedvalues>
+            </number>
+        </structure>
+        <structure name="SlicesResourceBlock" id="2720" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="ID" id="2726" type="integer" length="4"/>
+            <number name="Group ID" id="2727" type="integer" length="4"/>
+            <number name="Origin" id="2728" type="integer" length="4"/>
+            <number name="Layer ID" id="2729" disabled="yes" type="integer" length="4"/>
+            <structref name="Name" id="2730" structure="id:2717"/>
+            <number name="Type" id="2731" type="integer" length="4"/>
+            <structure name="Positions" id="2732">
+                <number name="left" id="2733" type="integer" length="4"/>
+                <number name="top" id="2734" type="integer" length="4"/>
+                <number name="right" id="2735" type="integer" length="4"/>
+                <number name="bottom" id="2736" type="integer" length="4"/>
+            </structure>
+            <structref name="URL" id="2738" structure="id:2717"/>
+            <structref name="Target" id="2739" structure="id:2717"/>
+            <structref name="Message" id="2740" structure="id:2717"/>
+            <structref name="Alt Tag" id="2741" structure="id:2717"/>
+            <number name="CellTextIsHTML" id="2742" type="integer" length="1"/>
+            <structref name="CellText" id="2743" structure="id:2717"/>
+            <number name="HorzAlignment" id="2744" type="integer" length="4"/>
+            <number name="VertAlignment" id="2745" type="integer" length="4"/>
+            <number name="AlphaColor" id="2746" type="integer" length="1"/>
+            <number name="Red" id="2747" type="integer" length="1"/>
+            <number name="Green" id="2748" type="integer" length="1"/>
+            <number name="Blue" id="2749" type="integer" length="1"/>
+            <number name="DescriptorVersion" id="2750" repeatmin="0" type="integer" length="4"/>
+            <structref name="Descriptor" id="2752" repeatmin="0" structure="id:2751"/>
+        </structure>
+        <structure name="UnicodeString" id="2717" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="SlicesNameLength" id="2754" type="integer" length="4"/>
+            <string name="SlicesName" id="2755" type="fixed-length" length="SlicesNameLength*2"/>
+        </structure>
+        <structure name="Descriptor" id="2751" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="Name" id="2757" structure="id:2717"/>
+            <number name="classID" id="2758" type="integer" length="4"/>
+            <number name="NumberOfItems" id="2759" type="integer" length="4"/>
+            <structure name="Item" id="2760">
+                <number name="length" id="2761" type="integer" length="4"/>
+            </structure>
+        </structure>
+        <structure name="ThumbnailResource" id="2240" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Header" id="2764" length="28">
+                <number name="Format" id="2765" type="integer" length="4">
+                    <fixedvalues>
+                        <fixedvalue name="kJpegRGB" value="1"/>
+                        <fixedvalue name="kRawRGB" value="0"/>
+                    </fixedvalues>
+                </number>
+                <number name="Width" id="2766" type="integer" length="4"/>
+                <number name="Height" id="2767" type="integer" length="4"/>
+                <number name="WidthBytes" id="2768" type="integer" length="4"/>
+                <number name="TotalSize" id="2769" type="integer" length="4"/>
+                <number name="CompressedSize" id="2770" type="integer" length="4"/>
+                <number name="BitsPerPixel" id="2771" type="integer" length="2"/>
+                <number name="NumberOfPlanes" id="2772" type="integer" length="2"/>
+            </structure>
+            <structref name="JPG file" id="2774" structure="id:1369"/>
+        </structure>
+    </grammar>
+</ufwb>
