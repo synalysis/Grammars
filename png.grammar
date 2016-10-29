@@ -30,7 +30,15 @@
             <structure name="Data" id="61">
                 <number name="Width" id="62" type="integer" length="4"/>
                 <number name="Height" id="63" type="integer" length="4"/>
-                <number name="Bit depth" id="64" type="integer" length="1"/>
+                <number name="Bit depth" id="64" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue value="1"></fixedvalue>
+                        <fixedvalue value="2"></fixedvalue>
+                        <fixedvalue value="4"></fixedvalue>
+                        <fixedvalue value="8"></fixedvalue>
+                        <fixedvalue value="16"></fixedvalue>
+                    </fixedvalues>
+                </number>
                 <number name="Color type" id="65" type="integer" length="1">
                     <fixedvalues>
                         <fixedvalue name="Type0" value="0">
