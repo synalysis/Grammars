@@ -268,6 +268,9 @@
                     <fixedvalue value="0x624B4744"/>
                 </fixedvalues>
             </number>
+            <structure name="Data" id="185">
+                <binary name="Color Data" id="186" length="remaining"/>
+            </structure>
             <binary name="CRC" id="187"/>
         </structure>
         <structure name="pHYs" id="189" extends="id:51">
