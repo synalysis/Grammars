@@ -283,7 +283,12 @@
             <structure name="Data" id="192">
                 <number name="Pixels per unit, x axis" id="193" type="integer" length="4"/>
                 <number name="Pixels per unit, y axis" id="194" type="integer" length="4"/>
-                <number name="Unit specifier" id="195" type="integer" length="1"/>
+                <number name="Unit specifier" id="195" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="unit is unknown" value="0"/>
+                        <fixedvalue name="unit is the metre" value="1"/>
+                    </fixedvalues>
+                </number>
             </structure>
             <binary name="CRC" id="197"/>
         </structure>
@@ -367,7 +372,7 @@
                 <structref name="sBIT" id="259" repeatmin="0" structure="id:228"/>
                 <structref name="sPLT" id="260" repeatmin="0" structure="id:199"/>
                 <structref name="sRGB" id="261" repeatmin="0" structure="id:213"/>
-                <structref name="IEND" id="262" structure="id:236"/>
+                <structref name="IEND" id="262" repeatmin="0" structure="id:236"/>
                 <structref name="Chunk" id="263" structure="id:51"/>
             </structure>
         </structure>
