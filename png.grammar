@@ -30,7 +30,15 @@
             <structure name="Data" id="61">
                 <number name="Width" id="62" type="integer" length="4"/>
                 <number name="Height" id="63" type="integer" length="4"/>
-                <number name="Bit depth" id="64" type="integer" length="1"/>
+                <number name="Bit depth" id="64" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue value="1"></fixedvalue>
+                        <fixedvalue value="2"></fixedvalue>
+                        <fixedvalue value="4"></fixedvalue>
+                        <fixedvalue value="8"></fixedvalue>
+                        <fixedvalue value="16"></fixedvalue>
+                    </fixedvalues>
+                </number>
                 <number name="Color type" id="65" type="integer" length="1">
                     <fixedvalues>
                         <fixedvalue name="Type0" value="0">
@@ -124,10 +132,10 @@
                 <string name="Key" id="98" type="zero-terminated"/>
                 <number name="Compression method" id="99" type="integer" length="1">
                     <fixedvalues>
-                        <fixedvalue value="0"/>
+                        <fixedvalue name="zlib with deflate" value="0"><description>zlib datastream with deflate compression</description></fixedvalue>
                     </fixedvalues>
                 </number>
-                <string name="Text" id="100" type="zero-terminated"/>
+                <binary name="Compressed Text" id="100" length="remaining"/>
             </structure>
             <binary name="CRC" id="102"/>
         </structure>
@@ -142,12 +150,13 @@
                 <string name="Key" id="108" type="zero-terminated"/>
                 <number name="Compression flag" id="109" type="integer" length="1">
                     <fixedvalues>
-                        <fixedvalue value="0"/>
+                        <fixedvalue name="Uncompressed" value="0"><description>Uncompressed text</description></fixedvalue>
+                        <fixedvalue name="Compressed" value="1"><description>Compressed text</description></fixedvalue>
                     </fixedvalues>
                 </number>
                 <number name="Compression method" id="110" type="integer" length="1">
                     <fixedvalues>
-                        <fixedvalue value="0"/>
+                        <fixedvalue name="zlib with deflate" value="0"><description>zlib datastream with deflate compression</description></fixedvalue>
                     </fixedvalues>
                 </number>
                 <string name="Language tag" id="111" type="zero-terminated"/>
@@ -165,7 +174,11 @@
             </number>
             <structure name="Data" id="120">
                 <string name="Profile name" id="121" type="zero-terminated"/>
-                <number name="Compression method" id="122" type="integer" length="1"/>
+                <number name="Compression method" id="122" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="zlib with deflate" value="0"><description>zlib datastream with deflate compression</description></fixedvalue>
+                    </fixedvalues>
+                </number>
                 <number name="Compressed profile" id="123" type="integer" length="1"/>
             </structure>
             <binary name="CRC" id="125"/>
@@ -244,7 +257,7 @@
                 </fixedvalues>
             </number>
             <structure name="Data" id="177">
-                <number name="Count" id="178" type="integer" length="2"/>
+                <number name="Count" id="178" type="integer" length="2" repeatmax="unlimited"/>
             </structure>
             <binary name="CRC" id="180"/>
         </structure>
@@ -255,6 +268,9 @@
                     <fixedvalue value="0x624B4744"/>
                 </fixedvalues>
             </number>
+            <structure name="Data" id="185">
+                <binary name="Color Data" id="186" length="remaining"/>
+            </structure>
             <binary name="CRC" id="187"/>
         </structure>
         <structure name="pHYs" id="189" extends="id:51">
@@ -343,9 +359,9 @@
                 <structref name="PLTE" id="251" repeatmin="0" structure="id:162"/>
                 <structref name="bKGD" id="252" repeatmin="0" structure="id:182"/>
                 <structref name="IDAT" id="253" repeatmin="0" repeatmax="unlimited" structure="id:220"/>
-                <structref name="iTXt" id="254" repeatmin="0" structure="id:104"/>
-                <structref name="zTXt" id="255" repeatmin="0" structure="id:94"/>
-                <structref name="tEXt" id="256" repeatmin="0" structure="id:85"/>
+                <structref name="iTXt" id="254" repeatmin="0" repeatmax="unlimited" structure="id:104"/>
+                <structref name="zTXt" id="255" repeatmin="0" repeatmax="unlimited" structure="id:94"/>
+                <structref name="tEXt" id="256" repeatmin="0" repeatmax="unlimited" structure="id:85"/>
                 <structref name="tRNS" id="257" repeatmin="0" structure="id:127"/>
                 <structref name="hIST" id="258" repeatmin="0" structure="id:174"/>
                 <structref name="sBIT" id="259" repeatmin="0" structure="id:228"/>
