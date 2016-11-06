@@ -4,7 +4,9 @@
         <description>Grammar for PCX files</description>
         <structure name="PCX file" id="828" encoding="ISO_8859-1:1987" endian="little" signed="no">
             <structure name="Header" id="830" length="128">
-                <number name="Identifier" mustmatch="yes" id="832" type="integer" length="1" fixedval="10"/>
+                <number name="Identifier" mustmatch="yes" id="832" type="integer" length="1">
+                    <fixedvalue value="10"/>
+                </number>
                 <number name="Version" id="833" type="integer" length="1">
                     <fixedvalue name="Version 2.5" value="0"/>
                     <fixedvalue name="Version 2.8 with Palette" value="2"/>

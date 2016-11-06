@@ -154,7 +154,7 @@
             </number>
             <string name="ScriptType" id="323" type="fixed-length" length="4">
                 <fixedvalues>
-                    <fixedvalue name="HyperTalk" value=""/>
+                    <fixedvalue name="HyperTalk"/>
                     <fixedvalue name="Compiled OSA String" value="WOSA"/>
                 </fixedvalues>
             </string>

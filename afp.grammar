@@ -3800,7 +3800,11 @@
         </structure>
         <!--
         <structure name="EIM" extends="Structured Field" lengthoffset="1">
-            <number name="SFTypeID" fixedval="0xD3A9FB"/>
+            <number name="SFTypeID">
+                <fixedvalues>
+                    <fixedvalue value="0xD3A9FB"/>
+                </fixedvalues>
+            </number>
             <structure name="Data">
                 <string name="IdoName" repeatmin="0" type="fixed-length" length="8"/>
                 <structref name="Triplet X'02'" repeatmin="0"/>

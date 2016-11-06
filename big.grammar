@@ -14,7 +14,11 @@
             </structure>
         </structure>
         <structure name="BIG Identifier" id="858" encoding="ISO_8859-1:1987" endian="big" signed="no">
-            <string name="Identifier" mustmatch="yes" id="870" type="fixed-length" length="4" encoding="ISO_8859-1:1987" fixedval="BIGF"/>
+            <string name="Identifier" mustmatch="yes" id="870" type="fixed-length" length="4" encoding="ISO_8859-1:1987">
+                <fixedvalues>
+                    <fixedvalue value="BIGF"/>
+                </fixedvalues>
+            </string>
         </structure>
         <structure name="File Header" id="865" encoding="ISO_8859-1:1987" endian="big" signed="no">
             <offset name="File Offset" id="873" strokecolor="FCFC3E" fillcolor="FF30FA" length="4" references="File" referenced-size="id:874"/>

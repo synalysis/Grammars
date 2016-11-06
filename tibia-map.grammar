@@ -38,7 +38,6 @@
                 <number name="xPosition" id="8" fillcolor="AAAAFF" type="integer" length="1"/>
                 <number name="xTile" id="9" fillcolor="D7D7FF" type="integer" length="1"/>
                 <binary name="__padding1" mustmatch="yes" id="10" fillcolor="000000" length="2">
-                    <description></description>
                     <fixedvalues>
                         <fixedvalue name="two blank bytes" value="0000"/>
                     </fixedvalues>

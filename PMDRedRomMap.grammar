@@ -80,10 +80,14 @@
         <structure name="ROM Header" id="443" length="192" encoding="ISO_8859-1:1987" endian="little" signed="no">
             <binary name="ARM B Jump Instruction" id="444" length="4"/>
             <binary name="Nintendo Logo Data" id="445" length="156"/>
-            <string name="Game Title" mustmatch="yes" id="446" type="fixed-length" length="12" fixedval="POKE DUNGEON"/>
+            <string name="Game Title" mustmatch="yes" id="446" type="fixed-length" length="12">
+                <fixedvalue value="POKE DUNGEON"/>
+            </string>
             <string name="Game Code" id="447" type="fixed-length" length="4"/>
             <binary name="Maker Code" id="448" length="2"/>
-            <binary name="&lt;fixed value&gt;" mustmatch="yes" id="449" length="1" fixedval="96"/>
+            <binary name="&lt;fixed value&gt;" mustmatch="yes" id="449" length="1">
+                <fixedvalue value="96" />
+            </binary>
             <binary name="Main Unit Code" id="450" length="1"/>
             <binary name="Device Type" id="451" length="1"/>
             <binary name="&lt;reserved&gt;" id="452" length="7"/>
@@ -92,10 +96,14 @@
             <binary name="&lt;reserved-2&gt;" id="455" length="2"/>
         </structure>
         <structure name="US ROM Header" id="329" extends="id:443">
-            <string name="Game Code" mustmatch="yes" id="460" type="fixed-length" length="4" fixedval="B24E"/>
+            <string name="Game Code" mustmatch="yes" id="460" type="fixed-length" length="4">
+                <fixedvalue value="B24E"/>
+            </string>
         </structure>
         <structure name="Euro ROM Header" id="470" extends="id:443">
-            <string name="Game Code" mustmatch="yes" id="474" type="fixed-length" length="4" fixedval="B24P"/>
+            <string name="Game Code" mustmatch="yes" id="474" type="fixed-length" length="4">
+                <fixedvalue value="B24P"/>
+            </string>
         </structure>
         <structure name="Starter Pokémon Data" id="333" encoding="ISO_8859-1:1987" endian="little" signed="no">
             <structref name="Starter Pokémon Data Entry" id="485" repeatmin="13" repeatmax="13" structure="id:484"/>
@@ -160,7 +168,9 @@
             <structref name="Description" id="527" repeatmin="58" repeatmax="58" structure="id:494"/>
         </structure>
         <structure name="Item Data SIRO Section" id="411" extends="id:529" endian="little">
-            <string name="&lt;header&gt;" id="530" type="fixed-length" length="4" fixedval="SIRO"/>
+            <string name="&lt;header&gt;" id="530" type="fixed-length" length="4">
+                <fixedvalue value="SIRO"/>
+            </string>
             <offset name="Data Pointer" id="532" fillcolor="FF80FB" length="4" references="id:531" additional="-134217728" follownullreference="yes"/>
             <binary name="&lt;new binary&gt;" id="533" length="8"/>
             <binary name="Item Description String Pool" id="534" length="26280"/>
@@ -176,7 +186,9 @@
             <structref name="Description" id="544" structure="id:494"/>
         </structure>
         <structure name="Pokémon Data SIRO Section" id="415" extends="id:529">
-            <string name="&lt;header&gt;" id="546" type="fixed-length" length="4" fixedval="SIRO"/>
+            <string name="&lt;header&gt;" id="546" type="fixed-length" length="4">
+                <fixedvalue value="SIRO"/>
+            </string>
             <offset name="Data Pointer" id="548" length="4" references="id:547" additional="-134217728" follownullreference="yes"/>
             <binary name="&lt;new binary&gt;" id="549" length="8"/>
             <structref name="Pokémon Data" id="550" structure="id:547"/>
@@ -225,7 +237,9 @@
             <number name="Recruit Rate" id="586" type="integer" length="2" signed="yes"/>
         </structure>
         <structure name="Move Data SIRO Section" id="417" extends="id:529">
-            <string name="&lt;header&gt;" id="588" type="fixed-length" length="4" fixedval="SIRO"/>
+            <string name="&lt;header&gt;" id="588" type="fixed-length" length="4">
+                <fixedvalue value="SIRO"/>
+            </string>
             <offset name="Data Pointer" id="590" fillcolor="FF80FB" length="4" references="id:589" additional="-134217728" follownullreference="yes"/>
             <binary name="&lt;new binary-1&gt;" id="591" length="10"/>
             <binary name="Moves Learned Data Pool" id="592" length="28054"/>
@@ -276,7 +290,9 @@
             <offset name="SIRO Section" id="636" fillcolor="FF80FB" length="4" references="id:529" additional="-134217728" follownullreference="yes"/>
         </structure>
         <structure name="SIRO Section" id="529" encoding="ISO_8859-1:1987" endian="little" signed="no">
-            <string name="&lt;header&gt;" mustmatch="yes" id="638" strokecolor="FCFD84" fillcolor="919191" type="fixed-length" length="4" fixedval="SIRO"/>
+            <string name="&lt;header&gt;" mustmatch="yes" id="638" strokecolor="FCFD84" fillcolor="919191" type="fixed-length" length="4">
+                <fixedvalue value="SIRO"/>
+            </string>
             <number name="Data Pointer" id="639" fillcolor="FF86D5" type="integer" length="4" display="hex"/>
         </structure>
     </grammar>

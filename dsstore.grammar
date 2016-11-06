@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ufwb version="1.9">
-    <grammar name="DS_Store" start="id:374" author="Andreas Pehnack" email="andreas@synalysis.com" fileextension="">
+    <grammar name="DS_Store" start="id:374" author="Andreas Pehnack" email="andreas@synalysis.com">
         <description>Grammar for .DS_Store files</description>
         <structure name="File" id="374" encoding="ISO_8859-1:1987" endian="big" signed="no">
             <structure name="Header" id="376" length="36">

@@ -66,7 +66,9 @@
             </structure>
         </structure>
         <structure name="DataChunk" id="108" repeatmin="0" extends="id:55">
-            <string name="chunkID" mustmatch="yes" id="109" type="fixed-length" length="4" fixedval="data"/>
+            <string name="chunkID" mustmatch="yes" id="109" type="fixed-length" length="4">
+                <fixedvalue value="data" />
+            </string>
             <number name="chunkSize" id="110" type="integer"/>
             <structure name="Contents" id="111">
                 <binary name="Samples" id="112" fillcolor="FE7E7B"/>
@@ -89,7 +91,9 @@
             </structure>
         </structure>
         <structure name="FactChunk" id="123" repeatmin="0" extends="id:55">
-            <string name="chunkID" mustmatch="yes" id="124" type="fixed-length" length="4" fixedval="fact"/>
+            <string name="chunkID" mustmatch="yes" id="124" type="fixed-length" length="4">
+                <fixedvalue value="fact"/>
+            </string>
             <number name="chunkSize" id="125" type="integer"/>
             <structure name="Contents" id="126">
                 <number name="Format Dependent Data" id="127" fillcolor="CEFA8B" type="integer" length="4"/>

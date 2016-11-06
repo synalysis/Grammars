@@ -20,7 +20,7 @@
                 <number name="RootCellIndex" id="59" fillcolor="00FFFF" type="integer" length="4"/>
                 <number name="Length" id="60" fillcolor="00FF00" type="integer" length="4"/>
                 <binary name="Cluster" id="61" fillcolor="AA0000" length="4"/>
-                <string name="EmbeddedFilename" id="62" fillcolor="FF4C9D" type="delimiter-terminated" encoding="Adobe-Standard-Encoding"/>
+                <string name="EmbeddedFilename" id="62" fillcolor="FF4C9D" type="zero-terminated" encoding="Adobe-Standard-Encoding"/>
                 <binary name="Reserved1" id="63" length="396"/>
                 <binary name="Checksum" id="64" fillcolor="5500FF" length="4"/>
                 <binary name="Reserved2" id="65" length="3576"/>
