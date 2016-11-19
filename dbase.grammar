@@ -5,7 +5,7 @@
         <structure name="Defaults" id="25" length="Remaining" alignment="4" consists-of="id:24" encoding="ISO_8859-1:1987" endian="little" signed="no"/>
         <structure name="dBASE file" id="24" length="Remaining" alignment="4" encoding="ISO_8859-1:1987" endian="little" signed="no">
             <structure name="Header" id="27" length="PositionOfFirstDataRecord" alignment="4" consists-of="id:45">
-                <number name="FileType" id="28" fillcolor="FFA8BB" type="float" length="32" lengthunit="bit" endian="little" display="hex" minval="" maxval="">
+                <number name="FileType" id="28" fillcolor="FFA8BB" type="float" length="32" lengthunit="bit" endian="little" display="hex">
                     <fixedvalues>
                         <fixedvalue name="FoxBASE" value="0x2"/>
                         <fixedvalue name="FoxBASE+/Dbase III plus, no memo" value="0x3"/>

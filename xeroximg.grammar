@@ -80,7 +80,7 @@
                 </fixedvalues>
             </number>
         </structure>
-        <structure name="SHORTINT-3" id="63" length="" extends="id:71">
+        <structure name="SHORTINT-3" id="63" extends="id:71">
             <number name="ID" id="96" type="integer" length="2">
                 <fixedvalues>
                     <fixedvalue name="SHORTINT" value="0xC203"/>

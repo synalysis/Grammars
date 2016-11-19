@@ -12,7 +12,9 @@
             <structref name="RootRecord" id="10" structure="id:9"/>
         </structure>
         <structure name="Header" id="5" length="12" encoding="ISO_8859-1:1987" endian="little" signed="no">
-            <number name="Magic" id="12" fillcolor="F70916" type="integer" length="4" display="hex" fixedval="0xABCE"/>
+            <number name="Magic" id="12" fillcolor="F70916" type="integer" length="4" display="hex">
+                <fixedvalue value="0xABCE"/>
+            </number>
             <number name="Reserved" id="13" fillcolor="8E510B" type="integer" length="4" display="hex"/>
             <number name="TimeStamp" id="14" fillcolor="3500FC" type="integer" length="4" display="hex"/>
         </structure>

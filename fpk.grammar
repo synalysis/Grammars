@@ -3,9 +3,15 @@
     <grammar name="Civilization IV FPK grammar" start="FPK file" author="Kelvin Chung" fileextension="fpk">
         <description>Grammar for Civilizaiton IV FPK files</description>
         <structure name="FPK file" id="3341" encoding="ISO_8859-1:1987" endian="little" signed="no">
-            <number name="Version" mustmatch="yes" id="3342" type="integer" length="4" fixedval="4"/>
-            <string name="Identifier" mustmatch="yes" id="3343" type="fixed-length" length="4" encoding="ISO_8859-1:1987" fixedval="FPK_"/>
-            <number name="Version 2" mustmatch="yes" id="3344" type="integer" length="1" fixedval="1"/>
+            <number name="Version" mustmatch="yes" id="3342" type="integer" length="4">
+                <fixedvalue value="4"/>
+            </number>
+            <string name="Identifier" mustmatch="yes" id="3343" type="fixed-length" length="4" encoding="ISO_8859-1:1987">
+                <fixedvalue value="FPK_"/>
+            </string>
+            <number name="Version 2" mustmatch="yes" id="3344" type="integer" length="1">
+                <fixedvalue value="1"/>
+            </number>
             <number name="Number of Files" id="3345" fillcolor="FCFC3E" type="integer" length="4"/>
             <structure name="File Headers" id="3346" repeat="id:3345" repeatmax="unlimited" consists-of="File Header">
                 <structref name="File Header" id="3348"/>

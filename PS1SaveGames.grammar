@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ufwb version="1.3">
-    <grammar name="PS1 Save Games" start="id:7" author="Diskutant" email="diskutant@googlemail.com" fileextension="" uti="public.unix-executable">
+    <grammar name="PS1 Save Games" start="id:7" author="Diskutant" email="diskutant@googlemail.com" uti="public.unix-executable">
         <description>Grammar for PlayStation 1 Save Games (individual files)</description>
         <structure name="Header" id="7" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
             <binary name="Header" mustmatch="yes" id="9" length="2">
