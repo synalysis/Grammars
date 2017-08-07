@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.18">
+    <grammar name="3GF" start="id:90" author="Tide Gu" email="tidegu@me.com" fileextension="3gf">
+        <description>Grammar for 3GF files</description>
+        <structure name="3GF file" id="90" length="0" encoding="ISO_8859-1:1987" endian="big" signed="yes">
+            <structure name="Segments" id="91" length="10" repeatmax="-1">
+                <description>The file is structured in fixed sets of 10 bytes. The 2 bytes are used as a 16bit signed integer.</description>
+                <binary name="Header" id="92" fillcolor="FEFFFF" length="2">
+                    <description>Bytes 0-1: Always 00 00</description>
+                    <fixedvalues>
+                        <fixedvalue name="Fixed" value="0000"/>
+                    </fixedvalues>
+                </binary>
+                <number name="TimeOffset" id="93" fillcolor="D5D7FF" type="integer" length="2">
+                    <description>Bytes 2-3: The time offset in milliseconds</description>
+                </number>
+                <number name="VAcc" id="94" fillcolor="FFADD5" type="integer" length="2">
+                    <description>Bytes 4-5: Vertical acceleration with 128 equaling 1g</description>
+                </number>
+                <number name="HAccL2R" id="95" fillcolor="FEFC78" type="integer" length="2">
+                    <description>Bytes 6-7: Horizontal acceleration Left-Right with Right being positive</description>
+                </number>
+                <number name="HAccF2B" id="96" fillcolor="A6FBA9" type="integer" length="2">
+                    <description>Bytes 8-9: horizontal acceleration Forward to Back with Back being positive</description>
+                </number>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>
