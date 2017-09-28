@@ -1,31 +1,297 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ufwb version="1.3.0.1">
-    <grammar name="MIDI" start="id:38" author="Andreas Pehnack" fileextension="mid, kipr" uti="public.midi-audio">
-        <description>Grammar for MIDI and .kipr files</description>
-        <structure name="MIDI file" id="38" encoding="ISO_8859-1:1987" endian="big" signed="no">
-            <structref name="Header Chunk" id="40" structure="id:39"/>
-            <structref name="Track Chunk" id="42" repeatmax="numberOfTracks" structure="id:41"/>
+<ufwb version="1.17">
+    <grammar name="MIDI" start="id:7" author="Nicolas Kniebihler" fileextension="mid, kipr" uti="public.midi-audio" complete="yes">
+        <description>Grammar for MIDI and .kipr files, inspired by Andreas Pehnack's work.</description>
+        <structure name="MIDI file" id="7" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="Header Chunk" id="9" structure="id:8"/>
+            <structref name="Track Chunk" id="11" repeatmax="numberOfTracks" structure="id:10"/>
         </structure>
-        <structure name="Chunk" id="44" length="chunkSize+8" encoding="ISO_8859-1:1987" endian="big" signed="no">
-            <string name="chunkID" mustmatch="yes" id="45" type="fixed-length" length="4">
+        <structure name="Chunk" id="13" length="chunkSize+8" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <string name="chunkID" mustmatch="yes" id="14" type="fixed-length" length="4">
                 <fixedvalues>
                     <fixedvalue name="MThd" value="MThd"/>
                 </fixedvalues>
             </string>
-            <number name="chunkSize" id="46" type="integer" length="4"/>
+            <number name="chunkSize" id="15" type="integer" length="4"/>
         </structure>
-        <structure name="Header Chunk" id="39" extends="id:44">
-            <number name="formatType" id="50" type="integer" length="2"/>
-            <number name="numberOfTracks" id="51" type="integer" length="2"/>
-            <number name="timeDivision" id="52" type="integer" length="2"/>
+        <structure name="Header Chunk" id="8" extends="id:13">
+            <number name="formatType" id="19" type="integer" length="2"/>
+            <number name="numberOfTracks" id="20" type="integer" length="2"/>
+            <number name="timeDivision" id="21" type="integer" length="2"/>
         </structure>
-        <structure name="Track Chunk" id="41" extends="id:44">
-            <string name="chunkID" id="54" type="fixed-length" length="4">
+        <structure name="Track Chunk" id="10" extends="id:13">
+            <string name="chunkID" id="23" type="fixed-length" length="4">
                 <fixedvalues>
                     <fixedvalue name="MTrk" value="MTrk"/>
                 </fixedvalues>
             </string>
+            <structure name="trackData" id="24" length="0" repeatmax="-1" order="variable">
+                <structref name="MetaData" id="27" repeatmin="0" repeatmax="-1" structure="id:26"/>
+                <structref name="NoteOffEvent" id="29" repeatmin="0" repeatmax="-1" structure="id:28"/>
+                <structref name="NoteOnEvent" id="31" repeatmin="0" repeatmax="-1" structure="id:30"/>
+                <structref name="Aftertouch" id="33" repeatmin="0" repeatmax="-1" structure="id:32"/>
+                <structref name="Control Change" id="35" repeatmin="0" repeatmax="-1" structure="id:34"/>
+                <structref name="Program Change" id="37" repeatmin="0" repeatmax="-1" structure="id:36"/>
+                <structref name="Canal Pressure" id="39" repeatmin="0" repeatmax="-1" structure="id:38"/>
+                <structref name="Pitch Wheel Change" id="41" repeatmin="0" repeatmax="-1" structure="id:40"/>
+                <structref name="Message" id="43" repeatmin="0" repeatmax="-1" structure="id:42"/>
+            </structure>
         </structure>
-        <structure name="Event" id="57" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+        <structure name="MetaData" id="26" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="deltaTime" id="47" structure="id:46"/>
+            <binary name="header" mustmatch="yes" id="48" length="1">
+                <fixedvalues>
+                    <fixedvalue name="&lt;unnamed&gt;" value="FF"/>
+                </fixedvalues>
+            </binary>
+            <binary name="type" mustmatch="yes" id="49" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Sequence Number" value="00"/>
+                    <fixedvalue name="Copyright Notice" value="02"/>
+                    <fixedvalue name="Sequence Name" value="03"/>
+                    <fixedvalue name="Instrument Name" value="04"/>
+                    <fixedvalue name="Lyric/Display" value="05"/>
+                    <fixedvalue name="Marker text" value="06"/>
+                    <fixedvalue name="Cue Point" value="07"/>
+                    <fixedvalue name="Program Name" value="08"/>
+                    <fixedvalue name="Peripheric Name" value="09"/>
+                    <fixedvalue name="End of Track" value="2F"/>
+                    <fixedvalue name="Tempo Setting" value="51"/>
+                    <fixedvalue name="SMPTE Offset" value="54"/>
+                    <fixedvalue name="Time Signature" value="58"/>
+                    <fixedvalue name="Key Signature" value="59"/>
+                    <fixedvalue name="Sequencer Specific Event" value="7F"/>
+                    <fixedvalue name="Text Event" value="01"/>
+                </fixedvalues>
+            </binary>
+            <number name="length" id="50" type="integer" length="1"/>
+            <binary name="data" id="51" length="length"/>
+        </structure>
+        <structure name="Event" id="53" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="deltaTime" id="54" structure="id:46"/>
+            <binary name="type" mustmatch="yes" id="55" length="4" lengthunit="bit">
+                <fixedvalues>
+                    <fixedvalue name="&lt;unnamed&gt;" value="08"/>
+                    <fixedvalue name="&lt;unnamed&gt;" value="09"/>
+                    <fixedvalue name="&lt;unnamed&gt;" value="0A"/>
+                    <fixedvalue name="&lt;unnamed&gt;" value="0B"/>
+                    <fixedvalue name="&lt;unnamed&gt;" value="0C"/>
+                    <fixedvalue name="&lt;unnamed&gt;" value="0D"/>
+                    <fixedvalue name="&lt;unnamed&gt;" value="0E"/>
+                </fixedvalues>
+            </binary>
+            <number name="canal" id="56" type="integer" length="4" lengthunit="bit"/>
+            <structure name="data" id="57"/>
+        </structure>
+        <structure name="NoteOffEvent" id="28" extends="id:53">
+            <binary name="type" id="61">
+                <fixedvalues>
+                    <fixedvalue value="08"/>
+                </fixedvalues>
+            </binary>
+            <structure name="data" id="62">
+                <number name="note" id="64" type="integer" length="1"/>
+                <number name="velocity" id="65" type="integer" length="1"/>
+                <structure name="repeat" id="66" length="0" alignment="0" repeatmin="0" repeatmax="-1">
+                    <structref name="deltaTime" id="67" structure="id:46"/>
+                    <binary name="repeatBit" mustmatch="yes" id="68" length="1" lengthunit="bit">
+                        <fixedvalues>
+                            <fixedvalue name="&lt;unnamed&gt;" value="00"/>
+                        </fixedvalues>
+                    </binary>
+                    <number name="note" id="69" type="integer" length="7" lengthunit="bit"/>
+                    <number name="velocity" id="70" type="integer" length="1"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="NoteOnEvent" id="30" extends="id:53">
+            <binary name="type" id="75">
+                <fixedvalues>
+                    <fixedvalue value="09"/>
+                </fixedvalues>
+            </binary>
+            <structure name="data" id="76">
+                <number name="note" id="78" type="integer" length="1"/>
+                <number name="velocity" id="79" type="integer" length="1"/>
+                <structure name="repeat" id="80" repeatmin="0" repeatmax="-1">
+                    <structref name="deltaTime" id="81" structure="id:46"/>
+                    <binary name="repeatBit" mustmatch="yes" id="82" length="1" lengthunit="bit">
+                        <fixedvalues>
+                            <fixedvalue name="&lt;unnamed&gt;" value="00"/>
+                        </fixedvalues>
+                    </binary>
+                    <number name="note" id="83" type="integer" length="7" lengthunit="bit"/>
+                    <number name="velocity" id="84" type="integer" length="1"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="Aftertouch" id="32" extends="id:53">
+            <binary name="type" id="89">
+                <fixedvalues>
+                    <fixedvalue value="0A"/>
+                </fixedvalues>
+            </binary>
+            <structure name="data" id="90">
+                <number name="note" id="92" type="integer" length="1"/>
+                <number name="vibrato" id="93" type="integer" length="1"/>
+            </structure>
+        </structure>
+        <structure name="Control Change" id="34" extends="id:53">
+            <binary name="type" id="97">
+                <fixedvalues>
+                    <fixedvalue name="&lt;unnamed&gt;" value="0B"/>
+                </fixedvalues>
+            </binary>
+            <structure name="data" id="98">
+                <binary name="type" id="100" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="Bank Select" value="00"/>
+                        <fixedvalue name="Modulation Wheel" value="01"/>
+                        <fixedvalue name="Breath Controller" value="02"/>
+                        <fixedvalue name="Foot Controller" value="04"/>
+                        <fixedvalue name="Portamento Time" value="05"/>
+                        <fixedvalue name="Data Entry MSB" value="06"/>
+                        <fixedvalue name="Channel Volume" value="07"/>
+                        <fixedvalue name="Balance" value="08"/>
+                        <fixedvalue name="Pan" value="0A"/>
+                        <fixedvalue name="Expression Controller" value="0B"/>
+                        <fixedvalue name="Effect Control 1" value="0C"/>
+                        <fixedvalue name="Effect Control 2" value="0D"/>
+                        <fixedvalue name="General Purpose 1" value="10"/>
+                        <fixedvalue name="General Purpose 2" value="11"/>
+                        <fixedvalue name="General Purpose 3" value="12"/>
+                        <fixedvalue name="General Purpose 4" value="13"/>
+                        <fixedvalue name="Damper Pedal" value="40"/>
+                        <fixedvalue name="Portamento On/Off" value="41"/>
+                        <fixedvalue name="Sostenuto On/Off" value="42"/>
+                        <fixedvalue name="Soft Pedal On/Off" value="43"/>
+                        <fixedvalue name="Legato Footswitch" value="44"/>
+                        <fixedvalue name="Hold 2" value="45"/>
+                        <fixedvalue name="Sound Variation" value="46"/>
+                        <fixedvalue name="Timber/Harmonic Intens" value="47"/>
+                        <fixedvalue name="Release Time" value="48"/>
+                        <fixedvalue name="Attack Time" value="49"/>
+                        <fixedvalue name="Brightness" value="4A"/>
+                        <fixedvalue name="Decay Time" value="4B"/>
+                        <fixedvalue name="Vibrato Rate" value="4C"/>
+                        <fixedvalue name="Vibrato Depth" value="4D"/>
+                        <fixedvalue name="Vibrato Delay" value="4E"/>
+                        <fixedvalue name="Portamento Control" value="54"/>
+                        <fixedvalue name="High Resolution Velocity Prefix" value="58"/>
+                        <fixedvalue name="Reverb Send Level" value="5B"/>
+                        <fixedvalue name="Tremolo Depth" value="5C"/>
+                        <fixedvalue name="Chorus Send Level" value="5D"/>
+                        <fixedvalue name="Detune Depth" value="5E"/>
+                        <fixedvalue name="Phaser Depth" value="5F"/>
+                        <fixedvalue name="Data Increment +1" value="60"/>
+                        <fixedvalue name="Data Increment -1" value="61"/>
+                        <fixedvalue name="NRPN - LSB" value="62"/>
+                        <fixedvalue name="NRPN - MSB" value="63"/>
+                        <fixedvalue name="RPN - LSB" value="64"/>
+                        <fixedvalue name="RPN - MSB" value="65"/>
+                        <fixedvalue name="All Sound Off" value="78"/>
+                        <fixedvalue name="Reset All Controllers" value="79"/>
+                        <fixedvalue name="Local Control On/Off" value="7A"/>
+                        <fixedvalue name="All Notes Off" value="7B"/>
+                        <fixedvalue name="Omni Mode Off" value="7C"/>
+                        <fixedvalue name="Omni Mode On" value="7D"/>
+                        <fixedvalue name="Mono Mode On" value="7E"/>
+                        <fixedvalue name="Poly Mode On" value="7F"/>
+                    </fixedvalues>
+                </binary>
+                <number name="value" id="101" type="integer" length="1"/>
+            </structure>
+        </structure>
+        <structure name="Program Change" id="36" extends="id:53">
+            <binary name="type" id="105">
+                <fixedvalues>
+                    <fixedvalue name="&lt;unnamed&gt;" value="0C"/>
+                </fixedvalues>
+            </binary>
+            <structure name="data" id="106">
+                <number name="instrument" id="108" type="integer" length="1"/>
+            </structure>
+        </structure>
+        <structure name="Canal Pressure" id="38" extends="id:53">
+            <binary name="type" id="112">
+                <fixedvalues>
+                    <fixedvalue value="0D"/>
+                </fixedvalues>
+            </binary>
+            <structure name="data" id="113">
+                <number name="vibrato" id="115" type="integer" length="1"/>
+            </structure>
+        </structure>
+        <structure name="Pitch Wheel Change" id="40" extends="id:53">
+            <binary name="type" id="119">
+                <fixedvalues>
+                    <fixedvalue value="0E"/>
+                </fixedvalues>
+            </binary>
+        </structure>
+        <structure name="deltaTime" id="46" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="deltaTimeHigh" id="125" repeatmin="0" repeatmax="3" structure="id:124"/>
+            <structref name="deltaTimeLow" id="127" structure="id:126"/>
+        </structure>
+        <structure name="deltaTimeLow" id="126" length="1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="bit" mustmatch="yes" id="129" length="1" lengthunit="bit">
+                <fixedvalues>
+                    <fixedvalue name="&lt;unnamed&gt;" value="00"/>
+                </fixedvalues>
+            </binary>
+            <number name="time" id="130" type="integer" length="7" lengthunit="bit"/>
+        </structure>
+        <structure name="deltaTimeHigh" id="124" length="1" alignment="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="bit" mustmatch="yes" id="132" length="1" lengthunit="bit">
+                <fixedvalues>
+                    <fixedvalue name="&lt;unnamed&gt;" value="01"/>
+                </fixedvalues>
+            </binary>
+            <number name="time" id="133" type="integer" length="7" lengthunit="bit"/>
+        </structure>
+        <structure name="Message" id="42" repeatmax="-1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="deltaTime" id="135" structure="id:46"/>
+            <binary name="header" mustmatch="yes" id="136" length="1">
+                <fixedvalues>
+                    <fixedvalue value="F0"/>
+                </fixedvalues>
+            </binary>
+            <structref name="length" id="137" structure="id:46"/>
+            <scriptelement name="data" id="138">
+                <script name="unnamed" type="Generic">
+                    <source language="Python">results = currentMapper.getCurrentResults()
+lastResult = results.getLastResult()
+
+time = lastResult.getValue().getUnsignedNumber()
+
+lastResult = results.getPrevResult(lastResult) # bit
+lastResult = results.getPrevResult(lastResult) # deltaTimeLow
+
+multiplicator = 128
+
+lastResult = results.getPrevResult(lastResult)
+previousResultName = lastResult.getName()
+while previousResultName == &quot;time&quot;:
+	highTime = lastResult.getValue().getUnsignedNumber()
+	time += highTime * multiplicator
+	multiplicator *= 128
+	lastResult = results.getPrevResult(lastResult) # bit
+	lastResult = results.getPrevResult(lastResult) # deltaTimeHigh
+	lastResult = results.getPrevResult(lastResult)
+	previousResultName = lastResult.getName()
+
+debugLog(&quot;!!!!!!! time=&quot; + str(time))
+
+grammar = currentMapper.getCurrentGrammar()
+structure = grammar.getStructureByName(&quot;Elements&quot;)
+element = structure.getElementByName(&quot;MessageData&quot;)
+currentMapper.mapElementWithSize(element, time)
+</source>
+                </script>
+            </scriptelement>
+        </structure>
+        <structure name="Elements" id="140" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="MessageData" id="141" length="remaining"/>
+        </structure>
     </grammar>
 </ufwb>
