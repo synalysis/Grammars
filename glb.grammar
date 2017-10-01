@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.17">
+    <grammar name="GLB (Binary glTF)" start="id:7" author="Szasz, Pal" fileextension="glb" complete="yes">
+        <description>Grammar for the binary glTF file format.
+
+More info: https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md#glb-file-format-specification</description>
+        <structure name="Chunk" id="8" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="chunk_length" id="9" fillcolor="00E800" type="integer" length="4"/>
+            <binary name="chunk_type" mustmatch="yes" id="10" fillcolor="5799FF" length="4">
+                <fixedvalues>
+                    <fixedvalue name="None" value="00000000"/>
+                    <fixedvalue name="JSON" value="4A534F4E"/>
+                    <fixedvalue name="BIN" value="42494E00"/>
+                </fixedvalues>
+            </binary>
+            <binary name="chunk_data" id="11" fillcolor="FFB000" length="chunk_length"/>
+        </structure>
+        <structure name="JSONChunk" id="13" length="0" alignment="0" extends="id:8" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="chunk_length" id="14" type="integer"/>
+            <binary name="chunk_type" id="15"/>
+            <binary name="chunk_data" id="16"/>
+        </structure>
+        <structure name="GLB File" id="7" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="GLB Header" id="18">
+                <binary name="magic" mustmatch="yes" id="19" fillcolor="5799FF" length="4">
+                    <fixedvalues>
+                        <fixedvalue name="MAGIC" value="676C5446"/>
+                    </fixedvalues>
+                </binary>
+                <number name="version" id="20" fillcolor="FF40FD" type="integer" length="4"/>
+                <number name="length" id="21" fillcolor="00E800" type="integer" length="4"/>
+            </structure>
+            <structref name="JSONChunk" id="23" structure="id:13"/>
+            <structure name="BinaryChunks" id="24" repeatmin="0" repeatmax="unlimited">
+                <structref name="Chunk" id="25" structure="id:8"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>
