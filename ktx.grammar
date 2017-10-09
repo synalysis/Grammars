@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.17">
+    <grammar name="KTX grammar" start="id:8" author="Szasz, Pal" email="pal.szasz@gmail.com" fileextension="ktx">
+        <description>Grammar for KTX files
+
+Spec: https://www.khronos.org/opengles/sdk/tools/KTX/file_format_spec/
+
+Example files: https://github.com/KhronosGroup/KTX
+
+NOTES:
+* Arrays not implemented yet</description>
+        <structure name="KTX file" id="8" encoding="ISO_8859-1:1987" endian="dynamic" signed="no">
+            <structure name="Header" id="9">
+                <binary name="identifier" id="10" fillcolor="0C32FF" length="12">
+                    <description>The file identifier is a unique set of bytes that will differentiate the file from other types of files. It consists of 12 bytes, as follows:
+
+Byte[12] FileIdentifier = {
+   0xAB, 0x4B, 0x54, 0x58, 0x20, 0x31, 0x31, 0xBB, 0x0D, 0x0A, 0x1A, 0x0A
+}
+This can also be expressed using C-style character definitions as:
+
+Byte[12] FileIdentifier = {
+    '«', 'K', 'T', 'X', ' ', '1', '1', '»', '\r', '\n', '\x1A', '\n'
+}
+The rationale behind the choice values in the identifier is based on the rationale for the identifier in the PNG specification. This identifier both identifies the file as a KTX file and provides for immediate detection of common file-transfer problems.
+
+Byte [0] is chosen as a non-ASCII value to reduce the probability that a text file may be misrecognized as a KTX file.
+Byte [0] also catches bad file transfers that clear bit 7.
+Bytes [1..6] identify the format, and are the ascii values for the string &quot;KTX 11&quot;.
+Byte [7] is for aesthetic balance with byte 1 (they are a matching pair of double-angle quotation marks).
+Bytes [8..9] form a CR-LF sequence which catches bad file transfers that alter newline sequences.
+Byte [10] is a control-Z character, which stops file display under MS-DOS, and further reduces the chance that a text file will be falsely recognised.
+Byte [11] is a final line feed, which checks for the inverse of the CR-LF translation problem.
+</description>
+                </binary>
+                <number name="endianness" mustmatch="yes" id="11" fillcolor="5799FF" type="integer" length="4" endian="little" display="hex">
+                    <description>endianness contains the number 0x04030201 written as a 32 bit integer. If the file is little endian then this is represented as the bytes 0x01 0x02 0x03 0x04. If the file is big endian then this is represented as the bytes 0x04 0x03 0x02 0x01. When reading endianness as a 32 bit integer produces the value 0x04030201 then the endianness of the file matches the the endianness of the program that is reading the file and no conversion is necessary. When reading endianness as a 32 bit integer produces the value 0x01020304 then the endianness of the file is opposite the endianness of the program that is reading the file, and in that case the program reading the file must endian convert all header bytes to the endianness of the program (i.e. a little endian program must convert from big endian, and a big endian program must convert to little endian).</description>
+                    <fixedvalues>
+                        <fixedvalue name="BE" value="0x1020304"/>
+                        <fixedvalue name="LE" value="0x4030201"/>
+                    </fixedvalues>
+                </number>
+                <scriptelement name="detect_endiannes" id="12">
+                    <script name="unnamed" type="Generic">
+                        <source language="Lua">results = currentMapper:getCurrentResults()
+lastResult = results:getLastResult()
+value = lastResult:getValue()
+num = value:getUnsignedNumber()
+
+if (num == 0x04030201) then
+currentMapper:setDynamicEndianness(synalysis.ENDIAN_LITTLE)
+else
+currentMapper:setDynamicEndianness(synalysis.ENDIAN_BIG)
+end</source>
+                    </script>
+                </scriptelement>
+                <number name="glType" id="13" fillcolor="DB35D7" type="integer" length="4" display="hex">
+                    <description>For compressed textures, glType must equal 0. For uncompressed textures, glType specifies the type parameter passed to glTex{,Sub}Image*D, usually one of the values from table 8.2 of the OpenGL 4.4 specification [OPENGL44] (UNSIGNED_BYTE, UNSIGNED_SHORT_5_6_5, etc.)</description>
+                    <fixedvalues>
+                        <fixedvalue name="GL_BYTE" value="0x1400"/>
+                        <fixedvalue name="GL_UNSIGNED_BYTE" value="0x1401"/>
+                        <fixedvalue name="GL_SHORT" value="0x1402"/>
+                        <fixedvalue name="GL_UNSIGNED_SHORT" value="0x1403"/>
+                        <fixedvalue name="GL_INT" value="0x1404"/>
+                        <fixedvalue name="GL_UNSIGNED_INT" value="0x1405"/>
+                        <fixedvalue name="GL_FLOAT" value="0x1406"/>
+                        <fixedvalue name="Compressed" value="0x0"/>
+                    </fixedvalues>
+                </number>
+                <number name="glTypeSize" id="14" fillcolor="FF40FD" type="integer" length="4">
+                    <description>glTypeSize specifies the data type size that should be used when endianness conversion is required for the texture data stored in the file. If glType is not 0, this should be the size in bytes corresponding to glType. For texture data which does not depend on platform endianness, including compressed texture data, glTypeSize must equal 1.</description>
+                </number>
+                <number name="glFormat" id="15" fillcolor="FF6600" type="integer" length="4" display="hex">
+                    <description>For compressed textures, glFormat must equal 0. For uncompressed textures, glFormat specifies the format parameter passed to glTex{,Sub}Image*D, usually one of the values from table 8.3 of the OpenGL 4.4 specification [OPENGL44] (RGB, RGBA, BGRA, etc.)</description>
+                    <fixedvalues>
+                        <fixedvalue name="Compressed" value="0x0"/>
+                        <fixedvalue name="GL_STENCIL_INDEX" value="0x1901"/>
+                        <fixedvalue name="GL_DEPTH_COMPONENT" value="0x1902"/>
+                        <fixedvalue name="GL_RED" value="0x1903"/>
+                        <fixedvalue name="GL_GREEN" value="0x1904"/>
+                        <fixedvalue name="GL_BLUE" value="0x1905"/>
+                        <fixedvalue name="GL_ALPHA" value="0x1906"/>
+                        <fixedvalue name="GL_RGB" value="0x1907"/>
+                        <fixedvalue name="GL_RGBA" value="0x1908"/>
+                        <fixedvalue name="GL_LUMINANCE" value="0x1909"/>
+                        <fixedvalue name="GL_LUMINANCE_ALPHA" value="0x190A"/>
+                    </fixedvalues>
+                </number>
+                <number name="glInternalFormat" id="16" fillcolor="FFB000" type="integer" length="4" display="hex">
+                    <description>For compressed textures, glInternalFormat must equal the compressed internal format, usually one of the values from table 8.14 of the OpenGL 4.4 specification [OPENGL44]. For uncompressed textures, glInternalFormat specifies the internalformat parameter passed to glTexStorage*D or glTexImage*D, usually one of the sized internal formats from tables 8.12 &amp; 8.13 of the OpenGL 4.4 specification [OPENGL44]. The sized format should be chosen to match the bit depth of the data provided. glInternalFormat is used when loading both compressed and uncompressed textures, except when loading into a context that does not support sized formats, such as an unextended OpenGL ES 2.0 context where the internalformat parameter is required to have the same value as the format parameter.</description>
+                    <fixedvalues>
+                        <fixedvalue name="GL_STENCIL_INDEX" value="0x1901"/>
+                        <fixedvalue name="GL_DEPTH_COMPONENT" value="0x1902"/>
+                        <fixedvalue name="GL_RED" value="0x1903"/>
+                        <fixedvalue name="GL_GREEN" value="0x1904"/>
+                        <fixedvalue name="GL_BLUE" value="0x1905"/>
+                        <fixedvalue name="GL_ALPHA" value="0x1906"/>
+                        <fixedvalue name="GL_RGB" value="0x1907"/>
+                        <fixedvalue name="GL_RGBA" value="0x1908"/>
+                        <fixedvalue name="GL_LUMINANCE" value="0x1909"/>
+                        <fixedvalue name="GL_LUMINANCE_ALPHA" value="0x190A"/>
+                        <fixedvalue name="GL_RGBA32UI" value="0x8D70"/>
+                        <fixedvalue name="GL_RGB32UI" value="0x8D71"/>
+                        <fixedvalue name="GL_RGBA16UI" value="0x8D76"/>
+                        <fixedvalue name="GL_RGB16UI" value="0x8D77"/>
+                        <fixedvalue name="GL_RGBA8UI" value="0x8D7C"/>
+                        <fixedvalue name="GL_RGB8UI" value="0x8D7D"/>
+                        <fixedvalue name="GL_RGBA32I" value="0x8D82"/>
+                        <fixedvalue name="GL_RGB32I" value="0x8D83"/>
+                        <fixedvalue name="GL_RGBA16I" value="0x8D88"/>
+                        <fixedvalue name="GL_RGB16I" value="0x8D89"/>
+                        <fixedvalue name="GL_RGBA8I" value="0x8D8E"/>
+                        <fixedvalue name="GL_RGB8I" value="0x8D8F"/>
+                        <fixedvalue name="COMPRESSED_RGB8_ETC2" value="0x9274"/>
+                        <fixedvalue name="COMPRESSED_SRGB8_ETC2" value="0x9275"/>
+                        <fixedvalue name="COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_ETC2" value="0x9276"/>
+                        <fixedvalue name="COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2" value="0x9277"/>
+                        <fixedvalue name="COMPRESSED_RGBA8_ETC2_EAC" value="0x9278"/>
+                        <fixedvalue name="COMPRESSED_SRGB8_ALPHA8_ETC2_EAC" value="0x9279"/>
+                        <fixedvalue name="COMPRESSED_R11_EAC" value="0x9270"/>
+                        <fixedvalue name="COMPRESSED_SIGNED_R11_EAC" value="0x9271"/>
+                        <fixedvalue name="COMPRESSED_RG11_EAC" value="0x9272"/>
+                        <fixedvalue name="COMPRESSED_SIGNED_RG11_EAC" value="0x9273"/>
+                        <fixedvalue name="ETC1_RGB8_OES" value="0x8D64"/>
+                    </fixedvalues>
+                </number>
+                <number name="glBaseInternalFormat" id="17" fillcolor="C68400" type="integer" length="4" display="hex">
+                    <description>For both compressed and uncompressed textures, glBaseInternalFormat specifies the base internal format of the texture, usually one of the values from table 8.11 of the OpenGL 4.4 specification [OPENGL44] (RGB, RGBA, ALPHA, etc.). For uncompressed textures, this value will be the same as glFormat and is used as the internalformat parameter when loading into a context that does not support sized formats, such as an unextended OpenGL ES 2.0 context.</description>
+                    <fixedvalues>
+                        <fixedvalue name="GL_STENCIL_INDEX" value="0x1901"/>
+                        <fixedvalue name="GL_DEPTH_COMPONENT" value="0x1902"/>
+                        <fixedvalue name="GL_RED" value="0x1903"/>
+                        <fixedvalue name="GL_GREEN" value="0x1904"/>
+                        <fixedvalue name="GL_BLUE" value="0x1905"/>
+                        <fixedvalue name="GL_ALPHA" value="0x1906"/>
+                        <fixedvalue name="GL_RGB" value="0x1907"/>
+                        <fixedvalue name="GL_RGBA" value="0x1908"/>
+                        <fixedvalue name="GL_LUMINANCE" value="0x1909"/>
+                        <fixedvalue name="GL_LUMINANCE_ALPHA" value="0x190A"/>
+                    </fixedvalues>
+                </number>
+                <number name="pixelWidth" id="18" fillcolor="FF272E" type="integer" length="4">
+                    <description>The size of the texture image for level 0, in pixels. No rounding to block sizes should be applied for block compressed textures.
+
+For 1D textures pixelHeight and pixelDepth must be 0. For 2D and cube textures pixelDepth must be 0.</description>
+                    <fixedvalues>
+                        <fixedvalue value="65536"/>
+                    </fixedvalues>
+                </number>
+                <number name="pixelHeight" id="19" fillcolor="00E800" type="integer" length="4">
+                    <fixedvalues>
+                        <fixedvalue value="65536"/>
+                    </fixedvalues>
+                </number>
+                <number name="pixelDepth" id="20" fillcolor="0C32FF" type="integer" length="4">
+                    <fixedvalues>
+                        <fixedvalue value="0"/>
+                    </fixedvalues>
+                </number>
+                <number name="numberOfArrayElements" id="21" fillcolor="DB35D7" type="integer" length="4">
+                    <description>numberOfArrayElements specifies the number of array elements. If the texture is not an array texture, numberOfArrayElements must equal 0.
+
+</description>
+                    <fixedvalues>
+                        <fixedvalue value="0"/>
+                    </fixedvalues>
+                </number>
+                <number name="numberOfFaces" id="22" fillcolor="FF40FD" type="integer" length="4">
+                    <description>numberOfFaces specifies the number of cubemap faces. For cubemaps and cubemap arrays this should be 6. For non cubemaps this should be 1. Cube map faces are stored in the order: +X, -X, +Y, -Y, +Z, -Z.</description>
+                    <fixedvalues>
+                        <fixedvalue value="100663296"/>
+                    </fixedvalues>
+                </number>
+                <number name="numberOfMipmapLevels" id="23" fillcolor="DB35D7" type="integer" length="4">
+                    <description>numberOfMipmapLevels must equal 1 for non-mipmapped textures. For mipmapped textures, it equals the number of mipmaps. Mipmaps are stored in order from largest size to smallest size. The first mipmap level is always level 0. A KTX file does not need to contain a complete mipmap pyramid. If numberOfMipmapLevels equals 0, it indicates that a full mipmap pyramid should be generated from level 0 at load time (this is usually not allowed for compressed formats).</description>
+                    <fixedvalues>
+                        <fixedvalue value="117440512"/>
+                    </fixedvalues>
+                </number>
+                <number name="bytesOfKeyValueData" id="24" fillcolor="FF40FD" type="integer" length="4" display="hex">
+                    <description>An arbitrary number of key/value pairs may follow the header. This can be used to encode any arbitrary data. The bytesOfKeyValueData field indicates the total number of bytes of key/value data including all keyAndValueByteSize fields, all keyAndValue fields, and all valuePadding fields. The file offset of the first imageSize field is located at the file offset of the bytesOfKeyValueData field plus the value of the bytesOfKeyValueData field plus 4.</description>
+                </number>
+            </structure>
+            <structure name="keyAndValues" id="33" length="bytesOfKeyValueData">
+                <description>keyAndValue contains 2 separate sections. First it contains a key encoded in UTF-8. The key must be terminated by a NUL character (a single 0x00 byte). Keys that begin with the 3 ascii characters 'KTX' or 'ktx' are reserved and must not be used except as described by this spec (this version of the KTX spec defines a single key). Immediately following the NUL character that terminates the key is the Value data.
+
+The Value data may consist of any arbitrary data bytes. Any byte value is allowed. It is encouraged that the value be a NUL terminated UTF-8 string, but this is not required. If the Value data is binary, it is a sequence of bytes rather than of words. It is up to the vendor defining the key to specify how those bytes are to be interpreted (including the endianness of any encoded numbers). If the Value data is a string of bytes then the NUL termination should be included in the keyAndValueByteSize byte count (but programs that read KTX files must not rely on this).</description>
+                <structure name="keyAndValue" id="35" alignment="4" repeatmax="unlimited">
+                    <number name="keyAndValueByteSize" id="37" fillcolor="0C32FF" type="integer" length="4"/>
+                    <structure name="keyAndValue" id="40" length="keyAndValueByteSize">
+                        <string name="Key" id="39" type="zero-terminated"/>
+                        <string name="Value" id="43" type="zero-terminated"/>
+                    </structure>
+                </structure>
+            </structure>
+            <structure name="MipMaps" id="27" alignment="4" repeatmin="numberOfMipmapLevels" repeatmax="numberOfMipmapLevels">
+                <number name="imageSize" id="29" fillcolor="FF6600" type="integer" length="4"/>
+                <binary name="imageData" id="32" fillcolor="FFB000" repeatmax="numberOfFaces" length="imageSize"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>
