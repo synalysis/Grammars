@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.17">
+    <grammar name="ASTC grammar" start="id:109" author="Szasz, Pal" fileextension="astc">
+        <description>Grammar for ASTC files
+
+See: https://en.wikipedia.org/wiki/Adaptive_Scalable_Texture_Compression</description>
+        <structure name="ASTC file" id="109" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Header" id="111">
+                <number name="magic" mustmatch="yes" id="113" fillcolor="DB35D7" type="integer" length="4" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="magic" value="0x5CA1AB13"/>
+                    </fixedvalues>
+                </number>
+                <number name="blockdim_x" id="114" fillcolor="FF272E" type="integer" length="1">
+                    <description>Encoding block width</description>
+                </number>
+                <number name="blockdim_y" id="115" fillcolor="00E800" type="integer" length="1">
+                    <description>Encoding block height</description>
+                </number>
+                <number name="blockdim_z" id="116" fillcolor="0C32FF" type="integer" length="1">
+                    <description>Encoding block depth</description>
+                </number>
+                <number name="xsize" id="117" fillcolor="FF272E" type="integer" length="3">
+                    <description>Image width</description>
+                </number>
+                <number name="ysize" id="118" fillcolor="00E800" type="integer" length="3">
+                    <description>Image height</description>
+                </number>
+                <number name="zsize" id="119" fillcolor="0C32FF" type="integer" length="3">
+                    <description>Image depth</description>
+                </number>
+            </structure>
+            <binary name="Payload" id="120" fillcolor="FFB000" length="remaining">
+                <description>Image data</description>
+            </binary>
+        </structure>
+    </grammar>
+</ufwb>
