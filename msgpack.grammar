@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.20">
+    <grammar name="Messagepack" start="id:1" author="Johannes Schriewer" email="j.schriewer@anfe.ma" uti="public.data" complete="yes">
+        <description>Messagepack grammar</description>
+        <structure name="MSGPack" id="2" repeatmin="0" encoding="UTF-8" endian="big" signed="no" order="variable">
+            <structure name="positive_fixint" id="3" repeatmin="0" fillcolor="DDDCFF">
+                <binary name="header" mustmatch="yes" id="4" length="1" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="00"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Value" id="5" type="integer" length="7" lengthunit="bit"/>
+            </structure>
+            <structure name="fixmap" id="7" repeatmin="0" strokecolor="287C47">
+                <binary name="header" mustmatch="yes" id="8" length="4" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="08"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="433" type="integer" length="4" lengthunit="bit"/>
+                <structref name="Property" id="434" repeatmin="Length" repeatmax="Length" structure="id:429"/>
+            </structure>
+            <structure name="fixarray" id="10" repeatmin="0" strokecolor="3E39B1">
+                <binary name="header" mustmatch="yes" id="11" length="4" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="09"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="419" type="integer" length="4" lengthunit="bit"/>
+                <structref name="Item" id="420" repeatmin="Length" repeatmax="Length" structure="id:2"/>
+            </structure>
+            <structure name="fixstr" id="13" repeatmin="0" fillcolor="FFD3D4">
+                <binary name="header" mustmatch="yes" id="14" length="3" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="05"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="405" type="integer" length="5" lengthunit="bit"/>
+                <string name="Value" id="406" type="fixed-length" length="Length"/>
+            </structure>
+            <structure name="nil" id="16" repeatmin="0" fillcolor="EDEDED">
+                <binary name="header" mustmatch="yes" id="17" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="C0"/>
+                    </fixedvalues>
+                </binary>
+            </structure>
+            <structure name="false" id="19" repeatmin="0" fillcolor="EDEDED">
+                <binary name="header" mustmatch="yes" id="20" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="C2"/>
+                    </fixedvalues>
+                </binary>
+            </structure>
+            <structure name="true" id="22" repeatmin="0" fillcolor="EDEDED">
+                <binary name="header" mustmatch="yes" id="23" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="C3"/>
+                    </fixedvalues>
+                </binary>
+            </structure>
+            <structure name="bin8" id="25" repeatmin="0">
+                <binary name="header" mustmatch="yes" id="26" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="C4"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="418" type="integer" length="1"/>
+                <binary name="Value" id="417" length="Length"/>
+            </structure>
+            <structure name="bin16" id="28" repeatmin="0">
+                <binary name="header" mustmatch="yes" id="29" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="C5"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="416" type="integer" length="2"/>
+                <binary name="Value" id="415" length="Length"/>
+            </structure>
+            <structure name="bin32" id="31" repeatmin="0">
+                <binary name="header" mustmatch="yes" id="32" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="C6"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="413" type="integer" length="4"/>
+                <binary name="Value" id="414" length="Length"/>
+            </structure>
+            <structure name="ext8" id="34" repeatmin="0">
+                <binary name="header" mustmatch="yes" id="35" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="C7"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="436" type="integer" length="1"/>
+                <number name="Type" id="435" type="integer" length="1"/>
+                <binary name="Data" id="453" length="Length"/>
+            </structure>
+            <structure name="ext16" id="37" repeatmin="0">
+                <binary name="header" mustmatch="yes" id="38" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="C8"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="437" type="integer" length="2"/>
+                <number name="Type" id="438" type="integer" length="1"/>
+                <binary name="Data" id="454" length="Length"/>
+            </structure>
+            <structure name="ext32" id="40" repeatmin="0">
+                <binary name="header" mustmatch="yes" id="41" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="C9"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="439" type="integer" length="4"/>
+                <number name="Type" id="440" type="integer" length="1"/>
+                <binary name="Data" id="455" length="Length"/>
+            </structure>
+            <structure name="float32" id="43" repeatmin="0" fillcolor="D8FFDB">
+                <binary name="header" mustmatch="yes" id="44" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="CA"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Value" id="403" type="float" length="32" lengthunit="bit" signed="yes"/>
+            </structure>
+            <structure name="float64" id="46" repeatmin="0" fillcolor="D8FFDB">
+                <binary name="header" mustmatch="yes" id="47" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="CB"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Value" id="404" type="float" length="64" lengthunit="bit" signed="yes"/>
+            </structure>
+            <structure name="uint8" id="49" repeatmin="0" fillcolor="DDDCFF">
+                <binary name="header" mustmatch="yes" id="50" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="CC"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Value" id="395" type="integer" length="1"/>
+            </structure>
+            <structure name="uint16" id="52" repeatmin="0" fillcolor="DDDCFF">
+                <binary name="header" mustmatch="yes" id="53" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="CD"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Value" id="396" type="integer" length="2"/>
+            </structure>
+            <structure name="uint32" id="55" repeatmin="0" fillcolor="DDDCFF">
+                <binary name="header" mustmatch="yes" id="56" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="CE"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Value" id="397" type="integer" length="4"/>
+            </structure>
+            <structure name="uint64" id="58" repeatmin="0" fillcolor="DDDCFF">
+                <binary name="header" mustmatch="yes" id="59" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="CF"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Value" id="398" type="integer" length="8"/>
+            </structure>
+            <structure name="int8" id="61" repeatmin="0" fillcolor="DDDCFF">
+                <binary name="header" mustmatch="yes" id="62" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="D0"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Value" id="399" type="integer" length="1" signed="yes"/>
+            </structure>
+            <structure name="int16" id="64" repeatmin="0" fillcolor="DDDCFF">
+                <binary name="header" mustmatch="yes" id="65" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="D1"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Value" id="400" type="integer" length="2" signed="yes"/>
+            </structure>
+            <structure name="int32" id="67" repeatmin="0" fillcolor="DDDCFF">
+                <binary name="header" mustmatch="yes" id="68" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="D2"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Value" id="401" type="integer" length="4" signed="yes"/>
+            </structure>
+            <structure name="int64" id="70" repeatmin="0" fillcolor="DDDCFF">
+                <binary name="header" mustmatch="yes" id="71" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="D3"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Value" id="402" type="integer" length="8" signed="yes"/>
+            </structure>
+            <structure name="fixext1" id="73" repeatmin="0">
+                <binary name="header" mustmatch="yes" id="74" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="D4"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Type" id="442" type="integer" length="1"/>
+                <binary name="Data" id="445" length="1"/>
+            </structure>
+            <structure name="fixext2" id="76" repeatmin="0">
+                <binary name="header" mustmatch="yes" id="77" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="D5"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Type" id="444" type="integer" length="1"/>
+                <binary name="Data" id="446" length="2"/>
+            </structure>
+            <structure name="fixext4" id="79" repeatmin="0">
+                <binary name="header" mustmatch="yes" id="80" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="D6"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Type" id="448" type="integer" length="1"/>
+                <binary name="Data" id="447" length="4"/>
+            </structure>
+            <structure name="fixext8" id="82" repeatmin="0">
+                <binary name="header" mustmatch="yes" id="83" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="D7"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Type" id="450" type="integer" length="1"/>
+                <binary name="Data" id="449" length="8"/>
+            </structure>
+            <structure name="fixext16" id="85" repeatmin="0">
+                <binary name="header" mustmatch="yes" id="86" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="D8"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Type" id="452" type="integer" length="1"/>
+                <binary name="Data" id="451" length="16"/>
+            </structure>
+            <structure name="str8" id="88" repeatmin="0" fillcolor="FFD3D4">
+                <binary name="header" mustmatch="yes" id="89" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="D9"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="407" type="integer" length="1"/>
+                <string name="Value" id="408" type="fixed-length" length="Length"/>
+            </structure>
+            <structure name="str16" id="91" repeatmin="0" fillcolor="FFD3D4">
+                <binary name="header" mustmatch="yes" id="92" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="DA"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="410" type="integer" length="2"/>
+                <string name="Value" id="409" type="fixed-length" length="Length"/>
+            </structure>
+            <structure name="str32" id="94" repeatmin="0" fillcolor="FFD3D4">
+                <binary name="header" mustmatch="yes" id="95" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="DB"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="412" type="integer" length="4"/>
+                <string name="Value" id="411" type="fixed-length" length="Length"/>
+            </structure>
+            <structure name="array16" id="97" repeatmin="0" strokecolor="3E39B1">
+                <binary name="header" mustmatch="yes" id="98" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="DC"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="422" type="integer" length="2"/>
+                <structref name="Item" id="421" repeatmin="Length" repeatmax="Length" structure="id:2"/>
+            </structure>
+            <structure name="array32" id="100" repeatmin="0" strokecolor="3D39B1">
+                <binary name="header" mustmatch="yes" id="101" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="DD"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="424" type="integer" length="4"/>
+                <structref name="Item" id="423" repeatmin="Length" repeatmax="Length" structure="id:2"/>
+            </structure>
+            <structure name="map16" id="103" repeatmin="0" strokecolor="287C47">
+                <binary name="header" mustmatch="yes" id="104" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="DE"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="426" type="integer" length="2"/>
+                <structref name="Property" id="425" repeatmin="Length" repeatmax="Length" structure="id:429"/>
+            </structure>
+            <structure name="map32" id="106" repeatmin="0" strokecolor="287C47">
+                <binary name="header" mustmatch="yes" id="107" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="DF"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Length" id="428" type="integer" length="4"/>
+                <structref name="Property" id="427" repeatmin="Length" repeatmax="Length" structure="id:429"/>
+            </structure>
+            <structure name="negative_fixint" id="109" repeatmin="0">
+                <binary name="header" mustmatch="yes" id="110" length="3" lengthunit="bit">
+                    <fixedvalues>
+                        <fixedvalue name="header" value="07"/>
+                    </fixedvalues>
+                </binary>
+                <number name="Value" id="111" type="integer" length="5" lengthunit="bit" valueexpression="-Value"/>
+            </structure>
+        </structure>
+        <structure name="Property" id="429" length="0" repeatmin="0" consists-of="id:2" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="Name" id="431" structure="id:2"/>
+            <structref name="Value" id="432" structure="id:2"/>
+        </structure>
+        <structure name="Datastream" id="1" encoding="UTF-8" endian="big" signed="no" order="variable">
+            <structref name="MSGPack" id="456" strokecolor="FFFFFF" repeatmax="-1" structure="id:2"/>
+        </structure>
+    </grammar>
+</ufwb>
