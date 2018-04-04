@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.22">
+    <grammar name="ELF" start="id:1745" author="Rick Pontefract" email="rjpontefract@gmail.com" uti="public.data">
+        <description>A grammar for Executable and Linkable Format (ELF) files.  
+
+(This is a work in progress and may be incomplete or incorrect)</description>
+        <structure name="elf_file" id="1745" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="elf_header" id="1746" endian="dynamic">
+                <structure name="eh_ident" id="1747">
+                    <description>The initial bytes mark the file as an object file and provide machine-independent data with which to decode and interpret the file’s contents</description>
+                    <structure name="ei_magic" id="1748">
+                        <binary name="eim_mag_0" mustmatch="yes" id="1749" length="1">
+                            <fixedvalues>
+                                <fixedvalue name="elf_id" value="7F"/>
+                            </fixedvalues>
+                        </binary>
+                        <string name="eim_mag_1_3" id="1750" type="fixed-length" length="3"/>
+                    </structure>
+                    <number name="ei_class" id="1752" type="integer" length="1">
+                        <fixedvalues>
+                            <fixedvalue name="ELFCLASSNONE" value="0"/>
+                            <fixedvalue name="ELFCLASS32" value="1"/>
+                            <fixedvalue name="ELFCLASS64" value="2"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="ei_data" id="1753" type="integer" length="1">
+                        <fixedvalues>
+                            <fixedvalue name="ELFDATANONE" value="0"/>
+                            <fixedvalue name="ELFDATA2LSB" value="1"/>
+                            <fixedvalue name="ELFDATA2MSB" value="2"/>
+                        </fixedvalues>
+                    </number>
+                    <scriptelement name="set_endianness" id="1754">
+                        <script name="unnamed" type="Generic">
+                            <source language="Lua">results    = currentMapper:getCurrentResults()
+lastResult = results:getLastResult()
+value      = lastResult:getValue()
+num        = value:getUnsignedNumber()
+
+if (num == 1) then
+    currentMapper:setDynamicEndianness(synalysis.ENDIAN_LITTLE)
+	print &quot;Little Endian&quot;
+else
+    currentMapper:setDynamicEndianness(synalysis.ENDIAN_BIG)
+	print &quot;Big Endian&quot;
+end
+
+</source>
+                        </script>
+                    </scriptelement>
+                    <number name="ei_version" id="1755" type="integer" length="1">
+                        <fixedvalues>
+                            <fixedvalue name="EV_NONE" value="0"/>
+                            <fixedvalue name="EV_CURRENT" value="1"/>
+                        </fixedvalues>
+                    </number>
+                    <binary name="ei_os_abi" id="1756" length="1">
+                        <fixedvalues>
+                            <fixedvalue name="NSK" value="0E"/>
+                            <fixedvalue name="Linux" value="03"/>
+                        </fixedvalues>
+                    </binary>
+                    <binary name="ei_abi_version" id="1757" length="1">
+                        <fixedvalues>
+                            <fixedvalue name="version_1" value="01"/>
+                            <fixedvalue name="version_0" value="00"/>
+                        </fixedvalues>
+                    </binary>
+                    <binary name="ei_padding" id="1758" length="7">
+                        <description>NSX seems to shove some garbage in the padding which should according to the specifications be all 0x00.
+</description>
+                    </binary>
+                </structure>
+                <number name="eh_type" id="1760" type="integer" length="2" display="hex">
+                    <description>This member identifies the object file type.
+
+Although the core file contents are unspecified, type ET_CORE is reserved to mark the file. Values from ET_LOPROC through ET_HIPROC (inclusive) are reserved for processor-specific semantics. Other values are reserved and will be assigned to new object file types as necessary</description>
+                    <fixedvalues>
+                        <fixedvalue name="ET_NONE" value="0x0"/>
+                        <fixedvalue name="ET_REL" value="0x1"/>
+                        <fixedvalue name="ET_EXEC" value="0x2"/>
+                        <fixedvalue name="ET_DYN" value="0x3"/>
+                        <fixedvalue name="ET_CORE" value="0x4"/>
+                        <fixedvalue name="ET_LOPROC" value="0xFF00"/>
+                        <fixedvalue name="ET_HIPROC" value="0xFFFF"/>
+                    </fixedvalues>
+                </number>
+                <number name="eh_machine" id="1761" type="integer" length="2" display="hex">
+                    <description>This member’s value specifies the required architecture for an individual file.
+
+Other values are reserved and will be assigned to new machines as necessary. Processor-specific ELF names use the machine name to distinguish them. For example, the flags mentioned below use the prefix EF_; a flag named WIDGET for the EM_XYZ machine would be called EF_XYZ_WIDGET</description>
+                    <fixedvalues>
+                        <fixedvalue name="EM_NONE" value="0x0"/>
+                        <fixedvalue name="EM_M32" value="0x1"/>
+                        <fixedvalue name="EM_SPARC" value="0x2"/>
+                        <fixedvalue name="EM_386" value="0x3"/>
+                        <fixedvalue name="EM_68K" value="0x4"/>
+                        <fixedvalue name="EM_88K" value="0x5"/>
+                        <fixedvalue name="EM_860" value="0x7"/>
+                        <fixedvalue name="EM_MIPS" value="0x8"/>
+                        <fixedvalue name="EM_X86_64" value="0x3E"/>
+                    </fixedvalues>
+                </number>
+                <number name="eh_version" id="1762" type="integer" length="4">
+                    <description>This member identifies the object file version.
+
+The value 1 signifies the original file format; extensions will create new versions with higher numbers. The value of EV_CURRENT, though given as 1 above, will change as necessary to reflect the current version number</description>
+                    <fixedvalues>
+                        <fixedvalue name="EV_NONE" value="0"/>
+                        <fixedvalue name="EV_CURRENT" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="eh_entry" id="1763" type="integer" length="4 * ei_class" display="hex"/>
+                <offset name="eh_phoff" id="1765" length="4 * ei_class" references="id:1764" follownullreference="no"/>
+                <offset name="eh_shoff" id="1767" length="4 * ei_class" references="id:1766" follownullreference="no"/>
+                <binary name="eh_flags" id="1768" length="4"/>
+                <number name="eh_ehsize" id="1769" type="integer" length="2"/>
+                <number name="eh_phentsize" id="1770" type="integer" length="2"/>
+                <number name="eh_phnum" id="1771" type="integer" length="2"/>
+                <number name="eh_shentsize" id="1772" type="integer" length="2"/>
+                <number name="eh_shnum" id="1773" type="integer" length="2"/>
+                <number name="eh_shstrndx" id="1774" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="program_headers" id="1764" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="program_header" id="1777" length="eh_phentsize" repeatmax="eh_phnum" encoding="ISO_8859-1:1987" endian="dynamic" signed="no">
+                <number name="ph_type" id="1778" type="integer" length="4" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="PT_NULL" value="0x0"/>
+                        <fixedvalue name="PT_LOAD" value="0x1"/>
+                        <fixedvalue name="PT_DYNAMIC" value="0x2"/>
+                        <fixedvalue name="PT_INTERP" value="0x3"/>
+                        <fixedvalue name="PT_NOTE" value="0x4"/>
+                        <fixedvalue name="PT_SHLIB" value="0x5"/>
+                        <fixedvalue name="PT_PHDR" value="0x6"/>
+                        <fixedvalue name="PT_LOPROC" value="0x70000000"/>
+                        <fixedvalue name="PT_HIPROC" value="0x7FFFFFFF"/>
+                    </fixedvalues>
+                </number>
+                <number name="ph_flags" id="1779" type="integer" length="4" display="hex">
+                    <mask name="flags" value="0xFF">
+                        <fixedvalue name="PF_X" value="0x1"/>
+                        <fixedvalue name="PF_W" value="0x2"/>
+                        <fixedvalue name="PF_R" value="0x4"/>
+                    </mask>
+                </number>
+                <offset name="ph_offset" id="1781" length="4 * ei_class" references="id:1780" referenced-size="id:1784" follownullreference="no" display="decimal"/>
+                <number name="ph_vaddr" id="1782" type="integer" length="4 * ei_class" display="hex"/>
+                <number name="ph_paddr" id="1783" type="integer" length="4 * ei_class" display="hex"/>
+                <number name="ph_filesz" id="1784" type="integer" length="4 * ei_class"/>
+                <number name="ph_memsz" id="1785" type="integer" length="4 * ei_class"/>
+                <number name="ph_align" id="1786" type="integer" length="4 * ei_class"/>
+            </structure>
+        </structure>
+        <structure name="program_segments" id="1780" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="p_segment" id="1789" length="ph_filesz"/>
+        </structure>
+        <structure name="section_headers" id="1766" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="section_header" id="1791" length="eh_shentsize" repeatmax="eh_shnum" encoding="ISO_8859-1:1987" endian="dynamic" signed="no">
+                <number name="sh_name" id="1792" type="integer" length="4"/>
+                <number name="sh_type" id="1793" type="integer" length="4" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="SHT_NULL" value="0x0"/>
+                        <fixedvalue name="SHT_PROGBITS" value="0x1"/>
+                        <fixedvalue name="SHT_SYMTAB" value="0x2"/>
+                        <fixedvalue name="SHT_STRTAB" value="0x3"/>
+                        <fixedvalue name="SHT_RELA" value="0x4"/>
+                        <fixedvalue name="SHT_HASH" value="0x5"/>
+                        <fixedvalue name="SHT_DYNAMIC" value="0x6"/>
+                        <fixedvalue name="SHT_NOTE" value="0x7"/>
+                        <fixedvalue name="SHT_NOBITS" value="0x8"/>
+                        <fixedvalue name="SHT_REL" value="0x9"/>
+                        <fixedvalue name="SHT_SHLIB" value="0xA"/>
+                        <fixedvalue name="SHT_DYNSYM" value="0xB"/>
+                        <fixedvalue name="SHT_LOOS" value="0x6000000"/>
+                        <fixedvalue name="SHT_HIOS" value="0x6FFFFFFF"/>
+                        <fixedvalue name="SHT_LOPROC" value="0x70000000"/>
+                        <fixedvalue name="SHT_HIPROC" value="0x7FFFFFFF"/>
+                    </fixedvalues>
+                </number>
+                <binary name="sh_flags" id="1794" length="4 * ei_class"/>
+                <number name="sh_address" id="1795" type="integer" length="4 * ei_class" display="hex"/>
+                <offset name="sh_offset" id="1797" length="4 * ei_class" references="id:1796" follownullreference="yes"/>
+                <number name="sh_size" id="1798" type="integer" length="4 * ei_class"/>
+                <number name="sh_link" id="1799" type="integer" length="4"/>
+                <binary name="sh_info" id="1800" length="4"/>
+                <number name="sh_addralign" id="1801" type="integer" length="4 * ei_class"/>
+                <number name="sh_entzise" id="1802" type="integer" length="4 * ei_class"/>
+            </structure>
+        </structure>
+        <structure name="section_contents" id="1796" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="section_content" id="1805" length="sh_size"/>
+        </structure>
+    </grammar>
+</ufwb>
