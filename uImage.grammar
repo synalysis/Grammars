@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.17">
+    <grammar name="uImage" start="id:10" author="Lukas Kuzmiak" email="lukash@backstep.net">
+        <structure name="Defaults" id="11" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+        <structure name="Header" id="13" consists-of="id:11" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <binary name="ImageHeaderMagicNumber" id="14" fillcolor="55FFF1" length="4">
+                <fixedvalues>
+                    <fixedvalue name="Image Header Magic Number" value="27051956"/>
+                </fixedvalues>
+            </binary>
+            <binary name="ImageHeaderCRCChecksum" id="15" fillcolor="FF7D6D" length="4"/>
+            <number name="ImageCreationTimestamp" id="16" fillcolor="77FFB1" type="integer" length="4"/>
+            <number name="ImageDataSize" id="17" fillcolor="FFEB83" type="integer" length="4"/>
+            <binary name="DataLoadAddress" id="18" fillcolor="C4C9FF" length="4"/>
+            <binary name="EntryPointAddress" id="19" fillcolor="FFB0FF" length="4"/>
+            <binary name="ImageDataCRCChecksum" id="20" fillcolor="FF75AB" length="4"/>
+            <number name="OperatingSystem" id="21" fillcolor="88FFF7" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Linux" value="5"/>
+                    <fixedvalue name="SVR4" value="6"/>
+                    <fixedvalue name="Esix" value="7"/>
+                    <fixedvalue name="Solaris" value="8"/>
+                    <fixedvalue name="Irix" value="9"/>
+                    <fixedvalue name="SCO" value="10"/>
+                    <fixedvalue name="Dell" value="11"/>
+                    <fixedvalue name="NCR" value="12"/>
+                    <fixedvalue name="LynxOS" value="13"/>
+                    <fixedvalue name="VxWorks" value="14"/>
+                    <fixedvalue name="pSOS" value="15"/>
+                    <fixedvalue name="QNX" value="16"/>
+                    <fixedvalue name="Firmware" value="17"/>
+                    <fixedvalue name="RTEMS" value="18"/>
+                    <fixedvalue name="ARTOS" value="19"/>
+                    <fixedvalue name="Unity OS" value="20"/>
+                    <fixedvalue name="INTEGRITY" value="21"/>
+                    <fixedvalue name="Invalid OS" value="0"/>
+                    <fixedvalue name="OpenBSD" value="1"/>
+                    <fixedvalue name="NetBSD" value="2"/>
+                    <fixedvalue name="FreeBSD" value="3"/>
+                    <fixedvalue name="4.4BSD" value="4"/>
+                </fixedvalues>
+            </number>
+            <number name="CPUarchitecture" id="22" fillcolor="88FF86" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Alpha" value="1"/>
+                    <fixedvalue name="ARM" value="2"/>
+                    <fixedvalue name="Intel x86" value="3"/>
+                    <fixedvalue name="IA64" value="4"/>
+                    <fixedvalue name="MIPS" value="5"/>
+                    <fixedvalue name="MIPS 64 Bit" value="6"/>
+                    <fixedvalue name="PowerPC" value="7"/>
+                    <fixedvalue name="IBM S390" value="8"/>
+                    <fixedvalue name="SuperH" value="9"/>
+                    <fixedvalue name="Sparc" value="10"/>
+                    <fixedvalue name="Sparc 64 Bit" value="11"/>
+                    <fixedvalue name="M68K" value="12"/>
+                    <fixedvalue name="Nios-32" value="13"/>
+                    <fixedvalue name="MicroBlaze" value="14"/>
+                    <fixedvalue name="Nios-II" value="15"/>
+                    <fixedvalue name="Blackfin" value="16"/>
+                    <fixedvalue name="AVR32" value="17"/>
+                    <fixedvalue name="STMicroelectronics ST200" value="18"/>
+                    <fixedvalue name="Invalid CPU" value="0"/>
+                </fixedvalues>
+            </number>
+            <number name="ImageType" id="23" fillcolor="F2FF6D" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Invalid Image" value="0"/>
+                    <fixedvalue name="Standalone Program" value="1"/>
+                    <fixedvalue name="OS Kernel Image" value="2"/>
+                    <fixedvalue name="RAMDisk Image" value="3"/>
+                    <fixedvalue name="Multi-File Image" value="4"/>
+                    <fixedvalue name="Firmware Image" value="5"/>
+                    <fixedvalue name="Script file" value="6"/>
+                    <fixedvalue name="Filesystem Image (any type)" value="7"/>
+                    <fixedvalue name="Binary Flat Device Tree Blob" value="8"/>
+                    <fixedvalue name="Kirkwood Boot Image" value="9"/>
+                    <fixedvalue name="Freescale IMXBoot Image" value="10"/>
+                </fixedvalues>
+            </number>
+            <number name="CompressionType" id="24" fillcolor="FF857B" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="No Compression" value="0"/>
+                    <fixedvalue name="gzip" value="1"/>
+                    <fixedvalue name="bzip2" value="2"/>
+                    <fixedvalue name="lzma" value="3"/>
+                    <fixedvalue name="lzo" value="4"/>
+                </fixedvalues>
+            </number>
+            <string name="ImageName" id="25" fillcolor="D6D28A" type="fixed-length" length="32"/>
+        </structure>
+        <structure name="uImage" id="10" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="Header" id="27" structure="id:13"/>
+            <binary name="ImageData" id="28" length="ImageDataSize"/>
+        </structure>
+    </grammar>
+</ufwb>
