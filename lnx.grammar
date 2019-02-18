@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.22">
+    <grammar name="LNX grammar" start="id:2" author="Brian Hall" email="bhall@markspace.com" fileextension="lnx">
+        <description>Grammar for Atari Lynx LNX files</description>
+        <structure name="LNX file" id="2" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="EXEHDR" id="4" length="59">
+                <number name="Magic - LYNX" id="6" type="integer" length="4" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="Magic" value="0x4C594E58"/>
+                    </fixedvalues>
+                </number>
+                <number name="Bank 0 Page Size" id="7" type="integer" length="2" display="hex"/>
+                <number name="Bank 1 Page Size" id="8" type="integer" length="2" display="hex"/>
+                <number name="Version" id="9" type="integer" length="2"/>
+                <string name="Cart Name (ASCIIZ)" id="10" type="fixed-length" length="31"/>
+                <structure name="C Name Null" id="13" valueexpression="0"/>
+                <string name="Manufacturer Name (ASCIIZ)" id="11" type="fixed-length" length="15"/>
+                <structure name="M Name Null" id="15" valueexpression="0"/>
+                <number name="Rotation" id="12" type="integer" length="1" display="hex">
+                    <fixedvalues>
+                        <fixedvalue name="None" value="0x0"/>
+                        <fixedvalue name="Left" value="0x1"/>
+                        <fixedvalue name="Right" value="0x2"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>
