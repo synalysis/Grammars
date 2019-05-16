@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.9">
+    <grammar name="Ducati DDA (GPS + Analog)" start="id:13" author="Jack Perry" email="jack.perry@me.com" fileextension="dda" uti="com.ducati.dda" complete="yes">
+        <description>Grammar for DDA GPS+ file format</description>
+        <scripts>
+            <script name="HexStringLength" type="DataType" id="25">
+                <description>This scripted data type interprets a hex string of characters ended with 0x0a as a number that can be used as length</description>
+                <source language="Python"># custom data type script
+
+def parseByteRange(element, byteView, bitPos, bitLength, results):
+	# this method parses data starting at bitPos, bitLength bits are remaining
+	&quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
+
+	# how many bytes were processed?
+	processedBytes = 0
+	iteration = 0
+	byteRead = 0
+	hexString = &quot;&quot;
+	startPos = bytePos = bitPos / 8
+
+	# read hex bytes unless \n is found
+	while (byteRead != 0x0A):
+		byteRead = byteView.readByte(bytePos)
+		bytePos += 1
+		if ((byteRead &gt;= ord('0') and byteRead &lt;= ord('9')) or \
+			(byteRead &gt;= ord('A') and byteRead &lt;= ord('F')) or \
+			(byteRead &gt;= ord('a') and byteRead &lt;= ord('f'))   ):
+				hexString += chr(byteRead)
+
+	processedBytes = bytePos - startPos
+
+	if (hexString != &quot;&quot;):
+		sum = int(hexString, 16)
+
+	# create and set new value
+	value = NumberValue()
+	value.setUnsigned(sum)
+
+	results.addElement(element, processedBytes, iteration, value)
+
+	# return number of processed bytes
+	return processedBytes
+
+def fillByteRange(value, byteArray, bitPos, bitLength):
+	# this method translates edited values back to the file
+	&quot;&quot;&quot;fillByteRange method&quot;&quot;&quot;
+
+	# get number edited by user
+	number = value.getUnsigned()
+
+	# hex string representation of edited number
+	hexString = &quot;%x&quot;%(number)
+
+	currentPos = startPos = bitPos/8
+
+	# remove old hex string
+	byteArray.deleteRange(startPos, bitLength/8)
+
+	# insert hex string in file
+	for digit in hexString:
+		byteArray.insertByte(currentPos, ord(digit))
+		currentPos += 1
+
+	# append trailing 0x0A
+	byteArray.insertByte(currentPos, ord('\n'))
+</source>
+            </script>
+        </scripts>
+        <structure name="DDA File" id="13" encoding="UTF-8" endian="little" signed="no">
+            <structref name="File Header" id="15" fillcolor="FF6314" structure="id:14"/>
+            <structref name="XML Header" id="17" fillcolor="0001FF" structure="id:16"/>
+            <structref name="Data Entries" id="19" fillcolor="00FF01" structure="id:18"/>
+        </structure>
+        <structure name="Header" id="14" length="430" repeatmin="0" encoding="ISO_8859-1:1987" endian="big" signed="no" fillcolor="000000">
+            <structure name="Common Data" id="21" length="32" consists-of="id:14" strokecolor="FF00DE" fillcolor="000000">
+                <number name="ddaVersion" id="22" fillcolor="0BFF00" type="integer" length="2"/>
+                <string name="DDA" id="23" fillcolor="09FFFB" type="zero-terminated"/>
+            </structure>
+            <structure name="ACQ?" id="25" length="10" consists-of="id:14" fillcolor="000000">
+                <string name="ACQ" id="26" fillcolor="FF0900" type="zero-terminated"/>
+                <string name="Test?" id="27" fillcolor="FA08FF" type="fixed-length" length="4"/>
+            </structure>
+            <structure name="Metadata" id="29" length="0" consists-of="id:14" strokecolor="FFF300" fillcolor="000000">
+                <string name="locationName" id="30" fillcolor="FF0E00" repeatmin="0" type="fixed-length" length="64"/>
+                <string name="riderName" id="31" fillcolor="FF1D00" type="fixed-length" length="16"/>
+                <binary name="padding" id="32" fillcolor="000000" length="211"/>
+                <string name="motorcycleVariant" id="33" fillcolor="FF0004" type="fixed-length" length="64"/>
+                <binary name="padding-1" id="34" fillcolor="000000" length="32"/>
+                <number name="xmlHeaderEntries" id="35" fillcolor="00FF08" type="integer" length="1"/>
+            </structure>
+        </structure>
+        <structure name="XML Header" id="16" encoding="ISO_8859-1:1987" endian="big" signed="no" strokecolor="FCFF00" fillcolor="F5FF00">
+            <structure name="Entry" id="38" length="80" repeatmax="xmlHeaderEntries" consists-of="id:16">
+                <string name="Data Name XML Format" id="39" fillcolor="FF8197" type="fixed-length" length="16"/>
+                <binary name="unkown-padding" id="40" fillcolor="000000" length="6"/>
+                <string name="Data Name Human Readable" id="41" fillcolor="DB92FF" type="fixed-length" length="58"/>
+            </structure>
+        </structure>
+        <structure name="Data Entries" id="18" encoding="ISO_8859-1:1987" endian="big" signed="no" fillcolor="00FF19">
+            <structure name="Entry" id="44" repeatmax="100" consists-of="id:18" strokecolor="FF0400" fillcolor="E3FF00">
+                <structure name="00Hz" id="45" fillcolor="00FFFF">
+                    <structref name="speed" id="47" structure="id:46"/>
+                    <structref name="rpm" id="49" structure="id:48"/>
+                    <structref name="temperature" id="51" structure="id:50"/>
+                    <structref name="throttle" id="53" structure="id:52"/>
+                    <structref name="distance" id="55" structure="id:54"/>
+                    <structref name="gear" id="57" structure="id:56"/>
+                    <structref name="lean" id="59" structure="id:58"/>
+                    <structref name="dtc" id="61" structure="id:60"/>
+                    <structref name="gps" id="63" structure="id:62"/>
+                    <structref name="lap" id="65" structure="id:64"/>
+                </structure>
+                <structure name="10Hz" id="67"/>
+                <structure name="20Hz" id="69" fillcolor="FF9500">
+                    <structref name="rpm" id="70" structure="id:48"/>
+                </structure>
+                <structure name="30Hz" id="72"/>
+                <structure name="40Hz" id="74" fillcolor="00FF11">
+                    <structref name="rpm" id="75" structure="id:48"/>
+                </structure>
+                <structure name="50Hz" id="77" fillcolor="E8FF00">
+                    <structref name="throttle" id="78" structure="id:52"/>
+                    <structref name="lean" id="79" structure="id:58"/>
+                    <structref name="dtc" id="80" structure="id:60"/>
+                </structure>
+                <structure name="60Hz" id="82" fillcolor="FF0090">
+                    <structref name="rpm" id="83" structure="id:48"/>
+                </structure>
+                <structure name="70Hz" id="85"/>
+                <structure name="80Hz" id="87" fillcolor="6900FF">
+                    <structref name="rpm" id="88" structure="id:48"/>
+                </structure>
+                <structure name="90Hz" id="90"/>
+                <structure name="100Hz" id="92" fillcolor="FF0018">
+                    <structref name="speed" id="93" structure="id:46"/>
+                    <structref name="rpm" id="94" structure="id:48"/>
+                    <structref name="temperature" id="95" structure="id:50"/>
+                    <structref name="throttle" id="96" structure="id:52"/>
+                    <structref name="gear" id="97" structure="id:56"/>
+                    <structref name="lean" id="98" structure="id:58"/>
+                    <structref name="dtc" id="99" structure="id:60"/>
+                    <structref name="gps" id="100" structure="id:62"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="speed" id="46" length="2" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="speed" id="104" type="integer" length="2"/>
+        </structure>
+        <structure name="rpm" id="48" length="2" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="rpm" id="106" type="integer" length="2"/>
+        </structure>
+        <structure name="temperature" id="50" length="1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="temperature" id="108" type="integer" length="1"/>
+        </structure>
+        <structure name="throttle" id="52" length="1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="throttle" id="110" type="integer" length="1"/>
+        </structure>
+        <structure name="distance" id="54" length="3" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="distance" id="112" type="integer" length="3"/>
+        </structure>
+        <structure name="gear" id="56" length="1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="gear" id="114" type="integer" length="1"/>
+        </structure>
+        <structure name="lean" id="58" length="2" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="lean" id="116" type="integer" length="2"/>
+        </structure>
+        <structure name="dtc" id="60" length="1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="dtc" id="118" type="integer" length="1"/>
+        </structure>
+        <structure name="gps" id="62" length="10" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="altitude" id="120" type="integer" length="16" lengthunit="bit" signed="yes"/>
+            <number name="longitude" id="121" type="integer" length="32" lengthunit="bit" signed="yes"/>
+            <number name="latitude" id="122" type="integer" length="32" lengthunit="bit" signed="yes"/>
+        </structure>
+        <structure name="lap" id="64" length="1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="lap" id="124" type="integer" length="1"/>
+        </structure>
+    </grammar>
+</ufwb>
