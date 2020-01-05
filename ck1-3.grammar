@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.23.4">
+    <grammar name="CK1, CK2, CK3 grammar" start="id:401" author="Mario Lacko" email="mario.lacko@me.com" fileextension="CK?">
+        <description>Grammar for CK1, CK2 and CK3 files. Save game files for game Commander Keen 1 - 3.</description>
+        <structure name="CK1-3 file" id="401" length="92" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="Items" id="419">
+                <number name="gotBattery" id="402" fillcolor="FF89D8" type="integer" length="2" minval="0" maxval="1">
+                    <fixedvalues>
+                        <fixedvalue name="No" value="0"/>
+                        <fixedvalue name="Yes" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="gotVacuum" id="404" fillcolor="FF84FF" type="integer" length="2" minval="0" maxval="1">
+                    <fixedvalues>
+                        <fixedvalue name="No" value="0"/>
+                        <fixedvalue name="Yes" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="gotJoystick" id="405" fillcolor="D783FF" type="integer" length="2" minval="0" maxval="1">
+                    <fixedvalues>
+                        <fixedvalue name="No" value="0"/>
+                        <fixedvalue name="Yes" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="gotPogo" id="408" fillcolor="7980FF" type="integer" length="2" minval="0" maxval="1">
+                    <fixedvalues>
+                        <fixedvalue name="No" value="0"/>
+                        <fixedvalue name="Yes" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="gotWhiskey" id="409" fillcolor="75D5FF" type="integer" length="2" minval="0" maxval="1">
+                    <fixedvalues>
+                        <fixedvalue name="No" value="0"/>
+                        <fixedvalue name="Yes" value="1"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+            <structure name="Keycards" id="422">
+                <number name="gotKeycardR" id="410" fillcolor="FF2600" type="integer" length="2" minval="0" maxval="1">
+                    <fixedvalues>
+                        <fixedvalue name="No" value="0"/>
+                        <fixedvalue name="Yes" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="gotKeycardG" id="411" fillcolor="00F900" type="integer" length="2" minval="0" maxval="1">
+                    <fixedvalues>
+                        <fixedvalue name="No" value="0"/>
+                        <fixedvalue name="Yes" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="gotKeycardB" id="412" fillcolor="0432FF" type="integer" length="2" minval="0" maxval="1">
+                    <fixedvalues>
+                        <fixedvalue name="No" value="0"/>
+                        <fixedvalue name="Yes" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="gotKeycardY" id="413" fillcolor="FEFB00" type="integer" length="2" minval="0" maxval="1">
+                    <fixedvalues>
+                        <fixedvalue name="No" value="0"/>
+                        <fixedvalue name="Yes" value="1"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+            <structure name="Levels" id="417" length="0">
+                <number name="Level" id="421" fillcolor="AA7941" repeatmin="16" repeatmax="16" type="integer" length="2" minval="0" maxval="1">
+                    <fixedvalues>
+                        <fixedvalue name="Incomplete" value="0"/>
+                        <fixedvalue name="Completed" value="1"/>
+                    </fixedvalues>
+                </number>
+            </structure>
+            <number name="numLives" id="424" fillcolor="8DF900" type="integer" length="2"/>
+            <number name="ammo" id="425" fillcolor="00FCFF" type="integer" length="2"/>
+            <number name="score" id="426" fillcolor="0096FF" type="integer" length="4"/>
+            <binary name="blank?" id="427" length="1"/>
+            <number name="posX" id="428" fillcolor="4E8F00" type="integer" length="4"/>
+            <number name="posY" id="429" fillcolor="008E00" type="integer" length="4"/>
+            <number name="viewportX" id="430" fillcolor="005392" type="integer" length="2"/>
+            <binary name="blank_?" id="433" length="2"/>
+            <number name="viewportY" id="434" strokecolor="FEFFFF" fillcolor="011892" type="integer" length="2"/>
+            <structure name="cities" id="438">
+                <number name="city" id="436" fillcolor="FF9300" repeatmin="9" repeatmax="9" type="integer" length="2"/>
+            </structure>
+            <binary name="?" id="437" length="remaining"/>
+        </structure>
+    </grammar>
+</ufwb>
