@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.23.4">
+    <grammar name="EBU Subtitling data exchange format" start="id:692" author="Richard Newton" uti="public.standard-tesselated-geometry-format">
+        <description>Grammar for STL files</description>
+        <structure name="EBU STL file" id="692" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="General Subtitle Information Block" id="693" length="1024">
+                <string name="Code Page Number" id="694" fillcolor="8DF900" type="fixed-length" length="3">
+                    <fixedvalues>
+                        <fixedvalue name="United States" value="437"/>
+                        <fixedvalue name="Multilingual" value="850"/>
+                        <fixedvalue name="Portugal" value="860"/>
+                        <fixedvalue name="Canada-French" value="863"/>
+                        <fixedvalue name="Nordic" value="865"/>
+                    </fixedvalues>
+                </string>
+                <string name="Disc Format Code" id="695" fillcolor="FF2600" type="fixed-length" length="8">
+                    <fixedvalues>
+                        <fixedvalue name="25 Frames per Second" value="STL25.01"/>
+                        <fixedvalue name="30 Frames per Second" value="STL30.01"/>
+                    </fixedvalues>
+                </string>
+                <string name="Display Standard Code" id="696" fillcolor="8DF900" type="fixed-length" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="Undefined" value="&quot;&quot;"/>
+                        <fixedvalue name="Open Subtitling" value="0"/>
+                        <fixedvalue name="Level-1 Teletext" value="1"/>
+                        <fixedvalue name="Level-2 Teletext" value="2"/>
+                    </fixedvalues>
+                </string>
+                <string name="Character Code Table Number" id="697" fillcolor="00FCFF" type="fixed-length" length="2">
+                    <fixedvalues>
+                        <fixedvalue name="Latin" value="00"/>
+                        <fixedvalue name="Latin/Cyrillic" value="01"/>
+                        <fixedvalue name="Latin/Arabic" value="02"/>
+                        <fixedvalue name="Latin/Greek" value="03"/>
+                        <fixedvalue name="Latin/Hebrew" value="04"/>
+                    </fixedvalues>
+                </string>
+                <string name="Language Code" id="698" fillcolor="0096FF" type="fixed-length" length="2">
+                    <fixedvalues>
+                        <fixedvalue name="Unknown / Not Applicable" value="00"/>
+                        <fixedvalue name="Albanian" value="01"/>
+                        <fixedvalue name="Breton" value="02"/>
+                        <fixedvalue name="Catalan" value="03"/>
+                        <fixedvalue name="Croatian" value="04"/>
+                        <fixedvalue name="Welsh" value="05"/>
+                        <fixedvalue name="Czech" value="06"/>
+                        <fixedvalue name="Danish" value="07"/>
+                        <fixedvalue name="German" value="08"/>
+                        <fixedvalue name="English" value="09"/>
+                        <fixedvalue name="Spanish" value="0A"/>
+                        <fixedvalue name="Esperanto" value="0B"/>
+                        <fixedvalue name="Estonian" value="0C"/>
+                        <fixedvalue name="Basque" value="0D"/>
+                        <fixedvalue name="Faroese" value="0E"/>
+                        <fixedvalue name="French" value="0F"/>
+                        <fixedvalue name="Frisian" value="10"/>
+                        <fixedvalue name="Irish" value="11"/>
+                        <fixedvalue name="Gaelic" value="12"/>
+                        <fixedvalue name="Galician" value="13"/>
+                        <fixedvalue name="Icelandic" value="14"/>
+                        <fixedvalue name="Italian" value="15"/>
+                        <fixedvalue name="Lappish" value="16"/>
+                        <fixedvalue name="Latin" value="17"/>
+                        <fixedvalue name="Latvian" value="18"/>
+                        <fixedvalue name="Luxembourgian" value="19"/>
+                        <fixedvalue name="Lithuanian" value="1A"/>
+                        <fixedvalue name="Hungarian" value="1B"/>
+                        <fixedvalue name="Maltese" value="1C"/>
+                        <fixedvalue name="Dutch" value="1D"/>
+                        <fixedvalue name="Norwegian" value="1E"/>
+                        <fixedvalue name="Occitan" value="1F"/>
+                        <fixedvalue name="Polish" value="20"/>
+                        <fixedvalue name="Portugese" value="21"/>
+                        <fixedvalue name="Romanian" value="22"/>
+                        <fixedvalue name="Romansh" value="23"/>
+                        <fixedvalue name="Serbian" value="24"/>
+                        <fixedvalue name="Slovak" value="25"/>
+                        <fixedvalue name="Slovenian" value="26"/>
+                        <fixedvalue name="Finnish" value="27"/>
+                        <fixedvalue name="Swedish" value="28"/>
+                        <fixedvalue name="Turkish" value="29"/>
+                        <fixedvalue name="Flemish" value="2A"/>
+                        <fixedvalue name="Wallon" value="2B"/>
+                    </fixedvalues>
+                </string>
+                <string name="Original Programme Title" id="699" type="fixed-length" length="32"/>
+                <string name="Original Episode Title" id="700" type="fixed-length" length="32"/>
+                <string name="Translated Programme Title" id="701" type="fixed-length" length="32"/>
+                <string name="Translated Episode Title" id="702" type="fixed-length" length="32"/>
+                <string name="Translator's Name" id="703" type="fixed-length" length="32"/>
+                <string name="Translator's Contact Details" id="704" type="fixed-length" length="32"/>
+                <string name="Subtitle List Reference Code" id="705" type="fixed-length" length="16"/>
+                <structure name="Creation Date" id="706" length="6">
+                    <string name="Year (YY)" id="707" type="fixed-length" length="2"/>
+                    <string name="Month (MM)" id="708" type="fixed-length" length="2"/>
+                    <string name="Day (DD)" id="709" type="fixed-length" length="2"/>
+                </structure>
+                <structure name="Revision Date" id="711" length="6">
+                    <string name="Year (YY)" id="712" type="fixed-length" length="2"/>
+                    <string name="Month (MM)" id="713" type="fixed-length" length="2"/>
+                    <string name="Day (DD)" id="714" type="fixed-length" length="2"/>
+                </structure>
+                <string name="Revision number" id="716" fillcolor="FF89D8" type="fixed-length" length="2"/>
+                <string name="Total Number of Text and Timing Information (TTI) blocks" id="717" fillcolor="8DF900" type="fixed-length" length="5"/>
+                <string name="Total Number of Subtitles" id="718" fillcolor="00FCFF" type="fixed-length" length="5"/>
+                <string name="Total Number of Subtitle Groups" id="719" fillcolor="FEFB00" type="fixed-length" length="3"/>
+                <string name="Maximum Number of Displayable Characters in any text row" id="720" fillcolor="FF7D78" type="fixed-length" length="2"/>
+                <string name="Maximum Number of Displayable Rows" id="721" fillcolor="72FCD5" type="fixed-length" length="2"/>
+                <string name="Time Code: Status" id="722" fillcolor="FF89D8" type="fixed-length" length="1"/>
+                <structure name="Time Code: Start-of-Programme" id="723" length="8">
+                    <string name="Time Code: Start-of-Programme (Hours)" id="724" type="fixed-length" length="2"/>
+                    <string name="Time Code: Start-of-Programme (Minutes)" id="725" type="fixed-length" length="2"/>
+                    <string name="Time Code: Start-of-Programme (Seconds)" id="726" type="fixed-length" length="2"/>
+                    <string name="Time Code: Start-of-Programme (Frames)" id="727" type="fixed-length" length="2"/>
+                </structure>
+                <structure name="Time Code: First In-Cue" id="729" length="8">
+                    <string name="Time Code: First In-Cue (Hours)" id="730" fillcolor="FEFB00" type="fixed-length" length="2"/>
+                    <string name="Time Code: First In-Cue (Minutes)" id="731" type="fixed-length" length="2"/>
+                    <string name="Time Code: First In-Cue (Seconds)" id="732" type="fixed-length" length="2"/>
+                    <string name="Time Code: First In-Cue (Frames)" id="733" type="fixed-length" length="2"/>
+                </structure>
+                <string name="Total Number of Disks" id="735" type="fixed-length" length="1"/>
+                <string name="Disk Sequence Number" id="736" type="fixed-length" length="1"/>
+                <string name="Country of Origin" id="737" fillcolor="75D5FF" type="fixed-length" length="3">
+                    <fixedvalues>
+                        <fixedvalue name="Amharic" value="7F"/>
+                        <fixedvalue name="Arabic" value="7E"/>
+                        <fixedvalue name="Armenian" value="7D"/>
+                        <fixedvalue name="Assamese" value="7C"/>
+                        <fixedvalue name="Azerbaijani" value="7B"/>
+                        <fixedvalue name="Bambora" value="7A"/>
+                        <fixedvalue name="Bielorussian" value="79"/>
+                        <fixedvalue name="Bengali" value="78"/>
+                        <fixedvalue name="Bulgarian" value="77"/>
+                        <fixedvalue name="Burmese" value="76"/>
+                        <fixedvalue name="Chinese" value="75"/>
+                        <fixedvalue name="Churash" value="74"/>
+                        <fixedvalue name="Dari" value="73"/>
+                        <fixedvalue name="Fulani" value="72"/>
+                        <fixedvalue name="Georgian" value="71"/>
+                        <fixedvalue name="Greek" value="70"/>
+                        <fixedvalue name="Gujurati" value="6F"/>
+                        <fixedvalue name="Gurani" value="6E"/>
+                        <fixedvalue name="Hausa" value="6D"/>
+                        <fixedvalue name="Hebrew" value="6C"/>
+                        <fixedvalue name="Hindi" value="6B"/>
+                        <fixedvalue name="Indonesian" value="6A"/>
+                        <fixedvalue name="Japanese" value="69"/>
+                        <fixedvalue name="Kannada" value="68"/>
+                        <fixedvalue name="Kazakh" value="67"/>
+                        <fixedvalue name="Khmer" value="66"/>
+                        <fixedvalue name="Korean" value="65"/>
+                        <fixedvalue name="Laotian" value="64"/>
+                        <fixedvalue name="Macedonian" value="63"/>
+                        <fixedvalue name="Malagasay" value="62"/>
+                        <fixedvalue name="Malaysian" value="61"/>
+                        <fixedvalue name="Moldavian" value="60"/>
+                        <fixedvalue name="Marathi" value="5F"/>
+                        <fixedvalue name="Ndebele" value="5E"/>
+                        <fixedvalue name="Nepali" value="5D"/>
+                        <fixedvalue name="Oriya" value="5C"/>
+                        <fixedvalue name="Papamiento" value="5B"/>
+                        <fixedvalue name="Persian" value="5A"/>
+                        <fixedvalue name="Punjabi" value="59"/>
+                        <fixedvalue name="Pushtu" value="58"/>
+                        <fixedvalue name="Quechua" value="57"/>
+                        <fixedvalue name="Russian" value="56"/>
+                        <fixedvalue name="Ruthenian" value="55"/>
+                        <fixedvalue name="Serbo-croat" value="54"/>
+                        <fixedvalue name="Shona" value="53"/>
+                        <fixedvalue name="Sinhalese" value="52"/>
+                        <fixedvalue name="Somali" value="51"/>
+                        <fixedvalue name="Sranan Tongo" value="50"/>
+                        <fixedvalue name="Swahili" value="4F"/>
+                        <fixedvalue name="Tadzhik" value="4E"/>
+                        <fixedvalue name="Tamil" value="4D"/>
+                        <fixedvalue name="Tatar" value="4C"/>
+                        <fixedvalue name="Telugu" value="4B"/>
+                        <fixedvalue name="Thai" value="4A"/>
+                        <fixedvalue name="Ukrainian" value="49"/>
+                        <fixedvalue name="Urdu" value="48"/>
+                        <fixedvalue name="Uzbek" value="47"/>
+                        <fixedvalue name="Vietnamese" value="46"/>
+                        <fixedvalue name="Zulu" value="45"/>
+                        <fixedvalue name="private use" value="AAA-AAZ"/>
+                        <fixedvalue name="Aruba" value="ABW"/>
+                        <fixedvalue name="Afghanistan" value="AFG"/>
+                        <fixedvalue name="Angola" value="AGO"/>
+                        <fixedvalue name="Anguilla" value="AIA"/>
+                        <fixedvalue name="Albania" value="ALB"/>
+                        <fixedvalue name="Andorra" value="AND"/>
+                        <fixedvalue name="Netherlands Antilles" value="ANT"/>
+                        <fixedvalue name="United Arab Emirates" value="ARE"/>
+                        <fixedvalue name="Argentina" value="ARG"/>
+                        <fixedvalue name="American Samoa" value="ASM"/>
+                        <fixedvalue name="Antarctica" value="ATA"/>
+                        <fixedvalue name="French Southern Territories" value="ATF"/>
+                        <fixedvalue name="Antigua and Barbuda" value="ATG"/>
+                        <fixedvalue name="(Antarctica)" value="ATN"/>
+                        <fixedvalue name="Australia" value="AUS"/>
+                        <fixedvalue name="Austria" value="AUT"/>
+                        <fixedvalue name="Burundi" value="BDI"/>
+                        <fixedvalue name="Belgium" value="BEL"/>
+                        <fixedvalue name="Benin" value="BEN"/>
+                        <fixedvalue name="Burkina Faso" value="BFA"/>
+                        <fixedvalue name="Bangladesh" value="BGD"/>
+                        <fixedvalue name="Bulgaria" value="BGR"/>
+                        <fixedvalue name="Bahrain" value="BHR"/>
+                        <fixedvalue name="Bahamas" value="BHS"/>
+                        <fixedvalue name="Belize" value="BLZ"/>
+                        <fixedvalue name="Bermuda" value="BMU"/>
+                        <fixedvalue name="Bolivia" value="BOL"/>
+                        <fixedvalue name="Brazil" value="BRA"/>
+                        <fixedvalue name="Barbados" value="BRM"/>
+                        <fixedvalue name="Brunei Darussalam" value="BRN"/>
+                        <fixedvalue name="Bhutan" value="BTN"/>
+                        <fixedvalue name="Burma" value="BUR"/>
+                        <fixedvalue name="Bouvet Island" value="BVT"/>
+                        <fixedvalue name="Botswana" value="BWA"/>
+                        <fixedvalue name="Byelorussian SSR" value="BYS"/>
+                        <fixedvalue name="Central African Republic" value="CAF"/>
+                        <fixedvalue name="Canada" value="CAN"/>
+                        <fixedvalue name="Cocos (Keeling) Islands" value="CCK"/>
+                        <fixedvalue name="Switzerland" value="CHE"/>
+                        <fixedvalue name="Chile" value="CHL"/>
+                        <fixedvalue name="China" value="CHN"/>
+                        <fixedvalue name="Côte d'Ivoire" value="CIV"/>
+                        <fixedvalue name="Cameroon" value="CMR"/>
+                        <fixedvalue name="Congo" value="COG"/>
+                        <fixedvalue name="Cook Islands" value="COK"/>
+                        <fixedvalue name="Colombia" value="COL"/>
+                        <fixedvalue name="Comoros" value="COM"/>
+                        <fixedvalue name="Cape Verde" value="CPV"/>
+                        <fixedvalue name="Costa Rica" value="CRI"/>
+                        <fixedvalue name="Czechoslovakia" value="CSK"/>
+                        <fixedvalue name="(Kiribati)" value="CTE"/>
+                        <fixedvalue name="Cuba" value="CUB"/>
+                        <fixedvalue name="Christmas Island" value="CXR"/>
+                        <fixedvalue name="Cayman Islands" value="CYM"/>
+                        <fixedvalue name="Cyprus" value="CYP"/>
+                        <fixedvalue name="German Democratic Republic" value="DDR"/>
+                        <fixedvalue name="Germany, Federal Republic of" value="DEU"/>
+                        <fixedvalue name="Djibouti" value="DJI"/>
+                        <fixedvalue name="Dominica" value="DMA"/>
+                        <fixedvalue name="Denmark" value="DNK"/>
+                        <fixedvalue name="Dominican Republic" value="DOM"/>
+                        <fixedvalue name="Algeria" value="DZA"/>
+                        <fixedvalue name="Ecuador" value="ECU"/>
+                        <fixedvalue name="Egypt" value="EGY"/>
+                        <fixedvalue name="Western Sahara" value="ESH"/>
+                        <fixedvalue name="Spain" value="ESP"/>
+                        <fixedvalue name="Ethiopia" value="ETH"/>
+                        <fixedvalue name="Finland" value="FIN"/>
+                        <fixedvalue name="Fiji" value="FJI"/>
+                        <fixedvalue name="Falkland Islands (Malvinas)" value="FLK"/>
+                        <fixedvalue name="France" value="FRA"/>
+                        <fixedvalue name="Faroe Islands" value="FRO"/>
+                        <fixedvalue name="Micronesia" value="FSM"/>
+                        <fixedvalue name="Gabon" value="GAB"/>
+                        <fixedvalue name="United Kingdom" value="GBR"/>
+                        <fixedvalue name="Ghana" value="GHA"/>
+                        <fixedvalue name="Gibraltar" value="GIB"/>
+                        <fixedvalue name="Guinea" value="GIN"/>
+                        <fixedvalue name="Guadeloupe" value="GLP"/>
+                        <fixedvalue name="Gambia" value="GMB"/>
+                        <fixedvalue name="Guinea-Bissau" value="GNB"/>
+                        <fixedvalue name="Equatorial Guinea" value="GNQ"/>
+                        <fixedvalue name="Greece" value="GRC"/>
+                        <fixedvalue name="Grenada" value="GRD"/>
+                        <fixedvalue name="Greenland" value="GRL"/>
+                        <fixedvalue name="Guatemala" value="GTM"/>
+                        <fixedvalue name="French Guinea" value="GUF"/>
+                        <fixedvalue name="Guam" value="GUM"/>
+                        <fixedvalue name="Guyana" value="GUY"/>
+                        <fixedvalue name="Hong Kong" value="HKG"/>
+                        <fixedvalue name="Heard and Mc Donald Islands" value="HMD"/>
+                        <fixedvalue name="Honduras" value="HND"/>
+                        <fixedvalue name="Haiti" value="HTI"/>
+                        <fixedvalue name="Hungary" value="HUN"/>
+                        <fixedvalue name="(Burkina Faso)" value="HVO"/>
+                        <fixedvalue name="Indonesia" value="IDN"/>
+                        <fixedvalue name="India" value="IDN"/>
+                        <fixedvalue name="British Indian Ocean Territory" value="IOT"/>
+                        <fixedvalue name="Ireland" value="IRL"/>
+                        <fixedvalue name="Iran" value="IRN"/>
+                        <fixedvalue name="Iraq" value="IRQ"/>
+                        <fixedvalue name="Iceland" value="ISL"/>
+                        <fixedvalue name="Israel" value="ISR"/>
+                        <fixedvalue name="Italy" value="ITA"/>
+                        <fixedvalue name="Jamaica" value="JAM"/>
+                        <fixedvalue name="Jordan" value="JOR"/>
+                        <fixedvalue name="Japan" value="JPN"/>
+                        <fixedvalue name="(United States Minor Outlying Islands)" value="JTN"/>
+                        <fixedvalue name="Kenya" value="KEN"/>
+                        <fixedvalue name="Kampuchea, Democratic" value="DHM"/>
+                        <fixedvalue name="Kiribati" value="KIR"/>
+                        <fixedvalue name="Saint Kitts and Nevis" value="KNA"/>
+                        <fixedvalue name="Korea, Republic of" value="KOR"/>
+                        <fixedvalue name="Kuwait" value="KWT"/>
+                        <fixedvalue name="Lao, People's Democratic Republic of" value="LAO"/>
+                        <fixedvalue name="Lebanon" value="LBN"/>
+                        <fixedvalue name="Liberia" value="LBR"/>
+                        <fixedvalue name="Libyan Arab Jamahiriya" value="LBY"/>
+                        <fixedvalue name="Saint Lucia" value="LCA"/>
+                        <fixedvalue name="Liechtenstein" value="LIE"/>
+                        <fixedvalue name="Sri Lanka" value="LKA"/>
+                        <fixedvalue name="Lesotho" value="LSO"/>
+                        <fixedvalue name="Luxembourg" value="LUX"/>
+                        <fixedvalue name="Macau" value="MAC"/>
+                        <fixedvalue name="Morocco" value="MAR"/>
+                        <fixedvalue name="Monaco" value="MCO"/>
+                        <fixedvalue name="Madagascar" value="MDG"/>
+                        <fixedvalue name="Maldives" value="MDV"/>
+                        <fixedvalue name="Mexico" value="MEX"/>
+                        <fixedvalue name="Marshall Islands" value="MHL"/>
+                        <fixedvalue name="(United States Minor Outlying Islands)" value="MID"/>
+                        <fixedvalue name="Mali" value="MLI"/>
+                        <fixedvalue name="Malta" value="MLT"/>
+                        <fixedvalue name="Mongolia" value="MNG"/>
+                        <fixedvalue name="Nothern Mariana Islands" value="MNP"/>
+                        <fixedvalue name="Mozambique" value="MOZ"/>
+                        <fixedvalue name="Mauritania" value="MRT"/>
+                        <fixedvalue name="Montserrat" value="MSR"/>
+                        <fixedvalue name="Martinique" value="MTQ"/>
+                        <fixedvalue name="Mauritius" value="MUS"/>
+                        <fixedvalue name="Malawi" value="MWI"/>
+                        <fixedvalue name="Malaysia" value="MYS"/>
+                        <fixedvalue name="Namibia" value="NAM"/>
+                        <fixedvalue name="New Caledonia" value="NCL"/>
+                        <fixedvalue name="Niger" value="NER"/>
+                        <fixedvalue name="Norfolk Island" value="NFK"/>
+                        <fixedvalue name="Nigeria" value="NGA"/>
+                        <fixedvalue name="Nicaragua" value="NIC"/>
+                        <fixedvalue name="Niue" value="NIU"/>
+                        <fixedvalue name="Netherlands" value="NLD"/>
+                        <fixedvalue name="Norway" value="NOR"/>
+                        <fixedvalue name="Nepal" value="NPL"/>
+                        <fixedvalue name="Nauru" value="NRU"/>
+                        <fixedvalue name="Neutral Zone" value="NTZ"/>
+                        <fixedvalue name="New Zealand" value="NZL"/>
+                        <fixedvalue name="Oman" value="OMN"/>
+                        <fixedvalue name="escape code" value="OOO"/>
+                        <fixedvalue name="Pakistan" value="PAK"/>
+                        <fixedvalue name="Panama" value="PAN"/>
+                        <fixedvalue name="See FSM, MHL, MNP and PLW" value="PCI"/>
+                        <fixedvalue name="Pitcairn" value="PCN"/>
+                        <fixedvalue name="Peru" value="PER"/>
+                        <fixedvalue name="Philippines" value="PHL"/>
+                        <fixedvalue name="Palau" value="PLW"/>
+                        <fixedvalue name="Papua New Guinea" value="PNG"/>
+                        <fixedvalue name="Poland" value="POL"/>
+                        <fixedvalue name="Puerto Rico" value="PRI"/>
+                        <fixedvalue name="Korea, Democratic People's Republic of" value="PRK"/>
+                        <fixedvalue name="Portugal" value="PRT"/>
+                        <fixedvalue name="Paraguay" value="PRY"/>
+                        <fixedvalue name="(United States Minor Outlying Islands)" value="PUS"/>
+                        <fixedvalue name="French Polynesia" value="PYF"/>
+                        <fixedvalue name="Qatar" value="QAT"/>
+                        <fixedvalue name="private use" value="QMA-QZZ"/>
+                        <fixedvalue name="Réunion" value="REU"/>
+                        <fixedvalue name="Romania" value="ROM"/>
+                        <fixedvalue name="Rwanda" value="RWA"/>
+                        <fixedvalue name="Saudi Arabia" value="SAU"/>
+                        <fixedvalue name="Sudan" value="SDN"/>
+                        <fixedvalue name="Senegal" value="SEN"/>
+                        <fixedvalue name="Singapore" value="SGP"/>
+                        <fixedvalue name="St. Helena" value="SHN"/>
+                        <fixedvalue name="Svalbard and Jan Mayen Islands" value="SJM"/>
+                        <fixedvalue name="Solomon Islands" value="SLB"/>
+                        <fixedvalue name="Sierra Leone" value="SLE"/>
+                        <fixedvalue name="El Salvador" value="SLV"/>
+                        <fixedvalue name="San Marino" value="SMR"/>
+                        <fixedvalue name="Somalia" value="SOM"/>
+                        <fixedvalue name="St. Pierre and Miquelon" value="SPM"/>
+                        <fixedvalue name="Sao Tome and Principé" value="STP"/>
+                        <fixedvalue name="USSR" value="SUN"/>
+                        <fixedvalue name="Surinam" value="SUR"/>
+                        <fixedvalue name="Sweden" value="SWE"/>
+                        <fixedvalue name="Swaziland" value="SWZ"/>
+                        <fixedvalue name="Seychelles" value="SYC"/>
+                        <fixedvalue name="Syrian Arab Republic" value="SYR"/>
+                        <fixedvalue name="Turks and Caicos Islands" value="TCA"/>
+                        <fixedvalue name="Chad" value="TCD"/>
+                        <fixedvalue name="Togo" value="TGO"/>
+                        <fixedvalue name="Thailand" value="THA"/>
+                        <fixedvalue name="Tokelau" value="TKL"/>
+                        <fixedvalue name="East Timor" value="TMP"/>
+                        <fixedvalue name="Tonga" value="TON"/>
+                        <fixedvalue name="Trinidad and Tobago" value="TTO"/>
+                        <fixedvalue name="Tunisia" value="TUN"/>
+                        <fixedvalue name="Turkey" value="TUR"/>
+                        <fixedvalue name="Tuvalu" value="TUV"/>
+                        <fixedvalue name="Taiwan, Province of China" value="TWN"/>
+                        <fixedvalue name="Tanzania, United Republic of" value="TZA"/>
+                        <fixedvalue name="Uganda" value="UGA"/>
+                        <fixedvalue name="Ukrainian SSR" value="UKR"/>
+                        <fixedvalue name="United States Minor Outlying Islands" value="UMI"/>
+                        <fixedvalue name="Uruguay" value="URY"/>
+                        <fixedvalue name="United States" value="USA"/>
+                        <fixedvalue name="Vatican City State (Holy See)" value="VAT"/>
+                        <fixedvalue name="Saint Vincent and the Grenadines" value="VCT"/>
+                        <fixedvalue name="Venezuela" value="VEN"/>
+                        <fixedvalue name="Virgin Islands (British)" value="VGB"/>
+                        <fixedvalue name="Virgin Islands (U.S.)" value="VIR"/>
+                        <fixedvalue name="Viet Nam" value="VNM"/>
+                        <fixedvalue name="Vanuatu" value="VUT"/>
+                        <fixedvalue name="(United States Minor Outlying Islands)" value="WAK"/>
+                        <fixedvalue name="Wallis and Futuna Islands" value="WLF"/>
+                        <fixedvalue name="Samoa" value="WSM"/>
+                        <fixedvalue name="private use" value="XAA-XZZ"/>
+                        <fixedvalue name="Yemen" value="YEM"/>
+                        <fixedvalue name="Yemen, Democratic" value="YMD"/>
+                        <fixedvalue name="Yugoslavia" value="YUG"/>
+                        <fixedvalue name="South Africa" value="ZAF"/>
+                        <fixedvalue name="Zaire" value="ZAR"/>
+                        <fixedvalue name="Zambia" value="ZMB"/>
+                        <fixedvalue name="Zimbabwe" value="ZWE"/>
+                        <fixedvalue name="private use" value="ZZA-ZZZ"/>
+                    </fixedvalues>
+                </string>
+                <string name="Publisher" id="738" type="fixed-length" length="32"/>
+                <string name="Editor's Name" id="739" type="fixed-length" length="32"/>
+                <string name="Editor's Contact Details" id="740" type="fixed-length" length="32"/>
+                <string name="Spare Bytes" id="741" type="fixed-length" length="75"/>
+                <string name="User-Defined Area" id="742" type="fixed-length" length="576"/>
+            </structure>
+            <structure name="Text and Timing Information Block" id="744" length="128" repeatmax="-1">
+                <number name="Subtitle Group Number" id="745" fillcolor="FF7D78" type="integer" length="1"/>
+                <number name="Subtitle Number" id="746" fillcolor="FEFC78" type="integer" length="2"/>
+                <number name="Extension Block Number" id="747" fillcolor="72FA78" type="integer" length="1"/>
+                <binary name="Cumulative Status" id="748" fillcolor="72FCD5" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="Subtitle not part of a cumulative set" value="00"/>
+                        <fixedvalue name="First subtitle of a cumulative set" value="01"/>
+                        <fixedvalue name="Intermediate subtitle of a cumulative set" value="02"/>
+                        <fixedvalue name="Last subtitle of a cumulative set" value="03"/>
+                    </fixedvalues>
+                </binary>
+                <structure name="Time Code In" id="749" length="4" alignment="0">
+                    <number name="Time Code In (Hours)" id="750" fillcolor="FF84FF" type="integer" length="1"/>
+                    <number name="Time Code In (Minutes)" id="751" fillcolor="FF84FF" type="integer" length="1"/>
+                    <number name="Time Code In (Seconds)" id="752" fillcolor="FF84FF" type="integer" length="1"/>
+                    <number name="Time Code In (Frames)" id="753" fillcolor="FF89D8" type="integer" length="1"/>
+                </structure>
+                <structure name="Time Code Out" id="755" length="4">
+                    <number name="Time Code Out (Hours)" id="756" fillcolor="D783FF" type="integer" length="1"/>
+                    <number name="Time Code Out (Minutes)" id="757" fillcolor="D783FF" type="integer" length="1"/>
+                    <number name="Time Code Out (Seconds)" id="758" fillcolor="D783FF" type="integer" length="1"/>
+                    <number name="Time Code Out (Frames)" id="759" fillcolor="FF89D8" type="integer" length="1"/>
+                </structure>
+                <number name="Vertical Position" id="761" fillcolor="00FCFF" type="integer" length="1"/>
+                <binary name="Justification Code" id="762" fillcolor="8DF900" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="unchanged presentation" value="00"/>
+                        <fixedvalue name="left-justified text" value="01"/>
+                        <fixedvalue name="centred text" value="02"/>
+                        <fixedvalue name="right-justified text" value="03"/>
+                    </fixedvalues>
+                </binary>
+                <binary name="Comment Flag" id="763" fillcolor="FF9300" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="TF contains subtitle data" value="00"/>
+                        <fixedvalue name="TF contains comments not intended for transmission" value="01"/>
+                    </fixedvalues>
+                </binary>
+                <string name="Text Field" id="764" type="fixed-length" length="112"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>
