@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.23.4">
+    <grammar name="u-blox" start="id:1768" author="Karsten" email="karsten@briksoftware.com" fileextension="ubx">
+        <description>Grammar for UBX files</description>
+        <structure name="UBX-Message" id="1769" length="0" repeatmax="-1" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <binary name="MAGIC" mustmatch="yes" id="1770" fillcolor="B3B1FF" length="2">
+                <fixedvalues>
+                    <fixedvalue name="MAGIC" value="B562"/>
+                </fixedvalues>
+            </binary>
+            <binary name="ClassAndMessageID" id="1771" fillcolor="57B6FF" length="2">
+                <fixedvalues>
+                    <fixedvalue name="RXM-IMES" value="0215"/>
+                    <fixedvalue name="RXM-MEASX" value="0214"/>
+                    <fixedvalue name="RXM-PMREQ" value="0241"/>
+                    <fixedvalue name="RXM-RAWX" value="0215"/>
+                    <fixedvalue name="RXM-RLM" value="0259"/>
+                    <fixedvalue name="RXM-RTCM" value="0232"/>
+                    <fixedvalue name="RXM-SFRBX" value="0213"/>
+                    <fixedvalue name="RXM-SVSI" value="0220"/>
+                    <fixedvalue name="NAV-AOPSTATUS" value="0160"/>
+                    <fixedvalue name="NAV-ATT" value="0105"/>
+                    <fixedvalue name="NAV-CLOCK" value="0122"/>
+                    <fixedvalue name="NAV-COV" value="0136"/>
+                    <fixedvalue name="NAV-DGPS" value="0131"/>
+                    <fixedvalue name="NAV-DOP" value="0104"/>
+                    <fixedvalue name="NAV-EELL" value="013D"/>
+                    <fixedvalue name="NAV-EOE" value="0161"/>
+                    <fixedvalue name="NAV-GEOFENCE" value="0139"/>
+                    <fixedvalue name="NAV-HPPOSECEF" value="0113"/>
+                    <fixedvalue name="NAV-HPPOSLLH" value="0114"/>
+                    <fixedvalue name="NAV-NMI" value="0128"/>
+                    <fixedvalue name="NAV-ODO" value="0109"/>
+                    <fixedvalue name="NAV-ORB" value="0134"/>
+                    <fixedvalue name="NAV-POSECEF" value="0101"/>
+                    <fixedvalue name="NAV-POSLLH" value="0102"/>
+                    <fixedvalue name="NAV-PVT" value="0107"/>
+                    <fixedvalue name="NAV-RELPOSNED" value="013C"/>
+                    <fixedvalue name="NAV-RESETODO" value="0110"/>
+                    <fixedvalue name="NAV-SAT" value="0135"/>
+                    <fixedvalue name="NAV-SBAS" value="0132"/>
+                    <fixedvalue name="NAV-SLAS" value="0142"/>
+                    <fixedvalue name="NAV-SOL" value="0106"/>
+                    <fixedvalue name="NAV-STATUS" value="0103"/>
+                    <fixedvalue name="NAV-SVINFO" value="0130"/>
+                    <fixedvalue name="NAV-SVIN" value="013B"/>
+                    <fixedvalue name="NAV-TIMEBDS" value="0124"/>
+                    <fixedvalue name="NAV-TIMEGAL" value="0125"/>
+                    <fixedvalue name="NAV-TIMEGLO" value="0123"/>
+                    <fixedvalue name="NAV-TIMEGPS" value="0120"/>
+                    <fixedvalue name="NAV-TIMELS" value="0126"/>
+                    <fixedvalue name="NAV-TIMEUTC" value="0121"/>
+                    <fixedvalue name="NAV-VELECEF" value="0111"/>
+                    <fixedvalue name="NAV-VELNED" value="0112"/>
+                    <fixedvalue name="MON-BATCH" value="0A32"/>
+                    <fixedvalue name="MON-GNSS" value="0A28"/>
+                    <fixedvalue name="MON-HW2" value="0A0B"/>
+                    <fixedvalue name="MON-HW" value="0A09"/>
+                    <fixedvalue name="MON-IO" value="0A02"/>
+                    <fixedvalue name="MON-MSGPP" value="0A06"/>
+                    <fixedvalue name="MON-PATCH" value="0A27"/>
+                    <fixedvalue name="MON-RXBUF" value="0A07"/>
+                    <fixedvalue name="MON-RXR" value="0A21"/>
+                    <fixedvalue name="MON-SMGR" value="0A2E"/>
+                    <fixedvalue name="MON-SPT" value="0A2F"/>
+                    <fixedvalue name="MON-TXBUF" value="0A08"/>
+                    <fixedvalue name="MON-VER" value="0A04"/>
+                    <fixedvalue name="ACK-ACK" value="0501"/>
+                    <fixedvalue name="ACK-NAK" value="0500"/>
+                </fixedvalues>
+            </binary>
+            <number name="length" id="1772" fillcolor="2A72FF" type="integer" length="2"/>
+            <binary name="payload" id="1773" fillcolor="73FFFF" length="length"/>
+            <number name="checksum" id="1774" fillcolor="FFB5FF" type="integer" length="2"/>
+        </structure>
+        <structure name="NMEA-Sentence" id="1776" length="0" repeatmax="-1" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <string name="Dollar" mustmatch="yes" id="1777" fillcolor="A0FFB8" type="fixed-length" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Dollar" value="$"/>
+                </fixedvalues>
+            </string>
+            <string name="payload" id="1778" fillcolor="B2E38C" type="delimiter-terminated" delimiter="0D0A"/>
+        </structure>
+        <structure name="UBX file" id="1768" repeatmax="-1" encoding="ISO_8859-1:1987" endian="little" signed="no" order="variable">
+            <structref name="NMEA-Sentence" id="1780" repeatmin="0" repeatmax="-1" structure="id:1776"/>
+            <structref name="UBX-Message" id="1781" repeatmin="0" repeatmax="-1" structure="id:1769"/>
+        </structure>
+    </grammar>
+</ufwb>
