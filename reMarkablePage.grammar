@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.17">
+    <grammar name="reMarkable tablet page" start="id:1" author="Alessio Nossa" email="alessio.nossa@gmail.com" fileextension="rm">
+        <description>Grammar for reMarkable .rm files (tested with v5)</description>
+        <structure name="RM Page file" id="1" encoding="UTF-8" endian="little" signed="no">
+            <string name="Header" id="2" strokecolor="91E87D" fillcolor="8AE8AA" type="fixed-length" length="43"/>
+            <number name="N_Layers" id="3" fillcolor="AA7941" type="integer" length="4"/>
+            <structure name="Layer" id="4" repeat="id:3" repeatmax="-1">
+                <number name="N_lines" id="5" fillcolor="FEFB00" type="integer" length="4"/>
+                <structure name="Line" id="6" repeat="id:5" repeatmax="-1">
+                    <number name="Brush Type" id="7" fillcolor="FF9200" type="integer" length="4">
+                        <fixedvalues>
+                            <fixedvalue name="Ball Point" value="15"/>
+                            <fixedvalue name="Fineliner" value="17"/>
+                            <fixedvalue name="Marker" value="16"/>
+                            <fixedvalue name="Sharp Pencil" value="13"/>
+                            <fixedvalue name="Tilt Pencil" value="14"/>
+                            <fixedvalue name="Eraser" value="6"/>
+                            <fixedvalue name="Erase Area" value="8"/>
+                            <fixedvalue name="Brush" value="12"/>
+                        </fixedvalues>
+                    </number>
+                    <number name="Color" id="8" fillcolor="FF9200" type="integer" length="4">
+                        <fixedvalues>
+                            <fixedvalue name="Black" value="0"/>
+                            <fixedvalue name="Gray" value="1"/>
+                            <fixedvalue name="White" value="2"/>
+                            <fixedvalue name="Blue" value="6"/>
+                            <fixedvalue name="Red" value="7"/>
+                        </fixedvalues>
+                    </number>
+                    <binary name="UNKNOW" id="9" fillcolor="FF9200" length="4"/>
+                    <number name="Brush Base Size" id="10" fillcolor="FF9200" type="float" length="4"/>
+                    <binary name="UNKNOW2" id="11" fillcolor="FF9200" length="4"/>
+                    <number name="N_Points" id="12" fillcolor="FF9200" type="integer" length="4"/>
+                    <structure name="Point" id="13" length="0" repeat="id:12" repeatmax="-1">
+                        <number name="x" id="14" fillcolor="00FCFF" type="float" length="32" lengthunit="bit"/>
+                        <number name="y" id="15" fillcolor="00FCFF" type="float" length="32" lengthunit="bit"/>
+                        <number name="speed" id="16" fillcolor="00FCFF" type="float" length="32" lengthunit="bit"/>
+                        <number name="direction" id="17" fillcolor="00FCFF" type="float" length="32" lengthunit="bit"/>
+                        <number name="width" id="18" fillcolor="00FCFF" type="float" length="32" lengthunit="bit"/>
+                        <number name="pressure" id="19" fillcolor="00FCFF" type="float" length="32" lengthunit="bit"/>
+                    </structure>
+                </structure>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>
