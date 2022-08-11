@@ -6,13 +6,13 @@
             <script name="get_length" type="DataType" id="393">
                 <source language="Python"># custom data type script
 def parseByteRange(element, byteView, bitPos, bitLength, results):
-	offset = bitPos / 8
+	offset = bitPos // 8
 	processedBytes = 1
 	first_octet = byteView.readUnsignedInt(
 		offset + processedBytes - 1, 1, ENDIAN_LITTLE)
 	length = 0
-	print 'length in start', length
-	print 'first octet', first_octet
+	print('length in start', length)
+	print('first octet', first_octet)
 	if first_octet &amp; 0x80:
 		for i in range(first_octet &amp; 0x7F):
 			processedBytes += 1
@@ -37,15 +37,14 @@ def fillByteRange(value, byteArray, bitPos, bitLength):
 			result = chr(length &amp; 0xFF) + result
 			length &gt;&gt;= 8
 		result = chr(0x80 | len(result)) + result
-	print 'fill'
-	print 'length', length
-	print 'result', result
-	print 'value', value
-	print 'bitPos', bitPos
-	print 'bitLength', bitLength
+	print('fill')
+	print('length', length)
+	print('result', result)
+	print('value', value)
+	print('bitPos', bitPos)
+	print('bitLength', bitLength)
 
-	byteArray.fillRange(bitPos / 8,
-					    len(result), result)
+	byteArray.fillRange(bitPos // 8, len(result), result)
 
 </source>
             </script>

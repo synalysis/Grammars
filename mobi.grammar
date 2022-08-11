@@ -109,7 +109,7 @@ flagsValue = flagsResult.getValue()
 
 flags = flagsValue.getUnsignedNumber()
 
-print flags
+print(flags)
 
 if flags != 0:
 	currentGrammar = currentMapper.getCurrentGrammar()

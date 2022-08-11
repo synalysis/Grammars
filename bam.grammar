@@ -48,10 +48,10 @@ frameOffset = frameOffsetValue.getUnsignedNumber()
 actualOffset = frameOffset &amp; 0x7FFFFFFF
 compressed = (frameOffset &amp; 0x80000000)
 
-print width
-print height
-print compressed
-print actualOffset
+print(width)
+print(height)
+print(compressed)
+print(actualOffset)
 
 currentGrammar = currentMapper.getCurrentGrammar()
 

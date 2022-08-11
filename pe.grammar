@@ -12,13 +12,13 @@ from datetime import datetime, timedelta
 def parseByteRange(element, byteView, bitPos, bitLength, results):
 	&quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
 
-	timeStamp = byteView.readUnsignedInt(bitPos/8, 4, ENDIAN_LITTLE)
+	timeStamp = byteView.readUnsignedInt(bitPos//8, 4, ENDIAN_LITTLE)
 
 	value = Value()
 
 	if (timeStamp != 0):
 		dt = datetime.fromtimestamp(timeStamp)
-		dtAdjusted = dt - timedelta(hours=1)
+		dtAdjusted = dt - timedelta(hours=0)
 		dateString = dtAdjusted.strftime(&quot;%Y-%m-%d %H:%M:%S&quot;)
 		value.setString(dateString)
 	else:
@@ -1355,12 +1355,12 @@ def parseImageResourceDirectoryEntries(currentPos, numberOfNamedEntries, numberO
     &quot;parse IMAGE_RESOURCE_DIRECTORY_ENTRY&quot;
 
     for entryNum in range(0, numberOfNamedEntries):
-        print &quot;parse named entry&quot;
+        print(&quot;parse named entry&quot;)
         currentPos += parseImageResourceDirectoryEntry(currentPos, entryNum)
 
     #
     for entryNum in range(0, numberOfIdEntries):
-        print &quot;parse Id entry&quot;
+        print(&quot;parse Id entry&quot;)
         currentPos += parseImageResourceDirectoryEntry(currentPos, entryNum)
 
 parseImageResourceDirectoryEntries(currentPos, numberOfNamedEntries, numberOfIdEntries)

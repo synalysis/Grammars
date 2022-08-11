@@ -22,7 +22,7 @@
             </number>
             <offset name="bfOffBits" id="14" length="4" references="id:13" follownullreference="yes"/>
         </structure>
-        <structure name="Info" id="7" length="this.biSize" extends="id:3" fillcolor="929292">
+        <structure name="BITMAPINFOHEADER" id="7" length="this.biSize" extends="id:3" fillcolor="929292">
             <number name="biSize" id="16" fillcolor="FF2600" type="integer" length="4">
                 <fixedvalues>
                     <fixedvalue value="40"/>
