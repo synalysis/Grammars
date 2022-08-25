@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.17">
+    <grammar name="Casio SE-S400 900" start="id:301" author="Frank Nunneley" email="frank.nunneley@icloud.com" fileextension="900">
+        <description>Grammar for 900 files the backup file for Casio SE-S400 cash registers.</description>
+        <structure name="900 filex" id="301" length="0" encoding="windows-1250" endian="big" signed="no">
+            <structure name="FileHeader" id="302" length="160">
+                <description>160 bytes
+</description>
+                <string name="FileType" mustmatch="yes" id="303" type="fixed-length" length="2">
+                    <fixedvalues>
+                        <fixedvalue name="Key" value="n:"/>
+                    </fixedvalues>
+                </string>
+                <string name="FileNameTemplate" id="304" fillcolor="75D5FF" type="fixed-length" length="8" encoding="windows-1250"/>
+            </structure>
+            <structure name="ChunkHeader" id="306" length="0" repeatmax="100" fillcolor="75D5FF">
+                <number name="ChunkStart" mustmatch="yes" id="307" fillcolor="72FA78" type="integer" length="1" display="hex"/>
+                <number name="ChunkLength" id="308" fillcolor="75D5FF" type="integer" length="2"/>
+                <number name="ChunkType" id="309" fillcolor="75D5FF" type="integer" length="2"/>
+                <binary name="ChunkPadding" id="310" fillcolor="FEFB00" length="ChunkLength-2"/>
+                <structure name="Files" id="311" length="0" repeatmin="0" consists-of="id:312" order="variable">
+                    <structref name="File-Totals-01" id="314" repeatmin="0" structure="id:313"/>
+                    <structref name="FIle-Keys-02" id="316" repeatmin="0" structure="id:315"/>
+                    <structref name="File-PLU-04" id="318" repeatmin="0" structure="id:317"/>
+                    <structref name="File-Dept -05" id="320" repeatmin="0" structure="id:319"/>
+                    <structref name="File-Groups -06" id="322" repeatmin="0" structure="id:321"/>
+                    <structref name="File-Clerks-07" id="324" repeatmin="0" structure="id:323"/>
+                    <structref name="File-xx-09" id="326" repeatmin="0" structure="id:325"/>
+                    <structref name="File-10" id="328" repeatmin="0" structure="id:327"/>
+                    <structref name="File-Plu-Barcode-16" id="330" repeatmin="0" structure="id:329"/>
+                    <structref name="File-Grand-Total-Char-20" id="332" repeatmin="0" structure="id:331"/>
+                    <structref name="File-General-Stuff-22" id="334" repeatmin="0" structure="id:333"/>
+                    <structref name="File-OtherSymbols-23" id="336" repeatmin="0" structure="id:335"/>
+                    <structref name="File-ReportHeaders-24" id="338" repeatmin="0" structure="id:337"/>
+                    <structref name="File-Tax-Tables-25" id="340" repeatmin="0" structure="id:339"/>
+                    <structref name="File-Message-32" id="342" repeatmin="0" structure="id:341"/>
+                    <structref name="File-MachineNo-91" id="344" repeatmin="0" structure="id:343"/>
+                    <structref name="File-95" id="346" repeatmin="0" structure="id:345"/>
+                    <structref name="File-101" id="644" repeatmin="0" structure="id:636"/>
+                    <structref name="File-XX-TheRest" id="348" repeatmin="0" structure="id:347"/>
+                </structure>
+            </structure>
+        </structure>
+        <structure name="hello" id="352" encoding="ISO_8859-1:1987" endian="big" signed="no"/>
+        <structure name="FileStruct" id="312" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no" fillcolor="8DF900">
+            <binary name="FileStart" id="354" length="1"/>
+            <number name="FileNumber" id="355" type="integer" length="2"/>
+            <binary name="Fill 1" id="356" length="5"/>
+            <number name="RecordLength" id="357" type="integer" length="2"/>
+            <binary name="Fill 2" id="358" length="6"/>
+            <number name="RecordCount" id="359" type="integer" length="2"/>
+        </structure>
+        <structure name="File-01-Totals" id="313" extends="id:312">
+            <number name="FileNumber" mustmatch="yes" id="362" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="Prev.ChunkType" value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordCount" id="366" type="integer"/>
+            <structure name="Records" id="629" length="RecordLength" repeat="id:366" repeatmax="RecordCount">
+                <string name="Header" id="631" type="fixed-length" length="12"/>
+                <binary name="Value" id="635" length="10"/>
+            </structure>
+        </structure>
+        <structure name="FIle-02-Keys" id="315" length="0" alignment="0" repeatmin="0" extends="id:312" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="FileNumber" mustmatch="yes" id="370" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="prev.ChunkType" value="2"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordCount" id="374" type="integer"/>
+            <structure name="Keys-Data" id="375" length="RecordLength" repeat="id:374" repeatmin="RecordCount" repeatmax="RecordCount">
+                <number name="Number-1" id="376" type="integer" length="2"/>
+                <string name="Text" id="377" fillcolor="FEFB00" type="fixed-length" length="12"/>
+            </structure>
+        </structure>
+        <structure name="File-04-PLU" id="317" extends="id:312">
+            <number name="FileNumber" mustmatch="yes" id="381" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="prev.ChunkType" value="4"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordCount" id="385" type="integer"/>
+            <structure name="PLU" id="386" length="RecordLength" repeat="id:385" repeatmax="RecordCount">
+                <string name="Text" id="387" fillcolor="FEFB00" type="fixed-length" length="12"/>
+                <binary name="&lt;Binary Fill Bytes&gt;" id="388" unused="yes" length="3"/>
+                <number name="Tax-Status" id="389" type="integer" length="1"/>
+                <binary name="&lt;Binary Fill Bytes-1&gt;" id="390" unused="yes" length="1"/>
+                <number name="Open-PLU" id="391" type="integer" length="1">
+                    <mask name="Open-Plu" value="0x4">
+                        <fixedvalue name="Open-Plu" value="0x4"/>
+                    </mask>
+                </number>
+                <binary name="&lt;Binary Fill Bytes-2&gt;" id="392" unused="yes" length="2"/>
+                <number name="Grp-link" id="393" type="integer" length="1" display="hex"/>
+                <number name="Dept-Link" id="394" type="integer" length="2" display="hex"/>
+                <number name="UnitPrice" id="395" type="integer" length="3" display="hex"/>
+            </structure>
+        </structure>
+        <structure name="File-05-Dept" id="319" extends="id:312">
+            <number name="FileNumber" mustmatch="yes" id="399" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="prev.ChunkType" value="5"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordCount" id="403" type="integer"/>
+            <structure name="DeptStruct" id="404" length="RecordLength" repeat="id:403" repeatmin="RecordCount" repeatmax="RecordCount">
+                <string name="Dept_Text" id="405" fillcolor="FEFB00" type="fixed-length" length="12"/>
+                <binary name="Unknown" id="406" unused="yes" length="3"/>
+                <number name="Taxable_Status" id="407" type="integer" length="1" display="hex"/>
+                <binary name="Unknown-1" id="408" unused="yes" length="4"/>
+                <number name="GroupLink" id="409" type="integer" length="1" display="hex"/>
+                <number name="Amount" id="410" fillcolor="D4FB78" type="integer" length="5" display="hex"/>
+                <number name="HAL" id="411" type="integer" length="3" display="hex"/>
+            </structure>
+        </structure>
+        <structure name="File-06-Groups" id="321" extends="id:312">
+            <number name="FileNumber" mustmatch="yes" id="415" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="prev.ChunkType" value="6"/>
+                </fixedvalues>
+            </number>
+            <string name="GroupText" id="420" fillcolor="FEFC78" repeatmin="RecordCount" repeatmax="RecordCount" type="fixed-length" length="RecordLength"/>
+        </structure>
+        <structure name="File-07-Clerks" id="323" extends="id:312">
+            <number name="FileNumber" mustmatch="yes" id="423" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="ChunkType" value="7"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordCount" id="427" type="integer"/>
+            <structure name="ClerkStruct" id="428" length="RecordLength" repeat="id:427" repeatmax="RecordCount">
+                <binary name="Char-Mod" id="429" length="1"/>
+                <string name="Clerk-Char" id="430" fillcolor="FEFC78" type="fixed-length" length="1"/>
+                <string name="Clerk-Name" id="431" type="fixed-length" length="10"/>
+                <binary name="CL-2" id="432" length="remaining"/>
+            </structure>
+        </structure>
+        <structure name="File-09-xx" id="325" extends="id:312">
+            <number name="FileNumber" mustmatch="yes" id="436" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="prev.ChunkType" value="9"/>
+                </fixedvalues>
+            </number>
+            <number name="Unknowns" id="441" repeatmax="RecordCount" type="integer" length="RecordLength" display="hex"/>
+        </structure>
+        <structure name="File-10" id="327" extends="id:312">
+            <number name="FileNumber" mustmatch="yes" id="444" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="prev.ChunkType" value="10"/>
+                </fixedvalues>
+            </number>
+            <binary name="&lt;Binary Fill Bytes-1&gt;" id="449" unused="yes" length="8"/>
+            <number name="RecordCount-1" id="450" type="integer"/>
+            <binary name="&lt;new binary&gt;" id="451" length="remaining"/>
+        </structure>
+        <structure name="File-16-PLU-Barcode" id="329" extends="id:312" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="FileNumber" mustmatch="yes" id="454" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="prev.ChunkType" value="16"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordCount" id="458" type="integer"/>
+            <structure name="BarCodeStruct" id="459" length="RecordLength" repeat="id:458" repeatmin="RecordCount" repeatmax="RecordCount">
+                <binary name="BarCode-1" id="460" length="7"/>
+                <string name="Description" id="461" fillcolor="FEFC78" type="fixed-length" length="12"/>
+                <binary name="BarCode-2" id="462" length="remaining"/>
+            </structure>
+        </structure>
+        <structure name="File-20-Grand-Total-Char" id="331" extends="id:312">
+            <number name="FileNumber" mustmatch="yes" id="466" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="prev.ChunkType" value="20"/>
+                </fixedvalues>
+            </number>
+            <string name="Characters" id="471" repeatmax="RecordCount" type="fixed-length" length="RecordLength"/>
+        </structure>
+        <structure name="File-22-General-Stuff" id="333" extends="id:312">
+            <number name="FileNumber" mustmatch="yes" id="474" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="prev.ChunkType" value="22"/>
+                </fixedvalues>
+            </number>
+            <structure name="Codes" id="475" length="RecordCount*RecordLength">
+                <number name="Code-01-xx" id="480" type="integer" length="5" display="hex"/>
+                <number name="Code-02-MachineNumber" id="481" type="integer" length="5" display="hex">
+                    <mask name="MachineNumber" value="0xFFFF">
+                        <fixedvalue name="MachineNumber" value="0xFF"/>
+                    </mask>
+                </number>
+                <number name="Code-03-ResetAfter-Z" id="482" type="integer" length="5" display="hex">
+                    <mask name="Z-Reset" value="0xFFFFFFFF">
+                        <fixedvalue name="Z-Reset" value="0xFFFFFFFF"/>
+                    </mask>
+                </number>
+                <number name="Code-04-Tax-Rounding" id="483" type="integer" length="5" display="hex"/>
+                <number name="Code-05-Receipt-Journal-Print" id="484" type="integer" length="5" display="hex"/>
+                <number name="Code-06-Calc-and-Ops_methods" id="485" type="integer" length="5" display="hex"/>
+                <number name="Code-07-xx" id="486" type="integer" length="5" display="hex"/>
+                <number name="Code-08-Cont-Sales-rep" id="487" type="integer" length="5" display="hex"/>
+                <number name="Code-09-xx" id="488" type="integer" length="5" display="hex"/>
+                <number name="Code-10-Print-Tax-Amnt" id="489" type="integer" length="5" display="hex"/>
+                <number name="Code-11-xx" id="490" type="integer" length="5" display="hex"/>
+                <number name="Code-12-xx" id="491" type="integer" length="5" display="hex"/>
+                <number name="Code-13-xx" id="492" type="integer" length="5" display="hex"/>
+                <number name="Code-14-Curency-Exch" id="493" type="integer" length="5" display="hex">
+                    <mask name="CurrencyExh" value="0xFFFFFFFF">
+                        <fixedvalue name="CurrencyExh" value="0xFFFFFFFF"/>
+                    </mask>
+                </number>
+                <number name="Code-15-Print-Meth-sales-rep" id="494" type="integer" length="5" display="hex"/>
+                <number name="Code-16-Print-Meth-Grand-Total" id="495" type="integer" length="5" display="hex">
+                    <mask name="GrandTotal" value="0xFFFFFFF">
+                        <fixedvalue name="GrandTotal" value="0xFFFFFFF"/>
+                    </mask>
+                </number>
+                <number name="Code-17-Date-Time-on-prints" id="496" type="integer" length="5" display="hex">
+                    <mask name="Date-Time" value="0xFFFF">
+                        <fixedvalue name="Date-Time" value="0xFFFF"/>
+                    </mask>
+                </number>
+                <number name="Code-18-xx" id="497" type="integer" length="5" display="hex"/>
+                <number name="Code-19-Dbl-Height-prints" id="498" type="integer" length="5" display="hex">
+                    <mask name="DblHeight" value="0xFFFFFFF">
+                        <fixedvalue name="DblHeight" value="0xFFFFFFF"/>
+                    </mask>
+                </number>
+                <number name="Code-20-xx" id="499" type="integer" length="5"/>
+                <number name="Code-21-Prt-Meth-Msgs" id="500" type="integer" length="5" display="hex"/>
+                <number name="Code-22-xx" id="501" type="integer" length="5"/>
+                <number name="Code-23-xx" id="502" type="integer" length="5" display="hex"/>
+                <number name="Code-24-xx" id="503" type="integer" length="5" display="hex"/>
+                <number name="Code-25-Entry-Last-Digit" id="504" type="integer" length="5" display="hex">
+                    <mask name="LastDigit" value="0xF">
+                        <fixedvalue name="LastDigit" value="0xF"/>
+                    </mask>
+                </number>
+                <number name="Code-26-xx" id="505" type="integer" length="5" display="hex"/>
+                <number name="Code-27-Clerk-Ops-Selection" id="506" type="integer" length="5" display="hex">
+                    <mask name="ClerkOps" value="0xFFFFFFFFF">
+                        <fixedvalue name="ClerkOps" value="0xFFFFFFFFF"/>
+                    </mask>
+                </number>
+                <number name="Code-28-Euro-1" id="507" type="integer" length="5" display="hex"/>
+                <number name="Code-29-Euro_2" id="508" type="integer" length="5" display="hex"/>
+                <number name="Code-30-Rcpt-msg" id="509" type="integer" length="5" display="hex">
+                    <mask name="RcptMsg" value="0xFFFFF">
+                        <fixedvalue name="RcptMsg" value="0xFFFFF"/>
+                    </mask>
+                </number>
+                <number name="Code-31-xx" id="510" type="integer" length="5" display="hex"/>
+                <number name="Code-32-xx" id="511" type="integer" length="5" display="hex"/>
+                <number name="Code-33-xx" id="512" type="integer" length="5" display="hex"/>
+                <number name="Code-34-BackGrnd-light" id="513" type="integer" length="5" display="hex">
+                    <mask name="BackGrndLight" value="0xFFFF">
+                        <fixedvalue name="BackGrndLight" value="0xFFFF"/>
+                    </mask>
+                </number>
+                <number name="Code-35-xx" id="514" type="integer" length="5" display="hex"/>
+                <number name="Code-36-xx" id="515" type="integer" length="5" display="hex"/>
+                <number name="Code-37-xx" id="516" type="integer" length="5" display="hex"/>
+            </structure>
+        </structure>
+        <structure name="File-23-OtherSymbols" id="335" extends="id:312" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="FileNumber" mustmatch="yes" id="520" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="prev.ChunkType" value="23"/>
+                </fixedvalues>
+            </number>
+            <structure name="File-23-OtherSymbols" id="521" length="RecordLength*RecordCount">
+                <string name="MainCurrencySymbol" id="526" type="fixed-length" length="2"/>
+                <string name="At_Symbol" id="527" type="fixed-length" length="2"/>
+                <string name="No" id="528" type="fixed-length" length="2"/>
+                <string name="SplitPricing" id="529" type="fixed-length" length="2"/>
+                <binary name="Padding" id="530" length="4"/>
+                <string name="SubCurrency" id="531" type="fixed-length" length="2"/>
+                <binary name="Padding_1" id="532" length="2"/>
+                <string name="No_items_Sold" id="533" type="fixed-length" length="2"/>
+                <string name="No_Customers" id="534" type="fixed-length" length="2"/>
+                <binary name="Padding_2" id="535" length="6"/>
+                <string name="Multiplication_Display" id="536" type="fixed-length" length="2"/>
+                <binary name="Padding_3" id="537" length="4"/>
+                <string name="Multiplication_Symbol" id="538" type="fixed-length" length="6"/>
+                <string name="Busy" id="539" type="fixed-length" length="4"/>
+                <binary name="Padding_4" id="540" length="6"/>
+                <structure name="Taxable_Symbols" id="541" length="16" repeatmin="3" repeatmax="3">
+                    <string name="Tax_Symbol" id="542" repeatmin="5" repeatmax="5" type="fixed-length" length="3"/>
+                    <binary name="Padding_1" id="543" length="remaining"/>
+                </structure>
+                <binary name="Padding_5" id="545" length="16"/>
+                <structure name="ForeignCurrency" id="546" length="16">
+                    <string name="Foreign_Currency_Symbol" id="547" repeatmin="4" repeatmax="4" type="fixed-length" length="2"/>
+                </structure>
+                <string name="Mode_Symbol_REG" id="549" type="fixed-length" length="4"/>
+                <string name="Mode_Symbol_RF" id="550" type="fixed-length" length="4"/>
+                <binary name="Padding_6" id="551" length="8"/>
+                <string name="Mode_Symbol_PGM" id="552" type="fixed-length" length="4"/>
+                <string name="Mode_Symbol_Daily_X" id="553" type="fixed-length" length="4"/>
+                <string name="Mode_Symbol_Daily_Z" id="554" type="fixed-length" length="4"/>
+                <string name="Mode_Symbol_Periodic" id="555" type="fixed-length" length="4"/>
+                <string name="Mode_Symbol_Not_Used_0" id="556" type="fixed-length" length="4"/>
+                <string name="Mode_Symbol_Not_Used_1" id="557" type="fixed-length" length="4"/>
+                <string name="Mode_Symbol_PGM_Read" id="558" type="fixed-length" length="4"/>
+                <binary name="Mode_Symbol_Not_Used_2" id="559" length="4"/>
+                <string name="Mode_Symbol_Decimal_Amount" id="560" type="fixed-length" length="1"/>
+                <string name="Mode_Symbol_Deciaml_Main_Qty" id="561" type="fixed-length" length="1"/>
+                <string name="Mode_Symbol_Seperator_Main_Amt" id="562" type="fixed-length" length="1"/>
+                <string name="Mode_Symbol_Seperator_Main_Qty" id="563" type="fixed-length" length="1"/>
+                <string name="Mode_Symbol_Seperator_Sub_Amt" id="564" type="fixed-length" length="1"/>
+                <string name="Mode_Symbol_Seperator_Sub_Qty" id="565" type="fixed-length" length="1"/>
+                <string name="Mode_Symbol_Not_Used_3" id="566" type="fixed-length" length="3"/>
+                <string name="Mode_Symbol_Squared" id="567" type="fixed-length" length="7"/>
+                <string name="Mode_Symbol_AM" id="568" type="fixed-length" length="3"/>
+                <string name="Mode_Symbol_PM" id="569" type="fixed-length" length="3"/>
+                <string name="Mode_Symbol_ST" id="570" type="fixed-length" length="3"/>
+                <binary name="Mode_Symbol_Not_used" id="571" length="7"/>
+                <string name="MoreStrings" id="572" repeatmin="40" repeatmax="83" type="fixed-length" length="16"/>
+            </structure>
+        </structure>
+        <structure name="File-24-ReportHeaders" id="337" extends="id:312">
+            <number name="FileNumber" mustmatch="yes" id="576" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="prev.ChunkType" value="24"/>
+                </fixedvalues>
+            </number>
+            <string name="Header" id="581" repeatmax="RecordCount" type="fixed-length" length="RecordLength"/>
+        </structure>
+        <structure name="File-25-Tax-Tables" id="339" extends="id:312">
+            <number name="FileNumber" mustmatch="yes" id="584" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Prev.ChunkType" value="25"/>
+                </fixedvalues>
+            </number>
+            <binary name="Tax Table" id="589" repeatmax="RecordCount" length="RecordLength"/>
+        </structure>
+        <structure name="File-32-Message" id="341" extends="id:312">
+            <number name="FileNumber" mustmatch="yes" id="592" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="prev.ChunkType" value="32"/>
+                </fixedvalues>
+            </number>
+            <string name="Message" id="597" repeatmax="RecordCount" type="fixed-length" length="RecordLength"/>
+        </structure>
+        <structure name="File-91-MachineNo" id="343" extends="id:312">
+            <number name="FileNumber" mustmatch="yes" id="600" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Prev.ChunkType" value="91"/>
+                </fixedvalues>
+            </number>
+            <string name="MachineNo" id="605" type="fixed-length" length="RecordLength"/>
+        </structure>
+        <structure name="File-95" id="345" extends="id:312">
+            <number name="FileNumber" mustmatch="yes" id="622" type="integer" length="2">
+                <fixedvalues>
+                    <fixedvalue name="Prev.ChunkType" value="95"/>
+                </fixedvalues>
+            </number>
+            <binary name="Data" id="627" length="RecordLength"/>
+        </structure>
+        <structure name="File-101" id="636" extends="id:312">
+            <number name="FileNumber" mustmatch="yes" id="639" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="Prev.ChunkType" value="101"/>
+                </fixedvalues>
+            </number>
+            <number name="RecordCount" id="643" type="integer"/>
+            <structure name="Data" id="645" repeat="id:643" repeatmax="RecordCount">
+                <binary name="Data" id="647" repeatmax="RecordCount" length="RecordLength"/>
+            </structure>
+        </structure>
+        <structure name="File-XX" id="347" length="0" alignment="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="FileNumber" mustmatch="yes" id="608" type="integer"/>
+            <structure name="Unnamed-1" id="609"/>
+            <binary name="FileStart-1" id="615"/>
+            <number name="FileNumber-1" id="616" type="integer"/>
+            <number name="RecordLength-1" id="617" type="integer"/>
+            <number name="RecordCount-1" id="618" type="integer"/>
+            <string name="Text-Stuff" id="619" fillcolor="FEFB00" repeatmin="RecordCount" repeatmax="RecordCount" type="fixed-length" length="RecordLength"/>
+        </structure>
+    </grammar>
+</ufwb>
