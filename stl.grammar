@@ -1,34 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ufwb version="1.7">
-    <grammar name="STereoLithography" start="id:5" author="Jonathan Wight" email="jwight@mac.com" uti="com.pleasantsoftware.uti.stl">
-        <description>Grammar for STL files</description>
-        <structure name="STL" id="5" encoding="ISO_8859-1:1987" endian="little" signed="no">
-            <description>STL (STereoLithography) files are used predominately as a file format for 3D printing.
+<ufwb version="1.24">
+    <grammar name="STereoLithography" start="id:20" author="Chris Wilson" email="synalyzeIt@yepher.com" fileextension="stl" uti="public.standard-tesselated-geometry-format" complete="yes">
+        <description>Grammar for Binary STL (stereolithography) files</description>
+        <structure name="STL Binary (STereoLithography)" id="20" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <description>https://en.wikipedia.org/wiki/STL_(file_format)
 
-There are really two formats called STL - a binary format (that this grammar works with) and text based.
-
-http://en.wikipedia.org/wiki/STL_(file_format)</description>
-            <string name="Header" id="6" type="fixed-length" length="80"/>
-            <number name="TriangleCount" id="7" type="integer" length="4" minval="0"/>
-            <structure name="triangles" id="8">
-                <structref name="triangles" id="10" repeatmax="TriangleCount" structure="id:9"/>
-            </structure>
-            <structure name="vertex" id="12">
-                <number name="x" id="13" type="float" length="32" lengthunit="bit"/>
-                <number name="y" id="14" type="float" length="4"/>
-                <number name="z" id="15" type="float" length="4"/>
-            </structure>
-            <structure name="triangle" id="9">
-                <structref name="normal" id="17" fillcolor="D783FF" structure="id:12"/>
-                <structref name="vertex0" id="18" structure="id:12"/>
-                <structref name="vertex1" id="19" structure="id:12"/>
-                <structref name="vertex2" id="20" structure="id:12"/>
-                <number name="attribute_byte_count" mustmatch="yes" id="21" type="integer" length="2">
-                    <fixedvalues>
-                        <fixedvalue name="default" value="0"/>
-                    </fixedvalues>
+STL binary format uses es the IEEE integer and floating point numerical representation.</description>
+            <string name="Header" id="21" fillcolor="46C3FF" type="fixed-length" length="80">
+                <description>80 characters (uint8) header</description>
+            </string>
+            <number name="Number of Triangles" id="22" fillcolor="00FF53" type="integer" length="4" endian="little">
+                <description>Number of Triangles (facets) - 4-byte little endian unsigned integer</description>
+            </number>
+            <structure name="Triangle" id="23" length="50" repeat="id:22" repeatmin="0" repeatmax="-1" endian="little">
+                <description>Structure defines a facet</description>
+                <structure name="NormalVector" id="24" fillcolor="FFD000">
+                    <description>
+In cartesian system, any vector is represented in terms of its unit vectors. The unit vectors along x-axis, y-axis and z-axis are represented by i, j and k respectively.</description>
+                    <number name="i" id="25" fillcolor="FEFC78" type="float" length="4"/>
+                    <number name="j" id="26" fillcolor="FFD478" type="float" length="4"/>
+                    <number name="k" id="27" fillcolor="FF7D78" type="float" length="4"/>
+                </structure>
+                <structref name="Vertex01" id="47" structure="id:29"/>
+                <structref name="Vertex02" id="48" structure="id:29"/>
+                <structref name="Vertex03" id="49" structure="id:29"/>
+                <number name="AttributeByteCount" id="44" fillcolor="73FDFF" type="integer" length="2">
+                    <description>It is specified that the attribute byte count should be set to zero.</description>
                 </number>
             </structure>
+        </structure>
+        <structure name="Vertex" id="29" encoding="ISO_8859-1:1987" endian="big" signed="no" fillcolor="FF031C">
+            <number name="x" id="30" fillcolor="FF89D8" type="float" length="4"/>
+            <number name="y" id="31" fillcolor="FF84FF" type="float" length="4"/>
+            <number name="z" id="32" fillcolor="D783FF" type="float" length="4"/>
         </structure>
     </grammar>
 </ufwb>
