@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ufwb version="1.24">
-    <grammar name="STereoLithography" start="id:20" author="Chris Wilson" email="synalyzeIt@yepher.com" fileextension="stl" uti="public.standard-tesselated-geometry-format" complete="yes">
+    <grammar name="STereoLithography" start="id:1" author="Chris Wilson" email="synalyzeIt@yepher.com" fileextension="stl" uti="public.standard-tesselated-geometry-format" complete="yes">
         <description>Grammar for Binary STL (stereolithography) files</description>
-        <structure name="STL Binary (STereoLithography)" id="20" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+        <structure name="STL Binary (STereoLithography)" id="1" length="0" encoding="ISO_8859-1:1987" endian="little" signed="no">
             <description>https://en.wikipedia.org/wiki/STL_(file_format)
 
 STL binary format uses es the IEEE integer and floating point numerical representation.</description>
-            <string name="Header" id="21" fillcolor="46C3FF" type="fixed-length" length="80">
+            <string name="Header" id="2" fillcolor="46C3FF" type="fixed-length" length="80">
                 <description>80 characters (uint8) header</description>
             </string>
-            <number name="Number of Triangles" id="22" fillcolor="00FF53" type="integer" length="4" endian="little">
+            <number name="Number of Triangles" id="3" fillcolor="00FF53" type="integer" length="4">
                 <description>Number of Triangles (facets) - 4-byte little endian unsigned integer</description>
             </number>
-            <structure name="Triangle" id="23" length="50" repeat="id:22" repeatmin="0" repeatmax="-1" endian="little">
+            <structure name="Triangle" id="4" length="50" repeat="id:3" repeatmin="0" repeatmax="-1">
                 <description>Structure defines a facet</description>
-                <structure name="NormalVector" id="24" fillcolor="FFD000">
+                <structure name="NormalVector" id="5" fillcolor="FFD000">
                     <description>
 In cartesian system, any vector is represented in terms of its unit vectors. The unit vectors along x-axis, y-axis and z-axis are represented by i, j and k respectively.</description>
-                    <number name="i" id="25" fillcolor="FEFC78" type="float" length="4"/>
-                    <number name="j" id="26" fillcolor="FFD478" type="float" length="4"/>
-                    <number name="k" id="27" fillcolor="FF7D78" type="float" length="4"/>
+                    <number name="i" id="6" fillcolor="FEFC78" type="float" length="4"/>
+                    <number name="j" id="7" fillcolor="FFD478" type="float" length="4"/>
+                    <number name="k" id="8" fillcolor="FF7D78" type="float" length="4"/>
                 </structure>
-                <structref name="Vertex01" id="47" structure="id:29"/>
-                <structref name="Vertex02" id="48" structure="id:29"/>
-                <structref name="Vertex03" id="49" structure="id:29"/>
-                <number name="AttributeByteCount" id="44" fillcolor="73FDFF" type="integer" length="2">
+                <structref name="Vertex01" id="11" structure="id:10"/>
+                <structref name="Vertex02" id="12" structure="id:10"/>
+                <structref name="Vertex03" id="13" structure="id:10"/>
+                <number name="AttributeByteCount" id="14" fillcolor="73FDFF" type="integer" length="2">
                     <description>It is specified that the attribute byte count should be set to zero.</description>
                 </number>
             </structure>
         </structure>
-        <structure name="Vertex" id="29" encoding="ISO_8859-1:1987" endian="big" signed="no" fillcolor="FF031C">
-            <number name="x" id="30" fillcolor="FF89D8" type="float" length="4"/>
-            <number name="y" id="31" fillcolor="FF84FF" type="float" length="4"/>
-            <number name="z" id="32" fillcolor="D783FF" type="float" length="4"/>
+        <structure name="Vertex" id="10" encoding="ISO_8859-1:1987" endian="little" signed="no" fillcolor="FF031C">
+            <number name="x" id="17" fillcolor="FF89D8" type="float" length="4"/>
+            <number name="y" id="18" fillcolor="FF84FF" type="float" length="4"/>
+            <number name="z" id="19" fillcolor="D783FF" type="float" length="4"/>
         </structure>
     </grammar>
 </ufwb>
