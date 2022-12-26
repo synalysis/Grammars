@@ -240,11 +240,11 @@ padding = 0
 if (layer == 3):
 	if (paddingBit == 1):
 		padding = 4
-	frameLengthInBytes =  (12 * bitrate / samplingRate + padding) * 4 - 4
+	frameLengthInBytes =  (12 * bitrate // samplingRate + padding) * 4 - 4
 else:
 	if (paddingBit == 1):
 		padding = 1
-	frameLengthInBytes = 144 * bitrate / samplingRate + padding - 4
+	frameLengthInBytes = 144 * bitrate // samplingRate + padding - 4
 
 if (frameLengthInBytes &lt; 0):
 	print(&quot;Frame length not positive&quot;)

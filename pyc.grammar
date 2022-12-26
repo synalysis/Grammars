@@ -141,7 +141,7 @@ PyLong_MASK = (PyLong_BASE - 1)
 PyLong_MARSHAL_SHIFT = 15
 PyLong_MARSHAL_BASE = (1 &lt;&lt; PyLong_MARSHAL_SHIFT)
 PyLong_MARSHAL_MASK = (PyLong_MARSHAL_BASE - 1)
-PyLong_MARSHAL_RATIO = round(PyLong_SHIFT / PyLong_MARSHAL_SHIFT)
+PyLong_MARSHAL_RATIO = round(PyLong_SHIFT // PyLong_MARSHAL_SHIFT)
 
 
 def r_long(b):

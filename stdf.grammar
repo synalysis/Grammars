@@ -69,7 +69,7 @@ def fillByteRange(value, byteArray, bitPos, bitLength):
 	dt = datetime.strptime(dateTimeString, &quot;%Y-%m-%d %H:%M:%S&quot;)
 
 	highWord = ((dt.year - 1980) &lt;&lt; 9) + (dt.month &lt;&lt; 5) + dt.day
-	lowWord = (dt.hour &lt;&lt; 11) + (dt.minute &lt;&lt; 5) + (dt.second / 2)
+	lowWord = (dt.hour &lt;&lt; 11) + (dt.minute &lt;&lt; 5) + (dt.second // 2)
 
 	byteArray.writeUnsignedInt(highWord, bitPos//8, 2, ENDIAN_BIG)
 	byteArray.writeUnsignedInt(lowWord, bitPos//8+2, 2, ENDIAN_BIG)
