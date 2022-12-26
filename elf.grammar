@@ -39,10 +39,10 @@ num        = value:getUnsignedNumber()
 
 if (num == 1) then
     currentMapper:setDynamicEndianness(synalysis.ENDIAN_LITTLE)
-	print &quot;Little Endian&quot;
+	print(&quot;Little Endian&quot;)
 else
     currentMapper:setDynamicEndianness(synalysis.ENDIAN_BIG)
-	print &quot;Big Endian&quot;
+	print(&quot;Big Endian&quot;)
 end
 
 </source>

@@ -12,9 +12,9 @@ def parseByteRange(element, byteView, bitPos, bitLength, results):
 	&quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
 
 	# if there's a file name specified there shouldn't be a '\0'
-	testByte = byteView.readByte(bitPos/8 + 3)
+	testByte = byteView.readByte(bitPos//8 + 3)
 
-	print testByte
+	print(testByte)
 
 	# create and set new value
 	value = Value()

@@ -35,7 +35,7 @@ def parseByteRange(element, byteView, bitPos, bitLength, results):
 	&quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
 	
 	byteRead = 0
-	startPos = bytePos = bitPos / 8
+	startPos = bytePos = bitPos // 8
 	parsedString = &quot;&quot;
 	
 	while (byteRead != 0xFF):

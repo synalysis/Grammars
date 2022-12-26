@@ -15,7 +15,7 @@ def parseByteRange(element, byteView, bitPos, bitLength, results):
 	iteration = 0
 	byteRead = 0
 	octalString = &quot;&quot;
-	startPos = bytePos = bitPos / 8
+	startPos = bytePos = bitPos // 8
 	sum = 999
 
 	# read octal bytes unless \0 or space is found
@@ -53,7 +53,7 @@ def fillByteRange(value, byteArray, bitPos, bitLength):
 	# hex string representation of edited number
 	octalString = &quot;0&quot; % (number)
 
-	currentPos = startPos = bitPos/8
+	currentPos = startPos = bitPos//8
 
 	# remove old hex string
 	byteArray.deleteRange(startPos, bitLength/8)

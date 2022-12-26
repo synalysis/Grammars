@@ -38,8 +38,8 @@ from datetime import datetime
 def parseByteRange(element, byteView, bitPos, bitLength, results):
 	&quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
 
-	highWord = byteView.readUnsignedInt(bitPos/8, 2, ENDIAN_BIG)
-	lowWord = byteView.readUnsignedInt(bitPos/8+2, 2, ENDIAN_BIG)
+	highWord = byteView.readUnsignedInt(bitPos//8, 2, ENDIAN_BIG)
+	lowWord = byteView.readUnsignedInt(bitPos//8+2, 2, ENDIAN_BIG)
 
 	year = (highWord &gt;&gt; 9) + 1980
 	month = (highWord &gt;&gt; 5) &amp; 0x1F
@@ -62,7 +62,7 @@ def fillByteRange(value, byteArray, bitPos, bitLength):
 	&quot;&quot;&quot;fillByteRange method&quot;&quot;&quot;
 
 	if (bitLength &lt; 32):
-		print &quot;Not enough space for DOS Date/Time structure, 32 bits needed&quot;
+		print(&quot;Not enough space for DOS Date/Time structure, 32 bits needed&quot;)
 
 	dateTimeString = value.getString()
 
@@ -71,8 +71,8 @@ def fillByteRange(value, byteArray, bitPos, bitLength):
 	highWord = ((dt.year - 1980) &lt;&lt; 9) + (dt.month &lt;&lt; 5) + dt.day
 	lowWord = (dt.hour &lt;&lt; 11) + (dt.minute &lt;&lt; 5) + (dt.second / 2)
 
-	byteArray.writeUnsignedInt(highWord, bitPos/8, 2, ENDIAN_BIG)
-	byteArray.writeUnsignedInt(lowWord, bitPos/8+2, 2, ENDIAN_BIG)
+	byteArray.writeUnsignedInt(highWord, bitPos//8, 2, ENDIAN_BIG)
+	byteArray.writeUnsignedInt(lowWord, bitPos//8+2, 2, ENDIAN_BIG)
 </source>
             </script>
         </scripts>

@@ -4,7 +4,7 @@
         <description>Grammar for ITC files</description>
         <scripts>
             <script name="PreambleType" type="Generic" id="41">
-                <source language="Python">print &quot;Generic Python Script did run&quot;
+                <source language="Python">print(&quot;Generic Python Script did run&quot;)
 </source>
             </script>
         </scripts>

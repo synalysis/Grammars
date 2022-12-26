@@ -13,12 +13,12 @@ def parseByteRange(element, byteView, bitPos, bitLength, results):
     &quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
 
     # need at least three bytes
-    if (bitLength / 8 &lt; 3):
+    if (bitLength // 8 &lt; 3):
         return 0
 
-    heads = byteView.readByte(bitPos/8 + 0)
-    byte2 = byteView.readByte(bitPos/8 + 1)
-    byte3 = byteView.readByte(bitPos/8 + 2)
+    heads = byteView.readByte(bitPos//8 + 0)
+    byte2 = byteView.readByte(bitPos//8 + 1)
+    byte3 = byteView.readByte(bitPos//8 + 2)
 
     sectors = byte2 &amp; 0x3F
     cylinders = ((byte2 &amp; 0xC0) &lt;&lt; 2) + byte3

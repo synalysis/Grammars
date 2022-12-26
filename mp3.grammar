@@ -148,7 +148,7 @@ else:
 	column = 2
 
 samplingRate = samplingRateMatrix[samplingRateIndex][column] + &quot; Hz&quot;
-print samplingRate
+print(samplingRate)
 
 value = Value()
 value.setString(samplingRate)
@@ -232,7 +232,7 @@ layer = layerValue.getUnsignedNumber()
 paddingBit = paddingValue.getUnsignedNumber()
 
 if (samplingRate &lt; 1):
-	print &quot;Sampling rate is negative&quot;
+	print(&quot;Sampling rate is negative&quot;)
 
 frameLengthInBytes = 0
 padding = 0
@@ -247,7 +247,7 @@ else:
 	frameLengthInBytes = 144 * bitrate / samplingRate + padding - 4
 
 if (frameLengthInBytes &lt; 0):
-	print &quot;Frame length not positive&quot;
+	print(&quot;Frame length not positive&quot;)
 
 
 value = Value()
@@ -441,8 +441,8 @@ number = value.getUnsignedNumber()
 
 decodedNumber = (number &amp; 0x7F) + ((number &amp; 0x7F00) &gt;&gt; 1) + ((number &amp; 0x7F0000) &gt;&gt; 2) + ((number &amp; 0x7F000000) &gt;&gt; 3)
 
-print number
-print decodedNumber
+print(number)
+print(decodedNumber)
 
 value = Value()
 value.setUnsigned(decodedNumber)
@@ -553,8 +553,8 @@ number = value.getUnsignedNumber()
 
 decodedNumber = (number &amp; 0x7F) + ((number &amp; 0x7F00) &gt;&gt; 1) + ((number &amp; 0x7F0000) &gt;&gt; 2) + ((number &amp; 0x7F000000) &gt;&gt; 3)
 
-print number
-print decodedNumber
+print(number)
+print(decodedNumber)
 
 value = Value()
 value.setUnsigned(decodedNumber)

@@ -745,7 +745,7 @@ while not endFound:
 			endFound = True
 			theValue = Value();
 			theValue.setString( &quot;EOF&quot;);
-			# print &quot;End found at offset &quot; + str(theOffset)
+			# print(&quot;End found at offset &quot; + str(theOffset))
 			struct = grammar.getStructureByName(&quot;ImageBytes&quot;)
 			element = struct.getElementByName(&quot;ImageBytes&quot;)
 			length = theOffset - currentOffset
@@ -775,7 +775,7 @@ while not endFound:
 			endFound = True
 			theValue = Value();
 			theValue.setString( &quot;EOF&quot;);
-			# print &quot;End found at offset &quot; + str(theOffset)
+			# print(&quot;End found at offset &quot; + str(theOffset))
 			struct = grammar.getStructureByName(&quot;ImageBytes&quot;)
 			element = struct.getElementByName(&quot;ImageBytes&quot;)
 			length = theOffset - currentOffset

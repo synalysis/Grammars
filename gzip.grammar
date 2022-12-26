@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 def parseByteRange(element, byteView, bitPos, bitLength, results):
 	&quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
 
-	timeStamp = byteView.readUnsignedInt(bitPos/8, 4, ENDIAN_LITTLE)
+	timeStamp = byteView.readUnsignedInt(bitPos//8, 4, ENDIAN_LITTLE)
 
 	dt = datetime.fromtimestamp(timeStamp)
 
@@ -92,7 +92,7 @@ flagsResult = results.getResultByName(&quot;Flags&quot;)
 flagsValue = flagsResult.getValue()
 flags = flagsValue.getUnsigned()
 
-# print &quot;Flags: &quot; + str(flags)
+# print(&quot;Flags: &quot; + str(flags))
 
 partNumberPresent = flags &amp; 0x02
 extraFieldPresent = flags &amp; 0x04
@@ -118,7 +118,7 @@ if fileCommentPresent:
 
 remainingSize = currentMapper.getCurrentRemainingSize()
 
-# print &quot;Remaining: &quot; + str(remainingSize)
+# print(&quot;Remaining: &quot; + str(remainingSize))
 
 dataElement = optionalFieldsStructure.getElementByName(&quot;Data&quot;)
 currentMapper.mapElementWithSize(dataElement, remainingSize - 8)

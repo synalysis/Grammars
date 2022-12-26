@@ -21,7 +21,7 @@ lengthNum = lengthValue:getUnsignedNumber()
 
 if (lengthNum &gt; 63) then
 
-    print &quot;long header&quot;
+    print(&quot;long header&quot;)
     -- get currently processed grammar
     currentGrammar = currentMapper:getCurrentGrammar()
 
@@ -91,7 +91,7 @@ lengthNum = lengthValue.getUnsignedNumber()
 
 if (lengthNum &gt; 63):
 
-    print &quot;long header&quot;
+    print(&quot;long header&quot;)
     # get currently processed grammar
     currentGrammar = currentMapper.getCurrentGrammar()
 
@@ -102,7 +102,7 @@ if (lengthNum &gt; 63):
 
     currentMapper.mapElementWithSize(SI32element, 4)
 
-print lengthNum
+print(lengthNum)
 </source>
                     </script>
                 </scriptelement>
@@ -265,7 +265,7 @@ if structureElement is None:
 
 structure = structureElement.getStructure()
 
-print &quot;Map &quot; + structureName
+print(&quot;Map &quot; + structureName)
 currentMapper.mapStructure(structure) 
 
 </source>

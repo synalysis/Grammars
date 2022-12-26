@@ -5,30 +5,30 @@
         <scripts>
             <script name="SamplePython" type="Grammar" id="101">
                 <source language="Python">def init():
-	print &quot;init&quot;
+	print(&quot;init&quot;)
 
 def processGrammar(grammar):
-	print &quot;grammar&quot;
+	print(&quot;grammar&quot;)
 
 	currentGrammar = grammar
 	elfFile = currentGrammar:getStructureByName(&quot;ELF_file”)
 	shHdr = elfFile:getStructureByName(&quot;Elf32_Shdr”)
 
-	print elfFile
-	print shHdr
+	print(elfFile)
+	print(shHdr)
 
 
 def terminate():
-	print &quot;terminate&quot;
+	print(&quot;terminate&quot;)
 </source>
             </script>
             <script name="SampleLua" type="Grammar" id="101">
                 <source language="Lua">function init()
-	print &quot;hello init&quot;
+	print(&quot;hello init&quot;)
 end
 
 function processGrammar(grammar)
-	print &quot;hello grammar&quot;
+	print(&quot;hello grammar&quot;)
 
 	print (grammar)
 	elfFile = grammar:getStructureByName(&quot;ELF_file&quot;)
@@ -40,7 +40,7 @@ function processGrammar(grammar)
 end
 
 function terminate()
-	print &quot;end of processing&quot;
+	print(&quot;end of processing&quot;)
 end
 </source>
             </script>

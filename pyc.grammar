@@ -45,7 +45,7 @@ def parseByteRange(element, byteView, bitPos, bitLength, results):
     # this method parses data starting at bitPos, bitLength bits are remaining
     &quot;&quot;&quot;parseByteRange method&quot;&quot;&quot;
 
-    tsBytes = byteView.readUnsignedInt(bitPos/8, 4, ENDIAN_LITTLE)
+    tsBytes = byteView.readUnsignedInt(bitPos//8, 4, ENDIAN_LITTLE)
     stamp = str(time.strftime(TIME_FORMAT, time.localtime(tsBytes)))
 
     # create and set new value
@@ -70,7 +70,7 @@ def fillByteRange(value, byteArray, bitPos, bitLength):
     newBytes = struct.pack('I', newStamp)
     
     # write an integer back to file
-    byteArray.fillRange(bitPos/8, 4, newBytes)
+    byteArray.fillRange(bitPos//8, 4, newBytes)
 </source>
             </script>
             <script name="LongObjectValue" type="DataType" id="528">
@@ -172,7 +172,7 @@ def parseByteRange(element, byteView, bitPos, bitLength, results):
     else:
         endianess = ENDIAN_BIG
 
-    start = ((bitPos/8) - offset)
+    start = ((bitPos//8) - offset)
     size = abs(int(byteView.readSignedInt(int(start + 1), 4, endianess)))
 
     if PyLong_MARSHAL_SHIFT == 30:
@@ -217,7 +217,7 @@ def fillByteRange(value, byteArray, bitPos, bitLength):
     # wouldn't change.
     # 
     offset = len('\x6C\x00\x00\x00\x00')
-    start = ((bitPos/8) - offset)
+    start = ((bitPos//8) - offset)
     editedString = value.getString()
     try:
         newBytes = marshal.dumps(long(editedString))

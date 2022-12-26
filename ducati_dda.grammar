@@ -16,7 +16,7 @@ def parseByteRange(element, byteView, bitPos, bitLength, results):
 	iteration = 0
 	byteRead = 0
 	hexString = &quot;&quot;
-	startPos = bytePos = bitPos / 8
+	startPos = bytePos = bitPos // 8
 
 	# read hex bytes unless \n is found
 	while (byteRead != 0x0A):
@@ -51,7 +51,7 @@ def fillByteRange(value, byteArray, bitPos, bitLength):
 	# hex string representation of edited number
 	hexString = &quot;%x&quot;%(number)
 
-	currentPos = startPos = bitPos/8
+	currentPos = startPos = bitPos//8
 
 	# remove old hex string
 	byteArray.deleteRange(startPos, bitLength/8)

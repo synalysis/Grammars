@@ -190,7 +190,7 @@ fileNameRes = results.getResultByName(&quot;FileName&quot;)
 fileNameVal = fileNameRes.getValue()
 fileNameFlag = fileNameVal.getUnsigned()
 
-print fileNameFlag
+print(fileNameFlag)
 
 if fileNameFlag != 0:
     fileNameValue = NumberValue()

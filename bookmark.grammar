@@ -24,13 +24,13 @@ def parseBitRange(element, byteView, bitPos, bitLength, results):
 		intMarker = byteView.readUnsignedIntBits(bitPos + processedBits, 4, ENDIAN_BIG)
 		processedBits += 4
 		if (intMarker != 1):
-			intPos = (bitPos + processedBits) / 8;
+			intPos = (bitPos + processedBits) // 8;
 			print(&quot;Expected integer object at position &quot; + str(intPos))
 		else:
 			intBits = byteView.readUnsignedIntBits(bitPos + processedBits, 4, ENDIAN_BIG)
 			processedBits += 4
 			intBytes = 2 ** intBits
-			count = byteView.readUnsignedInt((bitPos + processedBits) / 8, intBytes, ENDIAN_BIG)
+			count = byteView.readUnsignedInt((bitPos + processedBits) // 8, intBytes, ENDIAN_BIG)
 			processedBits += intBytes * 8
 
 	value.setUnsigned(count)
