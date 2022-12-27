@@ -4065,6 +4065,7 @@ synalysis@pascal.werz.name</description>
                 <number name="cputype" mustmatch="yes" id="6696" type="integer" length="4" display="hex">
                     <fixedvalues>
                         <fixedvalue name="CPU_TYPE_ARM" value="0xC"/>
+                        <fixedvalue name="CPU_TYPE_ARM_APPLE" value="0x100000C"/>
                     </fixedvalues>
                 </number>
                 <number name="subtype capabilities" id="6697" type="integer" length="1" display="hex">
@@ -4343,6 +4344,7 @@ synalysis@pascal.werz.name</description>
                 <number name="cputype" mustmatch="yes" id="6762" type="integer" length="4" display="hex">
                     <fixedvalues>
                         <fixedvalue name="CPU_TYPE_ARM" value="0xC"/>
+                        <fixedvalue name="CPU_TYPE_ARM_APPLE" value="0x100000C"/>
                     </fixedvalues>
                 </number>
                 <number name="cpusubtype" id="6763" type="integer" length="3" display="hex">
