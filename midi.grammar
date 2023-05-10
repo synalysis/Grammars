@@ -47,6 +47,7 @@
             <binary name="type" mustmatch="yes" id="49" length="1">
                 <fixedvalues>
                     <fixedvalue name="Sequence Number" value="00"/>
+                    <fixedvalue name="Text Event" value="01"/>
                     <fixedvalue name="Copyright Notice" value="02"/>
                     <fixedvalue name="Sequence Name" value="03"/>
                     <fixedvalue name="Instrument Name" value="04"/>
@@ -55,13 +56,13 @@
                     <fixedvalue name="Cue Point" value="07"/>
                     <fixedvalue name="Program Name" value="08"/>
                     <fixedvalue name="Peripheric Name" value="09"/>
+                    <fixedvalue name="MIDI Channel Prefix" value="20"/>
                     <fixedvalue name="End of Track" value="2F"/>
                     <fixedvalue name="Tempo Setting" value="51"/>
                     <fixedvalue name="SMPTE Offset" value="54"/>
                     <fixedvalue name="Time Signature" value="58"/>
                     <fixedvalue name="Key Signature" value="59"/>
                     <fixedvalue name="Sequencer Specific Event" value="7F"/>
-                    <fixedvalue name="Text Event" value="01"/>
                 </fixedvalues>
             </binary>
             <number name="length" id="50" type="integer" length="1"/>
