@@ -57,6 +57,7 @@
                     <fixedvalue name="Program Name" value="08"/>
                     <fixedvalue name="Peripheric Name" value="09"/>
                     <fixedvalue name="MIDI Channel Prefix" value="20"/>
+                    <fixedvalue name="MIDI Port" value="21"/>
                     <fixedvalue name="End of Track" value="2F"/>
                     <fixedvalue name="Tempo Setting" value="51"/>
                     <fixedvalue name="SMPTE Offset" value="54"/>
