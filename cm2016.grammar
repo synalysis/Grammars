@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.32">
+    <grammar name="Voltcraft CM2016" start="id:1" author="Konrad Skeri Ekblad" email="lunkar.bifokal.0c@icloud.com">
+        <description>Grammar for a binary dump of the serial data sent by the Voltcraft CM2016 battery charger.
+Based upon https://github.com/sarnau/cm2016</description>
+        <structure name="Voltcraft CM2016" id="1" length="0" alignment="0" repeatmax="-1" encoding="ISO_8859-1:1987" endian="big" signed="yes">
+            <structref name="Voltcraft CM2016 data transmission" id="47" repeatmax="-1" structure="id:45"/>
+        </structure>
+        <structure name="Voltcraft CM2016 data transmission" id="45" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structure name="Header" id="5" length="17" endian="big">
+                <string name="Unit" id="3" type="fixed-length" length="7"/>
+                <number name="Version major" id="7" type="integer" length="1"/>
+                <number name="Version minor" id="8" type="integer" length="1"/>
+                <number name="Chemistry" mustmatch="yes" id="13" type="integer" length="1">
+                    <fixedvalues>
+                        <fixedvalue name="NiMH" value="0"/>
+                        <fixedvalue name="NiZn" value="1"/>
+                    </fixedvalues>
+                </number>
+                <number name="OVERTEMP_FLAG" id="9" type="integer" length="1"/>
+                <number name="TEMP_START" id="10" type="integer" length="2"/>
+                <number name="TEMP_ACT" id="11" type="integer" length="2"/>
+                <number name="ACTION_CNTR" id="12" type="integer" length="2"/>
+            </structure>
+            <structref name="Slot data" id="22" repeatmin="6" repeatmax="6" structure="id:19"/>
+            <binary name="CRC" id="31" length="2"/>
+        </structure>
+        <structure name="Slot data" id="19" length="18" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="Active" mustmatch="yes" id="21" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Empty" value="0"/>
+                    <fixedvalue name="Active" value="1"/>
+                </fixedvalues>
+            </number>
+            <number name="Program" mustmatch="yes" id="23" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="Idle" value="0"/>
+                    <fixedvalue name="Charge" value="1"/>
+                    <fixedvalue name="Discharge" value="2"/>
+                    <fixedvalue name="Check" value="3"/>
+                    <fixedvalue name="Cycle" value="4"/>
+                    <fixedvalue name="Alive" value="5"/>
+                    <fixedvalue name="No Param" value="6"/>
+                    <fixedvalue name="Trickle" value="7"/>
+                    <fixedvalue name="Waiting" value="8"/>
+                    <fixedvalue name="Error" value="9"/>
+                    <fixedvalue name="Ready" value="10"/>
+                </fixedvalues>
+            </number>
+            <number name="Mode" mustmatch="yes" id="24" type="integer" length="1">
+                <fixedvalues>
+                    <fixedvalue name="---" value="0"/>
+                    <fixedvalue name="Charge" value="1"/>
+                    <fixedvalue name="Discarge" value="2"/>
+                    <fixedvalue name="Ready" value="3"/>
+                    <fixedvalue name="Ready" value="4"/>
+                    <fixedvalue name="Waiting" value="5"/>
+                    <fixedvalue name="Error" value="6"/>
+                </fixedvalues>
+            </number>
+            <number name="&lt;unknown&gt;" id="25" type="integer" length="1"/>
+            <number name="Time (minutes)" id="26" type="integer" length="2"/>
+            <number name="Voltage (mV)" id="27" type="integer" length="2"/>
+            <number name="Current (mA)" id="28" type="integer" length="2"/>
+            <number name="Charge capacity (/100 mAh)" id="29" type="integer" length="4"/>
+            <number name="Discharge capacity (/100 mAh)" id="30" type="integer" length="4"/>
+        </structure>
+    </grammar>
+</ufwb>
