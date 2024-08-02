@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.32">
+    <grammar name="UEF [Unified Emulator Format]" start="id:5" author="Rick Pontefract" email="rjpontefract@gmail.com">
+        <description>The UEF file format is designed to store images of all the common media types that are associated with the BBC Micro, Acorn Electron and Atom, so that no information that would be presented to those machines is discarded. </description>
+        <structure name="uef_file" id="5" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <structure name="uef_header" id="6">
+                <string name="uh_id" id="7" type="fixed-length" length="10"/>
+                <number name="uh_minor_version" id="8" type="integer" length="1"/>
+                <number name="uh_major_version" id="9" type="integer" length="1"/>
+            </structure>
+            <structure name="chunks" id="11" length="0" repeatmax="-1" order="variable">
+                <structref name="0000_origin_information_chunk" id="13" repeatmin="0" structure="id:12"/>
+                <structref name="0001_games_notes_chunk" id="15" repeatmin="0" structure="id:14"/>
+                <structref name="0100_implicit_start_stop_bit_tape_data_block " id="17" repeatmin="0" structure="id:16"/>
+                <structref name="0110_high_tone_chunk" id="19" repeatmin="0" structure="id:18"/>
+                <structref name="0111_high_tone_with_dummy_byte_chunk" id="21" repeatmin="0" structure="id:20"/>
+                <structref name="0112_baud_wise_gap_chunk" id="23" repeatmin="0" structure="id:22"/>
+                <structref name="0113_change_of_baud_rate_chunk" id="25" repeatmin="0" structure="id:24"/>
+                <structref name="0114_security_waves_chunk" id="27" repeatmin="0" structure="id:26"/>
+                <structref name="0115_phase_change_chunk" id="29" repeatmin="0" structure="id:28"/>
+                <structref name="0116_floating_point_gap_chunk" id="31" repeatmin="0" structure="id:30"/>
+            </structure>
+        </structure>
+        <structure name="chunk_base" id="34" encoding="ISO_8859-1:1987" endian="little" signed="no">
+            <number name="chunk_id" id="35" fillcolor="932092" type="integer" length="2" display="hex"/>
+            <number name="chunk_length" id="36" fillcolor="FF2600" type="integer" length="4"/>
+        </structure>
+        <structure name="0000_origin_information_chunk" id="12" length="0" extends="id:34" fillcolor="0432FF">
+            <number name="chunk_id" mustmatch="yes" id="38" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="chunk0000" value="0x0"/>
+                </fixedvalues>
+            </number>
+            <number name="chunk_length" id="39" type="integer" length="4"/>
+            <structure name="chunk_data" id="40" length="0">
+                <string name="description" id="41" type="fixed-length" length="chunk_length"/>
+            </structure>
+        </structure>
+        <structure name="0001_games_notes_chunk" id="14" extends="id:34" fillcolor="AA7941">
+            <description>Text as above, intended to hold a copy of the game manual, or some notes on the game generally. Alternatively, this may contain a URL to a more meaningful resource, such as a local or internet based web site, in which case the first five characters should be &quot;URL: &quot; (URL: followed by a single space) followed by the URL. </description>
+            <number name="chunk_id" mustmatch="yes" id="44" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0001" value="0x1"/>
+                </fixedvalues>
+            </number>
+            <number name="chunk_length" id="45" type="integer"/>
+            <structure name="chunk_data" id="46">
+                <string name="notes" id="47" type="fixed-length" length="chunk_length"/>
+            </structure>
+        </structure>
+        <structure name="0100_implicit_start_stop_bit_tape_data_block " id="16" extends="id:34" fillcolor="AA7941">
+            <description> This chunk represents data stored on a cassette with the default start/stop bits, and as such those start/stop bits are omitted to save space.
+
+If one considers the most significant bit of a byte to be 'before' the least significant, bits are stored reversed from the order on the tape. The least significant bit of the first byte is the first bit that would have appeared on the tape, the most significant the 8th, and so on. In this way, bytewise values are the same as the bytes stored on cassette.
+
+PSEUDO-CODE
+
+    while bytes remain in UEF chunk
+        output a zero bit (the start bit)
+        read a byte from the UEF chunk, store it to NewByte
+        let InternalBitCount = 8
+        while InternalBitCount &gt; 0
+            output least significant bit of NewByte
+            shift NewByte right one position
+            decrement InternalBitCount
+        output a one bit (the stop bit)
+</description>
+            <number name="chunk_id" mustmatch="yes" id="50" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0100" value="0x100"/>
+                </fixedvalues>
+            </number>
+            <number name="chunk_length" id="51" type="integer"/>
+            <structure name="chunk_data" id="52">
+                <binary name="tape_data" id="53" length="chunk_length"/>
+            </structure>
+        </structure>
+        <structure name="0110_high_tone_chunk" id="18" extends="id:34" strokecolor="00FCFF">
+            <description> A run of high (2400Hz on a 1200 baud cassette) tone, with a running length described in (1/(baud rate*2))ths of a second by the first two bytes.
+
+PSEUDO-CODE (NB: see phase notes at head of document)
+
+    read wave count for chunk - first two bytes, store to WaveCount
+    while WaveCount &gt; 0
+        output a single wave (i.e. low pulse followed by high pulse) at the current '1' frequency - i.e. 2400Hz at 1200 baud
+        decrement WaveCount
+</description>
+            <number name="chunk_id" mustmatch="yes" id="56" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0110" value="0x110"/>
+                </fixedvalues>
+            </number>
+            <number name="chunk_length" id="57" type="integer"/>
+            <structure name="chunk_data" id="58">
+                <number name="running_length" id="59" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="0111_high_tone_with_dummy_byte_chunk" id="20" extends="id:34" strokecolor="00F900">
+            <description> According to the AUG section 20.10 (around p393), a dummy byte is usually placed in the middle of pure tone to get around a bug affecting BBC OS versions &lt; 1.0. This chunk replicates that situation without the need for a high tone chunk followed by a short data block followed by another high tone.
+
+This four byte chunk is composed of two sets of two bytes - the first two describing the length in (1/(baud rate*2))ths of a second of the tone before the dummy byte, and the second two similarly describing the length of the tone after the dummy byte. The dummy byte itself represents &amp;AA, which it always is with ROM saved files.
+
+PSEUDO-CODE (NB: see phase notes at head of document)
+
+    read 'before' wave count for chunk - first two bytes, store to WaveCount
+    while WaveCount &gt; 0
+        output a single wave (i.e. low pulse followed by high pulse) at the current '1' frequency - i.e. 2400Hz at 1200 baud
+        decrement WaveCount
+    output the folowing bit sequence (in English reading order): 0, 0, 1, 0, 1, 0, 1, 0, 1, 1
+    read 'after' wave count for chunk - final two bytes, store to WaveCount
+    while WaveCount &gt; 0
+        output a single wave (i.e. low pulse followed by high pulse) at the current '1' frequency - i.e. 2400Hz at 1200 baud
+        decrement WaveCount
+</description>
+            <number name="chunk_id" mustmatch="yes" id="62" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0111" value="0x111"/>
+                </fixedvalues>
+            </number>
+            <number name="chunk_length" id="63" type="integer"/>
+            <structure name="chunk_data" id="64">
+                <number name="tone_length_before_dummy" id="65" type="integer" length="2"/>
+                <number name="tone_length_after_dummy" id="66" type="integer" length="2"/>
+            </structure>
+        </structure>
+        <structure name="0112_baud_wise_gap_chunk" id="22" extends="id:34" strokecolor="FF9200">
+            <number name="chunk_id" mustmatch="yes" id="69" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0112" value="0x112"/>
+                </fixedvalues>
+            </number>
+            <number name="chunk_length" id="70" type="integer"/>
+            <structure name="chunk_data" id="71" length="0">
+                <number name="gap" id="72" type="integer" length="chunk_length"/>
+            </structure>
+        </structure>
+        <structure name="0113_change_of_baud_rate_chunk" id="24" extends="id:34" strokecolor="932092">
+            <description> With UEF files, the current baud rate is a modal value, which is assumed to be 1200 when a UEF is open. If this chunk is encountered, the baud rate changes.
+
+This chunks contains a single floating point number, stating baud rate in stored bits per second. </description>
+            <number name="chunk_id" mustmatch="yes" id="75" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0113" value="0x113"/>
+                </fixedvalues>
+            </number>
+            <number name="chunk_length" id="76" type="integer"/>
+            <structure name="chunk_data" id="77">
+                <number name="baud_rate" id="78" type="float" length="chunk_length"/>
+            </structure>
+        </structure>
+        <structure name="0114_security_waves_chunk" id="26" extends="id:34" strokecolor="FF2600">
+            <description> Security waves are mainly found at the start of a pilot tone as an identification feature. Sometimes they are at the end of a pilot tone but often only because of the high speed recording process. They consist of the same wavelengths as pilot waves and zero bit waves and sometimes have a leading and/or trailing pulse.
+
+The first three bytes of this chunk (a 24 bit value) denote the number of 'waves' (although it is possible that the first and last may be only a pulse).
+
+The fourth byte holds the ASCII code for 'P' or 'W'. If it is 'P', the first wave is only a single pulse equivalent to the second half of a wave (i.e. a high pulse if phase is unchanged), rather than an entire wave.
+
+The fifth byte again holds the ASCII code 'P' or 'W' which, if it is 'P' signifies that the last wave is only a pulse equivalent to the first half of a wave (i.e. a low pulse if phase is unchanged), rather than an entire wave.
+
+Remember to be aware of how phase may affect the current meaning of 'high' and 'low' pulse.
+
+If the 'waves' follow a gap then the fourth byte can logically be 'P' or 'W'. If the 'waves' follow waves then the fourth byte will logically be 'W'.
+
+This chunk never offends the general rule that the stored waveform consists only of gaps and pulses joined at zero crossings, and never creates an external or internal phase change.
+
+Waves are recorded with eight 'waves' per byte.
+Short 'waves' are denoted by 0 bits.
+Long 'waves' are denoted by 1 bits.
+Bits are stored akin to data bytes on the tape.
+Spare bits in the last byte should preferably be 0 bits.
+When the number of waves is '1':
+
+    Only one of the fourth and fifth bytes may be 'P'
+    If the fourth byte is 'P' the fifth byte must be 'W' but has no relevance
+
+Examples:
+
+The sequence of waves LSLLLSSLSSLLSL will be stored as &amp;0E, &amp;00, &amp;00, 'W', 'W', &amp;9D, &amp;2C. A sequence following waves having only 1 short pulse will be stored as &amp;01, &amp;00, &amp;00, 'W', 'P', &amp;00. A sequence following a gap having only 1 short pulse followed by 3 long waves will be stored as &amp;04, &amp;00, &amp;00, 'P', 'W', &amp;0E.
+
+PSEUDO-CODE (NB: see phase notes at head of document)
+
+    let NumWaves = number of stored waves, the first three bytes in chunk
+    read the first bit from the chunk
+    if fourth byte of chunk is an ASCII 'P' then output a single high pulse of the frequency implied by the bit just read, read new bit from chunk, decrement NumWaves
+    while NumWaves &gt; 1
+        read next bit from chunk
+        if it is a zero, output a single wave (i.e. low pulse then high pulse) of the 'zero' frequency - i.e. 1200Hz if baud rate is 1200
+        if it is a one, output a single wave (i.e. low pulse then high pulse) of the 'one' frequency - i.e. 2400Hz if baud rate is 1200
+        decrement NumWaves
+    if NumWaves is equal to 1
+        if fifth byte of chunk is an ASCII 'P' then output a single low pulse of the frequency implied by the final bit
+        else fifth byte of chunk must be an ASCII 'W' so output a single wave (i.e. low pulse then high pulse) of the frequency implied by the final bit
+</description>
+            <number name="chunk_id" mustmatch="yes" id="81" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0114" value="0x114"/>
+                </fixedvalues>
+            </number>
+            <number name="chunk_length" id="82" type="integer"/>
+            <structure name="chunk_data" id="83">
+                <number name="wave_count" id="84" type="integer" length="3">
+                    <description>The first three bytes of this chunk (a 24 bit value) denote the number of 'waves' (although it is possible that the first and last may be only a pulse). </description>
+                </number>
+                <binary name="first_wave_type" id="85" length="1">
+                    <description>The fourth byte holds the ASCII code for 'P' or 'W'. If it is 'P', the first wave is only a single pulse equivalent to the second half of a wave (i.e. a high pulse if phase is unchanged), rather than an entire wave. </description>
+                    <fixedvalues>
+                        <fixedvalue name="P" value="50"/>
+                        <fixedvalue name="W" value="57"/>
+                    </fixedvalues>
+                </binary>
+                <binary name="last_wave_type" mustmatch="yes" id="86" length="1">
+                    <description>The fifth byte again holds the ASCII code 'P' or 'W' which, if it is 'P' signifies that the last wave is only a pulse equivalent to the first half of a wave (i.e. a low pulse if phase is unchanged), rather than an entire wave. </description>
+                    <fixedvalues>
+                        <fixedvalue name="P" value="50"/>
+                        <fixedvalue name="W" value="57"/>
+                    </fixedvalues>
+                </binary>
+                <binary name="wave_data" id="87" length="ceil(wave_count/8)">
+                    <description> Waves are recorded with eight 'waves' per byte.
+Short 'waves' are denoted by 0 bits.
+Long 'waves' are denoted by 1 bits.
+Bits are stored akin to data bytes on the tape.
+Spare bits in the last byte should preferably be 0 bits.
+When the number of waves is '1':
+
+    Only one of the fourth and fifth bytes may be 'P'
+    If the fourth byte is 'P' the fifth byte must be 'W' but has no relevance
+</description>
+                </binary>
+            </structure>
+        </structure>
+        <structure name="0115_phase_change_chunk" id="28" extends="id:34" strokecolor="FEFB00">
+            <description>This chunk contains a 16 bit unsigned value between 0 and 359, which determines the new phase.
+
+Two phase shifts are commonly recorded by this chunk which are 0 and 180 degrees. The majority of professional cassettes have waves shifted 0 or 180 degrees. Before one of these chunks is met (i.e. immediately after opening a UEF) the phase shift should be taken to be 180 degrees.
+
+This chunk only makes sense, as a description of an original cassette, if found before or after a gap.
+</description>
+            <number name="chunk_id" mustmatch="yes" id="90" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0115" value="0x115"/>
+                </fixedvalues>
+            </number>
+            <number name="chunk_length" id="91" type="integer"/>
+            <structure name="chunk_data" id="92">
+                <number name="phase_change" id="93" type="integer" length="chunk_length"/>
+            </structure>
+        </structure>
+        <structure name="0116_floating_point_gap_chunk" id="30" extends="id:34" strokecolor="FEFFFF">
+            <description>As per 0112, but the gap length is a floating point number measured in seconds. </description>
+            <number name="chunk_id" mustmatch="yes" id="96" type="integer">
+                <fixedvalues>
+                    <fixedvalue name="0116" value="0x116"/>
+                </fixedvalues>
+            </number>
+            <number name="chunk_length" id="97" type="integer"/>
+            <structure name="chunk_data" id="98">
+                <number name="gap" id="99" type="float" length="chunk_length"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>
