@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.32">
+    <grammar name="BBC Micro CUTS" start="id:1" author="Dave Durbin" complete="yes">
+        <description>The BBC Micro cassette file format. This describes each block.
+
+As specified here. https://beebwiki.mdfs.net/Acorn_cassette_format</description>
+        <structure name="File" id="1" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="Blocks" id="3" strokecolor="C98356" repeatmax="-1" structure="id:2"/>
+        </structure>
+        <structure name="Block" id="2" length="0" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="Sync Byte" id="5" type="integer" length="1" display="hex">
+                <fixedvalues>
+                    <fixedvalue name="SyncByte" value="0x2A"/>
+                </fixedvalues>
+            </number>
+            <string name="File Name" id="6" type="zero-terminated"/>
+            <number name="LoadAddress" id="7" type="integer" length="4" endian="little" display="hex"/>
+            <number name="ExecutionAddress" id="8" type="integer" length="4" endian="little" display="hex"/>
+            <number name="BlockNumber" id="9" type="integer" length="2" endian="little"/>
+            <number name="DataLength" id="10" type="integer" length="2" endian="little"/>
+            <number name="BlockFlags" id="18" type="integer" length="8" lengthunit="bit">
+                <mask name="Last Block" value="0x80">
+                    <fixedvalue name="Last Block" value="0x80"/>
+                </mask>
+                <mask name="NoData" value="0x40">
+                    <fixedvalue name="DataValid" value="0x40"/>
+                </mask>
+                <mask name="Locked" value="0x1">
+                    <fixedvalue name="FirstBlock" value="0x20"/>
+                </mask>
+            </number>
+            <number name="Reserved" id="12" type="integer" length="4" endian="little" display="hex" valueexpression="0"/>
+            <number name="HeaderCrc" id="13" type="integer" length="2" endian="little" display="hex"/>
+            <binary name="Data" id="14" length="DataLength"/>
+            <number name="DataCrc" id="15" type="integer" length="2" endian="little" display="hex"/>
+        </structure>
+    </grammar>
+</ufwb>
